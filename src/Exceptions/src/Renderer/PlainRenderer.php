@@ -10,6 +10,7 @@ use Spiral\Exceptions\Verbosity;
 final class PlainRenderer extends AbstractRenderer
 {
     protected const FORMATS = ['text/plain', 'text', 'plain', 'cli', 'console'];
+
     // Lines to show around targeted line.
     private const SHOW_LINES = 2;
 
@@ -18,7 +19,7 @@ final class PlainRenderer extends AbstractRenderer
     public function render(
         \Throwable $exception,
         ?Verbosity $verbosity = null,
-        ?string $format = null
+        ?string $format = null,
     ): string {
         $verbosity ??= $this->defaultVerbosity;
         $exceptions = [$exception];
@@ -71,16 +72,16 @@ final class PlainRenderer extends AbstractRenderer
         $result = "\n";
         $rootDir = \getcwd();
 
-        $pad = \strlen((string)\count($stacktrace));
+        $pad = \strlen((string) \count($stacktrace));
 
         foreach ($stacktrace as $i => $trace) {
             if (isset($trace['type'], $trace['class'])) {
                 $line = \sprintf(
                     '%s. %s%s%s()',
-                    \str_pad((string)((int) $i + 1), $pad, ' ', \STR_PAD_LEFT),
+                    \str_pad((string) ((int) $i + 1), $pad, ' ', \STR_PAD_LEFT),
                     $trace['class'],
                     $trace['type'],
-                    $trace['function']
+                    $trace['function'],
                 );
             } else {
                 $line = $trace['function'];
@@ -106,7 +107,7 @@ final class PlainRenderer extends AbstractRenderer
                 $result .= $h->highlightLines(
                     $str,
                     $trace['line'],
-                    self::SHOW_LINES
+                    self::SHOW_LINES,
                 ) . "\n";
                 unset($str);
             }

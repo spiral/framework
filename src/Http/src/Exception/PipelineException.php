@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Exception;
 
-class PipelineException extends HttpException
-{
-}
+class PipelineException extends HttpException {}

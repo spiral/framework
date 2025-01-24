@@ -18,9 +18,8 @@ final class TokenStorage implements TokenStorageInterface
     private const SESSION_SECTION = 'auth';
 
     public function __construct(
-        private readonly SessionScope $session
-    ) {
-    }
+        private readonly SessionScope $session,
+    ) {}
 
     public function load(string $id): ?TokenInterface
     {

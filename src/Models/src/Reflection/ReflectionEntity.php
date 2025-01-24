@@ -31,11 +31,13 @@ class ReflectionEntity
      * Accessors and filters.
      */
     private const MUTATOR_GETTER   = 'getter';
+
     private const MUTATOR_SETTER   = 'setter';
     private const MUTATOR_ACCESSOR = 'accessor';
 
     /** @internal */
     private array $propertyCache = [];
+
     private \ReflectionClass $reflection;
 
     /**
@@ -44,23 +46,6 @@ class ReflectionEntity
     public function __construct(string $class)
     {
         $this->reflection = new \ReflectionClass($class);
-    }
-
-    /**
-     * Bypassing call to reflection.
-     */
-    public function __call(string $name, array $arguments): mixed
-    {
-        return \call_user_func_array([$this->reflection, $name], $arguments);
-    }
-
-
-    /**
-     * Cloning and flushing cache.
-     */
-    public function __clone()
-    {
-        $this->propertyCache = [];
     }
 
     public function getReflection(): \ReflectionClass
@@ -74,12 +59,12 @@ class ReflectionEntity
             return $this->getProperty('secured', true);
         }
 
-        return \array_unique((array)$this->getProperty('secured', true));
+        return \array_unique((array) $this->getProperty('secured', true));
     }
 
     public function getFillable(): array
     {
-        return \array_unique((array)$this->getProperty('fillable', true));
+        return \array_unique((array) $this->getProperty('fillable', true));
     }
 
     public function getSetters(): array
@@ -122,7 +107,7 @@ class ReflectionEntity
     public function getSchema(): array
     {
         //Default property to store schema
-        return (array)$this->getProperty('schema', true);
+        return (array) $this->getProperty('schema', true);
     }
 
     /**
@@ -136,15 +121,15 @@ class ReflectionEntity
             self::MUTATOR_ACCESSOR => [],
         ];
 
-        foreach ((array)$this->getProperty('getters', true) as $field => $filter) {
+        foreach ((array) $this->getProperty('getters', true) as $field => $filter) {
             $mutators[self::MUTATOR_GETTER][$field] = $filter;
         }
 
-        foreach ((array)$this->getProperty('setters', true) as $field => $filter) {
+        foreach ((array) $this->getProperty('setters', true) as $field => $filter) {
             $mutators[self::MUTATOR_SETTER][$field] = $filter;
         }
 
-        foreach ((array)$this->getProperty('accessors', true) as $field => $filter) {
+        foreach ((array) $this->getProperty('accessors', true) as $field => $filter) {
             $mutators[self::MUTATOR_ACCESSOR][$field] = $filter;
         }
 
@@ -212,5 +197,21 @@ class ReflectionEntity
         }
 
         return null;
+    }
+
+    /**
+     * Bypassing call to reflection.
+     */
+    public function __call(string $name, array $arguments): mixed
+    {
+        return \call_user_func_array([$this->reflection, $name], $arguments);
+    }
+
+    /**
+     * Cloning and flushing cache.
+     */
+    public function __clone()
+    {
+        $this->propertyCache = [];
     }
 }

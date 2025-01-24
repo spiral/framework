@@ -13,7 +13,6 @@ final class CommandStarting
     public function __construct(
         public readonly Command $command,
         public readonly InputInterface $input,
-        public readonly OutputInterface $output
-    ) {
-    }
+        public readonly OutputInterface $output,
+    ) {}
 }

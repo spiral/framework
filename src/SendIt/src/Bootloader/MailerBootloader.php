@@ -6,7 +6,6 @@ namespace Spiral\SendIt\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -36,7 +35,6 @@ class MailerBootloader extends Bootloader
         QueueBootloader::class,
         BuilderBootloader::class,
     ];
-
     protected const SINGLETONS = [
         MailJob::class => MailJob::class,
         SymfonyMailer::class => [self::class, 'mailer'],
@@ -47,9 +45,8 @@ class MailerBootloader extends Bootloader
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
-    ) {
-    }
+        private readonly ConfiguratorInterface $config,
+    ) {}
 
     public function init(EnvironmentInterface $env): void
     {
@@ -65,10 +62,10 @@ class MailerBootloader extends Bootloader
     {
         $binder->bindSingleton(
             MailerInterface::class,
-            static fn (MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue => new MailQueue(
+            static fn(MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue => new MailQueue(
                 $config,
-                $provider->getConnection($config->getQueueConnection())
-            )
+                $provider->getConnection($config->getQueueConnection()),
+            ),
         );
 
         $registry = $container->get(QueueRegistry::class);
@@ -85,7 +82,7 @@ class MailerBootloader extends Bootloader
     {
         return new Mailer(
             transport: $transport,
-            dispatcher: $dispatcher
+            dispatcher: $dispatcher,
         );
     }
 
@@ -96,11 +93,11 @@ class MailerBootloader extends Bootloader
         $defaultTransports = \iterator_to_array(Transport::getDefaultFactories(
             $dispatcher,
             null,
-            $logs?->getLogger('mailer')
+            $logs?->getLogger('mailer'),
         ));
 
         return new TransportResolver(
-            new Transport($defaultTransports)
+            new Transport($defaultTransports),
         );
     }
 }

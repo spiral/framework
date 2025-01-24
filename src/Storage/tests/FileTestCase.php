@@ -74,7 +74,7 @@ class FileTestCase extends TestCase
         $this->markTestSkipped(
             'This test [' . __FUNCTION__ . '] returns incorrect visibility ' .
                 'of files on Windows OS. ' .
-            'It is required to understand the situation'
+            'It is required to understand the situation',
         );
 
         $file = $this->local->file('file.txt')

@@ -15,6 +15,5 @@ class BootloadConfig
         public array $allowEnv = [],
         public array $denyEnv = [],
         public bool $override = true,
-    ) {
-    }
+    ) {}
 }

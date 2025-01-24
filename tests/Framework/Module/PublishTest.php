@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Module;
 
-use Spiral\Boot\DirectoriesInterface;
 use Spiral\Module\Exception\PublishException;
 use Spiral\Tests\Framework\ConsoleTestCase;
 
@@ -12,17 +11,6 @@ final class PublishTest extends ConsoleTestCase
 {
     protected const TEST_FILE   = __DIR__ . '/test.txt';
     protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';
-
-    protected function tearDown(): void
-    {
-        if (file_exists(self::TEST_FILE)) {
-            unlink(self::TEST_FILE);
-        }
-
-        $this->runCommand('cache:clean');
-
-        parent::tearDown();
-    }
 
     public function testPublish(): void
     {
@@ -35,7 +23,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertFileExists($file);
@@ -52,7 +40,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertSame('test', file_get_contents($file));
@@ -68,7 +56,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertSame('original', file_get_contents($file));
@@ -86,7 +74,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'invalid',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
     }
 
@@ -100,7 +88,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'readonly'
+            'mode'   => 'readonly',
         ]);
 
         self::assertSame('test', file_get_contents($file));
@@ -131,7 +119,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'replace',
             'target' => '@runtime',
             'source' => __DIR__,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertSame('test', file_get_contents($file));
@@ -148,7 +136,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime',
             'source' => __DIR__,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertSame('original', file_get_contents($file));
@@ -165,7 +153,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'replace',
             'target' => '@runtime',
             'source' => __DIR__ . '/*',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertSame('test', file_get_contents($file));
@@ -182,7 +170,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime',
             'source' => __DIR__ . '/*',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertSame('original', file_get_contents($file));
@@ -197,7 +185,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE . 'invalid',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
     }
 
@@ -209,7 +197,18 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE . 'invalid/*',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        if (file_exists(self::TEST_FILE)) {
+            unlink(self::TEST_FILE);
+        }
+
+        $this->runCommand('cache:clean');
+
+        parent::tearDown();
     }
 }

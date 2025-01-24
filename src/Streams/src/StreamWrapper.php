@@ -34,9 +34,86 @@ final class StreamWrapper
         'w'   => 33188,
         'wb'  => 33188,
     ];
-
     private ?StreamInterface $stream = null;
     private string $mode = '';
+
+    /**
+     * Register stream wrapper.
+     */
+    public static function register(): void
+    {
+        if (self::$registered) {
+            return;
+        }
+
+        \stream_wrapper_register('spiral', self::class);
+
+        self::$registered = true;
+    }
+
+    /**
+     * Check if given uri or stream has been allocated.
+     */
+    public static function has(StreamInterface|string $file): bool
+    {
+        if ($file instanceof StreamInterface) {
+            $file = 'spiral://' . \spl_object_hash($file);
+        }
+
+        return isset(self::$uris[$file]);
+    }
+
+    /**
+     * Create StreamInterface associated resource.
+     *
+     * @return resource
+     * @throws WrapperException
+     */
+    public static function getResource(StreamInterface $stream)
+    {
+        $mode = null;
+        if ($stream->isReadable()) {
+            $mode = 'r';
+        }
+
+        if ($stream->isWritable()) {
+            $mode = !empty($mode) ? 'r+' : 'w';
+        }
+
+        if (empty($mode)) {
+            throw new WrapperException('Stream is not available in read or write modes');
+        }
+
+        return \fopen(self::getFilename($stream), $mode);
+    }
+
+    /**
+     * Register StreamInterface and get unique url for it.
+     */
+    public static function getFilename(StreamInterface $stream): string
+    {
+        self::register();
+
+        $uri = 'spiral://' . \spl_object_hash($stream);
+        self::$uris[$uri] = $stream;
+
+        return $uri;
+    }
+
+    /**
+     * Free uri dedicated to specified StreamInterface. Method is useful for long living
+     * applications. You must close resource by yourself!
+     *
+     * @param string|StreamInterface $file String uri or StreamInterface.
+     */
+    public static function release(StreamInterface|string $file): void
+    {
+        if ($file instanceof StreamInterface) {
+            $file = 'spiral://' . \spl_object_hash($file);
+        }
+
+        unset(self::$uris[$file]);
+    }
 
     /**
      * Check if StreamInterface ended.
@@ -157,84 +234,6 @@ final class StreamWrapper
     }
 
     /**
-     * Register stream wrapper.
-     */
-    public static function register(): void
-    {
-        if (self::$registered) {
-            return;
-        }
-
-        \stream_wrapper_register('spiral', self::class);
-
-        self::$registered = true;
-    }
-
-    /**
-     * Check if given uri or stream has been allocated.
-     */
-    public static function has(StreamInterface|string $file): bool
-    {
-        if ($file instanceof StreamInterface) {
-            $file = 'spiral://' . \spl_object_hash($file);
-        }
-
-        return isset(self::$uris[$file]);
-    }
-
-    /**
-     * Create StreamInterface associated resource.
-     *
-     * @return resource
-     * @throws WrapperException
-     */
-    public static function getResource(StreamInterface $stream)
-    {
-        $mode = null;
-        if ($stream->isReadable()) {
-            $mode = 'r';
-        }
-
-        if ($stream->isWritable()) {
-            $mode = !empty($mode) ? 'r+' : 'w';
-        }
-
-        if (empty($mode)) {
-            throw new WrapperException('Stream is not available in read or write modes');
-        }
-
-        return \fopen(self::getFilename($stream), $mode);
-    }
-
-    /**
-     * Register StreamInterface and get unique url for it.
-     */
-    public static function getFilename(StreamInterface $stream): string
-    {
-        self::register();
-
-        $uri = 'spiral://' . \spl_object_hash($stream);
-        self::$uris[$uri] = $stream;
-
-        return $uri;
-    }
-
-    /**
-     * Free uri dedicated to specified StreamInterface. Method is useful for long living
-     * applications. You must close resource by yourself!
-     *
-     * @param string|StreamInterface $file String uri or StreamInterface.
-     */
-    public static function release(StreamInterface|string $file): void
-    {
-        if ($file instanceof StreamInterface) {
-            $file = 'spiral://' . \spl_object_hash($file);
-        }
-
-        unset(self::$uris[$file]);
-    }
-
-    /**
      * Helper method used to correctly resolve StreamInterface stats.
      */
     private function getStreamStats(StreamInterface $stream): array
@@ -258,7 +257,7 @@ final class StreamWrapper
             'uid'     => 0,
             'gid'     => 0,
             'rdev'    => 0,
-            'size'    => (string)$stream->getSize(),
+            'size'    => (string) $stream->getSize(),
             'atime'   => 0,
             'mtime'   => 0,
             'ctime'   => 0,

@@ -18,7 +18,7 @@ class ConfigTest extends TestCase
         $config = new ConsoleConfig([
             'sequences' => [
                 'update' => [
-                    []
+                    [],
                 ],
             ],
         ]);

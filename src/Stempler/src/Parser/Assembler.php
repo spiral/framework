@@ -21,9 +21,8 @@ final class Assembler
      */
     public function __construct(
         private NodeInterface $node,
-        private string $path
-    ) {
-    }
+        private string $path,
+    ) {}
 
     public function getNode(): NodeInterface
     {

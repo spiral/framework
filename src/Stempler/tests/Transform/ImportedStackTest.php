@@ -37,7 +37,7 @@ class ImportedStackTest extends BaseTestCase
             '<use:element path="import" as="url"/>
 <stack:collect name="css"/>
 <url href="google.com">hello world</url>
-'
+',
         );
         $loader->set('import', '
 <stack:push name="css">css</stack:push>
@@ -59,7 +59,7 @@ class ImportedStackTest extends BaseTestCase
 <block:body>
     <url href="google.com">hello world</url>
 </block:body>
-'
+',
         );
 
         $loader->set(
@@ -68,7 +68,7 @@ class ImportedStackTest extends BaseTestCase
             <stack:collect name="css"/>
             <body>${body}</body>
             <stack:collect name="js"/>
-            </html>'
+            </html>',
         );
 
         $loader->set('import', '
@@ -93,7 +93,7 @@ class ImportedStackTest extends BaseTestCase
     <stack:push name="js">js</stack:push>
     <url href="google.com">hello world</url>
 </block:body>
-'
+',
         );
 
         $loader->set(
@@ -102,7 +102,7 @@ class ImportedStackTest extends BaseTestCase
             <stack:collect name="css"/>
             <body>${body}</body>
             <stack:collect name="js"/>
-            </html>'
+            </html>',
         );
 
         $loader->set('import', '
@@ -127,7 +127,7 @@ class ImportedStackTest extends BaseTestCase
     <grid:cell title="ID">value</grid:cell>
     <grid:cell title="Title">value</grid:cell>
 </grid:render>
-'
+',
         );
 
         $loader->set(
@@ -142,7 +142,7 @@ class ImportedStackTest extends BaseTestCase
 </tbody>
 <hidden>${context}</hidden>
 </table>
-'
+',
         );
 
         $loader->set(
@@ -150,7 +150,7 @@ class ImportedStackTest extends BaseTestCase
             '
 <stack:push name="head"><tr>${title}</tr></stack:push>
 <stack:push name="body"><td>${context}</td></stack:push>
-'
+',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -183,7 +183,7 @@ class ImportedStackTest extends BaseTestCase
             new DefineAttributes(),
             new DefineBlocks(),
             new DefineStacks(),
-            new DefineHidden()
+            new DefineHidden(),
         ];
     }
 }

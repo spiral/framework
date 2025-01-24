@@ -24,7 +24,7 @@ final class CoreTest extends TestCase
         self::assertSame('Hello, Antony.', $core->callAction(
             DummyController::class,
             'index',
-            ['name' => 'Antony']
+            ['name' => 'Antony'],
         ));
     }
 
@@ -33,7 +33,7 @@ final class CoreTest extends TestCase
         $core = new SampleCore($this->getContainer());
         self::assertSame('Hello, Dave.', $core->callAction(
             DummyController::class,
-            'index'
+            'index',
         ));
     }
 
@@ -42,7 +42,7 @@ final class CoreTest extends TestCase
         $core = new SampleCore($this->getContainer());
         self::assertSame('Hello, Dave.', $core->callAction(
             DummyController::class,
-            'index'
+            'index',
         ));
     }
 
@@ -52,7 +52,7 @@ final class CoreTest extends TestCase
         self::assertSame('Hello, Antony.', $core->callAction(
             DummyController::class,
             'index',
-            ['name' => 'Antony']
+            ['name' => 'Antony'],
         ));
     }
 
@@ -130,7 +130,7 @@ final class CoreTest extends TestCase
         self::assertSame('900', $core->callAction(
             CleanController::class,
             'test',
-            ['id' => '900']
+            ['id' => '900'],
         ));
     }
 
@@ -142,7 +142,7 @@ final class CoreTest extends TestCase
         self::assertSame('900', $core->callAction(
             CleanController::class,
             'test',
-            ['id' => null]
+            ['id' => null],
         ));
     }
 
@@ -154,7 +154,7 @@ final class CoreTest extends TestCase
         self::assertSame('900', $core->callAction(
             CleanController::class,
             'test',
-            []
+            [],
         ));
     }
 
@@ -166,7 +166,7 @@ final class CoreTest extends TestCase
         self::assertSame('900', $core->callAction(
             CleanController::class,
             'invalid',
-            []
+            [],
         ));
     }
 
@@ -178,7 +178,7 @@ final class CoreTest extends TestCase
         self::assertSame('900', $core->callAction(
             CleanController::class,
             'another',
-            []
+            [],
         ));
     }
 
@@ -190,7 +190,7 @@ final class CoreTest extends TestCase
         self::assertSame('900', $core->callAction(
             CleanController::class,
             'missing',
-            []
+            [],
         ));
     }
 

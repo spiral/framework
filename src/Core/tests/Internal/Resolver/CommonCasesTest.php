@@ -11,7 +11,6 @@ use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use Spiral\Tests\Core\Stub\EnumObject;
 use Spiral\Tests\Core\Stub\NewObjectInParam;
 use Spiral\Tests\Core\Stub\TestTrait;
-use stdClass;
 
 final class CommonCasesTest extends BaseTestCase
 {
@@ -51,7 +50,7 @@ final class CommonCasesTest extends BaseTestCase
         );
 
         $this->assertCount(1, $result);
-        $this->assertInstanceOf(stdClass::class, $result[0]);
+        $this->assertInstanceOf(\stdClass::class, $result[0]);
     }
 
     /**
@@ -71,7 +70,7 @@ final class CommonCasesTest extends BaseTestCase
     {
         $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
-            'Can\'t resolve `Spiral\Tests\Core\Stub\TestTrait`: undefined class or binding `Spiral\Tests\Core\Stub\TestTrait`.'
+            'Can\'t resolve `Spiral\Tests\Core\Stub\TestTrait`: undefined class or binding `Spiral\Tests\Core\Stub\TestTrait`.',
         );
 
         $this->resolveClosure(

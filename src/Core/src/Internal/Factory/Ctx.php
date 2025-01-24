@@ -20,6 +20,5 @@ final class Ctx
         public \Stringable|string|null $context = null,
         public ?bool $singleton = null,
         public ?\ReflectionClass $reflection = null,
-    ) {
-    }
+    ) {}
 }

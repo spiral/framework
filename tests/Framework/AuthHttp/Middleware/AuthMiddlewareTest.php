@@ -15,13 +15,6 @@ use Spiral\Tests\Framework\HttpTestCase;
 
 final class AuthMiddlewareTest extends HttpTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->enableMiddlewares();
-    }
-
     #[TestScope(Spiral::Http)]
     public function testTokenStorageInterfaceShouldBeBound(): void
     {
@@ -55,5 +48,12 @@ final class AuthMiddlewareTest extends HttpTestCase
         });
 
         $this->fakeHttp()->withActor($user)->get('/');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->enableMiddlewares();
     }
 }

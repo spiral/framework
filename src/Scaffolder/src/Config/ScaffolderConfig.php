@@ -206,7 +206,7 @@ class ScaffolderConfig extends InjectableConfig
         $declaration = $this->getDeclaration($element);
 
         if (\array_key_exists('baseNamespace', $declaration)) {
-            return \trim((string)$this->getOption($element, 'baseNamespace', ''), '\\');
+            return \trim((string) $this->getOption($element, 'baseNamespace', ''), '\\');
         }
 
         return \trim((string) $this->config['namespace'], '\\');

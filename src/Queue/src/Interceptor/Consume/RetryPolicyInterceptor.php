@@ -20,8 +20,7 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
     public function __construct(
         private readonly ReaderInterface $reader,
         private readonly HandlerRegistryInterface $registry,
-    ) {
-    }
+    ) {}
 
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {
@@ -39,7 +38,7 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
             }
 
             $headers = $parameters['headers'] ?? [];
-            $attempts = (int)($headers['attempts'][0] ?? 0);
+            $attempts = (int) ($headers['attempts'][0] ?? 0);
 
             if ($policy->isRetryable($e, $attempts) === false) {
                 throw $e;
@@ -49,7 +48,7 @@ final class RetryPolicyInterceptor implements CoreInterceptorInterface
                 reason: $e->getMessage(),
                 options: (new Options())
                     ->withDelay($policy->getDelay($attempts))
-                    ->withHeader('attempts', (string)($attempts + 1))
+                    ->withHeader('attempts', (string) ($attempts + 1)),
             );
         }
     }

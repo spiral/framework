@@ -15,7 +15,6 @@ final class Status
      */
     public function __construct(
         public readonly string|int $code,
-        public readonly ?string $description = null
-    ) {
-    }
+        public readonly ?string $description = null,
+    ) {}
 }

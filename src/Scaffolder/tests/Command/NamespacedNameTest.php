@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
-use Throwable;
-
 class NamespacedNameTest extends AbstractCommandTestCase
 {
     private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Controller\\Namespaced\\SampleController';
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffold(): void
     {
@@ -28,7 +24,7 @@ class NamespacedNameTest extends AbstractCommandTestCase
         clearstatcache();
         self::assertTrue(class_exists(self::CLASS_NAME));
 
-        $reflection = new ReflectionClass(self::CLASS_NAME);
+        $reflection = new \ReflectionClass(self::CLASS_NAME);
 
         self::assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
         self::assertStringContainsString('Sample Controller', $reflection->getDocComment());

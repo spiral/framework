@@ -21,9 +21,8 @@ final class CookieTransport implements HttpTransportInterface
         private readonly ?string $domain = null,
         private readonly bool $secure = false,
         private readonly bool $httpOnly = true,
-        private readonly ?string $sameSite = null
-    ) {
-    }
+        private readonly ?string $sameSite = null,
+    ) {}
 
     public function fetchToken(Request $request): ?string
     {
@@ -35,7 +34,7 @@ final class CookieTransport implements HttpTransportInterface
         Request $request,
         Response $response,
         ?string $tokenID = null,
-        ?\DateTimeInterface $expiresAt = null
+        ?\DateTimeInterface $expiresAt = null,
     ): Response {
         /** @var CookieQueue $cookieQueue */
         $cookieQueue = $request->getAttribute(CookieQueue::ATTRIBUTE);
@@ -50,8 +49,8 @@ final class CookieTransport implements HttpTransportInterface
                     $this->domain,
                     $this->secure,
                     $this->httpOnly,
-                    $this->sameSite
-                )->createHeader()
+                    $this->sameSite,
+                )->createHeader(),
             );
         }
 
@@ -66,7 +65,7 @@ final class CookieTransport implements HttpTransportInterface
                 $this->domain,
                 $this->secure,
                 $this->httpOnly,
-                $this->sameSite
+                $this->sameSite,
             );
         }
 

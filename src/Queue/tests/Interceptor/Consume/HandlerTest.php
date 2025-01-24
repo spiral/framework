@@ -14,6 +14,15 @@ use Spiral\Tests\Queue\TestCase;
 
 final class HandlerTest extends TestCase
 {
+    public static function payloadDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
+    }
+
     #[DataProvider('payloadDataProvider')]
     public function testHandle(mixed $payload): void
     {
@@ -22,11 +31,11 @@ final class HandlerTest extends TestCase
         $tracerFactory->shouldReceive('make')
             ->once()
             ->with(['some' => 'data'])
-            ->andReturn( $tracer = new NullTracer());
+            ->andReturn($tracer = new NullTracer());
 
         $handler = new Handler(
             core: $core = m::mock(CoreInterface::class),
-            tracerFactory: $tracerFactory
+            tracerFactory: $tracerFactory,
         );
 
         $core->shouldReceive('callAction')
@@ -40,14 +49,5 @@ final class HandlerTest extends TestCase
             ]);
 
         $handler->handle('foo', 'sync', 'default', 'job-id', $payload, ['some' => 'data']);
-    }
-
-    public static function payloadDataProvider(): \Traversable
-    {
-        yield [['baz' => 'baf']];
-        yield [new \stdClass()];
-        yield ['some string'];
-        yield [123];
-        yield [null];
     }
 }

@@ -38,7 +38,7 @@ interface WritableInterface extends EntryInterface
      */
     public function setVisibility(
         #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
+        string $visibility,
     ): FileInterface;
 
     /**
@@ -49,7 +49,7 @@ interface WritableInterface extends EntryInterface
     public function copy(
         string $pathname,
         ?BucketInterface $storage = null,
-        array $config = []
+        array $config = [],
     ): FileInterface;
 
     /**
@@ -60,7 +60,7 @@ interface WritableInterface extends EntryInterface
     public function move(
         string $pathname,
         ?BucketInterface $storage = null,
-        array $config = []
+        array $config = [],
     ): FileInterface;
 
     /**

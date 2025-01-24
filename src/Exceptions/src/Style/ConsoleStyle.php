@@ -17,7 +17,6 @@ class ConsoleStyle implements StyleInterface
         'line'   => Color::LIGHT_CYAN . ' %s ' . Color::RESET . " %s\n",
         'active' => Color::BG_RED . ' ' . Color::LIGHT_WHITE . '%s ' . Color::RESET . " %s\n",
     ];
-
     protected array $style = [
         Color::YELLOW        => [
             T_STATIC,
@@ -103,8 +102,8 @@ class ConsoleStyle implements StyleInterface
     {
         return \sprintf(
             $this->templates[$target ? 'active' : 'line'],
-            \str_pad((string)$number, 4, ' ', STR_PAD_LEFT),
-            $code
+            \str_pad((string) $number, 4, ' ', STR_PAD_LEFT),
+            $code,
         );
     }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Storage;
 
-use Psr\Http\Message\UriInterface;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage\ReadableTrait;
 use Spiral\Storage\Storage\WritableTrait;
@@ -36,6 +35,7 @@ final class Storage implements MutableStorageInterface
      * @var array<string, BucketInterface>
      */
     private array $buckets = [];
+
     private string $default;
 
     public function __construct(string $name = self::DEFAULT_STORAGE)
@@ -120,7 +120,7 @@ final class Storage implements MutableStorageInterface
     {
         return match (true) {
             \is_string($uri) => $uri,
-            default => (string) $uri
+            default => (string) $uri,
         };
     }
 }

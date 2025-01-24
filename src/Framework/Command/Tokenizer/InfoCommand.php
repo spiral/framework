@@ -17,7 +17,7 @@ final class InfoCommand extends Command
     public function perform(
         TokenizerConfig $config,
         DirectoriesInterface $dirs,
-        TokenizerListenerRegistryInterface $listenerRegistry
+        TokenizerListenerRegistryInterface $listenerRegistry,
     ): int {
         $this->info('Included directories:');
         $grid = $this->table(['Directory', 'Scope']);
@@ -61,7 +61,7 @@ final class InfoCommand extends Command
         $grid->addRow(
             ['Interfaces', $config->isLoadInterfacesEnabled()
                 ? '<info>enabled</>'
-                : '<error>disabled</>. <comment>To enable, add "TOKENIZER_LOAD_INTERFACES=true" to your .env file.</>']
+                : '<error>disabled</>. <comment>To enable, add "TOKENIZER_LOAD_INTERFACES=true" to your .env file.</>'],
         );
 
         $grid->render();

@@ -10,7 +10,6 @@ use Spiral\Attributes\NamedArgumentConstructor;
 final class ProvideFrom
 {
     public function __construct(
-        public readonly string $method
-    ) {
-    }
+        public readonly string $method,
+    ) {}
 }

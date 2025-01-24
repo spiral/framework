@@ -19,10 +19,9 @@ class DynamicTest extends BaseTestCase
         HTMLRenderer::class,
         DynamicRenderer::class,
     ];
-
     protected const GRAMMARS = [
         DynamicGrammar::class => DynamicSyntax::class,
-        HTMLGrammar::class    => HTMLSyntax::class
+        HTMLGrammar::class    => HTMLSyntax::class,
     ];
 
     public function testOutput(): void

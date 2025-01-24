@@ -20,14 +20,13 @@ final class JsonPayloadMiddleware implements MiddlewareInterface
      * JsonPayloadMiddleware constructor.
      */
     public function __construct(
-        private readonly JsonPayloadConfig $config
-    ) {
-    }
+        private readonly JsonPayloadConfig $config,
+    ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->isJsonPayload($request)) {
-            $body = (string)$request->getBody();
+            $body = (string) $request->getBody();
             if ($body !== '') {
                 $request = $request->withParsedBody(\json_decode($body, true));
                 if (\json_last_error() !== 0) {

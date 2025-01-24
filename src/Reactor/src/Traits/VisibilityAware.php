@@ -20,7 +20,7 @@ trait VisibilityAware
 
     public function getVisibility(): ?Visibility
     {
-        return Visibility::tryFrom((string)$this->element->getVisibility());
+        return Visibility::tryFrom((string) $this->element->getVisibility());
     }
 
     public function setPublic(): static

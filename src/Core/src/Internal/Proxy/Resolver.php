@@ -75,7 +75,7 @@ final class Resolver
         }
 
         return \array_reverse(\array_map(
-            static fn (?string $name): string => $name ?? 'null',
+            static fn(?string $name): string => $name ?? 'null',
             Introspector::scopeNames($c),
         ));
     }

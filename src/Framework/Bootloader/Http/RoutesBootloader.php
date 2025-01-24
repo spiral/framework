@@ -10,10 +10,8 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use Spiral\Http\LazyPipeline;
-use Spiral\Http\Pipeline;
 use Spiral\Router\GroupRegistry;
 use Spiral\Router\Loader\Configurator\RoutingConfigurator;
-use Spiral\Router\PipelineFactory;
 
 abstract class RoutesBootloader extends Bootloader
 {
@@ -38,16 +36,12 @@ abstract class RoutesBootloader extends Bootloader
     /**
      * Override this method to configure application routes
      */
-    protected function defineRoutes(RoutingConfigurator $routes): void
-    {
-    }
+    protected function defineRoutes(RoutingConfigurator $routes): void {}
 
     /**
      * Override this method to configure route groups
      */
-    protected function configureRouteGroups(GroupRegistry $groups): void
-    {
-    }
+    protected function configureRouteGroups(GroupRegistry $groups): void {}
 
     /**
      * @return array<MiddlewareInterface|class-string<MiddlewareInterface>>
@@ -68,7 +62,7 @@ abstract class RoutesBootloader extends Bootloader
                     'middleware:' . $group,
                     static function (FactoryInterface $factory) use ($middleware): LazyPipeline {
                         return $factory->make(LazyPipeline::class)->withAddedMiddleware(...$middleware);
-                    }
+                    },
                 );
         }
     }

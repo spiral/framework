@@ -29,7 +29,7 @@ final class EventsBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             ListenerFactoryInterface::class,
-            ListenerFactoryInterface::class
+            ListenerFactoryInterface::class,
         );
     }
 
@@ -59,7 +59,7 @@ final class EventsBootloaderTest extends BaseTestCase
                     $processor1 = m::mock(ProcessorInterface::class),
                     $processor2 = m::mock(ProcessorInterface::class),
                 ],
-            ])
+            ]),
         );
 
         $processor1->shouldReceive('process')->once();
@@ -87,7 +87,7 @@ final class EventsBootloaderTest extends BaseTestCase
                 'processors' => [
                     'foo',
                 ],
-            ])
+            ]),
         );
 
         $processor->shouldReceive('process')->once();
@@ -104,7 +104,7 @@ final class EventsBootloaderTest extends BaseTestCase
             ->once()
             ->with('foo', [])
             ->andReturn(
-                $processor = m::mock(ProcessorInterface::class)
+                $processor = m::mock(ProcessorInterface::class),
             );
 
         $kernel = $this->getContainer()->get(AbstractKernel::class);
@@ -117,7 +117,7 @@ final class EventsBootloaderTest extends BaseTestCase
                 'processors' => [
                     new Container\Autowire('foo'),
                 ],
-            ])
+            ]),
         );
 
         $processor->shouldReceive('process')->once();
@@ -138,7 +138,7 @@ final class EventsBootloaderTest extends BaseTestCase
             bootloader: $bootloader,
             kernel: $kernel,
             finalizer: $finalizer,
-            eventDispatcher: $dispatcher
+            eventDispatcher: $dispatcher,
         );
     }
 
@@ -155,7 +155,7 @@ final class EventsBootloaderTest extends BaseTestCase
             bootloader: $bootloader,
             kernel: $kernel,
             finalizer: $finalizer,
-            eventDispatcher: $dispatcher
+            eventDispatcher: $dispatcher,
         );
     }
 
@@ -173,7 +173,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $bootloader->addInterceptor($autowire);
 
         self::assertSame([
-            'foo', $interceptor, $autowire
+            'foo', $interceptor, $autowire,
         ], $configs->getConfig(EventsConfig::CONFIG)['interceptors']);
     }
 
@@ -193,7 +193,7 @@ final class EventsBootloaderTest extends BaseTestCase
             kernel: $kernel,
             container: $this->getContainer(),
             finalizer: $finalizer,
-            eventDispatcher: $this->getContainer()->get(EventDispatcherInterface::class)
+            eventDispatcher: $this->getContainer()->get(EventDispatcherInterface::class),
         );
 
         self::assertInstanceOf(EventDispatcher::class, $this->getContainer()->get(EventDispatcherInterface::class));
@@ -219,7 +219,7 @@ final class EventsBootloaderTest extends BaseTestCase
             $kernel,
             $registry,
             $finalizer,
-            $eventDispatcher
+            $eventDispatcher,
         );
     }
 }

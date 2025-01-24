@@ -19,8 +19,7 @@ abstract class AbstractTracer implements TracerInterface
 {
     public function __construct(
         private readonly ?ScopeInterface $scope = new Container(),
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Throwable
@@ -32,7 +31,7 @@ abstract class AbstractTracer implements TracerInterface
             return $this->scope->runScope([
                 SpanInterface::class => $span,
                 TracerInterface::class => $this,
-            ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
+            ], static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback));
         }
 
         if ($container instanceof Container) {

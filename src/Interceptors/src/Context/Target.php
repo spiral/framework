@@ -21,13 +21,7 @@ final class Target implements TargetInterface
         private readonly ?object $object = null,
         private string $delimiter = '.',
         private readonly \Closure|array|null $callable = null,
-    ) {
-    }
-
-    public function __toString(): string
-    {
-        return \implode($this->delimiter, $this->path);
-    }
+    ) {}
 
     /**
      * Create a target from a method reflection.
@@ -170,5 +164,10 @@ final class Target implements TargetInterface
     public function getCallable(): callable|array|null
     {
         return $this->callable;
+    }
+
+    public function __toString(): string
+    {
+        return \implode($this->delimiter, $this->path);
     }
 }

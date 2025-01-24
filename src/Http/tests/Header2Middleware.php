@@ -13,7 +13,7 @@ class Header2Middleware implements MiddlewareInterface
 {
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         return $handler->handle($request)->withAddedHeader('Header', 'Value+');
     }

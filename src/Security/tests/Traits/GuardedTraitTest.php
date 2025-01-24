@@ -21,19 +21,8 @@ class GuardedTraitTest extends TestCase
     public const CONTEXT   = [];
 
     private object $trait;
-
     private MockObject&GuardInterface $guard;
-
     private MockObject&ContainerInterface $container;
-
-    protected function setUp(): void
-    {
-        $this->trait = new class {
-            use GuardedTrait;
-        };
-        $this->guard = $this->createMock(GuardInterface::class);
-        $this->container = $this->createMock(ContainerInterface::class);
-    }
 
     public function testGetGuardFromContainer(): void
     {
@@ -89,5 +78,14 @@ class GuardedTraitTest extends TestCase
         $guarded = new GuardedWithNamespace();
         $resolvedPermission = GuardedWithNamespace::GUARD_NAMESPACE . '.' . static::OPERATION;
         self::assertSame($resolvedPermission, $guarded->resolvePermission(static::OPERATION));
+    }
+
+    protected function setUp(): void
+    {
+        $this->trait = new class {
+            use GuardedTrait;
+        };
+        $this->guard = $this->createMock(GuardInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
     }
 }

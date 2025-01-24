@@ -9,7 +9,6 @@ class SameSite
     public const STRICT = 'Strict';
     public const LAX    = 'Lax';
     public const NONE   = 'None';
-
     private const VALUES  = [self::STRICT, self::LAX, self::NONE];
     private const DEFAULT = self::LAX;
 

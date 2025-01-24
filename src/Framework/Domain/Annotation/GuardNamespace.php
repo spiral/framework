@@ -24,7 +24,6 @@ final class GuardNamespace
      * @psalm-param non-empty-string $namespace
      */
     public function __construct(
-        public readonly string $namespace
-    ) {
-    }
+        public readonly string $namespace,
+    ) {}
 }

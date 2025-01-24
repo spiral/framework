@@ -13,9 +13,8 @@ use Spiral\Console\Configurator\Signature\Parser;
 final class SignatureBasedConfigurator implements ConfiguratorInterface
 {
     public function __construct(
-        private readonly Parser $parser
-    ) {
-    }
+        private readonly Parser $parser,
+    ) {}
 
     public function canConfigure(Command $command, \ReflectionClass $reflection): bool
     {

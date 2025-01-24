@@ -17,11 +17,6 @@ class TraitTest extends TestCase
 {
     use LoggerTrait;
 
-    protected function setUp(): void
-    {
-        $this->logger = null;
-    }
-
     public function testNoScope(): void
     {
         $logger = $this->getLogger();
@@ -108,5 +103,10 @@ class TraitTest extends TestCase
         ContainerScope::runScope($container, function () use ($logger): void {
             self::assertEquals($logger, $this->getLogger('test-channel'));
         });
+    }
+
+    protected function setUp(): void
+    {
+        $this->logger = null;
     }
 }

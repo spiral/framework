@@ -15,7 +15,7 @@ final class PipelineBuilder implements PipelineBuilderInterface
     private InterceptorPipeline $pipeline;
 
     public function __construct(
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
     ) {
         $this->pipeline = new InterceptorPipeline($dispatcher);
     }

@@ -22,8 +22,7 @@ final class CookiesBootloader extends Bootloader
     public function __construct(
         private readonly ConfiguratorInterface $config,
         private readonly BinderInterface $binder,
-    ) {
-    }
+    ) {}
 
     public function defineBindings(): array
     {
@@ -40,7 +39,7 @@ final class CookiesBootloader extends Bootloader
                 'domain' => '.%s',
                 'method' => CookiesConfig::COOKIE_ENCRYPT,
                 'excluded' => ['PHPSESSID', 'csrf-token'],
-            ]
+            ],
         );
     }
 

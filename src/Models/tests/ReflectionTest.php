@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Models;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Models\DataEntity;
 use Spiral\Models\Reflection\ReflectionEntity;
-use Spiral\Models\SchematicEntity;
 
 class ReflectionTest extends TestCase
 {
@@ -33,7 +31,7 @@ class ReflectionTest extends TestCase
     {
         $schema = new ReflectionEntity(TestModel::class);
         self::assertSame([
-            'value' => 'intval'
+            'value' => 'intval',
         ], $schema->getSetters());
     }
 
@@ -42,7 +40,7 @@ class ReflectionTest extends TestCase
         $schema = new ReflectionEntity(ExtendedModel::class);
         self::assertSame([
             'value' => 'intval',
-            'name'  => 'strval'
+            'name'  => 'strval',
         ], $schema->getSetters());
     }
 
@@ -56,7 +54,7 @@ class ReflectionTest extends TestCase
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
         self::assertEquals([
-            new \ReflectionMethod(ExtendedModel::class, 'methodB')
+            new \ReflectionMethod(ExtendedModel::class, 'methodB'),
         ], $schema->declaredMethods());
     }
 
@@ -72,12 +70,12 @@ class ReflectionTest extends TestCase
 
         self::assertSame([
             'value' => 'intval',
-            'name'  => 'strtoupper'
+            'name'  => 'strtoupper',
         ], $schema->getGetters());
 
         self::assertSame([
             'value' => 'intval',
-            'name'  => 'strval'
+            'name'  => 'strval',
         ], $schema->getSetters());
     }
 

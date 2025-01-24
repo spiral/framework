@@ -16,9 +16,8 @@ final class Context
 
     public function __construct(
         private readonly Token $token,
-        private readonly ?string $path = null
-    ) {
-    }
+        private readonly ?string $path = null,
+    ) {}
 
     public function getToken(): Token
     {

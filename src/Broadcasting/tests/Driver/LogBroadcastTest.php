@@ -18,22 +18,14 @@ final class LogBroadcastTest extends TestCase
      * @var m\LegacyMockInterface|m\MockInterface|LoggerInterface
      */
     private $logger;
+
     private LogBroadcast $driver;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->driver = new LogBroadcast(
-            $this->logger = m::mock(LoggerInterface::class)
-        );
-    }
 
     public function testPublishMessageToTopicWithLoglevel(): void
     {
         $driver = new LogBroadcast(
             $logger = m::mock(LoggerInterface::class),
-            LogLevel::DEBUG
+            LogLevel::DEBUG,
         );
 
         $logger->shouldReceive('log')->once()
@@ -74,5 +66,14 @@ final class LogBroadcastTest extends TestCase
             ->with(LogLevel::INFO, 'Broadcasting on channels [topic1, topic2] with payload: message2');
 
         $this->driver->publish(['topic1', 'topic2'], ['message1', 'message2']);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->driver = new LogBroadcast(
+            $this->logger = m::mock(LoggerInterface::class),
+        );
     }
 }

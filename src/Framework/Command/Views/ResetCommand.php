@@ -36,7 +36,7 @@ final class ResetCommand extends Command
                 $this->sprintf(
                     "<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>\n",
                     $files->relativePath($filename, $config->getCacheDirectory()),
-                    $e->getMessage()
+                    $e->getMessage(),
                 );
 
                 continue;
@@ -46,7 +46,7 @@ final class ResetCommand extends Command
             if ($this->isVerbose()) {
                 $this->sprintf(
                     "<fg=green>[deleted]</fg=green> `%s`\n",
-                    $files->relativePath($filename, $config->getCacheDirectory())
+                    $files->relativePath($filename, $config->getCacheDirectory()),
                 );
             }
         }

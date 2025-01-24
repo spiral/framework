@@ -13,6 +13,14 @@ use Spiral\Tests\Filters\Fixtures\UserFilter;
 
 final class EnumCasterTest extends TestCase
 {
+    public static function supportsDataProvider(): \Traversable
+    {
+        $ref = new \ReflectionClass(UserFilter::class);
+
+        yield 'enum' => [$ref->getProperty('status'), true];
+        yield 'uuid' => [$ref->getProperty('groupUuid'), false];
+    }
+
     #[DataProvider('supportsDataProvider')]
     public function testSupports(\ReflectionProperty $ref, bool $expected): void
     {
@@ -37,13 +45,5 @@ final class EnumCasterTest extends TestCase
 
         $this->expectException(SetterException::class);
         $setter->setValue($filter, $property, 'foo');
-    }
-
-    public static function supportsDataProvider(): \Traversable
-    {
-        $ref = new \ReflectionClass(UserFilter::class);
-
-        yield 'enum' => [$ref->getProperty('status'), true];
-        yield 'uuid' => [$ref->getProperty('groupUuid'), false];
     }
 }

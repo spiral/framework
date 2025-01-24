@@ -12,12 +12,10 @@ use Symfony\Component\Console\Input\InputOption;
 final class CommandWithNamespace extends AbstractCommand
 {
     protected const NAME = 'create:command-with-namespace';
-
     protected const ARGUMENTS   = [
         ['name', InputArgument::REQUIRED, 'Command name'],
         ['alias', InputArgument::OPTIONAL, 'Command id/alias'],
     ];
-
     protected const OPTIONS     = [
         [
             'namespace',

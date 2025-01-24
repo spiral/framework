@@ -17,17 +17,9 @@ final class LocaleDependency implements DependencyInterface
     private array $locales = [];
 
     public function __construct(
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
         $this->locales = $translator->getCatalogueManager()->getLocales();
-    }
-
-    public function __debugInfo(): array
-    {
-        return [
-            'value'    => $this->getValue(),
-            'variants' => $this->getVariants(),
-        ];
     }
 
     public function getName(): string
@@ -43,5 +35,13 @@ final class LocaleDependency implements DependencyInterface
     public function getVariants(): array
     {
         return $this->locales;
+    }
+
+    public function __debugInfo(): array
+    {
+        return [
+            'value'    => $this->getValue(),
+            'variants' => $this->getVariants(),
+        ];
     }
 }

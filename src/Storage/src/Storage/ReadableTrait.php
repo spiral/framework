@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use Psr\Http\Message\UriInterface;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
 use Spiral\Storage\BucketInterface;

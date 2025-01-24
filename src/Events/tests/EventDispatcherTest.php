@@ -14,7 +14,7 @@ final class EventDispatcherTest extends TestCase
 {
     public function testDispatch(): void
     {
-        $event = new class() {};
+        $event = new class {};
 
         $core = m::mock(CoreInterface::class);
         $core

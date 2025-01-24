@@ -34,7 +34,7 @@ abstract class BaseTestCase extends TestCase
                 'php'  => $this->container->get(PhpLoader::class),
                 'json' => $this->container->get(JsonLoader::class),
             ]),
-            $strict
+            $strict,
         );
     }
 }

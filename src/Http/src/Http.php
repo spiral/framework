@@ -41,7 +41,7 @@ final class Http implements RequestHandlerInterface
             }
         } else {
             $pipeline = $pipeline->withAddedMiddleware(
-                ...$this->config->getMiddleware()
+                ...$this->config->getMiddleware(),
             );
         }
 
@@ -86,11 +86,11 @@ final class Http implements RequestHandlerInterface
             $span
                 ->setAttribute(
                     'http.status_code',
-                    $response->getStatusCode()
+                    $response->getStatusCode(),
                 )
                 ->setAttribute(
                     'http.response_content_length',
-                    $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize()
+                    $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize(),
                 )
                 ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
 
@@ -103,13 +103,13 @@ final class Http implements RequestHandlerInterface
 
         /** @var ResponseInterface $response */
         $response = $tracer->trace(
-            name: \sprintf('%s %s', $request->getMethod(), (string)$request->getUri()),
+            name: \sprintf('%s %s', $request->getMethod(), (string) $request->getUri()),
             callback: $callback,
             attributes: [
                 'http.method' => $request->getMethod(),
                 'http.url' => (string) $request->getUri(),
                 'http.headers' => \array_map(
-                    static fn (array $values): string => \implode(',', $values),
+                    static fn(array $values): string => \implode(',', $values),
                     $request->getHeaders(),
                 ),
             ],

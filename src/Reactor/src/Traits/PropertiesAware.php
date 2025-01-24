@@ -16,8 +16,8 @@ trait PropertiesAware
     public function setProperties(Properties $properties): static
     {
         $this->element->setProperties(\array_map(
-            static fn (Property $property): NetteProperty => $property->getElement(),
-            \iterator_to_array($properties)
+            static fn(Property $property): NetteProperty => $property->getElement(),
+            \iterator_to_array($properties),
         ));
 
         return $this;
@@ -26,8 +26,8 @@ trait PropertiesAware
     public function getProperties(): Properties
     {
         return new Properties(\array_map(
-            static fn (NetteProperty $property): Property => Property::fromElement($property),
-            $this->element->getProperties()
+            static fn(NetteProperty $property): Property => Property::fromElement($property),
+            $this->element->getProperties(),
         ));
     }
 
@@ -36,7 +36,9 @@ trait PropertiesAware
         return $this->getProperties()->get($name);
     }
 
-    /** @param string $name without $ */
+    /**
+     * @param string $name without $
+     */
     public function addProperty(string $name, mixed $value = null): Property
     {
         if (\func_num_args() > 1) {
@@ -46,7 +48,9 @@ trait PropertiesAware
         return Property::fromElement($this->element->addProperty($name));
     }
 
-    /** @param string $name without $ */
+    /**
+     * @param string $name without $
+     */
     public function removeProperty(string $name): static
     {
         $this->element->removeProperty($name);

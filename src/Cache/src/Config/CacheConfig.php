@@ -42,7 +42,7 @@ final class CacheConfig extends InjectableConfig
     {
         if (!isset($this->config['storages'][$name])) {
             throw new InvalidArgumentException(
-                \sprintf('Config for storage `%s` is not defined.', $name)
+                \sprintf('Config for storage `%s` is not defined.', $name),
             );
         }
 
@@ -50,13 +50,13 @@ final class CacheConfig extends InjectableConfig
 
         if (!isset($config['type'])) {
             throw new InvalidArgumentException(
-                \sprintf('Storage type for `%s` is not defined.', $name)
+                \sprintf('Storage type for `%s` is not defined.', $name),
             );
         }
 
         if (!\is_string($config['type'])) {
             throw new InvalidArgumentException(
-                \sprintf('Storage type value for `%s` must be a string', $name)
+                \sprintf('Storage type value for `%s` must be a string', $name),
             );
         }
 

@@ -9,7 +9,7 @@ use Spiral\Stempler\Directive\JsonDirective;
 class JsonTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
-        JsonDirective::class
+        JsonDirective::class,
     ];
 
     public function testJson(): void

@@ -95,6 +95,7 @@ final class InputManager
             'alias'  => 'attribute',
         ],
     ];
+
     /**
      * @invisible
      */
@@ -121,27 +122,9 @@ final class InputManager
         /** @invisible */
         #[Proxy] private readonly ContainerInterface $container,
         /** @invisible */
-        HttpConfig $config = new HttpConfig()
+        HttpConfig $config = new HttpConfig(),
     ) {
         $this->bagAssociations = \array_merge($this->bagAssociations, $config->getInputBags());
-    }
-
-    public function __get(string $name): InputBag
-    {
-        return $this->bag($name);
-    }
-
-    /**
-     * Flushing bag instances when cloned.
-     */
-    public function __clone()
-    {
-        $this->bags = [];
-    }
-
-    public function __call(string $name, array $arguments): mixed
-    {
-        return $this->bag($name)->get(...$arguments);
     }
 
     /**
@@ -171,7 +154,7 @@ final class InputManager
         return match (true) {
             empty($path) => '/',
             $path[0] !== '/' => '/' . $path,
-            default => $path
+            default => $path,
         };
     }
 
@@ -263,7 +246,7 @@ final class InputManager
     public function isXmlHttpRequest(): bool
     {
         return \mb_strtolower(
-            $this->request()->getHeaderLine('X-Requested-With')
+            $this->request()->getHeaderLine('X-Requested-With'),
         ) === 'xmlhttprequest';
     }
 
@@ -334,7 +317,7 @@ final class InputManager
         $data = \call_user_func([$this->request(), $definition['source']]);
 
         if (!\is_array($data)) {
-            $data = (array)$data;
+            $data = (array) $data;
         }
 
         return $this->bags[$name] = new $class($data, $this->prefix);
@@ -355,6 +338,24 @@ final class InputManager
     public function input(string $name, mixed $default = null): mixed
     {
         return $this->data($name, $this->query->get($name, $default));
+    }
+
+    public function __get(string $name): InputBag
+    {
+        return $this->bag($name);
+    }
+
+    /**
+     * Flushing bag instances when cloned.
+     */
+    public function __clone()
+    {
+        $this->bags = [];
+    }
+
+    public function __call(string $name, array $arguments): mixed
+    {
+        return $this->bag($name)->get(...$arguments);
     }
 
     /**

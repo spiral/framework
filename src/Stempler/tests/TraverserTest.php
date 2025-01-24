@@ -22,7 +22,6 @@ class TraverserTest extends BaseTestCase implements VisitorInterface
         CoreRenderer::class,
         HTMLRenderer::class,
     ];
-
     protected const GRAMMARS = [
         HTMLGrammar::class => HTMLSyntax::class,
     ];
@@ -32,7 +31,7 @@ class TraverserTest extends BaseTestCase implements VisitorInterface
         $doc = $this->parse('<a href="url"></a>');
 
         $t = new Traverser();
-        $t->addVisitor(new class() implements VisitorInterface {
+        $t->addVisitor(new class implements VisitorInterface {
             public function enterNode(mixed $node, VisitorContext $ctx): mixed
             {
                 if ($node instanceof Tag && $node->name === 'a') {
@@ -58,7 +57,7 @@ class TraverserTest extends BaseTestCase implements VisitorInterface
         $doc = $this->parse('<a href="url"></a>');
 
         $t = new Traverser();
-        $t->addVisitor(new class() implements VisitorInterface {
+        $t->addVisitor(new class implements VisitorInterface {
             public function enterNode(mixed $node, VisitorContext $ctx): mixed
             {
                 return null;
@@ -88,7 +87,7 @@ class TraverserTest extends BaseTestCase implements VisitorInterface
         $doc = $this->parse('<a href="url"><b></b>hello</a>');
 
         $t = new Traverser();
-        $t->addVisitor(new class() implements VisitorInterface {
+        $t->addVisitor(new class implements VisitorInterface {
             public function enterNode(mixed $node, VisitorContext $ctx): mixed
             {
                 return null;

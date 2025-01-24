@@ -24,7 +24,7 @@ interface HttpTransportInterface
         Request $request,
         Response $response,
         string $tokenID,
-        ?\DateTimeInterface $expiresAt = null
+        ?\DateTimeInterface $expiresAt = null,
     ): Response;
 
     /**

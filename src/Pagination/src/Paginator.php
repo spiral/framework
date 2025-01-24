@@ -61,7 +61,7 @@ final class Paginator implements PaginatorInterface, \Countable
         return match (true) {
             $this->pageNumber < 1 => 1,
             $this->pageNumber > $this->countPages => $this->countPages,
-            default => $this->pageNumber
+            default => $this->pageNumber,
         };
     }
 
@@ -131,7 +131,7 @@ final class Paginator implements PaginatorInterface, \Countable
     private function setCount(int $count): self
     {
         $this->count = \max($count, 0);
-        $this->countPages = $this->count > 0 ? (int)\ceil($this->count / $this->limit) : 1;
+        $this->countPages = $this->count > 0 ? (int) \ceil($this->count / $this->limit) : 1;
 
         return $this;
     }

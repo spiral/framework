@@ -6,7 +6,6 @@ namespace Spiral\Reactor;
 
 use Doctrine\Inflector\Rules\English\InflectorFactory;
 use Nette\PhpGenerator\ClassLike;
-use Spiral\Reactor\Traits;
 
 /**
  * Generic element declaration.
@@ -23,11 +22,6 @@ abstract class AbstractDeclaration implements DeclarationInterface, NamedInterfa
      * @var T
      */
     protected ClassLike $element;
-
-    public function __toString(): string
-    {
-        return $this->element->__toString();
-    }
 
     public function setName(?string $name): self
     {
@@ -63,5 +57,10 @@ abstract class AbstractDeclaration implements DeclarationInterface, NamedInterfa
     public function render(): string
     {
         return $this->__toString();
+    }
+
+    public function __toString(): string
+    {
+        return $this->element->__toString();
     }
 }

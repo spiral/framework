@@ -40,7 +40,7 @@ trait TokenTrait
                     Token::TYPE_RAW,
                     $bufferOffset,
                     $buffer,
-                    self::class
+                    self::class,
                 );
                 $buffer = null;
             }
@@ -54,7 +54,7 @@ trait TokenTrait
                 Token::TYPE_RAW,
                 $bufferOffset,
                 $buffer,
-                self::class
+                self::class,
             );
         }
 

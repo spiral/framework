@@ -22,6 +22,7 @@ interface FilesInterface
      * Few size constants for better size manipulations.
      */
     public const KB = 1024;
+
     public const MB = 1048576;
     public const GB = 1073741824;
 
@@ -34,7 +35,6 @@ interface FilesInterface
      * Ensure location (directory) existence with specified mode.
      *
      * @param int $mode When NULL class can pick default mode.
-     *
      */
     public function ensureDirectory(string $directory, ?int $mode = null): bool;
 
@@ -58,7 +58,7 @@ interface FilesInterface
         string $filename,
         string $data,
         ?int $mode = null,
-        bool $ensureDirectory = false
+        bool $ensureDirectory = false,
     ): bool;
 
     /**
@@ -74,7 +74,7 @@ interface FilesInterface
         string $filename,
         string $data,
         ?int $mode = null,
-        bool $ensureDirectory = false
+        bool $ensureDirectory = false,
     ): bool;
 
     /**

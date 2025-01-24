@@ -11,9 +11,8 @@ final class StemplerCache
 {
     public function __construct(
         private readonly string $directory,
-        private readonly FilesInterface $files = new Files()
-    ) {
-    }
+        private readonly FilesInterface $files = new Files(),
+    ) {}
 
     /**
      * Store template into cache and write invalidation map file.
@@ -25,7 +24,7 @@ final class StemplerCache
             $this->filename($key),
             $content,
             FilesInterface::RUNTIME,
-            true
+            true,
         );
 
         // map file
@@ -33,7 +32,7 @@ final class StemplerCache
             $this->mapFilename($key),
             \sprintf('<?php return %s;', \var_export($paths, true)),
             FilesInterface::RUNTIME,
-            true
+            true,
         );
     }
 
@@ -49,7 +48,7 @@ final class StemplerCache
 
         $time = $this->files->time($this->filename($key));
 
-        $files = (array)include $mapFilename;
+        $files = (array) include $mapFilename;
         foreach ($files as $file) {
             if ($this->files->time($file) > $time) {
                 // some partial has changed

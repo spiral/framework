@@ -15,16 +15,15 @@ use Spiral\Core\Exception\Container\InjectionException;
 final class ClassLocatorInjector implements InjectorInterface
 {
     public function __construct(
-        private readonly Tokenizer $tokenizer
-    ) {
-    }
+        private readonly Tokenizer $tokenizer,
+    ) {}
 
     /**
      * @throws InjectionException
      */
     public function createInjection(
         \ReflectionClass $class,
-        ?string $context = null
+        ?string $context = null,
     ): ClassesInterface {
         return $this->tokenizer->classLocator();
     }

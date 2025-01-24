@@ -17,8 +17,12 @@ use Spiral\Stempler\VisitorContext;
 final class ImportContext
 {
     private function __construct(
-        private readonly VisitorContext $ctx
-    ) {
+        private readonly VisitorContext $ctx,
+    ) {}
+
+    public static function on(VisitorContext $ctx): self
+    {
+        return new self($ctx);
     }
 
     public function add(ImportInterface $import): void
@@ -27,7 +31,7 @@ final class ImportContext
         if (!$node instanceof AttributedInterface) {
             throw new LogicException(\sprintf(
                 'Unable to create import on node without attribute storage (%s)',
-                \get_debug_type($node)
+                \get_debug_type($node),
             ));
         }
 
@@ -68,10 +72,5 @@ final class ImportContext
         }
 
         return $imports;
-    }
-
-    public static function on(VisitorContext $ctx): self
-    {
-        return new self($ctx);
     }
 }

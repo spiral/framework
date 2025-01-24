@@ -17,11 +17,6 @@ class TestAuthToken implements TokenInterface
     /** @var array */
     private $payload;
 
-    /**
-     * @param string                  $id
-     * @param array                   $payload
-     * @param \DateTimeInterface|null $expiresAt
-     */
     public function __construct(string $id, array $payload, ?\DateTimeInterface $expiresAt = null)
     {
         $this->id = $id;
@@ -29,25 +24,16 @@ class TestAuthToken implements TokenInterface
         $this->payload = $payload;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getID(): string
     {
         return $this->id;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getExpiresAt(): ?\DateTimeInterface
     {
         return $this->expiresAt;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getPayload(): array
     {
         return $this->payload;

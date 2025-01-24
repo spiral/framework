@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry;
 
-use Ramsey\Uuid\Uuid;
 use Spiral\Telemetry\Span\Status;
 
 /**
@@ -19,9 +18,8 @@ final class Span implements SpanInterface
      */
     public function __construct(
         private string $name,
-        private array $attributes = []
-    ) {
-    }
+        private array $attributes = [],
+    ) {}
 
     public function getName(): string
     {

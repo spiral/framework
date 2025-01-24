@@ -68,6 +68,6 @@ final class DefineStacks implements VisitorInterface
             }
         }
 
-        return \abs((int)($options['level'] ?? 0));
+        return \abs((int) ($options['level'] ?? 0));
     }
 }

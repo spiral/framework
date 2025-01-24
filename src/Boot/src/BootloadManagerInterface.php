@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
-use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 
 /**
@@ -29,8 +28,8 @@ interface BootloadManagerInterface
      * ]
      *
      * @param TClass[]|array<TClass, array<string,mixed>> $classes
-     * @param array<Closure> $bootingCallbacks
-     * @param array<Closure> $bootedCallbacks
+     * @param array<\Closure> $bootingCallbacks
+     * @param array<\Closure> $bootedCallbacks
      *
      * @throws \Throwable
      */

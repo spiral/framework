@@ -12,9 +12,8 @@ use Spiral\Security\ActorInterface;
 class Actor implements ActorInterface
 {
     public function __construct(
-        private readonly array $roles
-    ) {
-    }
+        private readonly array $roles,
+    ) {}
 
     public function getRoles(): array
     {

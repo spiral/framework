@@ -15,9 +15,8 @@ use Spiral\Stempler\Node\Raw;
 final class QuotedValue
 {
     public function __construct(
-        private readonly NodeInterface|string $value
-    ) {
-    }
+        private readonly NodeInterface|string $value,
+    ) {}
 
     public function getValue(): mixed
     {

@@ -15,9 +15,9 @@ class HTMLTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(Token::TYPE_RAW, 0, 'raw body')
+                new Token(Token::TYPE_RAW, 0, 'raw body'),
             ],
-            ('raw body')
+            ('raw body'),
         );
     }
 
@@ -29,7 +29,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 1, 'tag'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 4, '>'),
             ],
-            ('<tag>')
+            ('<tag>'),
         );
     }
 
@@ -42,7 +42,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 2, 'tag'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 5, '>'),
             ],
-            ('<<tag>')
+            ('<<tag>'),
         );
     }
 
@@ -54,7 +54,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 1, 'tag'),
                 new Token(HTMLGrammar::TYPE_CLOSE_SHORT, 4, '/>'),
             ],
-            ('<tag/>')
+            ('<tag/>'),
         );
     }
 
@@ -70,7 +70,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_ATTRIBUTE, 11, '"value"'),
                 new Token(HTMLGrammar::TYPE_CLOSE_SHORT, 18, '/>'),
             ],
-            ('<tag param="value"/>')
+            ('<tag param="value"/>'),
         );
     }
 
@@ -80,7 +80,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<tag param="value"'),
             ],
-            ('<tag param="value"')
+            ('<tag param="value"'),
         );
     }
 
@@ -90,7 +90,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<tag param="value"/'),
             ],
-            ('<tag param="value"/')
+            ('<tag param="value"/'),
         );
     }
 
@@ -100,7 +100,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<tag param="value"<>'),
             ],
-            ('<tag param="value"<>')
+            ('<tag param="value"<>'),
         );
     }
 
@@ -110,7 +110,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<#tag param="value">'),
             ],
-            ('<#tag param="value">')
+            ('<#tag param="value">'),
         );
     }
 
@@ -123,7 +123,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 19, 'tag'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 22, '>'),
             ],
-            ('<tag param="value"<tag>')
+            ('<tag param="value"<tag>'),
         );
     }
 
@@ -133,7 +133,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<tag param="value'),
             ],
-            ('<tag param="value')
+            ('<tag param="value'),
         );
     }
 
@@ -143,7 +143,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<>'),
             ],
-            ('<>')
+            ('<>'),
         );
     }
 
@@ -153,7 +153,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<"">'),
             ],
-            ('<"">')
+            ('<"">'),
         );
     }
 
@@ -163,7 +163,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<=>'),
             ],
-            ('<=>')
+            ('<=>'),
         );
     }
 
@@ -173,7 +173,7 @@ class HTMLTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '< "=" keyword >'),
             ],
-            ('< "=" keyword >')
+            ('< "=" keyword >'),
         );
     }
 
@@ -187,7 +187,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_WHITESPACE, 5, ' '),
                 new Token(HTMLGrammar::TYPE_CLOSE, 6, '>'),
             ],
-            ('< tag >')
+            ('< tag >'),
         );
     }
 
@@ -201,7 +201,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_WHITESPACE, 6, '  '),
                 new Token(HTMLGrammar::TYPE_CLOSE, 8, '>'),
             ],
-            ('<  tag  >')
+            ('<  tag  >'),
         );
     }
 
@@ -213,7 +213,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 2, 'tag'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 5, '>'),
             ],
-            ('</tag>')
+            ('</tag>'),
         );
     }
 
@@ -229,7 +229,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 11, 'tag'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 14, '>'),
             ],
-            ('<tag>body</tag>')
+            ('<tag>body</tag>'),
         );
     }
 
@@ -245,7 +245,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 23, 'script'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 29, '>'),
             ],
-            ('<script>alert("<a>");</script>')
+            ('<script>alert("<a>");</script>'),
         );
     }
 
@@ -261,7 +261,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 29, 'script'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 35, '>'),
             ],
-            ('<script>alert("</script>");</script>')
+            ('<script>alert("</script>");</script>'),
         );
     }
 
@@ -277,7 +277,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 38, 'script'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 44, '>'),
             ],
-            ('<script>alert("</script>"); //hello </script>')
+            ('<script>alert("</script>"); //hello </script>'),
         );
     }
 
@@ -293,7 +293,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 38, 'script'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 44, '>'),
             ],
-            ('<script>alert("</script>"); //hello"</script>')
+            ('<script>alert("</script>"); //hello"</script>'),
         );
     }
 
@@ -309,7 +309,7 @@ class HTMLTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 42, 'script'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 48, '>'),
             ],
-            ("<script>alert(\"</script>\"); /*hello\n'\"*/</script>")
+            ("<script>alert(\"</script>\"); /*hello\n'\"*/</script>"),
         );
     }
 }

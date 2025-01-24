@@ -13,13 +13,6 @@ final class ArrayStorageTest extends TestCase
 
     private ArrayStorage $storage;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->storage = new ArrayStorage(self::DEFAULT_TTL);
-    }
-
     public function testGetsWithExistsValue(): void
     {
         self::assertTrue($this->storage->set('foo', 'bar'));
@@ -174,6 +167,13 @@ final class ArrayStorageTest extends TestCase
 
         self::assertTrue($this->storage->has('foo'));
         self::assertFalse($this->storage->has('bar'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->storage = new ArrayStorage(self::DEFAULT_TTL);
     }
 
     private function getCacheTtl(string $key): ?int

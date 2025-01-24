@@ -28,7 +28,7 @@ final class ProtoSerializer implements SerializerInterface
             throw new InvalidArgumentException(\sprintf(
                 'Payload must be of type `%s`, received `%s`.',
                 Message::class,
-                \get_debug_type($payload)
+                \get_debug_type($payload),
             ));
         }
 
@@ -49,7 +49,7 @@ final class ProtoSerializer implements SerializerInterface
             throw new InvalidArgumentException(\sprintf(
                 'Parameter `$type` must be of type: `%s`, received `%s`.',
                 Message::class,
-                \get_debug_type($type)
+                \get_debug_type($type),
             ));
         }
 
@@ -61,7 +61,7 @@ final class ProtoSerializer implements SerializerInterface
             throw new UnserializeException(
                 \sprintf('Failed to unserialize data: %s', $e->getMessage()),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 

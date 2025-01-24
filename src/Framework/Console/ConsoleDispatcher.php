@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * Manages Console commands and exception. Lazy loads console service.
@@ -29,8 +28,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         private readonly FinalizerInterface $finalizer,
         private readonly ContainerInterface $container,
         private readonly ExceptionHandlerInterface $errorHandler,
-    ) {
-    }
+    ) {}
 
     public static function canServe(EnvironmentInterface $env): bool
     {
@@ -53,7 +51,7 @@ final class ConsoleDispatcher implements DispatcherInterface
 
         try {
             return $console->start($input ?? new ArgvInput(), $output);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->handleException($e, $output);
 
             return 255;
@@ -63,7 +61,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         }
     }
 
-    protected function handleException(Throwable $exception, OutputInterface $output): void
+    protected function handleException(\Throwable $exception, OutputInterface $output): void
     {
         $this->errorHandler->report($exception);
         $output->write(
@@ -71,7 +69,7 @@ final class ConsoleDispatcher implements DispatcherInterface
                 $exception,
                 verbosity: $this->mapVerbosity($output),
                 format: 'cli',
-            )
+            ),
         );
     }
 
@@ -80,7 +78,7 @@ final class ConsoleDispatcher implements DispatcherInterface
         return match (true) {
             $output->isDebug() => Verbosity::DEBUG,
             $output->isVeryVerbose() => Verbosity::VERBOSE,
-            default => Verbosity::BASIC
+            default => Verbosity::BASIC,
         };
     }
 }

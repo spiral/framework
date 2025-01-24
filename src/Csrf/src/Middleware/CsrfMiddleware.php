@@ -24,9 +24,8 @@ final class CsrfMiddleware implements MiddlewareInterface
     public const ATTRIBUTE = 'csrfToken';
 
     public function __construct(
-        private readonly CsrfConfig $config
-    ) {
-    }
+        private readonly CsrfConfig $config,
+    ) {}
 
     public function process(Request $request, RequestHandlerInterface $handler): Response
     {
@@ -42,7 +41,7 @@ final class CsrfMiddleware implements MiddlewareInterface
         }
 
         //CSRF issues must be handled by Firewall middleware
-        $response = $handler->handle($request->withAttribute(static::ATTRIBUTE, $token));
+        $response = $handler->handle($request->withAttribute(self::ATTRIBUTE, $token));
 
         if (!empty($cookie)) {
             return $response->withAddedHeader('Set-Cookie', $cookie);
@@ -64,7 +63,7 @@ final class CsrfMiddleware implements MiddlewareInterface
             null,
             $this->config->isCookieSecure(),
             true,
-            $this->config->getSameSite()
+            $this->config->getSameSite(),
         )->createHeader();
     }
 

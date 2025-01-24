@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Stempler;
 
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\Internal\Introspector;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Testing\Attribute\TestScope;
@@ -15,17 +14,6 @@ class CacheTest extends BaseTestCase
 {
     /** @var FilesInterface */
     protected $files;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->files = new Files();
-
-        /** @var ConfiguratorInterface $configurator */
-        $configurator = $this->container->get(ConfiguratorInterface::class);
-        $configurator->modify('views', new EnableCachePatch());
-    }
 
     #[TestScope("http")]
     public function testCache(): void
@@ -38,5 +26,16 @@ class CacheTest extends BaseTestCase
 
         $s->reset('test', new ViewContext());
         self::assertCount(0, $this->files->getFiles(__DIR__ . '/../cache/', '*.php'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->files = new Files();
+
+        /** @var ConfiguratorInterface $configurator */
+        $configurator = $this->container->get(ConfiguratorInterface::class);
+        $configurator->modify('views', new EnableCachePatch());
     }
 }

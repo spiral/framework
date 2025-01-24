@@ -27,15 +27,13 @@ final class TelemetryBootloader extends Bootloader
         TracerFactoryProviderInterface::class => ConfigTracerFactoryProvider::class,
         ClockInterface::class => SystemClock::class,
     ];
-
     protected const BINDINGS = [
         TracerInterface::class => [self::class, 'getTracer'],
     ];
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
-    ) {
-    }
+    ) {}
 
     public function init(EnvironmentInterface $env): void
     {

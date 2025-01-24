@@ -12,23 +12,6 @@ use Spiral\Http\Request\InputManager;
 
 final class InputScopeTest extends BaseTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container->bindSingleton(InputInterface::class, InputScope::class);
-        $this->container->bindSingleton(InputManager::class, new InputManager($this->container));
-        $this->container->bindSingleton(
-            ServerRequestInterface::class,
-            (new ServerRequest('POST', '/test'))->withParsedBody([
-                'foo' => 'value',
-                'bar' => [
-                    'empty' => null,
-                ],
-            ])
-        );
-    }
-
     public function testGetValue(): void
     {
         $input = $this->getInput();
@@ -62,6 +45,23 @@ final class InputScopeTest extends BaseTestCase
     {
         $input = $this->getInput();
         self::assertFalse($input->hasValue('query', 'foo'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bindSingleton(InputInterface::class, InputScope::class);
+        $this->container->bindSingleton(InputManager::class, new InputManager($this->container));
+        $this->container->bindSingleton(
+            ServerRequestInterface::class,
+            (new ServerRequest('POST', '/test'))->withParsedBody([
+                'foo' => 'value',
+                'bar' => [
+                    'empty' => null,
+                ],
+            ]),
+        );
     }
 
     private function getInput(): InputInterface

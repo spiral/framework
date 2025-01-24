@@ -8,8 +8,7 @@ final class Scalar extends Binding
 {
     public function __construct(
         public readonly bool|int|string|float $value,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

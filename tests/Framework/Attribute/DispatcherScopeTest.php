@@ -16,6 +16,13 @@ use Spiral\Tests\Framework\BaseTestCase;
 
 final class DispatcherScopeTest extends BaseTestCase
 {
+    public static function dispatchersDataProvider(): \Traversable
+    {
+        yield [DispatcherWithScopeName::class, Spiral::Console];
+        yield [DispatcherWithCustomEnum::class, Scope::Custom];
+        yield [DispatcherWithStringScope::class, 'test'];
+    }
+
     #[DataProvider('dispatchersDataProvider')]
     public function testDispatcherScope(string $dispatcher, string|\BackedEnum $scope): void
     {
@@ -29,12 +36,5 @@ final class DispatcherScopeTest extends BaseTestCase
         self::assertInstanceOf(\stdClass::class, $app->serve()['foo']);
         self::assertInstanceOf($dispatcher, $app->serve()['dispatcher']);
         self::assertSame(is_object($scope) ? $scope->value : $scope, $app->serve()['scope']);
-    }
-
-    public static function dispatchersDataProvider(): \Traversable
-    {
-        yield [DispatcherWithScopeName::class, Spiral::Console];
-        yield [DispatcherWithCustomEnum::class, Scope::Custom];
-        yield [DispatcherWithStringScope::class, 'test'];
     }
 }

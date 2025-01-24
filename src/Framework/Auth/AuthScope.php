@@ -16,9 +16,8 @@ use Spiral\Core\Exception\ScopeException;
 final class AuthScope implements AuthContextInterface
 {
     public function __construct(
-        #[Proxy] private readonly ContainerInterface $container
-    ) {
-    }
+        #[Proxy] private readonly ContainerInterface $container,
+    ) {}
 
     /**
      * @throws ScopeException

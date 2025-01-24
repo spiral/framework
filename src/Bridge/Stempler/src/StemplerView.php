@@ -19,7 +19,7 @@ abstract class StemplerView implements ViewInterface
     public function __construct(
         protected StemplerEngine $engine,
         protected ViewSource $view,
-        protected ContextInterface $context
+        protected ContextInterface $context,
     ) {
         $this->container = $engine->getContainer();
     }
@@ -31,7 +31,7 @@ abstract class StemplerView implements ViewInterface
     {
         $sourcemap = $this->engine->makeSourceMap(
             \sprintf('%s:%s', $this->view->getNamespace(), $this->view->getName()),
-            $this->context
+            $this->context,
         );
 
         if ($sourcemap === null) {

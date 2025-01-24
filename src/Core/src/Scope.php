@@ -23,6 +23,5 @@ final class Scope
         public readonly string|\BackedEnum|null $name = null,
         public readonly array $bindings = [],
         public readonly bool $autowire = true,
-    ) {
-    }
+    ) {}
 }

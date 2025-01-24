@@ -34,8 +34,7 @@ class Initializer implements InitializerInterface
         protected readonly BinderInterface $binder,
         protected readonly ClassesRegistry $bootloaders = new ClassesRegistry(),
         ?BootloaderCheckerInterface $checker = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Instantiate bootloader objects and resolve dependencies
@@ -89,7 +88,7 @@ class Initializer implements InitializerInterface
 
         $this->initBindings(
             $bootloader->defineBindings(),
-            $bootloader->defineSingletons()
+            $bootloader->defineSingletons(),
         );
     }
 
@@ -121,7 +120,7 @@ class Initializer implements InitializerInterface
         foreach (Methods::cases() as $method) {
             if ($reflectionClass->hasMethod($method->value)) {
                 $methodsDeps[] = $this->findBootloaderClassesInMethod(
-                    $reflectionClass->getMethod($method->value)
+                    $reflectionClass->getMethod($method->value),
                 );
             }
         }
@@ -177,7 +176,7 @@ class Initializer implements InitializerInterface
      */
     private function getBootloadConfig(
         string|BootloaderInterface $bootloader,
-        array|callable|BootloadConfig $config
+        array|callable|BootloadConfig $config,
     ): BootloadConfig {
         if ($config instanceof \Closure) {
             $config = $this->container instanceof ResolverInterface
@@ -186,7 +185,7 @@ class Initializer implements InitializerInterface
         }
         $attr = $this->getBootloadConfigAttribute($bootloader);
 
-        $getArgument = static fn (string $key, bool $override, mixed $default = []): mixed => match (true) {
+        $getArgument = static fn(string $key, bool $override, mixed $default = []): mixed => match (true) {
             $config instanceof BootloadConfig && $override => $config->{$key},
             $config instanceof BootloadConfig && !$override && \is_array($default) =>
                 $config->{$key} + ($attr->{$key} ?? []),

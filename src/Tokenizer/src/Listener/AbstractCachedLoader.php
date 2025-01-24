@@ -18,8 +18,7 @@ abstract class AbstractCachedLoader
         protected readonly MemoryInterface $memory,
         protected readonly ListenerInvoker $invoker,
         protected readonly bool $readCache = true,
-    ) {
-    }
+    ) {}
 
     protected function doLoad(
         TokenizationListenerInterface $listener,

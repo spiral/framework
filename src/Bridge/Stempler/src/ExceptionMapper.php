@@ -11,9 +11,8 @@ final class ExceptionMapper
 {
     public function __construct(
         private readonly SourceMap $sourcemap,
-        private readonly int $lineOffset
-    ) {
-    }
+        private readonly int $lineOffset,
+    ) {}
 
     public function mapException(\Throwable $e, string $class, string $filename, array $data): \Throwable
     {

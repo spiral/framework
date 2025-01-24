@@ -14,13 +14,6 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /** @var array<non-empty-string, RouteConfigurator> */
     private array $routes = [];
 
-    public function __clone()
-    {
-        foreach ($this->routes as $name => $route) {
-            $this->routes[$name] = clone $route;
-        }
-    }
-
     /**
      * Gets the current RouteCollection as an Iterator that includes all routes.
      *
@@ -122,6 +115,13 @@ class RouteCollection implements \IteratorAggregate, \Countable
     {
         foreach ($this->routes as $route) {
             $route->group($group);
+        }
+    }
+
+    public function __clone()
+    {
+        foreach ($this->routes as $name => $route) {
+            $this->routes[$name] = clone $route;
         }
     }
 }

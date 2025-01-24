@@ -11,32 +11,8 @@ final class SectionScope implements SessionSectionInterface
 {
     public function __construct(
         private readonly SessionScope $session,
-        private readonly string $name
-    ) {
-    }
-
-    /**
-     * Shortcut for get.
-     */
-    public function __get(string $name): mixed
-    {
-        return $this->get($name);
-    }
-
-    public function __set(string $name, mixed $value): void
-    {
-        $this->set($name, $value);
-    }
-
-    public function __isset(string $name): bool
-    {
-        return $this->has($name);
-    }
-
-    public function __unset(string $name): void
-    {
-        $this->delete($name);
-    }
+        private readonly string $name,
+    ) {}
 
     public function getIterator(): \Traversable
     {
@@ -101,6 +77,29 @@ final class SectionScope implements SessionSectionInterface
     public function clear(): void
     {
         $this->getActiveSection()->clear();
+    }
+
+    /**
+     * Shortcut for get.
+     */
+    public function __get(string $name): mixed
+    {
+        return $this->get($name);
+    }
+
+    public function __set(string $name, mixed $value): void
+    {
+        $this->set($name, $value);
+    }
+
+    public function __isset(string $name): bool
+    {
+        return $this->has($name);
+    }
+
+    public function __unset(string $name): void
+    {
+        $this->delete($name);
     }
 
     private function getActiveSection(): SessionSectionInterface

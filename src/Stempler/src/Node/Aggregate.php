@@ -24,7 +24,7 @@ final class Aggregate implements NodeInterface
 
     public function __construct(
         ?Context $context = null,
-        public string $pattern = '*'
+        public string $pattern = '*',
     ) {
         $this->context = $context;
     }

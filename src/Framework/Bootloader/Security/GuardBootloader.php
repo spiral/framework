@@ -22,14 +22,12 @@ final class GuardBootloader extends Bootloader
     protected const DEPENDENCIES = [
         AttributesBootloader::class,
     ];
-
     protected const SINGLETONS = [
         PermissionsInterface::class => PermissionManager::class,
         RulesInterface::class => RuleManager::class,
         GuardInterface::class => GuardScope::class,
         PermissionsProviderInterface::class => GuardPermissionsProvider::class,
     ];
-
     protected const BINDINGS = [
         ActorInterface::class => Guest::class,
     ];

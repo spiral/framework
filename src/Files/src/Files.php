@@ -32,22 +32,12 @@ final class Files implements FilesInterface
     }
 
     /**
-     * Destruct every temporary file.
-     */
-    public function __destruct()
-    {
-        foreach ($this->destructFiles as $filename) {
-            $this->delete($filename);
-        }
-    }
-
-    /**
      * @param bool $recursivePermissions Propagate permissions on created directories.
      */
     public function ensureDirectory(
         string $directory,
         ?int $mode = null,
-        bool $recursivePermissions = true
+        bool $recursivePermissions = true,
     ): bool {
         if (empty($mode)) {
             $mode = self::DEFAULT_FILE_MODE;
@@ -99,7 +89,7 @@ final class Files implements FilesInterface
         string $data,
         ?int $mode = null,
         bool $ensureDirectory = false,
-        bool $append = false
+        bool $append = false,
     ): bool {
         $mode ??= self::DEFAULT_FILE_MODE;
 
@@ -116,7 +106,7 @@ final class Files implements FilesInterface
             $result = \file_put_contents(
                 $filename,
                 $data,
-                $append ? FILE_APPEND | LOCK_EX : LOCK_EX
+                $append ? FILE_APPEND | LOCK_EX : LOCK_EX,
             );
 
             if ($result !== false) {
@@ -134,7 +124,7 @@ final class Files implements FilesInterface
         string $filename,
         string $data,
         ?int $mode = null,
-        bool $ensureDirectory = false
+        bool $ensureDirectory = false,
     ): bool {
         return $this->write($filename, $data, $mode, $ensureDirectory, true);
     }
@@ -166,7 +156,7 @@ final class Files implements FilesInterface
 
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+            \RecursiveIteratorIterator::CHILD_FIRST,
         );
 
         foreach ($files as $file) {
@@ -287,7 +277,7 @@ final class Files implements FilesInterface
                 continue;
             }
 
-            $result[] = $this->normalizePath((string)$filename);
+            $result[] = $this->normalizePath((string) $filename);
         }
 
         return $result;
@@ -356,6 +346,16 @@ final class Files implements FilesInterface
         }
 
         return \implode('/', $relative);
+    }
+
+    /**
+     * Destruct every temporary file.
+     */
+    public function __destruct()
+    {
+        foreach ($this->destructFiles as $filename) {
+            $this->delete($filename);
+        }
     }
 
     private function filesIterator(string $location, ?string $pattern = null): \GlobIterator

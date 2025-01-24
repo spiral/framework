@@ -23,7 +23,7 @@ class JobsQueueTest extends TestCase
             new MailerConfig([
                 'queue' => 'mailer',
             ]),
-            $queue
+            $queue,
         );
 
         $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
@@ -39,7 +39,7 @@ class JobsQueueTest extends TestCase
                 self::assertSame('mailer', $options->getQueue());
 
                 return true;
-            }
+            },
         );
 
         $mailer->send($mail);

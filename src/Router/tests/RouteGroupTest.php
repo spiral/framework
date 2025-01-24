@@ -20,14 +20,17 @@ use Spiral\Tests\Router\Stub\TestMiddleware;
 
 final class RouteGroupTest extends BaseTestCase
 {
-
-    protected function setUp(): void
+    public static function routePrefixDataProvider(): iterable
     {
-        parent::setUp();
-
-        $this->container = new Container();
-        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
-        $this->container->bind(UriFactoryInterface::class, Psr17Factory::class);
+        yield ['/api/', '/blog'];
+        yield ['/api', '/blog'];
+        yield ['/api', 'blog'];
+        yield ['api/', '/blog'];
+        yield ['api', '/blog'];
+        yield ['api', 'blog'];
+        yield ['api/', '/blog/'];
+        yield ['api', '/blog/'];
+        yield ['api', 'blog/'];
     }
 
     public function testCoreString(): void
@@ -153,17 +156,13 @@ final class RouteGroupTest extends BaseTestCase
         self::assertSame('/api/blog', (string) $route->uri());
     }
 
-    public static function routePrefixDataProvider(): iterable
+    protected function setUp(): void
     {
-        yield ['/api/', '/blog'];
-        yield ['/api', '/blog'];
-        yield ['/api', 'blog'];
-        yield ['api/', '/blog'];
-        yield ['api', '/blog'];
-        yield ['api', 'blog'];
-        yield ['api/', '/blog/'];
-        yield ['api', '/blog/'];
-        yield ['api', 'blog/'];
+        parent::setUp();
+
+        $this->container = new Container();
+        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
+        $this->container->bind(UriFactoryInterface::class, Psr17Factory::class);
     }
 
     /**

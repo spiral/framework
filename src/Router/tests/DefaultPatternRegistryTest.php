@@ -22,7 +22,7 @@ final class DefaultPatternRegistryTest extends TestCase
 
         self::assertSame(self::DEFAULT_PATTERNS + [
             'foo' => '\d+',
-            'bar' => '\d+'
+            'bar' => '\d+',
         ], $registry->all());
     }
 }

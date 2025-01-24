@@ -17,11 +17,17 @@ use Spiral\Boot\Exception\BootException;
 use Spiral\App\TestApp;
 use Spiral\Core\Container;
 use Spiral\Framework\Spiral;
-use stdClass;
 
 class KernelTest extends BaseTestCase
 {
     public const MAKE_APP_ON_STARTUP = false;
+
+    public static function dispatchersDataProvider(): \Traversable
+    {
+        yield [DispatcherWithScopeName::class, Spiral::Console->value];
+        yield [DispatcherWithCustomEnum::class, Scope::Custom->value];
+        yield [DispatcherWithStringScope::class, 'test'];
+    }
 
     public function testBypassEnvironmentToConfig(): void
     {
@@ -57,14 +63,14 @@ class KernelTest extends BaseTestCase
     {
         $this->initApp();
         $container = new Container();
-        $container->bind('foofoo', new stdClass());
+        $container->bind('foofoo', new \stdClass());
 
         $app = TestApp::create([
-            'root' => __DIR__.'/../',
+            'root' => __DIR__ . '/../',
         ], container: $container);
 
         self::assertSame($container, $app->getContainer());
-        self::assertInstanceOf(stdClass::class, $app->getContainer()->get('foofoo'));
+        self::assertInstanceOf(\stdClass::class, $app->getContainer()->get('foofoo'));
     }
 
     public function testRunningCallbackShouldBeFired(): void
@@ -74,7 +80,7 @@ class KernelTest extends BaseTestCase
         $callback1 = false;
         $callback2 = false;
 
-        $kernel = TestApp::create(['root' => __DIR__.'/../']);
+        $kernel = TestApp::create(['root' => __DIR__ . '/../']);
         $kernel->running(static function () use (&$callback1): void {
             $callback1 = true;
         });
@@ -100,7 +106,7 @@ class KernelTest extends BaseTestCase
         $container = new Container();
         $container->bindSingleton(BootloaderRegistryInterface::class, $registry);
 
-        $kernel = TestApp::create(directories: ['root' => __DIR__. '/../'], container: $container);
+        $kernel = TestApp::create(directories: ['root' => __DIR__ . '/../'], container: $container);
 
         self::assertSame($registry, $kernel->getContainer()->get(BootloaderRegistryInterface::class));
     }
@@ -132,12 +138,5 @@ class KernelTest extends BaseTestCase
         self::assertSame($scope, $app->serve()['scope']);
 
         self::assertFalse($app->getContainer()->has($dispatcher));
-    }
-
-    public static function dispatchersDataProvider(): \Traversable
-    {
-        yield [DispatcherWithScopeName::class, Spiral::Console->value];
-        yield [DispatcherWithCustomEnum::class, Scope::Custom->value];
-        yield [DispatcherWithStringScope::class, 'test'];
     }
 }

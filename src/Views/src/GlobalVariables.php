@@ -7,9 +7,8 @@ namespace Spiral\Views;
 final class GlobalVariables implements GlobalVariablesInterface
 {
     public function __construct(
-        private array $variables = []
-    ) {
-    }
+        private array $variables = [],
+    ) {}
 
     public function set(string $name, mixed $data): void
     {

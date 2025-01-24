@@ -82,7 +82,7 @@ final class RouteConfiguratorTest extends BaseTestCase
     public function testCallable(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $configurator->callable(fn () => null);
+        $configurator->callable(fn() => null);
 
         self::assertInstanceOf(\Closure::class, $configurator->target);
     }
@@ -90,8 +90,7 @@ final class RouteConfiguratorTest extends BaseTestCase
     public function testHandler(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $configurator->handler(new class ([], []) extends AbstractTarget
-        {
+        $configurator->handler(new class([], []) extends AbstractTarget {
             protected function resolveController(array $matches): string
             {
                 return '';
@@ -149,11 +148,8 @@ final class RouteConfiguratorTest extends BaseTestCase
         self::assertSame(['class-string', 'other-class-string'], $configurator->middleware);
 
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $testMiddleware = new class () implements MiddlewareInterface
-        {
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-            {
-            }
+        $testMiddleware = new class implements MiddlewareInterface {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {}
         };
         $configurator->controller('Controller')->middleware($testMiddleware);
         self::assertSame([$testMiddleware], $configurator->middleware);

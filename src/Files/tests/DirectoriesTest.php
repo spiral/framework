@@ -10,18 +10,6 @@ use Spiral\Files\FilesInterface;
 
 class DirectoriesTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $files = new Files();
-        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
-    }
-
-    protected function tearDown(): void
-    {
-        $files = new Files();
-        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
-    }
-
     public function testEnsureDirectory(): void
     {
         $files = new Files();
@@ -228,5 +216,17 @@ class DirectoriesTest extends TestCase
 
         self::assertEmpty($files->getFiles(__DIR__, '*.jpg'));
         self::assertNotEmpty($files->getFiles(__DIR__, '*.php'));
+    }
+
+    protected function setUp(): void
+    {
+        $files = new Files();
+        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new Files();
+        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 }

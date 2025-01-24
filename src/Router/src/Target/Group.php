@@ -18,13 +18,13 @@ final class Group extends AbstractTarget
     public function __construct(
         private readonly array $controllers,
         int $options = 0,
-        string $defaultAction = 'index'
+        string $defaultAction = 'index',
     ) {
         parent::__construct(
             ['controller' => null, 'action' => null],
             ['controller' => \array_keys($controllers), 'action' => null],
             $options,
-            $defaultAction
+            $defaultAction,
         );
     }
 

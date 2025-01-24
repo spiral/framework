@@ -11,7 +11,7 @@ final class StrategyBasedBootloadManager extends AbstractBootloadManager
     public function __construct(
         private readonly InvokerStrategyInterface $invoker,
         ScopeInterface $scope,
-        InitializerInterface $initializer
+        InitializerInterface $initializer,
     ) {
         parent::__construct($scope, $initializer);
     }
@@ -27,7 +27,7 @@ final class StrategyBasedBootloadManager extends AbstractBootloadManager
         array $classes,
         array $bootingCallbacks,
         array $bootedCallbacks,
-        bool $useConfig = true
+        bool $useConfig = true,
     ): void {
         /** @psalm-suppress TooManyArguments */
         $this->invoker->invokeBootloaders($classes, $bootingCallbacks, $bootedCallbacks, $useConfig);

@@ -19,7 +19,7 @@ final class ExceptionsTest extends BaseTestCase
         $this->expectException(ResolvingException::class);
 
         $this->resolveClosure(
-            static fn(EngineInterface $engine, string $two) => null
+            static fn(EngineInterface $engine, string $two) => null,
         );
     }
 
@@ -30,7 +30,7 @@ final class ExceptionsTest extends BaseTestCase
         $this->expectException(ResolvingException::class);
 
         $this->resolveClosure(
-            static fn(EngineInterface $engine, $two) => null
+            static fn(EngineInterface $engine, $two) => null,
         );
     }
 
@@ -41,7 +41,7 @@ final class ExceptionsTest extends BaseTestCase
         $this->expectException(NotFoundException::class);
 
         $this->resolveClosure(
-            static fn(EngineInterface $engine, ColorInterface $color) => null
+            static fn(EngineInterface $engine, ColorInterface $color) => null,
         );
     }
 
@@ -53,7 +53,7 @@ final class ExceptionsTest extends BaseTestCase
         $this->expectException(ResolvingException::class);
 
         $this->resolveClosure(
-            static fn(object $engine) => null
+            static fn(object $engine) => null,
         );
     }
 }

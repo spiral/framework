@@ -9,6 +9,6 @@ use Spiral\Boot\Bootloader\Bootloader;
 class BootloaderA extends Bootloader
 {
     public const BINDINGS = [
-        'a' => 'a'
+        'a' => 'a',
     ];
 }

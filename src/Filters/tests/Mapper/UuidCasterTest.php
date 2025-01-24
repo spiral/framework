@@ -12,6 +12,15 @@ use Spiral\Tests\Filters\Fixtures\UserFilter;
 
 final class UuidCasterTest extends TestCase
 {
+    public static function supportsDataProvider(): \Traversable
+    {
+        $ref = new \ReflectionClass(UserFilter::class);
+
+        yield 'string' => [$ref->getProperty('name'), false];
+        yield 'enum' => [$ref->getProperty('status'), false];
+        yield 'uuid' => [$ref->getProperty('groupUuid'), true];
+    }
+
     #[DataProvider('supportsDataProvider')]
     public function testSupports(\ReflectionProperty $ref, bool $expected): void
     {
@@ -37,14 +46,5 @@ final class UuidCasterTest extends TestCase
         $this->expectException(SetterException::class);
         $this->expectExceptionMessage('Unable to set UUID value. Invalid UUID string: foo');
         $setter->setValue($filter, $ref, 'foo');
-    }
-
-    public static function supportsDataProvider(): \Traversable
-    {
-        $ref = new \ReflectionClass(UserFilter::class);
-
-        yield 'string' => [$ref->getProperty('name'), false];
-        yield 'enum' => [$ref->getProperty('status'), false];
-        yield 'uuid' => [$ref->getProperty('groupUuid'), true];
     }
 }

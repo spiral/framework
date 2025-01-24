@@ -18,7 +18,6 @@ use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
-use Spiral\Testing\Attribute\TestScope;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Nyholm\Psr7\ServerRequest;
 
@@ -34,7 +33,7 @@ final class PipelineTest extends TestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('OK', $response->getReasonPhrase());
-        self::assertSame('response', (string)$response->getBody());
+        self::assertSame('response', (string) $response->getBody());
     }
 
     public function testHandle(): void
@@ -47,7 +46,7 @@ final class PipelineTest extends TestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('OK', $response->getReasonPhrase());
-        self::assertSame('response', (string)$response->getBody());
+        self::assertSame('response', (string) $response->getBody());
     }
 
     public function testHandleException(): void
@@ -117,7 +116,7 @@ final class PipelineTest extends TestCase
                 $pipeline->pushMiddleware($middleware);
 
                 $pipeline->withHandler($handler)->handle($request);
-            }
+            },
         );
     }
 }

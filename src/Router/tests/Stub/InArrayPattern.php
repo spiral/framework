@@ -5,9 +5,8 @@ namespace Spiral\Tests\Router\Stub;
 class InArrayPattern implements \Stringable
 {
     public function __construct(
-        private readonly array $values
-    ) {
-    }
+        private readonly array $values,
+    ) {}
 
     public function __toString()
     {

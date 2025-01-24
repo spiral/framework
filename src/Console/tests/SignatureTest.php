@@ -22,17 +22,17 @@ final class SignatureTest extends BaseTestCase
                         $option = $this->option('option');
 
                         if ($argument) {
-                            $this->write('argument : '.$argument);
+                            $this->write('argument : ' . $argument);
                         }
 
                         if ($option) {
-                            $this->write('option : '.$option);
+                            $this->write('option : ' . $option);
                         }
 
                         return 1;
                     }
                 },
-            ])
+            ]),
         );
 
         self::assertSame('', $core->run(command: 'foo:bar')->getOutput()->fetch());
@@ -55,21 +55,21 @@ final class SignatureTest extends BaseTestCase
 
                     public function perform(): int
                     {
-                        $argument = (array)$this->argument('arg');
-                        $option = (array)$this->option('option');
+                        $argument = (array) $this->argument('arg');
+                        $option = (array) $this->option('option');
 
                         if ($argument) {
-                            $this->write('argument : '.\implode(',', $argument));
+                            $this->write('argument : ' . \implode(',', $argument));
                         }
 
                         if ($option) {
-                            $this->write('option : '.\implode(',', $option));
+                            $this->write('option : ' . \implode(',', $option));
                         }
 
                         return 1;
                     }
                 },
-            ])
+            ]),
         );
 
         self::assertSame('', $core->run(command: 'foo:bar')->getOutput()->fetch());
@@ -103,7 +103,7 @@ final class SignatureTest extends BaseTestCase
                         return 1;
                     }
                 },
-            ])
+            ]),
         );
 
         self::assertStringStartsWith(<<<'HELP'
@@ -137,7 +137,7 @@ HELP, $core->run(command: 'help', input: ['command_name' => 'foo:bar'])->getOutp
                         return self::SUCCESS;
                     }
                 },
-            ])
+            ]),
         );
 
         self::assertSame('baz', $core->run(command: 'foo:bar')->getOutput()->fetch());

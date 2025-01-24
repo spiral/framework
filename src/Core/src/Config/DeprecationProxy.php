@@ -35,7 +35,7 @@ final class DeprecationProxy extends Proxy
             'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version %s.',
             $this->interface,
             $this->scope instanceof \BackedEnum ? $this->scope->value : $this->scope,
-            $this->version
+            $this->version,
         );
 
         @trigger_error($message, \E_USER_DEPRECATED);

@@ -24,7 +24,7 @@ final class NullTracerTest extends TestCase
     public function testFallbackRunScope(): void
     {
         $tracer = new NullTracer(
-            $scope = m::mock(ScopeInterface::class)
+            $scope = m::mock(ScopeInterface::class),
         );
 
         $invoker = m::mock(InvokerInterface::class);
@@ -37,9 +37,10 @@ final class NullTracerTest extends TestCase
             ->andReturn('hello');
 
         $scope->shouldReceive('runScope')
-            ->withArgs(static fn(array $scope): bool =>
+            ->withArgs(
+                static fn(array $scope): bool =>
                 $scope[SpanInterface::class] instanceof Span
-                && $scope[SpanInterface::class]->getName() === 'foo'
+                && $scope[SpanInterface::class]->getName() === 'foo',
             )
             ->andReturnUsing(static fn(array $scope, callable $callable) => $callable($invoker));
 
@@ -50,7 +51,7 @@ final class NullTracerTest extends TestCase
     public function testWithScopedContainer(): void
     {
         $tracer = new NullTracer(
-            $scope = m::mock(ScopeInterface::class)
+            $scope = m::mock(ScopeInterface::class),
         );
 
         $invoker = m::mock(InvokerInterface::class);

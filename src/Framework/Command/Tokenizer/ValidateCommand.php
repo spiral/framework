@@ -18,7 +18,7 @@ final class ValidateCommand extends Command
     public function perform(
         TokenizerListenerRegistryInterface $registry,
         DirectoriesInterface $dirs,
-        ReaderInterface $reader
+        ReaderInterface $reader,
     ): int {
         $listeners = \method_exists($registry, 'getListenerClasses') ? $registry->getListenerClasses() : [];
 

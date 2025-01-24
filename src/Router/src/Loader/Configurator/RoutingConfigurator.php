@@ -13,9 +13,8 @@ final class RoutingConfigurator
 
     public function __construct(
         private readonly RouteCollection $collection,
-        private readonly LoaderInterface $loader
-    ) {
-    }
+        private readonly LoaderInterface $loader,
+    ) {}
 
     public function import(string|array $resource, ?string $type = null): ImportConfigurator
     {

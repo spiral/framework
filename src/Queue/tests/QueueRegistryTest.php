@@ -22,21 +22,34 @@ use Spiral\Serializer\SerializerRegistryInterface;
 final class QueueRegistryTest extends TestCase
 {
     private Container $mockContainer;
+
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HandlerRegistryInterface */
     private $fallbackHandlers;
+
     private QueueRegistry $registry;
 
-    protected function setUp(): void
+    public static function serializersDataProvider(): \Traversable
     {
-        parent::setUp();
+        // serializer name
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), 'some'];
 
-        $this->mockContainer = new Container();
+        // class-string
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), JsonSerializer::class];
 
-        $this->registry = new QueueRegistry(
-            $this->mockContainer,
-            $this->mockContainer,
-            $this->fallbackHandlers = m::mock(HandlerRegistryInterface::class)
-        );
+        // class
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new JsonSerializer()];
+
+        // autowire
+        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new Autowire(JsonSerializer::class)];
+
+        // adding by class-string
+        yield [new SerializerRegistry(), JsonSerializer::class];
+
+        // adding by class
+        yield [new SerializerRegistry(), new JsonSerializer()];
+
+        // adding by autowire
+        yield [new SerializerRegistry(), new Autowire(JsonSerializer::class)];
     }
 
     public function testGetsHandlerForNotRegisteredJobType(): void
@@ -71,7 +84,7 @@ final class QueueRegistryTest extends TestCase
 
         $this->mockContainer->bind(SerializerManager::class, new SerializerManager(new SerializerRegistry([
             'serializer' => new PhpSerializer(),
-            'json' => new JsonSerializer()
+            'json' => new JsonSerializer(),
         ]), 'json'));
 
         self::assertInstanceOf(JsonSerializer::class, $this->registry->getSerializer());
@@ -80,7 +93,7 @@ final class QueueRegistryTest extends TestCase
     #[DataProvider('serializersDataProvider')]
     public function testDefaultSerializer(
         SerializerRegistry $registry,
-        string|SerializerInterface|Autowire $serializer
+        string|SerializerInterface|Autowire $serializer,
     ): void {
         $this->mockContainer->bind(QueueConfig::class, new QueueConfig(['defaultSerializer' => $serializer]));
         $this->mockContainer->bind(SerializerRegistryInterface::class, $registry);
@@ -101,27 +114,16 @@ final class QueueRegistryTest extends TestCase
         self::assertInstanceOf(SerializerInterface::class, $this->registry->getSerializer('foo'));
     }
 
-    public static function serializersDataProvider(): \Traversable
+    protected function setUp(): void
     {
-        // serializer name
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), 'some'];
+        parent::setUp();
 
-        // class-string
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), JsonSerializer::class];
+        $this->mockContainer = new Container();
 
-        // class
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new JsonSerializer()];
-
-        // autowire
-        yield [new SerializerRegistry(['some' => new JsonSerializer()]), new Autowire(JsonSerializer::class)];
-
-        // adding by class-string
-        yield [new SerializerRegistry(), JsonSerializer::class];
-
-        // adding by class
-        yield [new SerializerRegistry(), new JsonSerializer()];
-
-        // adding by autowire
-        yield [new SerializerRegistry(), new Autowire(JsonSerializer::class)];
+        $this->registry = new QueueRegistry(
+            $this->mockContainer,
+            $this->mockContainer,
+            $this->fallbackHandlers = m::mock(HandlerRegistryInterface::class),
+        );
     }
 }

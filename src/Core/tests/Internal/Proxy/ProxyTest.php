@@ -26,6 +26,13 @@ final class ProxyTest extends TestCase
         // yield [EmptyInterface::class, 'empty'];
     }
 
+    public static function invalidDeprecationProxyArgsDataProvider(): \Traversable
+    {
+        yield [null, '4.0'];
+        yield ['foo', null];
+        yield [null, null];
+    }
+
     #[DataProvider('interfacesProvider')]
     public function testSimpleCases(string $interface, string $var): void
     {
@@ -35,7 +42,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(/*proxyOverloads: true*/)] EmptyInterface $empty,
+            #[Proxy/*proxyOverloads: true*/] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -67,7 +74,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(/*proxyOverloads: true*/)] EmptyInterface $empty,
+            #[Proxy/*proxyOverloads: true*/] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -87,7 +94,7 @@ final class ProxyTest extends TestCase
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
-            #[Proxy(/*proxyOverloads: true*/)] EmptyInterface $empty,
+            #[Proxy/*proxyOverloads: true*/] EmptyInterface $empty,
         ) use ($var) {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
@@ -103,7 +110,7 @@ final class ProxyTest extends TestCase
     public function testReference(string $interface, string $var): void
     {
         $interface === EmptyInterface::class && self::markTestSkipped(
-            'Impossible to pass reference using magic method __call()'
+            'Impossible to pass reference using magic method __call()',
         );
 
         $root = new Container();
@@ -123,7 +130,7 @@ final class ProxyTest extends TestCase
     public function testReturnReference(string $interface, string $var): void
     {
         $interface === EmptyInterface::class && self::markTestSkipped(
-            'Impossible to return reference using magic method __call()'
+            'Impossible to return reference using magic method __call()',
         );
 
         $root = new Container();
@@ -146,7 +153,7 @@ final class ProxyTest extends TestCase
     public function testReferenceVariadic(string $interface, string $var): void
     {
         $interface === EmptyInterface::class && self::markTestSkipped(
-            'Impossible to pass reference using magic method __call()'
+            'Impossible to pass reference using magic method __call()',
         );
 
         $root = new Container();
@@ -233,7 +240,7 @@ final class ProxyTest extends TestCase
             self::assertSame(
                 \sprintf('Using `%s` outside of the `foo` scope is deprecated and will be ' .
                     'impossible in version 4.0.', $interface),
-                $error
+                $error,
             );
         });
 
@@ -290,7 +297,7 @@ final class ProxyTest extends TestCase
             self::assertSame(
                 \sprintf('Using `%s` outside of the `a` scope is deprecated and will be ' .
                     'impossible in version 4.0.', $interface),
-                $error
+                $error,
             );
         });
 
@@ -357,12 +364,5 @@ final class ProxyTest extends TestCase
         $this->expectExceptionMessage(\sprintf('Interface `%s` does not exist.', \stdClass::class));
 
         new Config\Proxy(\stdClass::class);
-    }
-
-    public static function invalidDeprecationProxyArgsDataProvider(): \Traversable
-    {
-        yield [null, '4.0'];
-        yield ['foo', null];
-        yield [null, null];
     }
 }

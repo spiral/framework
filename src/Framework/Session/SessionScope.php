@@ -21,9 +21,8 @@ final class SessionScope implements SessionInterface
     private const DEFAULT_SECTION = '_DEFAULT';
 
     public function __construct(
-        #[Proxy] private readonly ContainerInterface $container
-    ) {
-    }
+        #[Proxy] private readonly ContainerInterface $container,
+    ) {}
 
     /**
      * @throws ScopeException
@@ -102,7 +101,7 @@ final class SessionScope implements SessionInterface
             throw new ScopeException(
                 'Unable to receive active session, invalid request scope',
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }

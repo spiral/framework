@@ -13,6 +13,7 @@ final class TransportRegistry
 {
     /** @var HttpTransportInterface[] */
     private array $transports = [];
+
     private ?string $default = null;
 
     public function setDefaultTransport(string $name): void

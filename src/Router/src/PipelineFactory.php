@@ -16,9 +16,8 @@ final class PipelineFactory
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     /**
      * @throws RouteException

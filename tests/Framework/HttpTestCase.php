@@ -30,7 +30,7 @@ abstract class HttpTestCase extends BaseTestCase
                 AuthMiddleware::class,
             ],
             'basePath' => '/',
-            'headers' => []
+            'headers' => [],
         ]));
     }
 }

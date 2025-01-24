@@ -12,6 +12,7 @@ final class ListenerProcessorRegistry implements ProcessorInterface
 {
     /** @var ProcessorInterface[] */
     private array $processors = [];
+
     private bool $processed = false;
 
     public function addProcessor(ProcessorInterface $processor): void

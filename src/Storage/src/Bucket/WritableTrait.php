@@ -36,7 +36,7 @@ trait WritableTrait
             switch (true) {
                 case \is_object($content):
                 case \is_string($content):
-                    $fs->write($pathname, (string)$content, $config);
+                    $fs->write($pathname, (string) $content, $config);
                     break;
 
                 case \is_resource($content):
@@ -57,7 +57,7 @@ trait WritableTrait
     public function setVisibility(
         string $pathname,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
+        string $visibility,
     ): FileInterface {
         $fs = $this->getOperator();
 
@@ -74,7 +74,7 @@ trait WritableTrait
         string $source,
         string $destination,
         ?BucketInterface $storage = null,
-        array $config = []
+        array $config = [],
     ): FileInterface {
         $fs = $this->getOperator();
 
@@ -95,7 +95,7 @@ trait WritableTrait
         string $source,
         string $destination,
         ?BucketInterface $storage = null,
-        array $config = []
+        array $config = [],
     ): FileInterface {
         $fs = $this->getOperator();
 
@@ -131,12 +131,13 @@ trait WritableTrait
             throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
     abstract protected function getOperator(): FilesystemOperator;
 
     #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
     private function toFlysystemVisibility(
         #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
+        string $visibility,
     ): string {
         return ($visibility === Visibility::VISIBILITY_PUBLIC)
             ? \League\Flysystem\Visibility::PUBLIC

@@ -6,7 +6,6 @@ namespace Spiral\Tests\Core\Internal\Destructor;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Tests\Core\Fixtures\Finalizer;
 
 class FinalizerTest extends TestCase
 {
@@ -16,6 +15,7 @@ class FinalizerTest extends TestCase
             $container = new Container();
             $finalizer = new class {
                 public ?\Closure $closure = null;
+
                 public function __destruct()
                 {
                     if ($this->closure !== null) {

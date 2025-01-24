@@ -12,15 +12,6 @@ class HelpersTest extends BaseTestCase
 {
     private \Spiral\Console\Console $core;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->core = $this->getCore($this->getStaticLocator([
-            HelperCommand::class
-        ]));
-    }
-
     public function testVerbose(): void
     {
         $actual = $this->core->run('helper', ['helper' => 'verbose'])
@@ -57,5 +48,14 @@ class HelpersTest extends BaseTestCase
         self::assertStringContainsString('1', $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
 
         self::assertStringContainsString('true', $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->core = $this->getCore($this->getStaticLocator([
+            HelperCommand::class,
+        ]));
     }
 }

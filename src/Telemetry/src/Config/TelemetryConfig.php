@@ -41,7 +41,7 @@ final class TelemetryConfig extends InjectableConfig
     {
         if (!isset($this->config['drivers'][$name])) {
             throw new InvalidArgumentException(
-                \sprintf('Config for telemetry driver `%s` is not defined.', $name)
+                \sprintf('Config for telemetry driver `%s` is not defined.', $name),
             );
         }
 
@@ -53,7 +53,7 @@ final class TelemetryConfig extends InjectableConfig
 
         if (!\is_string($driver) && !$driver instanceof Autowire) {
             throw new InvalidArgumentException(
-                \sprintf('Trace type value for `%s` must be a string or %s', $name, Autowire::class)
+                \sprintf('Trace type value for `%s` must be a string or %s', $name, Autowire::class),
             );
         }
 

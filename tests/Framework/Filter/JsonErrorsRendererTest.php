@@ -13,12 +13,12 @@ final class JsonErrorsRendererTest extends BaseTestCase
     public function testRender(): void
     {
         $renderer = new JsonErrorsRenderer(
-            $this->getContainer()->get(ResponseWrapper::class)
+            $this->getContainer()->get(ResponseWrapper::class),
         );
 
         $response = $renderer->render(
             ['foo' => 'bar',],
-            'foo_context'
+            'foo_context',
         );
 
         self::assertSame(422, $response->getStatusCode());

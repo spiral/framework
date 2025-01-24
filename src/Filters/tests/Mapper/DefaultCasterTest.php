@@ -36,7 +36,7 @@ final class DefaultCasterTest extends TestCase
         $this->expectExceptionMessage(\sprintf(
             'Unable to set value. Cannot assign %s to property %s::$city of type string',
             \stdClass::class,
-            AddressFilter::class
+            AddressFilter::class,
         ));
         $setter->setValue($filter, $property, new \stdClass());
     }

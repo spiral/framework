@@ -11,9 +11,8 @@ use Spiral\Exceptions\ExceptionReporterInterface;
 class LoggerReporter implements ExceptionReporterInterface
 {
     public function __construct(
-        private readonly LoggerInterface $logger = new NullLogger()
-    ) {
-    }
+        private readonly LoggerInterface $logger = new NullLogger(),
+    ) {}
 
     public function report(\Throwable $exception): void
     {
@@ -22,7 +21,7 @@ class LoggerReporter implements ExceptionReporterInterface
             $exception::class,
             $exception->getMessage(),
             $exception->getFile(),
-            $exception->getLine()
+            $exception->getLine(),
         ));
     }
 }

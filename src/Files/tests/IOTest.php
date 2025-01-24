@@ -11,18 +11,6 @@ use Spiral\Files\FilesInterface;
 
 class IOTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $files = new Files();
-        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
-    }
-
-    protected function tearDown(): void
-    {
-        $files = new Files();
-        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
-    }
-
     public function testWrite(): void
     {
         $files = new Files();
@@ -235,5 +223,17 @@ class IOTest extends TestCase
 
         self::assertFalse($files->exists($filename));
         $files->move($filename, $destination);
+    }
+
+    protected function setUp(): void
+    {
+        $files = new Files();
+        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new Files();
+        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 }

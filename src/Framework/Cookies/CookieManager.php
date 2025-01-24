@@ -22,8 +22,7 @@ final class CookieManager
 {
     public function __construct(
         #[Proxy] private readonly ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ScopeException
@@ -95,7 +94,6 @@ final class CookieManager
      *                              cookie attribute is set. When Same-Site attribute is set to "None" it is required
      *                              to have "Secure" attribute enable. Otherwise it will be converted to "Lax".
      * @return $this
-     *
      */
     public function set(
         string $name,
@@ -105,7 +103,7 @@ final class CookieManager
         ?string $domain = null,
         ?bool $secure = null,
         bool $httpOnly = true,
-        ?string $sameSite = null
+        ?string $sameSite = null,
     ): self {
         $this->getCookieQueue()->set($name, $value, $lifetime, $path, $domain, $secure, $httpOnly, $sameSite);
 

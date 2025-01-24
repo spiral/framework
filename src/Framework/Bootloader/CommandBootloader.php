@@ -41,7 +41,7 @@ final class CommandBootloader extends Bootloader
         /** @psalm-suppress InvalidArgument */
         $console->addConfigureSequence(
             [RuntimeDirectory::class, 'ensure'],
-            '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>verify `runtime` directory access</fg=cyan>'
+            '<fg=magenta>[runtime]</fg=magenta> <fg=cyan>verify `runtime` directory access</fg=cyan>',
         );
 
         $this->configureExtensions($console, $container);
@@ -82,12 +82,12 @@ final class CommandBootloader extends Bootloader
                 $files->ensureDirectory($config->getLocaleDirectory($config->getDefaultLocale()));
                 $output->writeln('<info>The default locale directory has been ensured.</info>');
             },
-            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>ensure default locale directory...</fg=cyan>'
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>ensure default locale directory...</fg=cyan>',
         );
 
         $console->addConfigureSequence(
             'i18n:index',
-            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>'
+            '<fg=magenta>[i18n]</fg=magenta> <fg=cyan>scan translator function and [[values]] usage...</fg=cyan>',
         );
     }
 
@@ -98,7 +98,7 @@ final class CommandBootloader extends Bootloader
 
         $console->addConfigureSequence(
             'views:compile',
-            '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>'
+            '<fg=magenta>[views]</fg=magenta> <fg=cyan>warm up view cache...</fg=cyan>',
         );
     }
 

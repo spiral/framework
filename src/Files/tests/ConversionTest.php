@@ -10,11 +10,6 @@ final class ConversionTest extends TestCase
 {
     private Files $files;
 
-    protected function setUp(): void
-    {
-        $this->files = new Files();
-    }
-
     public function testNormalizeFilePath(): void
     {
         self::assertSame('/abc/file.name', $this->files->normalizePath('/abc\\file.name'));
@@ -46,5 +41,10 @@ final class ConversionTest extends TestCase
         self::assertSame('./some-filename.txt', $this->files->relativePath('/abc/some-filename.txt', '/abc/..'));
 
         self::assertSame('../some-filename.txt', $this->files->relativePath('/abc/some-filename.txt', '/abc/../..'));
+    }
+
+    protected function setUp(): void
+    {
+        $this->files = new Files();
     }
 }

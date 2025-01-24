@@ -7,6 +7,4 @@ namespace Spiral\Cache\Event;
 /**
  * Triggered when cache item is not found.
  */
-final class CacheMissed extends CacheEvent
-{
-}
+final class CacheMissed extends CacheEvent {}

@@ -18,38 +18,6 @@ use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 
 abstract class BaseFirewallTestCase extends BaseTestCase
 {
-    protected function getCore(AbstractFirewall $firewall, HttpTransportInterface $transport): Http
-    {
-        $config = new HttpConfig([
-            'basePath'   => '/',
-            'headers'    => [
-                'Content-Type' => 'text/html; charset=UTF-8'
-            ],
-            'middleware' => [],
-        ]);
-
-        $http = new Http(
-            $config,
-            new Pipeline($this->container),
-            new ResponseFactory($config),
-            $this->container
-        );
-
-        $http->getPipeline()->pushMiddleware(
-            new AuthMiddleware(
-                $this->container,
-                new TestAuthHttpProvider(),
-                new TestAuthHttpStorage(),
-                $reg = new TransportRegistry()
-            )
-        );
-        $http->getPipeline()->pushMiddleware($firewall);
-
-        $reg->setTransport('transport', $transport);
-
-        return $http;
-    }
-
     public static function successTokensDataProvider(): \Traversable
     {
         // ok
@@ -63,5 +31,37 @@ abstract class BaseFirewallTestCase extends BaseTestCase
 
         // Bad token
         yield ['bad'];
+    }
+
+    protected function getCore(AbstractFirewall $firewall, HttpTransportInterface $transport): Http
+    {
+        $config = new HttpConfig([
+            'basePath'   => '/',
+            'headers'    => [
+                'Content-Type' => 'text/html; charset=UTF-8',
+            ],
+            'middleware' => [],
+        ]);
+
+        $http = new Http(
+            $config,
+            new Pipeline($this->container),
+            new ResponseFactory($config),
+            $this->container,
+        );
+
+        $http->getPipeline()->pushMiddleware(
+            new AuthMiddleware(
+                $this->container,
+                new TestAuthHttpProvider(),
+                new TestAuthHttpStorage(),
+                $reg = new TransportRegistry(),
+            ),
+        );
+        $http->getPipeline()->pushMiddleware($firewall);
+
+        $reg->setTransport('transport', $transport);
+
+        return $http;
     }
 }

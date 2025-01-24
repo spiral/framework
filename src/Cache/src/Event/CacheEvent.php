@@ -11,6 +11,5 @@ abstract class CacheEvent
 {
     public function __construct(
         public readonly string $key,
-    ) {
-    }
+    ) {}
 }

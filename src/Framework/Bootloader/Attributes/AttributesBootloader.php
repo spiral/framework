@@ -30,8 +30,7 @@ class AttributesBootloader extends Bootloader
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
-    ) {
-    }
+    ) {}
 
     public function init(EnvironmentInterface $env): void
     {

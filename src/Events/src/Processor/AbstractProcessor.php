@@ -60,8 +60,8 @@ abstract class AbstractProcessor implements ProcessorInterface
             \sprintf(
                 '`%s::%s` must contain only one parameter with event class type that listener will listen.',
                 $class,
-                $name
-            )
+                $name,
+            ),
         );
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Telemetry;
 
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Spiral\Core\ScopeInterface;
@@ -28,7 +27,7 @@ final class LogTracerFactoryTest extends TestCase
             $scope = $this->createMock(ScopeInterface::class),
             $clock = $this->createMock(ClockInterface::class),
             $logs,
-            'some-channel'
+            'some-channel',
         );
 
         $clock->method('now');
@@ -39,4 +38,3 @@ final class LogTracerFactoryTest extends TestCase
         $tracer->trace('foo', static fn(): string => 'hello');
     }
 }
-

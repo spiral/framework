@@ -53,7 +53,7 @@ class ScopesTest extends TestCase
 
         self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
-            'other'  => new SampleClass()
+            'other'  => new SampleClass(),
         ], function ($c): bool {
             self::assertSame('b', $c->get('bucket')->getName());
             self::assertTrue($c->has('other'));
@@ -75,7 +75,7 @@ class ScopesTest extends TestCase
 
         self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
-            'other'  => new SampleClass()
+            'other'  => new SampleClass(),
         ], function ($c): bool {
             self::assertSame('b', $c->get('bucket')->getName());
             self::assertTrue($c->has('other'));
@@ -86,7 +86,7 @@ class ScopesTest extends TestCase
         try {
             self::assertTrue($c->runScope([
                 'bucket' => new Bucket('b'),
-                'other'  => new SampleClass()
+                'other'  => new SampleClass(),
             ], function () use ($c): void {
                 throw new RuntimeException('exception');
             }));
@@ -101,13 +101,13 @@ class ScopesTest extends TestCase
     {
         $container = new Container();
 
-        self::assertSame($container, ContainerScope::runScope($container, static fn (ContainerInterface $container): \Psr\Container\ContainerInterface => $container));
+        self::assertSame($container, ContainerScope::runScope($container, static fn(ContainerInterface $container): \Psr\Container\ContainerInterface => $container));
 
         $result = ContainerScope::runScope(
             $container,
             static fn(Container $container): mixed => $container->runScope(
                 [],
-                static fn (Container $container): \Spiral\Core\Container => $container,
+                static fn(Container $container): \Spiral\Core\Container => $container,
             ),
         );
 

@@ -23,6 +23,18 @@ final class Property implements NamedInterface, AggregableInterface
         $this->element = new NetteProperty($name);
     }
 
+    /**
+     * @internal
+     */
+    public static function fromElement(NetteProperty $element): self
+    {
+        $property = new self($element->getName());
+
+        $property->element = $element;
+
+        return $property;
+    }
+
     public function setValue(mixed $value): self
     {
         $this->element->setValue($value);
@@ -95,18 +107,6 @@ final class Property implements NamedInterface, AggregableInterface
     public function isReadOnly(): bool
     {
         return $this->element->isReadOnly();
-    }
-
-    /**
-     * @internal
-     */
-    public static function fromElement(NetteProperty $element): self
-    {
-        $property = new self($element->getName());
-
-        $property->element = $element;
-
-        return $property;
     }
 
     /**

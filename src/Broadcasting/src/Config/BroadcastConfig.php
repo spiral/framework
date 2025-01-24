@@ -29,7 +29,7 @@ final class BroadcastConfig extends InjectableConfig
      */
     public function getTopics(): array
     {
-        return (array)($this->config['authorize']['topics'] ?? []);
+        return (array) ($this->config['authorize']['topics'] ?? []);
     }
 
     /**
@@ -45,7 +45,7 @@ final class BroadcastConfig extends InjectableConfig
      */
     public function getAliases(): array
     {
-        return (array)($this->config['aliases'] ?? []);
+        return (array) ($this->config['aliases'] ?? []);
     }
 
     /**
@@ -68,7 +68,7 @@ final class BroadcastConfig extends InjectableConfig
     {
         if (!isset($this->config['connections'][$name])) {
             throw new InvalidArgumentException(
-                \sprintf('Config for connection `%s` is not defined.', $name)
+                \sprintf('Config for connection `%s` is not defined.', $name),
             );
         }
 
@@ -76,13 +76,13 @@ final class BroadcastConfig extends InjectableConfig
 
         if (!isset($config['driver'])) {
             throw new InvalidArgumentException(
-                \sprintf('Driver for `%s` connection is not defined.', $name)
+                \sprintf('Driver for `%s` connection is not defined.', $name),
             );
         }
 
         if (!\is_string($config['driver'])) {
             throw new InvalidArgumentException(
-                \sprintf('Driver value for `%s` connection must be a string', $name)
+                \sprintf('Driver value for `%s` connection must be a string', $name),
             );
         }
 

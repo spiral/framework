@@ -22,18 +22,6 @@ final class ValidationHandlerMiddlewareTest extends TestCase
     private ValidationHandlerMiddleware $middleware;
     private ErrorsRendererInterface|m\MockInterface $renderer;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $container = m::mock(ContainerInterface::class);
-        $this->renderer = m::mock(ErrorsRendererInterface::class);
-
-        $this->middleware = new ValidationHandlerMiddleware(
-            $container, $this->renderer
-        );
-    }
-
     public function testDefaultRendererShouldBeUsed(): void
     {
         $container = m::mock(ContainerInterface::class);
@@ -80,7 +68,7 @@ final class ValidationHandlerMiddlewareTest extends TestCase
 
         $handler->shouldReceive('handle')
             ->andThrow(new ValidationException($errors = [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ], $context = 'foo_context'));
 
         $this->renderer->shouldReceive('render')
@@ -89,5 +77,18 @@ final class ValidationHandlerMiddlewareTest extends TestCase
             ->andReturn($response = m::mock(ResponseInterface::class));
 
         self::assertSame($response, $this->middleware->process($request, $handler));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $container = m::mock(ContainerInterface::class);
+        $this->renderer = m::mock(ErrorsRendererInterface::class);
+
+        $this->middleware = new ValidationHandlerMiddleware(
+            $container,
+            $this->renderer,
+        );
     }
 }

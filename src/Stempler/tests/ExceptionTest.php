@@ -188,7 +188,7 @@ class ExceptionTest extends BaseTestCase
     {
         return [
             new DefineAttributes(),
-            new DefineBlocks()
+            new DefineBlocks(),
         ];
     }
 }

@@ -95,7 +95,7 @@ final class InjectCommand extends AbstractCommand
             $modified = $this->injector->injectDependencies(
                 \file_get_contents($class->getFileName()),
                 $classDefinition,
-                $this->option('remove')
+                $this->option('remove'),
             );
 
             \file_put_contents($class->getFileName(), $modified);

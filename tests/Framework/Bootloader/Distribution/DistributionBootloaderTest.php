@@ -46,7 +46,7 @@ final class DistributionBootloaderTest extends BaseTestCase
     {
         $this->assertConfigMatches(DistributionConfig::CONFIG, [
             'default' => Manager::DEFAULT_RESOLVER,
-            'resolvers' => []
+            'resolvers' => [],
         ]);
     }
 }

@@ -15,9 +15,8 @@ final class ConfigTracerFactoryProvider implements TracerFactoryProviderInterfac
 
     public function __construct(
         private readonly TelemetryConfig $config,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     public function getTracerFactory(?string $name = null): TracerFactoryInterface
     {

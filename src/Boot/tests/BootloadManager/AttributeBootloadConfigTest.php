@@ -18,13 +18,65 @@ use Spiral\Tests\Boot\Fixtures\BootloaderK;
 
 final class AttributeBootloadConfigTest extends InitializerTestCase
 {
+    public static function allowEnvDataProvider(): \Traversable
+    {
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
+            [BootloaderH::class => ['bootloader' => new BootloaderH(), 'options' => []]],
+        ];
+        yield [
+            ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
+            [],
+        ];
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
+            [],
+        ];
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
+            [],
+        ];
+    }
+
+    public static function denyEnvDataProvider(): \Traversable
+    {
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
+            [BootloaderI::class => ['bootloader' => new BootloaderI(), 'options' => []]],
+        ];
+    }
+
     public function testDefaultBootloadConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderE::class, BootloaderD::class]));
 
         self::assertEquals([
             BootloaderE::class => ['bootloader' => new BootloaderE(), 'options' => []],
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []],
         ], $result);
     }
 
@@ -33,7 +85,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class]));
 
         self::assertEquals([
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []],
         ], $result);
     }
 
@@ -52,7 +104,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         self::assertEquals([
             BootloaderF::class => ['bootloader' => new BootloaderF(), 'options' => []],
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []],
         ], $result);
     }
 
@@ -94,57 +146,5 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'jobs']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
         self::assertSame([], $result);
-    }
-
-    public static function allowEnvDataProvider(): \Traversable
-    {
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            [BootloaderH::class => ['bootloader' => new BootloaderH(), 'options' => []]]
-        ];
-        yield [
-            ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            []
-        ];
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
-            []
-        ];
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
-            []
-        ];
-    }
-
-    public static function denyEnvDataProvider(): \Traversable
-    {
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
-            []
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            []
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            []
-        ];
-        yield [
-            ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            []
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
-            []
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            []
-        ];
-        yield [
-            ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            [BootloaderI::class => ['bootloader' => new BootloaderI(), 'options' => []]]
-        ];
     }
 }

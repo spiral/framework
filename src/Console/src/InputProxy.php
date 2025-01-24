@@ -14,14 +14,8 @@ final class InputProxy implements InputInterface, \Stringable
 {
     public function __construct(
         private readonly InputInterface $input,
-        private readonly array $overwrite
-    ) {
-    }
-
-    public function __toString(): string
-    {
-        return $this->input->__toString();
-    }
+        private readonly array $overwrite,
+    ) {}
 
     public function getFirstArgument(): ?string
     {
@@ -36,7 +30,7 @@ final class InputProxy implements InputInterface, \Stringable
     public function getParameterOption(
         string|array $values,
         string|bool|int|float|array|null $default = false,
-        bool $onlyParams = false
+        bool $onlyParams = false,
     ): mixed {
         return $this->input->getParameterOption($values, $default, $onlyParams);
     }
@@ -99,5 +93,10 @@ final class InputProxy implements InputInterface, \Stringable
     public function setInteractive(bool $interactive): void
     {
         $this->input->setInteractive($interactive);
+    }
+
+    public function __toString(): string
+    {
+        return $this->input->__toString();
     }
 }

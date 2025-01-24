@@ -25,7 +25,7 @@ interface PublisherInterface
         string $filename,
         string $destination,
         string $mergeMode = self::FOLLOW,
-        int $mode = FilesInterface::READONLY
+        int $mode = FilesInterface::READONLY,
     ): void;
 
     /**
@@ -37,7 +37,7 @@ interface PublisherInterface
         string $directory,
         string $destination,
         string $mergeMode = self::REPLACE,
-        int $mode = FilesInterface::READONLY
+        int $mode = FilesInterface::READONLY,
     ): void;
 
     /**

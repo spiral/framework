@@ -10,6 +10,4 @@ use Spiral\Core\Exception\RuntimeException;
 /**
  * Something inside container.
  */
-class ContainerException extends RuntimeException implements ContainerExceptionInterface
-{
-}
+class ContainerException extends RuntimeException implements ContainerExceptionInterface {}

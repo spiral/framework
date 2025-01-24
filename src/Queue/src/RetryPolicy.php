@@ -29,21 +29,21 @@ final class RetryPolicy implements RetryPolicyInterface
     {
         if ($maxAttempts < 0) {
             throw new InvalidArgumentException(
-                \sprintf('Maximum attempts must be greater than or equal to zero: `%s` given.', $maxAttempts)
+                \sprintf('Maximum attempts must be greater than or equal to zero: `%s` given.', $maxAttempts),
             );
         }
         $this->maxAttempts = $maxAttempts;
 
         if ($delay < 0) {
             throw new InvalidArgumentException(
-                \sprintf('Delay must be greater than or equal to zero: `%s` given.', $delay)
+                \sprintf('Delay must be greater than or equal to zero: `%s` given.', $delay),
             );
         }
         $this->delay = $delay;
 
         if ($multiplier < 1) {
             throw new InvalidArgumentException(
-                \sprintf('Multiplier must be greater than zero: `%s` given.', $multiplier)
+                \sprintf('Multiplier must be greater than zero: `%s` given.', $multiplier),
             );
         }
         $this->multiplier = $multiplier;

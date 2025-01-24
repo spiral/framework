@@ -7,6 +7,4 @@ namespace Spiral\Boot\Exception;
 /**
  * Environment configuration issue.
  */
-class EnvironmentException extends BootException
-{
-}
+class EnvironmentException extends BootException {}

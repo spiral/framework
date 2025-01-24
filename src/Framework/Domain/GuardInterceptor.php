@@ -17,9 +17,8 @@ final class GuardInterceptor implements CoreInterceptorInterface
 {
     public function __construct(
         private readonly GuardInterface $guard,
-        private readonly PermissionsProviderInterface $permissions
-    ) {
-    }
+        private readonly PermissionsProviderInterface $permissions,
+    ) {}
 
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {

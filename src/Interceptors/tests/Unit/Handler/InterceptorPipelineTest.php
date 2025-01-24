@@ -34,7 +34,7 @@ final class InterceptorPipelineTest extends TestCase
                 new \Spiral\Interceptors\Event\InterceptorCalling(
                     $context,
                     $interceptor,
-                )
+                ),
             );
         $pipeline = $this->createPipeline(interceptors: [$interceptor], dispatcher: $dispatcher);
 
@@ -44,7 +44,7 @@ final class InterceptorPipelineTest extends TestCase
                 {
                     return null;
                 }
-            }
+            },
         )->handle($context);
     }
 
@@ -120,6 +120,11 @@ final class InterceptorPipelineTest extends TestCase
         self::assertSame(['foo', 'bar'], $result);
     }
 
+    public function createPathContext(array $path = []): CallContext
+    {
+        return new CallContext(Target::fromPathArray($path));
+    }
+
     /**
      * @param array<InterceptorInterface> $interceptors
      */
@@ -133,10 +138,5 @@ final class InterceptorPipelineTest extends TestCase
         $lastHandler instanceof HandlerInterface and $pipeline = $pipeline->withHandler($lastHandler);
 
         return $pipeline->withInterceptors(...$interceptors);
-    }
-
-    public function createPathContext(array $path = []): CallContext
-    {
-        return new CallContext(Target::fromPathArray($path));
     }
 }

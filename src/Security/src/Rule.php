@@ -36,9 +36,8 @@ abstract class Rule implements RuleInterface
     ];
 
     public function __construct(
-        protected ResolverInterface $resolver
-    ) {
-    }
+        protected ResolverInterface $resolver,
+    ) {}
 
     /**
      * @throws RuleException

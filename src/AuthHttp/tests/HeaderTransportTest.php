@@ -33,15 +33,15 @@ final class HeaderTransportTest extends BaseTestCase
                     echo ':';
                     echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
-            }
+            },
         );
 
         $response = $http->handle(
-            new ServerRequest('GET', '', ['X-Auth-Token' => 'good-token'], 'php://input')
+            new ServerRequest('GET', '', ['X-Auth-Token' => 'good-token'], 'php://input'),
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+        self::assertSame('good-token:{"id":"good-token"}', (string) $response->getBody());
     }
 
     public function testHeaderTokenWithCustomValueFormat(): void
@@ -57,16 +57,17 @@ final class HeaderTransportTest extends BaseTestCase
                     echo ':';
                     echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
-            }
+            },
         );
 
         $response = $http->handle(
-            new ServerRequest('GET', '', ['Authorization' => 'Bearer good-token'], 'php://input')
+            new ServerRequest('GET', '', ['Authorization' => 'Bearer good-token'], 'php://input'),
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        self::assertSame('good-token:{"id":"good-token"}', (string)$response->getBody());
+        self::assertSame('good-token:{"id":"good-token"}', (string) $response->getBody());
     }
+
     public function testBadHeaderToken(): void
     {
         $http = $this->getCore(new HeaderTransport());
@@ -80,15 +81,15 @@ final class HeaderTransportTest extends BaseTestCase
                     echo ':';
                     echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
-            }
+            },
         );
 
         $response = $http->handle(
-            new ServerRequest('GET', '', ['X-Auth-Token' => 'bad'], 'php://input')
+            new ServerRequest('GET', '', ['X-Auth-Token' => 'bad'], 'php://input'),
         );
 
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        self::assertSame('no token', (string)$response->getBody());
+        self::assertSame('no token', (string) $response->getBody());
     }
 
     public function testDeleteToken(): void
@@ -99,14 +100,14 @@ final class HeaderTransportTest extends BaseTestCase
             static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->close();
                 echo 'closed';
-            }
+            },
         );
         $response = $http->handle(
-            new ServerRequest('GET', '',['X-Auth-Token' => 'bad'], 'php://input')
+            new ServerRequest('GET', '', ['X-Auth-Token' => 'bad'], 'php://input'),
         );
 
         self::assertEmpty($response->getHeader('X-Auth-Token'));
-        self::assertSame('closed', (string)$response->getBody());
+        self::assertSame('closed', (string) $response->getBody());
     }
 
     public function testCommitToken(): void
@@ -116,9 +117,9 @@ final class HeaderTransportTest extends BaseTestCase
         $http->setHandler(
             static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->start(
-                    new TestAuthHttpToken('new-token', ['ok' => 1])
+                    new TestAuthHttpToken('new-token', ['ok' => 1]),
                 );
-            }
+            },
         );
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
@@ -133,9 +134,9 @@ final class HeaderTransportTest extends BaseTestCase
         $http->setHandler(
             static function (ServerRequestInterface $request): void {
                 $request->getAttribute('authContext')->start(
-                    new TestAuthHttpToken('new-token', ['ok' => 1])
+                    new TestAuthHttpToken('new-token', ['ok' => 1]),
                 );
-            }
+            },
         );
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
@@ -148,7 +149,7 @@ final class HeaderTransportTest extends BaseTestCase
         $config = new HttpConfig([
             'basePath'   => '/',
             'headers'    => [
-                'Content-Type' => 'text/html; charset=UTF-8'
+                'Content-Type' => 'text/html; charset=UTF-8',
             ],
             'middleware' => [],
         ]);
@@ -157,7 +158,7 @@ final class HeaderTransportTest extends BaseTestCase
             $config,
             new Pipeline($this->container),
             new ResponseFactory($config),
-            $this->container
+            $this->container,
         );
 
         $http->getPipeline()->pushMiddleware(
@@ -165,8 +166,8 @@ final class HeaderTransportTest extends BaseTestCase
                 $this->container,
                 new TestAuthHttpProvider(),
                 new TestAuthHttpStorage(),
-                $reg = new TransportRegistry()
-            )
+                $reg = new TransportRegistry(),
+            ),
         );
 
         $reg->setDefaultTransport('transport');

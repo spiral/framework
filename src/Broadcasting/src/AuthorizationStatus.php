@@ -15,19 +15,12 @@ final class AuthorizationStatus
         public readonly bool $success,
         public readonly ?array $topics,
         public readonly array $attributes = [],
-        public readonly ?ResponseInterface $response = null
-    ) {
-    }
+        public readonly ?ResponseInterface $response = null,
+    ) {}
 
-    /**
-     * @param bool $success
-     * @param non-empty-string[]|null $topics
-     * @param array $attributes
-     * @param ResponseInterface|null $response
-     */
     public function with(mixed ...$values): self
     {
-        return new self(...($values + (array)$this));
+        return new self(...($values + (array) $this));
     }
 
     /**

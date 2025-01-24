@@ -13,8 +13,7 @@ final class LegacyChangerInterceptor implements CoreInterceptorInterface
         private readonly ?string $controller = null,
         private readonly ?string $action = null,
         private readonly ?array $parameters = null,
-    ) {
-    }
+    ) {}
 
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): mixed
     {

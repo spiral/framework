@@ -11,12 +11,6 @@ use function Spiral\Scaffolder\defineArrayType;
 
 class FunctionsTest extends TestCase
 {
-    #[DataProvider('defineProvider')]
-    public function testDefineArrayType(?string $expected, array $array, ?string $failureType): void
-    {
-        self::assertEquals($expected, defineArrayType($array, $failureType));
-    }
-
     public static function defineProvider(): \Traversable
     {
         //valid
@@ -27,5 +21,11 @@ class FunctionsTest extends TestCase
         yield [null, [1, '2', 3], null];
         yield [null, [null, 'null'], null];
         yield ['mixed', [null, 'null'], 'mixed'];
+    }
+
+    #[DataProvider('defineProvider')]
+    public function testDefineArrayType(?string $expected, array $array, ?string $failureType): void
+    {
+        self::assertEquals($expected, defineArrayType($array, $failureType));
     }
 }

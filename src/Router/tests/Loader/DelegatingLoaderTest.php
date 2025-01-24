@@ -17,7 +17,7 @@ final class DelegatingLoaderTest extends TestCase
     public function testLoad(): void
     {
         $loader = new DelegatingLoader(new LoaderRegistry([
-            new TestLoader()
+            new TestLoader(),
         ]));
 
         self::assertInstanceOf(RouteCollection::class, $loader->load('file.yaml', 'yaml'));
@@ -41,7 +41,7 @@ final class DelegatingLoaderTest extends TestCase
 
         $loader = new DelegatingLoader(new LoaderRegistry([
             new PhpFileLoader($container, $container),
-            new TestLoader()
+            new TestLoader(),
         ]));
         self::assertTrue($loader->supports('file.php'));
         self::assertTrue($loader->supports('file.php', 'php'));

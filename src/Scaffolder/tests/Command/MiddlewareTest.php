@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
-use Throwable;
-
 class MiddlewareTest extends AbstractCommandTestCase
 {
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffold(): void
     {
@@ -20,13 +16,13 @@ class MiddlewareTest extends AbstractCommandTestCase
 
         $this->console()->run('create:middleware', [
             'name'      => 'sample-middleware',
-            '--comment' => 'Sample Middleware'
+            '--comment' => 'Sample Middleware',
         ]);
 
         clearstatcache();
         self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('strict_types=1', $content);
@@ -37,8 +33,8 @@ class MiddlewareTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffoldWithCustomNamespace(): void
     {
@@ -46,13 +42,13 @@ class MiddlewareTest extends AbstractCommandTestCase
 
         $this->console()->run('create:middleware', [
             'name' => 'sample-middleware',
-            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware'
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware',
         ]);
 
         clearstatcache();
         self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('App/Custom/Middleware/SampleMiddleware.php', \str_replace('\\', '/', $reflection->getFileName()));

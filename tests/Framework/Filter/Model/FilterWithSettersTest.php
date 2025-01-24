@@ -24,7 +24,7 @@ final class FilterWithSettersTest extends FilterTestCase
                     return '--<b>"test"</b>  ';
                 }
             },
-            'nullableString' => null
+            'nullableString' => null,
         ]);
 
         self::assertInstanceOf(FilterWithSetters::class, $filter);
@@ -42,8 +42,8 @@ final class FilterWithSettersTest extends FilterTestCase
             'active' => '1',
             'post_rating' => '0.9',
             'author' => [
-                'id' => '3'
-            ]
+                'id' => '3',
+            ],
         ]);
 
         self::assertInstanceOf(PostFilter::class, $filter);

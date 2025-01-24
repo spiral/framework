@@ -34,9 +34,8 @@ final class ViewsBootloader extends Bootloader
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
-    ) {
-    }
+        private readonly ConfiguratorInterface $config,
+    ) {}
 
     public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
@@ -57,7 +56,7 @@ final class ViewsBootloader extends Bootloader
                 ],
                 'dependencies' => [],
                 'engines' => [NativeEngine::class],
-            ]
+            ],
         );
     }
 
@@ -69,7 +68,7 @@ final class ViewsBootloader extends Bootloader
 
         $this->config->modify(
             ViewsConfig::CONFIG,
-            new Append('namespaces.' . $namespace, null, $directory)
+            new Append('namespaces.' . $namespace, null, $directory),
         );
     }
 
@@ -77,7 +76,7 @@ final class ViewsBootloader extends Bootloader
     {
         $this->config->modify(
             ViewsConfig::CONFIG,
-            new Append('engines', null, $engine)
+            new Append('engines', null, $engine),
         );
     }
 
@@ -85,21 +84,21 @@ final class ViewsBootloader extends Bootloader
     {
         $this->config->modify(
             ViewsConfig::CONFIG,
-            new Append('dependencies', null, $dependency)
+            new Append('dependencies', null, $dependency),
         );
     }
 
     protected function initGlobalVariables(ViewsConfig $config): GlobalVariablesInterface
     {
         return new GlobalVariables(
-            $config->getGlobalVariables()
+            $config->getGlobalVariables(),
         );
     }
 
     protected function initLoader(ViewsConfig $config): LoaderInterface
     {
         return new ViewLoader(
-            $config->getNamespaces()
+            $config->getNamespaces(),
         );
     }
 }

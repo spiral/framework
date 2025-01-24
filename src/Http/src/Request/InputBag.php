@@ -18,14 +18,8 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     public function __construct(
         private readonly array $data,
-        private readonly int|string $prefix = ''
-    ) {
-    }
-
-    public function __debugInfo(): array
-    {
-        return $this->all();
-    }
+        private readonly int|string $prefix = '',
+    ) {}
 
     public function count(): int
     {
@@ -116,6 +110,11 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         throw new InputException('InputBag is immutable.');
+    }
+
+    public function __debugInfo(): array
+    {
+        return $this->all();
     }
 
     /**

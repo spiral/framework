@@ -22,6 +22,7 @@ final class ReflectionFile
      * Constants for convenience.
      */
     public const TOKEN_TYPE = Tokenizer::TYPE;
+
     public const TOKEN_CODE = Tokenizer::CODE;
     public const TOKEN_LINE = Tokenizer::LINE;
 
@@ -29,6 +30,7 @@ final class ReflectionFile
      * Opening and closing token ids.
      */
     public const O_TOKEN = 0;
+
     public const C_TOKEN = 1;
 
     /**
@@ -112,7 +114,7 @@ final class ReflectionFile
     private array $invocations = [];
 
     public function __construct(
-        private readonly string $filename
+        private readonly string $filename,
     ) {
         $this->tokens = Tokenizer::getTokens($filename);
         $this->countTokens = \count($this->tokens);
@@ -527,7 +529,7 @@ final class ReflectionFile
                         $argumentsTID,
                         $tokenID,
                         $arguments,
-                        $invocationLevel
+                        $invocationLevel,
                     );
 
                     //Closing search
@@ -580,7 +582,7 @@ final class ReflectionFile
         int $argumentsID,
         int $endID,
         array $arguments,
-        int $invocationLevel
+        int $invocationLevel,
     ): void {
         //Nested invocations
         $this->locateInvocations($arguments, $invocationLevel + 1);
@@ -600,7 +602,7 @@ final class ReflectionFile
             $name,
             ReflectionArgument::locateArguments($arguments),
             $this->getSource($invocationID, $endID),
-            $invocationLevel
+            $invocationLevel,
         );
     }
 

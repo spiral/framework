@@ -20,7 +20,7 @@ use Spiral\Filters\Model\FilterInterface;
  *
  * After creating nested filter it will be validated.
  */
-#[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class NestedFilter
 {
     /**
@@ -28,9 +28,8 @@ final class NestedFilter
      */
     public function __construct(
         public readonly string $class,
-        public readonly ?string $prefix = null
-    ) {
-    }
+        public readonly ?string $prefix = null,
+    ) {}
 
     public function getSchema(\ReflectionProperty $property): string|array
     {

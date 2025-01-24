@@ -30,22 +30,18 @@ final class MonologBootloader extends Bootloader
         LogsInterface::class => LogFactory::class,
         Logger::class => Logger::class,
     ];
-
     protected const BINDINGS = [
         'log.rotate' => [self::class, 'logRotate'],
     ];
-
     protected const DEPENDENCIES = [
         LoggerBootloader::class,
     ];
-
     private const DEFAULT_FORMAT = "[%datetime%] %level_name%: %message% %context%\n";
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
         private readonly EnvironmentInterface $env,
-    ) {
-    }
+    ) {}
 
     public function init(Container $container, FinalizerInterface $finalizer): void
     {
@@ -89,8 +85,8 @@ final class MonologBootloader extends Bootloader
             new Append(
                 'handlers.' . $channel,
                 null,
-                $handler
-            )
+                $handler,
+            ),
         );
     }
 
@@ -98,7 +94,7 @@ final class MonologBootloader extends Bootloader
         string $filename,
         int|Level $level = Logger::DEBUG,
         int $maxFiles = 0,
-        bool $bubble = true
+        bool $bubble = true,
     ): HandlerInterface {
         $handler = new RotatingFileHandler(
             $filename,
@@ -106,11 +102,11 @@ final class MonologBootloader extends Bootloader
             $level,
             $bubble,
             null,
-            true
+            true,
         );
 
         return $handler->setFormatter(
-            new LineFormatter($this->env->get('MONOLOG_FORMAT', self::DEFAULT_FORMAT))
+            new LineFormatter($this->env->get('MONOLOG_FORMAT', self::DEFAULT_FORMAT)),
         );
     }
 }

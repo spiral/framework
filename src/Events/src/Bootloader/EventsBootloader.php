@@ -40,16 +40,14 @@ final class EventsBootloader extends Bootloader
         TokenizerListenerBootloader::class,
         AttributesBootloader::class,
     ];
-
     protected const SINGLETONS = [
         ListenerFactoryInterface::class => AutowireListenerFactory::class,
         ListenerProcessorRegistry::class => ListenerProcessorRegistry::class,
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $configs
-    ) {
-    }
+        private readonly ConfiguratorInterface $configs,
+    ) {}
 
     public function init(): void
     {
@@ -70,7 +68,7 @@ final class EventsBootloader extends Bootloader
         AbstractKernel $kernel,
         ListenerProcessorRegistry $registry,
         FinalizerInterface $finalizer,
-        ?EventDispatcherInterface $eventDispatcher = null
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): void {
         if ($eventDispatcher !== null) {
             $this->initEventDispatcher(new Core($eventDispatcher), $config, $container, $factory);
@@ -105,7 +103,7 @@ final class EventsBootloader extends Bootloader
         Core $core,
         EventsConfig $config,
         Container $container,
-        FactoryInterface $factory
+        FactoryInterface $factory,
     ): void {
         $builder = new CompatiblePipelineBuilder();
         $list = [];

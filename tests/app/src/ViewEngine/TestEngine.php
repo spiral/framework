@@ -30,9 +30,7 @@ class TestEngine extends AbstractEngine
         }
     }
 
-    public function reset(string $path, ContextInterface $context): void
-    {
-    }
+    public function reset(string $path, ContextInterface $context): void {}
 
     public function get(string $path, ContextInterface $context): ViewInterface
     {

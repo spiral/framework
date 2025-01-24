@@ -34,7 +34,7 @@ final class DynamicToPHP implements VisitorInterface
      */
     public function __construct(
         private readonly string $defaultFilter = self::DEFAULT_FILTER,
-        private array $directives = []
+        private array $directives = [],
     ) {
         $this->traverser = new Traverser();
         $this->traverser->addVisitor($this);
@@ -84,7 +84,7 @@ final class DynamicToPHP implements VisitorInterface
 
         throw new DirectiveException(
             \sprintf('Undefined directive `%s`', $node->name),
-            $node->getContext()
+            $node->getContext(),
         );
     }
 
@@ -105,7 +105,7 @@ final class DynamicToPHP implements VisitorInterface
         return new PHP(
             $result,
             \token_get_all($result),
-            $node->getContext()->withValue(PHP::ORIGINAL_BODY, \trim((string) $node->body))
+            $node->getContext()->withValue(PHP::ORIGINAL_BODY, \trim((string) $node->body)),
         );
     }
 
@@ -134,7 +134,7 @@ final class DynamicToPHP implements VisitorInterface
                 'json_encode(%s, %s, %s)',
                 '%s',
                 'JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT',
-                '512'
+                '512',
             );
         }
 

@@ -19,35 +19,35 @@ class DeleteTest extends BaseTestCase
         $cf->modify('scope', new Delete('.', 'value'));
 
         self::assertSame([
-            'other' => ['a' => 'b']
+            'other' => ['a' => 'b'],
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', null, 'c'));
 
         self::assertSame([
             'other' => ['a' => 'b'],
-            'c'
+            'c',
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('.', null, 'c'));
 
         self::assertSame([
-            'other' => ['a' => 'b']
+            'other' => ['a' => 'b'],
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('other', 'a'));
         self::assertSame([
-            'other' => []
+            'other' => [],
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Append('.', 'other', ['a' => 'b']));
         self::assertSame([
-            'other' => ['a' => 'b']
+            'other' => ['a' => 'b'],
         ], $cf->getConfig('scope'));
 
         $cf->modify('scope', new Delete('other', null, 'b'));
         self::assertSame([
-            'other' => []
+            'other' => [],
         ], $cf->getConfig('scope'));
     }
 

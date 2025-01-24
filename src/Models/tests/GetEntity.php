@@ -17,6 +17,6 @@ class GetEntity extends DataEntity
             throw new RuntimeException("can't be array");
         }
 
-        return (int)$v;
+        return (int) $v;
     }
 }

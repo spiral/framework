@@ -88,7 +88,7 @@ abstract class Kernel extends AbstractKernel
                 static function () use ($self): void {
                     $self->fireCallbacks($self->bootingCallbacks);
                 },
-            ]
+            ],
         );
 
         $this->fireCallbacks($this->bootedCallbacks);
@@ -123,7 +123,7 @@ abstract class Kernel extends AbstractKernel
                 'config'    => $directories['app'] . '/config/',
                 'resources' => $directories['app'] . '/resources/',
             ],
-            $directories
+            $directories,
         );
     }
 }

@@ -55,7 +55,7 @@ class FactoryTest extends BaseTestCase
         $logger = $factory->getLogger();
 
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
+            new class implements LoaderInterface {
                 public function has(string $section): bool
                 {
                     return false;
@@ -65,7 +65,7 @@ class FactoryTest extends BaseTestCase
                 {
                     return [];
                 }
-            }
+            },
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
@@ -84,7 +84,7 @@ class FactoryTest extends BaseTestCase
         $factory = new LogFactory(new MonologConfig([]), new ListenerRegistry(), new Container());
 
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
+            new class implements LoaderInterface {
                 public function has(string $section): bool
                 {
                     return false;
@@ -94,7 +94,7 @@ class FactoryTest extends BaseTestCase
                 {
                     return [];
                 }
-            }
+            },
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
@@ -111,7 +111,7 @@ class FactoryTest extends BaseTestCase
     public function testFinalizerShouldResetDefaultLogger(): void
     {
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
+            new class implements LoaderInterface {
                 public function has(string $section): bool
                 {
                     return false;
@@ -121,7 +121,7 @@ class FactoryTest extends BaseTestCase
                 {
                     return [];
                 }
-            }
+            },
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = new Finalizer());
@@ -129,14 +129,14 @@ class FactoryTest extends BaseTestCase
         $factory = new LogFactory(new MonologConfig([
             'handlers' => [
                 'default' => [
-                    $handler = \Mockery::mock(HandlerInterface::class, ResettableInterface::class)
-                ]
+                    $handler = \Mockery::mock(HandlerInterface::class, ResettableInterface::class),
+                ],
             ],
             'processors' => [
                 'default' => [
-                    $processor = \Mockery::mock(ProcessorInterface::class, ResettableInterface::class)
-                ]
-            ]
+                    $processor = \Mockery::mock(ProcessorInterface::class, ResettableInterface::class),
+                ],
+            ],
         ]), new ListenerRegistry(), $this->container);
 
         $handler->shouldReceive('reset')->twice();
@@ -151,7 +151,7 @@ class FactoryTest extends BaseTestCase
     public function testFinalizerShouldNotResetLoggerWhenApplicationTerminating(): void
     {
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
+            new class implements LoaderInterface {
                 public function has(string $section): bool
                 {
                     return false;
@@ -161,7 +161,7 @@ class FactoryTest extends BaseTestCase
                 {
                     return [];
                 }
-            }
+            },
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = new Finalizer());
@@ -169,14 +169,14 @@ class FactoryTest extends BaseTestCase
         $factory = new LogFactory(new MonologConfig([
             'handlers' => [
                 'default' => [
-                    $handler = \Mockery::mock(HandlerInterface::class, ResettableInterface::class)
-                ]
+                    $handler = \Mockery::mock(HandlerInterface::class, ResettableInterface::class),
+                ],
             ],
             'processors' => [
                 'default' => [
-                    $processor = \Mockery::mock(ProcessorInterface::class, ResettableInterface::class)
-                ]
-            ]
+                    $processor = \Mockery::mock(ProcessorInterface::class, ResettableInterface::class),
+                ],
+            ],
         ]), new ListenerRegistry(), $this->container);
 
         $handler->shouldReceive('reset')->never();

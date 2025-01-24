@@ -14,6 +14,6 @@ class NoIndex
      * @do-not-index
      */
     protected $mess = [
-        '[[no-message]]'
+        '[[no-message]]',
     ];
 }

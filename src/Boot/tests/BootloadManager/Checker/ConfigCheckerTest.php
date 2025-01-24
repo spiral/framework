@@ -13,16 +13,6 @@ use Spiral\Tests\Boot\Fixtures\BootloaderA;
 
 final class ConfigCheckerTest extends TestCase
 {
-    #[DataProvider('canInitializeDataProvider')]
-    public function testCanInitialize(bool $expected, ?BootloadConfig $config = null): void
-    {
-        $checker = new ConfigChecker(new Environment([
-            'APP_ENV' => 'dev'
-        ]));
-
-        self::assertSame($expected, $checker->canInitialize(BootloaderA::class, $config));
-    }
-
     public static function canInitializeDataProvider(): \Traversable
     {
         yield [true, null];
@@ -42,5 +32,15 @@ final class ConfigCheckerTest extends TestCase
         yield [true, new BootloadConfig(denyEnv: ['APP_ENV' => 'prod'])];
         yield [true, new BootloadConfig(denyEnv: ['APP_ENV' => ['prod']])];
         yield [true, new BootloadConfig(denyEnv: ['APP_ENV' => ['prod'], 'DEBUG' => true])];
+    }
+
+    #[DataProvider('canInitializeDataProvider')]
+    public function testCanInitialize(bool $expected, ?BootloadConfig $config = null): void
+    {
+        $checker = new ConfigChecker(new Environment([
+            'APP_ENV' => 'dev',
+        ]));
+
+        self::assertSame($expected, $checker->canInitialize(BootloaderA::class, $config));
     }
 }

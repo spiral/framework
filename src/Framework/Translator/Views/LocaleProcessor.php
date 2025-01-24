@@ -18,9 +18,8 @@ final class LocaleProcessor implements ProcessorInterface
     private const REGEXP = '/\[\[(.*?)\]\]/s';
 
     public function __construct(
-        private readonly TranslatorInterface $translator
-    ) {
-    }
+        private readonly TranslatorInterface $translator,
+    ) {}
 
     public function process(ViewSource $source, ContextInterface $context): ViewSource
     {
@@ -31,22 +30,22 @@ final class LocaleProcessor implements ProcessorInterface
                 '%s-%s-%s',
                 self::PREFIX,
                 \str_replace(['/', '\\'], '-', $source->getNamespace()),
-                \str_replace(['/', '\\'], '-', $source->getName())
-            )
+                \str_replace(['/', '\\'], '-', $source->getName()),
+            ),
         );
 
         //We are not forcing locale for now
         return $source->withCode(
             \preg_replace_callback(
                 self::REGEXP,
-                static fn ($matches) => $translator->trans(
+                static fn($matches) => $translator->trans(
                     $matches[1],
                     [],
                     $domain,
-                    $context->resolveValue(LocaleDependency::NAME)
+                    $context->resolveValue(LocaleDependency::NAME),
                 ),
-                $source->getCode()
-            )
+                $source->getCode(),
+            ),
         );
     }
 }

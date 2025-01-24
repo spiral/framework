@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Translator;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Core\BootloadManager;
 use Spiral\Core\Container;
-use Spiral\Core\MemoryInterface;
-use Spiral\Core\NullMemory;
 use Spiral\Translator\Catalogue;
 use Spiral\Translator\Catalogue\LoaderInterface;
 use Spiral\Translator\Catalogue\RuntimeLoader;
@@ -40,8 +37,8 @@ class InterpolateTest extends TestCase
         $container->bind(TranslatorConfig::class, new TranslatorConfig([
             'locale'  => 'en',
             'domains' => [
-                'messages' => ['*']
-            ]
+                'messages' => ['*'],
+            ],
         ]));
 
         $container->bindSingleton(TranslatorInterface::class, Translator::class);
@@ -52,8 +49,8 @@ class InterpolateTest extends TestCase
         $loader->addCatalogue('en', new Catalogue('en', [
             'messages' => [
                 'Welcome, {name}!' => 'Welcome, {name}!',
-                'Bye, {1}!'        => 'Bye, {1}!'
-            ]
+                'Bye, {1}!'        => 'Bye, {1}!',
+            ],
         ]));
 
         $container->bind(LoaderInterface::class, $loader);

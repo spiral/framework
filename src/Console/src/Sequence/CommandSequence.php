@@ -17,7 +17,7 @@ final class CommandSequence extends AbstractSequence
         private readonly string $command,
         private readonly array $options = [],
         string $header = '',
-        string $footer = ''
+        string $footer = '',
     ) {
         parent::__construct($header, $footer);
     }

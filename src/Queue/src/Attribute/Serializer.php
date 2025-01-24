@@ -21,7 +21,6 @@ use Spiral\Attributes\NamedArgumentConstructor;
 class Serializer
 {
     public function __construct(
-        public readonly string $serializer
-    ) {
-    }
+        public readonly string $serializer,
+    ) {}
 }

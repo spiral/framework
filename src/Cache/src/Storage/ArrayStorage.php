@@ -16,9 +16,8 @@ class ArrayStorage implements CacheInterface
     protected array $storage = [];
 
     public function __construct(
-        private readonly int $ttl = 2_592_000
-    ) {
-    }
+        private readonly int $ttl = 2_592_000,
+    ) {}
 
     public function get(string $key, mixed $default = null): mixed
     {

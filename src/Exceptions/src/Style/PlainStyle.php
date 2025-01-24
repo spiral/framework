@@ -21,15 +21,15 @@ class PlainStyle implements StyleInterface
         if ($target) {
             return \sprintf(
                 ">%s %s\n",
-                \str_pad((string)$number, 4, ' ', STR_PAD_LEFT),
-                $code
+                \str_pad((string) $number, 4, ' ', STR_PAD_LEFT),
+                $code,
             );
         }
 
         return \sprintf(
             " %s %s\n",
-            \str_pad((string)$number, 4, ' ', STR_PAD_LEFT),
-            $code
+            \str_pad((string) $number, 4, ' ', STR_PAD_LEFT),
+            $code,
         );
     }
 }

@@ -17,11 +17,20 @@ use Spiral\Tests\Queue\TestCase;
 
 final class CoreTest extends TestCase
 {
+    public static function payloadDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
+    }
+
     #[DataProvider('payloadDataProvider')]
     public function testCallActionWithNullOptions(mixed $payload): void
     {
         $core = new Core(
-            $queue = m::mock(QueueInterface::class)
+            $queue = m::mock(QueueInterface::class),
         );
 
         if (!\is_array($payload)) {
@@ -30,7 +39,8 @@ final class CoreTest extends TestCase
         }
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, mixed $p = [], ?OptionsInterface $options = null): bool => $name === 'foo'
+            ->withArgs(
+                fn(string $name, mixed $p = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === $p
                 && $options instanceof Options,
             );
@@ -46,7 +56,7 @@ final class CoreTest extends TestCase
     public function testCallActionWithOptions(mixed $payload): void
     {
         $core = new Core(
-            $queue = m::mock(QueueInterface::class)
+            $queue = m::mock(QueueInterface::class),
         );
 
         if (!\is_array($payload)) {
@@ -84,7 +94,7 @@ final class CoreTest extends TestCase
                 && $payload === ['baz' => 'baf']
                 && $options->getHeader('foo') === ['bar']);
 
-        ContainerScope::runScope($container, function() use($core): void {
+        ContainerScope::runScope($container, function () use ($core): void {
             $core->callAction('foo', 'bar', [
                 'id' => 'job-id',
                 'payload' => ['baz' => 'baf'],
@@ -112,14 +122,5 @@ final class CoreTest extends TestCase
             'payload' => ['baz' => 'baf'],
             'options' => m::mock(OptionsInterface::class),
         ]);
-    }
-
-    public static function payloadDataProvider(): \Traversable
-    {
-        yield [['baz' => 'baf']];
-        yield [new \stdClass()];
-        yield ['some string'];
-        yield [123];
-        yield [null];
     }
 }

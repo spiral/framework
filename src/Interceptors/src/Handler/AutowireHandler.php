@@ -21,8 +21,7 @@ final class AutowireHandler implements HandlerInterface
     public function __construct(
         /** @internal */
         protected ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     /**
      * @psalm-assert class-string $controller
@@ -40,7 +39,7 @@ final class AutowireHandler implements HandlerInterface
 
         if ($method instanceof \ReflectionFunction) {
             return $method->invokeArgs(
-                $this->resolveArguments($method, $context)
+                $this->resolveArguments($method, $context),
             );
         }
 

@@ -43,21 +43,11 @@ final class Session implements SessionInterface
     public function __construct(
         private readonly string $clientSignature,
         private readonly int $lifetime,
-        ?string $id = null
+        ?string $id = null,
     ) {
         if (!empty($id) && $this->validID($id)) {
             $this->id = $id;
         }
-    }
-
-    public function __debugInfo(): array
-    {
-        return [
-            'id'        => $this->id,
-            'signature' => $this->clientSignature,
-            'started'   => $this->isStarted(),
-            'data'      => $this->isStarted() ? $_SESSION : null,
-        ];
     }
 
     public function isStarted(): bool
@@ -161,6 +151,16 @@ final class Session implements SessionInterface
     public function getSection(?string $name = null): SessionSectionInterface
     {
         return new SessionSection($this, $name ?? self::DEFAULT_SECTION);
+    }
+
+    public function __debugInfo(): array
+    {
+        return [
+            'id'        => $this->id,
+            'signature' => $this->clientSignature,
+            'started'   => $this->isStarted(),
+            'data'      => $this->isStarted() ? $_SESSION : null,
+        ];
     }
 
     /**

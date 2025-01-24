@@ -19,8 +19,7 @@ final class Registry
         private readonly Config $config,
         private array $objects = [],
         private readonly Options $options = new Options(),
-    ) {
-    }
+    ) {}
 
     public function set(string $name, object $value): void
     {

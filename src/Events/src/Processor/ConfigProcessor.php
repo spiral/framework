@@ -14,8 +14,7 @@ final class ConfigProcessor extends AbstractProcessor
         private readonly EventsConfig $config,
         private readonly ListenerFactoryInterface $factory,
         private readonly ?ListenerRegistryInterface $registry = null,
-    ) {
-    }
+    ) {}
 
     public function process(): void
     {
@@ -29,7 +28,7 @@ final class ConfigProcessor extends AbstractProcessor
                 $this->registry->addListener(
                     event: $event,
                     listener: $this->factory->create($listener->listener, $method->getName()),
-                    priority: $listener->priority
+                    priority: $listener->priority,
                 );
             }
         }

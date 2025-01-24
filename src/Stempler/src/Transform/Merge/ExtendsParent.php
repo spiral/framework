@@ -27,9 +27,8 @@ final class ExtendsParent implements VisitorInterface
 
     public function __construct(
         private readonly Builder $builder,
-        private readonly Merger $merger = new Merger()
-    ) {
-    }
+        private readonly Merger $merger = new Merger(),
+    ) {}
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
@@ -47,7 +46,7 @@ final class ExtendsParent implements VisitorInterface
             if (!$parent instanceof AttributedInterface) {
                 throw new LogicException(\sprintf(
                     'Unable to extend non attributable node (%s)',
-                    \get_debug_type($node)
+                    \get_debug_type($node),
                 ));
             }
 
@@ -80,7 +79,7 @@ final class ExtendsParent implements VisitorInterface
                 throw new ExtendsException(
                     \sprintf('Unable to extend parent `%s`', $path),
                     $extends->getContext(),
-                    $e
+                    $e,
                 );
             }
         }
@@ -105,7 +104,7 @@ final class ExtendsParent implements VisitorInterface
         // might be non existed
         throw new SyntaxException(
             'Unable to extend parent without specified path',
-            $tag->getContext()->getToken()
+            $tag->getContext()->getToken(),
         );
     }
 }

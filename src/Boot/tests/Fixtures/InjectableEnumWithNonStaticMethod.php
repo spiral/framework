@@ -13,7 +13,5 @@ enum InjectableEnumWithNonStaticMethod implements InjectableEnumInterface
     case Foo;
     case Bar;
 
-    public function detect(): void
-    {
-    }
+    public function detect(): void {}
 }

@@ -29,7 +29,7 @@ class SourcemapTest extends BaseTestCase
 
         self::assertSame([
             'bundle-import',
-            'import/bundle'
+            'import/bundle',
         ], $res->getPaths());
     }
 
@@ -95,7 +95,7 @@ class SourcemapTest extends BaseTestCase
     {
         return [
             new DefineAttributes(),
-            new DefineBlocks()
+            new DefineBlocks(),
         ];
     }
 }

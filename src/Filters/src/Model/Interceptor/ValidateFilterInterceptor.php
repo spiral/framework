@@ -22,9 +22,8 @@ use Spiral\Validation\ValidationProviderInterface;
 final class ValidateFilterInterceptor implements CoreInterceptorInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container
-    ) {
-    }
+        private readonly ContainerInterface $container,
+    ) {}
 
     /**
      * @param-assert TParameters $parameters
@@ -39,7 +38,7 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
                 $filter->filterDefinition(),
                 $bag,
                 $bag->errors ?? [],
-                $parameters['context'] ?? null
+                $parameters['context'] ?? null,
             );
         }
 
@@ -55,7 +54,7 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
         FilterDefinitionInterface $definition,
         FilterBag $bag,
         array $errors,
-        mixed $context
+        mixed $context,
     ): void {
         if ($definition instanceof ShouldBeValidated) {
             $errorMapper = new ErrorMapper($bag->schema);
@@ -68,7 +67,7 @@ final class ValidateFilterInterceptor implements CoreInterceptorInterface
             if (!$validator->isValid()) {
                 throw new ValidationException(
                     $errorMapper->mapErrors(\array_merge($errors, $validator->getErrors())),
-                    $context
+                    $context,
                 );
             } elseif ($errors !== []) {
                 throw new ValidationException($errorMapper->mapErrors($errors), $context);

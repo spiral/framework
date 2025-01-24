@@ -25,7 +25,7 @@ final class PaginationBootloaderTest extends BaseTestCase
         \set_error_handler(static function (int $errno, string $error): void {
             self::assertSame(\sprintf(
                 'Using `%s` outside of the `http-request` scope is deprecated and will be impossible in version 4.0.',
-                PaginationProviderInterface::class
+                PaginationProviderInterface::class,
             ), $error);
         });
 

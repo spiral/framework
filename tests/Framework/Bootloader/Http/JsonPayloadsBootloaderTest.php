@@ -19,9 +19,9 @@ final class JsonPayloadsBootloaderTest extends BaseTestCase
             [
                 'contentTypes' => [
                     'application/json',
-                    'application/vnd.api+json'
+                    'application/vnd.api+json',
                 ],
-            ]
+            ],
         );
     }
 

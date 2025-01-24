@@ -11,7 +11,6 @@ use Spiral\Reactor\Partial\Constant;
 use Spiral\Reactor\Partial\EnumCase;
 use Spiral\Reactor\Partial\Method;
 use Spiral\Reactor\Partial\TraitUse;
-use Spiral\Reactor\Traits;
 
 /**
  * @extends AbstractDeclaration<EnumType>
@@ -25,6 +24,18 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
     public function __construct(string $name)
     {
         $this->element = new EnumType($name);
+    }
+
+    /**
+     * @internal
+     */
+    public static function fromElement(EnumType $element): static
+    {
+        $enum = new static($element->getName());
+
+        $enum->element = $element;
+
+        return $enum;
     }
 
     public function setType(?string $type): static
@@ -49,7 +60,9 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
         return $this;
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public function getImplements(): array
     {
         return $this->element->getImplements();
@@ -72,8 +85,8 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
     public function setCases(EnumCases $enumCases): static
     {
         $this->element->setCases(\array_map(
-            static fn (EnumCase $enumCase): NetteEnumCase => $enumCase->getElement(),
-            \iterator_to_array($enumCases)
+            static fn(EnumCase $enumCase): NetteEnumCase => $enumCase->getElement(),
+            \iterator_to_array($enumCases),
         ));
 
         return $this;
@@ -82,8 +95,8 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
     public function getCases(): EnumCases
     {
         return new EnumCases(\array_map(
-            static fn (NetteEnumCase $enumCase): EnumCase => EnumCase::fromElement($enumCase),
-            $this->element->getCases()
+            static fn(NetteEnumCase $enumCase): EnumCase => EnumCase::fromElement($enumCase),
+            $this->element->getCases(),
         ));
     }
 
@@ -109,18 +122,6 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
         $this->element->addMember($member->getElement());
 
         return $this;
-    }
-
-    /**
-     * @internal
-     */
-    public static function fromElement(EnumType $element): static
-    {
-        $enum = new static($element->getName());
-
-        $enum->element = $element;
-
-        return $enum;
     }
 
     /**

@@ -14,7 +14,5 @@ final class CustomInitializer implements InitializerInterface
         yield 'foo' => ['bootloader' => new BootloaderA(), 'options' => []];
     }
 
-    public function getRegistry(): ClassesRegistry
-    {
-    }
+    public function getRegistry(): ClassesRegistry {}
 }

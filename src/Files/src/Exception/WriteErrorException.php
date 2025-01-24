@@ -7,6 +7,4 @@ namespace Spiral\Files\Exception;
 /**
  * File can not be written.
  */
-class WriteErrorException extends FilesException
-{
-}
+class WriteErrorException extends FilesException {}

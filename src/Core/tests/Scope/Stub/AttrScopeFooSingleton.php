@@ -9,6 +9,4 @@ use Spiral\Core\Attribute\Singleton;
 
 #[Singleton]
 #[Scope('foo')]
-final class AttrScopeFooSingleton
-{
-}
+final class AttrScopeFooSingleton {}

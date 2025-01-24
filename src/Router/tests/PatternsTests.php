@@ -21,7 +21,7 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/statistics/set/<moduleType:\d+>/<moduleId:\d+>/<type:\d+>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
@@ -39,13 +39,13 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<int:int>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/1'))
+            new ServerRequest('GET', new Uri('http://site.com/users/1')),
         );
 
         self::assertSame([
@@ -57,13 +57,13 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<int:int>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/1b'))
+            new ServerRequest('GET', new Uri('http://site.com/users/1b')),
         );
 
         self::assertNull($match);
@@ -73,13 +73,13 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<integer:integer>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/1'))
+            new ServerRequest('GET', new Uri('http://site.com/users/1')),
         );
 
         self::assertSame([
@@ -91,13 +91,13 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<integer:integer>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/1b'))
+            new ServerRequest('GET', new Uri('http://site.com/users/1b')),
         );
 
         self::assertNull($match);
@@ -107,13 +107,13 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<uuid:uuid>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac120002'))
+            new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac120002')),
         );
 
         self::assertSame([
@@ -125,13 +125,13 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<uuid:uuid>',
-            'test'
+            'test',
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0'))
+            new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0')),
         );
 
         self::assertNull($match);
@@ -141,7 +141,7 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<uuid:foo>',
-            'test'
+            'test',
         );
 
         $registry = m::mock(RoutePatternRegistryInterface::class);
@@ -154,12 +154,12 @@ class PatternsTests extends TestCase
         $route = $route->withUriHandler(
             new UriHandler(
                 new UriFactory(),
-                patternRegistry: $registry
-            )
+                patternRegistry: $registry,
+            ),
         );
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac222222'))
+            new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac222222')),
         );
 
         self::assertSame([
@@ -171,35 +171,35 @@ class PatternsTests extends TestCase
     {
         $route = new Route(
             '/users/<name:in_array>',
-            'test'
+            'test',
         );
 
         $registry = new DefaultPatternRegistry();
 
         $registry->register(
             'in_array',
-            new InArrayPattern(['foo', 'bar'])
+            new InArrayPattern(['foo', 'bar']),
         );
         $registry->register(
             'foo',
-            '[0-9]+'
+            '[0-9]+',
         );
 
         $route = $route->withUriHandler(
             new UriHandler(
                 new UriFactory(),
-                patternRegistry: $registry
-            )
+                patternRegistry: $registry,
+            ),
         );
 
         $match = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/foo'))
+            new ServerRequest('GET', new Uri('http://site.com/users/foo')),
         );
         $match1 = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/bar'))
+            new ServerRequest('GET', new Uri('http://site.com/users/bar')),
         );
         $match2 = $route->match(
-            new ServerRequest('GET', new Uri('http://site.com/users/baz'))
+            new ServerRequest('GET', new Uri('http://site.com/users/baz')),
         );
 
         self::assertSame([

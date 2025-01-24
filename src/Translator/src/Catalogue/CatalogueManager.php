@@ -23,7 +23,7 @@ final class CatalogueManager implements CatalogueManagerInterface
 
     public function __construct(
         private readonly LoaderInterface $loader,
-        ?CacheInterface $cache = null
+        ?CacheInterface $cache = null,
     ) {
         $this->cache = $cache ?? new NullCache();
     }
@@ -34,7 +34,7 @@ final class CatalogueManager implements CatalogueManagerInterface
             return $this->locales;
         }
 
-        $this->locales = (array)$this->cache->getLocales();
+        $this->locales = (array) $this->cache->getLocales();
         if ($this->locales === []) {
             $this->locales = $this->loader->getLocales();
             $this->cache->setLocales($this->locales);
@@ -49,7 +49,7 @@ final class CatalogueManager implements CatalogueManagerInterface
             return $this->catalogues[$locale];
         }
 
-        $data = (array)$this->cache->loadLocale($locale);
+        $data = (array) $this->cache->loadLocale($locale);
         if (!empty($data)) {
             $this->catalogues[$locale] = new Catalogue($locale, $data);
         } else {

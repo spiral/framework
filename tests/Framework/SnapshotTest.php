@@ -14,7 +14,7 @@ final class SnapshotTest extends BaseTestCase
         // string important. Emulating string from .env
         $app = $this->makeApp([
             'SNAPSHOT_MAX_FILES' => '1',
-            'SNAPSHOT_VERBOSITY' => '1'
+            'SNAPSHOT_VERBOSITY' => '1',
         ]);
 
         self::assertInstanceOf(SnapshotterInterface::class, $app->getContainer()->get(SnapshotterInterface::class));

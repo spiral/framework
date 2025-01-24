@@ -20,7 +20,7 @@ final class ConfigTracerFactoryProviderTest extends TestCase
     {
         $provider = new ConfigTracerFactoryProvider(
             new TelemetryConfig(['drivers' => ['foo' => 'bar']]),
-            $factory = \Mockery::mock(FactoryInterface::class)
+            $factory = \Mockery::mock(FactoryInterface::class),
         );
 
         $factory->shouldReceive('make')
@@ -36,9 +36,9 @@ final class ConfigTracerFactoryProviderTest extends TestCase
         $provider = new ConfigTracerFactoryProvider(
             new TelemetryConfig([
                 'default' => 'foo',
-                'drivers' => ['foo' => 'bar']
+                'drivers' => ['foo' => 'bar'],
             ]),
-            $factory = \Mockery::mock(FactoryInterface::class)
+            $factory = \Mockery::mock(FactoryInterface::class),
         );
 
         $factory->shouldReceive('make')
@@ -57,9 +57,9 @@ final class ConfigTracerFactoryProviderTest extends TestCase
         $provider = new ConfigTracerFactoryProvider(
             new TelemetryConfig([
                 'default' => 'bar',
-                'drivers' => ['foo' => 'bar']
+                'drivers' => ['foo' => 'bar'],
             ]),
-            $factory = \Mockery::mock(FactoryInterface::class)
+            $factory = \Mockery::mock(FactoryInterface::class),
         );
 
         $provider->getTracerFactory();

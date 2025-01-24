@@ -35,7 +35,7 @@ final class ControllerTest extends HttpTestCase
         $this->fakeHttp()->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"}'),
-            headers: ['Content-Type' => 'application/json;charset=UTF-8;']
+            headers: ['Content-Type' => 'application/json;charset=UTF-8;'],
         )->assertBodySame('{"a":"b"}')
             ->assertStatus(200);
     }
@@ -47,7 +47,7 @@ final class ControllerTest extends HttpTestCase
         $this->fakeHttp()->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"}'),
-            headers: ['Content-Type' => 'application/vnd.api+json;charset=UTF-8;']
+            headers: ['Content-Type' => 'application/vnd.api+json;charset=UTF-8;'],
         )->assertBodySame('{"a":"b"}')
             ->assertStatus(200);
     }
@@ -59,7 +59,7 @@ final class ControllerTest extends HttpTestCase
         $this->fakeHttp()->post(
             uri: '/payload',
             data: $factory->createStream('{"a":"b"'),
-            headers: ['Content-Type' => 'application/json;charset=UTF-8;']
+            headers: ['Content-Type' => 'application/json;charset=UTF-8;'],
         )
             ->assertStatus(400);
     }

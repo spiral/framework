@@ -36,6 +36,21 @@ final class InlineGrammar implements GrammarInterface
     /** @var array<array-key, Byte|Token>|null */
     private ?array $default = null;
 
+    /**
+     * @codeCoverageIgnore
+     */
+    public static function tokenName(int $token): string
+    {
+        return match ($token) {
+            self::TYPE_OPEN_TAG => 'INLINE:OPEN_TAG',
+            self::TYPE_CLOSE_TAG => 'INLINE:CLOSE_TAG',
+            self::TYPE_NAME => 'INLINE:NAME',
+            self::TYPE_SEPARATOR => 'INLINE:SEPARATOR',
+            self::TYPE_DEFAULT => 'INLINE:DEFAULT',
+            default => 'INLINE:UNDEFINED',
+        };
+    }
+
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {
@@ -53,21 +68,6 @@ final class InlineGrammar implements GrammarInterface
 
             yield from $binding;
         }
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public static function tokenName(int $token): string
-    {
-        return match ($token) {
-            self::TYPE_OPEN_TAG => 'INLINE:OPEN_TAG',
-            self::TYPE_CLOSE_TAG => 'INLINE:CLOSE_TAG',
-            self::TYPE_NAME => 'INLINE:NAME',
-            self::TYPE_SEPARATOR => 'INLINE:SEPARATOR',
-            self::TYPE_DEFAULT => 'INLINE:DEFAULT',
-            default => 'INLINE:UNDEFINED',
-        };
     }
 
     /**
@@ -113,7 +113,7 @@ final class InlineGrammar implements GrammarInterface
                     $this->tokens[] = new Token(
                         self::TYPE_CLOSE_TAG,
                         $n->offset,
-                        $n->char
+                        $n->char,
                     );
 
                     break 2;
@@ -125,7 +125,7 @@ final class InlineGrammar implements GrammarInterface
                     $this->tokens[] = new Token(
                         self::TYPE_SEPARATOR,
                         $n->offset,
-                        $n->char
+                        $n->char,
                     );
 
                     $this->default = [];

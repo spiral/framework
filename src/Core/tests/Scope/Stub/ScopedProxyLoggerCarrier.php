@@ -10,8 +10,7 @@ final class ScopedProxyLoggerCarrier
 {
     public function __construct(
         #[Proxy] public LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function getLogger(): LoggerInterface
     {

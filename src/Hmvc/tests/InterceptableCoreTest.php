@@ -22,7 +22,7 @@ final class InterceptableCoreTest extends TestCase
         self::assertSame('Hello, Antony.', $int->callAction(
             DummyController::class,
             'index',
-            ['name' => 'Antony']
+            ['name' => 'Antony'],
         ));
     }
 
@@ -34,7 +34,7 @@ final class InterceptableCoreTest extends TestCase
         self::assertSame('?Hello, Antony.!', $int->callAction(
             DummyController::class,
             'index',
-            ['name' => 'Antony']
+            ['name' => 'Antony'],
         ));
     }
 
@@ -47,7 +47,7 @@ final class InterceptableCoreTest extends TestCase
         self::assertSame('??Hello, Antony.!!', $int->callAction(
             DummyController::class,
             'index',
-            ['name' => 'Antony']
+            ['name' => 'Antony'],
         ));
     }
 
@@ -59,7 +59,7 @@ final class InterceptableCoreTest extends TestCase
         $pipeline->callAction(
             DummyController::class,
             'index',
-            ['name' => 'Antony']
+            ['name' => 'Antony'],
         );
     }
 }

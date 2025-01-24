@@ -22,7 +22,7 @@ final class PHP implements NodeInterface
         public string $content,
         /** @internal */
         public array $tokens,
-        ?Context $context = null
+        ?Context $context = null,
     ) {
         $this->context = $context;
     }

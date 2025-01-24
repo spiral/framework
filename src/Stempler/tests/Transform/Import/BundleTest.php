@@ -30,6 +30,13 @@ final class BundleTest extends BaseTestCase
         yield ['tes:span'];
     }
 
+    public static function correctNamespaceProvider(): iterable
+    {
+        yield ['test.span'];
+        yield ['test:span'];
+        yield ['test/span'];
+    }
+
     #[DataProvider('wrongNamespaceProvider')]
     public function testResolveTagWithWrongNamespace(string $tag): void
     {
@@ -46,7 +53,6 @@ final class BundleTest extends BaseTestCase
 
         $builder->addVisitor(
             new class implements VisitorInterface {
-
                 public function enterNode(mixed $node, VisitorContext $ctx): mixed
                 {
                     $n = $ctx->getCurrentNode();
@@ -69,13 +75,6 @@ final class BundleTest extends BaseTestCase
         self::assertNull(
             $bundle->resolve($builder, $tag),
         );
-    }
-
-    public static function correctNamespaceProvider(): iterable
-    {
-        yield ['test.span'];
-        yield ['test:span'];
-        yield ['test/span'];
     }
 
     #[DataProvider('correctNamespaceProvider')]

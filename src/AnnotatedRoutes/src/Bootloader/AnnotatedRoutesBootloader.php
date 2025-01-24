@@ -26,7 +26,7 @@ final class AnnotatedRoutesBootloader extends Bootloader
 
     public function init(
         TokenizerListenerRegistryInterface $listenerRegistry,
-        RouteLocatorListener $routeRegistrar
+        RouteLocatorListener $routeRegistrar,
     ): void {
         $listenerRegistry->addListener($routeRegistrar);
     }

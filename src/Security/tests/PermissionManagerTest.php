@@ -11,7 +11,6 @@ use Spiral\Security\Exception\RoleException;
 use Spiral\Security\PermissionManager;
 use Spiral\Security\Rule\AllowRule;
 use Spiral\Security\Rule\ForbidRule;
-use Spiral\Security\RuleInterface;
 use Spiral\Security\RulesInterface;
 
 /**
@@ -25,11 +24,6 @@ class PermissionManagerTest extends TestCase
     public const PERMISSION = 'permission';
 
     private MockObject&RulesInterface $rules;
-
-    protected function setUp(): void
-    {
-        $this->rules = $this->createMock(RulesInterface::class);
-    }
 
     public function testRoles(): void
     {
@@ -125,7 +119,7 @@ class PermissionManagerTest extends TestCase
         $manager->associate('admin', 'post.edit', AllowRule::class);
 
         self::assertSame([
-            'post.edit' => AllowRule::class
+            'post.edit' => AllowRule::class,
         ], $manager->getPermissions('admin'));
     }
 
@@ -156,5 +150,10 @@ class PermissionManagerTest extends TestCase
         $manager = new PermissionManager($this->rules);
         $manager->addRole(static::ROLE);
         $manager->associate(static::ROLE, static::PERMISSION);
+    }
+
+    protected function setUp(): void
+    {
+        $this->rules = $this->createMock(RulesInterface::class);
     }
 }

@@ -18,7 +18,6 @@ final class EncrypterBootloader extends Bootloader
     protected const SINGLETONS = [
         EncryptionInterface::class => EncrypterFactory::class,
     ];
-
     protected const BINDINGS = [
         EncrypterInterface::class => Encrypter::class,
     ];

@@ -8,7 +8,6 @@ use Psr\Container\ContainerInterface;
 use Spiral\Console\Command;
 use Spiral\Console\SequenceInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Throwable;
 
 abstract class SequenceCommand extends Command
 {
@@ -29,9 +28,9 @@ abstract class SequenceCommand extends Command
             try {
                 $sequence->execute($container, $this->output);
                 $sequence->writeFooter($this->output);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $errors++;
-                $this->error((string)$e);
+                $this->error((string) $e);
 
                 if (!$this->option('ignore') && $this->option('break')) {
                     $this->error('Aborting.');

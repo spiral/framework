@@ -14,9 +14,8 @@ final class EnvironmentCollector implements StateCollectorInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly EnvironmentInterface $env
-    ) {
-    }
+        private readonly EnvironmentInterface $env,
+    ) {}
 
     public function populate(StateInterface $state): void
     {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Scaffolder\Command;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use ReflectionClass;
 use Spiral\Console\Attribute\Argument;
 use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Attribute\Option;
@@ -13,6 +12,18 @@ use Spiral\Console\Attribute\Question;
 
 final class CommandTest extends AbstractCommandTestCase
 {
+    public static function commandDataProvider(): \Traversable
+    {
+        yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null, 'sample'];
+        yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SomeCommand', 'SomeCommand', null, 'some:command'];
+        yield [
+            '\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand',
+            'sampleAlias',
+            'my-sample-command-alias',
+            'my-sample-command-alias',
+        ];
+    }
+
     #[DataProvider('commandDataProvider')]
     public function testScaffold(string $className, string $name, ?string $alias, $commandName): void
     {
@@ -32,7 +43,7 @@ final class CommandTest extends AbstractCommandTestCase
         clearstatcache();
         self::assertTrue(class_exists($className));
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
         $content = $this->files()->read($reflection->getFileName());
         $classNameParts = \explode('\\', $className);
 
@@ -61,7 +72,7 @@ final class CommandTest extends AbstractCommandTestCase
         clearstatcache();
         self::assertTrue(\class_exists($className));
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
 
         self::assertTrue($reflection->hasProperty('username'));
         $username = $reflection->getProperty('username');
@@ -88,7 +99,7 @@ final class CommandTest extends AbstractCommandTestCase
         clearstatcache();
         self::assertTrue(\class_exists($className));
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
 
         self::assertTrue($reflection->hasProperty('isAdmin'));
         $isAdmin = $reflection->getProperty('isAdmin');
@@ -108,7 +119,7 @@ final class CommandTest extends AbstractCommandTestCase
         clearstatcache();
         self::assertTrue(class_exists($className));
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('App/Custom/Command/SampleCommand.php', \str_replace('\\', '/', $reflection->getFileName()));
@@ -133,17 +144,5 @@ final class CommandTest extends AbstractCommandTestCase
             2. Read more about user Commands in the documentation: https://spiral.dev/docs/console-commands
 
             OUTPUT, $output);
-    }
-
-    public static function commandDataProvider(): \Traversable
-    {
-        yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleCommand', 'sample', null, 'sample'];
-        yield ['\\Spiral\\Tests\\Scaffolder\\App\\Command\\SomeCommand', 'SomeCommand', null, 'some:command'];
-        yield [
-            '\\Spiral\\Tests\\Scaffolder\\App\\Command\\SampleAliasCommand',
-            'sampleAlias',
-            'my-sample-command-alias',
-            'my-sample-command-alias',
-        ];
     }
 }

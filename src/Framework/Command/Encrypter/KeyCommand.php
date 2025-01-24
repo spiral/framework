@@ -33,7 +33,7 @@ final class KeyCommand extends Command
     public function perform(
         EncrypterFactory $enc,
         FilesInterface $files,
-        ApplicationInProduction $confirmation
+        ApplicationInProduction $confirmation,
     ): int {
         $key = $enc->generateKey();
 

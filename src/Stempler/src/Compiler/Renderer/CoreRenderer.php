@@ -19,7 +19,7 @@ final class CoreRenderer implements RendererInterface
     public function render(
         Compiler $compiler,
         Compiler\Result $result,
-        NodeInterface $node
+        NodeInterface $node,
     ): bool {
         switch (true) {
             case $node instanceof Hidden:
@@ -32,7 +32,7 @@ final class CoreRenderer implements RendererInterface
                         foreach ($node->nodes as $child) {
                             $compiler->compile($child, $source);
                         }
-                    }
+                    },
                 );
 
                 return true;
@@ -49,7 +49,7 @@ final class CoreRenderer implements RendererInterface
 
                             $compiler->compile($child, $source);
                         }
-                    }
+                    },
                 );
 
                 return true;

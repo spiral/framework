@@ -25,27 +25,25 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
     public function __construct(
         protected Finder $finder,
         protected readonly bool $debug = false,
-    ) {
-    }
+    ) {}
 
     /**
      * Available file reflections. Generator.
      *
-     * @throws \Exception
-     *
      * @return \Generator<int, ReflectionFile, mixed, void>
+     * @throws \Exception
      */
     protected function availableReflections(): \Generator
     {
         foreach ($this->finder->getIterator() as $file) {
-            $reflection = new ReflectionFile((string)$file);
+            $reflection = new ReflectionFile((string) $file);
 
             if ($reflection->hasIncludes()) {
                 // We are not analyzing files which has includes, it's not safe to require such reflections
                 if ($this->debug) {
                     $this->getLogger()->warning(
                         \sprintf('File `%s` has includes and excluded from analysis', (string) $file),
-                        ['file' => $file]
+                        ['file' => $file],
                     );
                 }
 
@@ -91,7 +89,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
             if ($this->debug) {
                 $this->getLogger()->error(
                     \sprintf('%s: %s in %s:%s', $class, $e->getMessage(), $e->getFile(), $e->getLine()),
-                    ['error' => $e]
+                    ['error' => $e],
                 );
             }
 
@@ -134,7 +132,7 @@ abstract class AbstractLocator implements InjectableInterface, LoggerAwareInterf
             if ($this->debug) {
                 $this->getLogger()->error(
                     \sprintf('%s: %s in %s:%s', $enum, $e->getMessage(), $e->getFile(), $e->getLine()),
-                    ['error' => $e]
+                    ['error' => $e],
                 );
             }
 

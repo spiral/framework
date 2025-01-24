@@ -15,7 +15,6 @@ class HTMLTest extends BaseTestCase
         CoreRenderer::class,
         HTMLRenderer::class,
     ];
-
     protected const GRAMMARS = [
         HTMLGrammar::class => HTMLSyntax::class,
     ];

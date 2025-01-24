@@ -18,8 +18,7 @@ final class Scope
 
     public function __construct(
         private readonly ?string $scopeName = null,
-    ) {
-    }
+    ) {}
 
     public function getScopeName(): ?string
     {

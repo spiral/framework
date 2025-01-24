@@ -21,24 +21,8 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function __construct(
         private readonly array $allowed,
-        private array $elements = []
-    ) {
-    }
-
-    /**
-     * Get element by it's name.
-     *
-     * @param non-empty-string $name
-     *
-     * @return TElement
-     * @throws ReactorException
-     *
-     * TODO add parameter type
-     */
-    public function __get($name): AggregableInterface
-    {
-        return $this->get($name);
-    }
+        private array $elements = [],
+    ) {}
 
     public function isEmpty(): bool
     {
@@ -158,6 +142,21 @@ class Aggregator implements \ArrayAccess, \IteratorAggregate, \Countable
     public function offsetUnset(mixed $offset): void
     {
         $this->remove($offset);
+    }
+
+    /**
+     * Get element by it's name.
+     *
+     * @param non-empty-string $name
+     *
+     * @return TElement
+     * @throws ReactorException
+     *
+     * TODO add parameter type
+     */
+    public function __get($name): AggregableInterface
+    {
+        return $this->get($name);
     }
 
     /**

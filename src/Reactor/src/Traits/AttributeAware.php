@@ -12,7 +12,9 @@ use Spiral\Reactor\Partial\Attribute;
  */
 trait AttributeAware
 {
-    /** @param mixed[] $args */
+    /**
+     * @param mixed[] $args
+     */
     public function addAttribute(string $name, array $args = []): static
     {
         $this->element->addAttribute($name, $args);
@@ -26,19 +28,21 @@ trait AttributeAware
     public function setAttributes(array $attributes): static
     {
         $this->element->setAttributes(\array_map(
-            static fn (Attribute $attribute): NetteAttribute => $attribute->getElement(),
-            $attributes
+            static fn(Attribute $attribute): NetteAttribute => $attribute->getElement(),
+            $attributes,
         ));
 
         return $this;
     }
 
-    /** @return Attribute[] */
+    /**
+     * @return Attribute[]
+     */
     public function getAttributes(): array
     {
         return \array_map(
-            static fn (NetteAttribute $attribute): Attribute => Attribute::fromElement($attribute),
-            $this->element->getAttributes()
+            static fn(NetteAttribute $attribute): Attribute => Attribute::fromElement($attribute),
+            $this->element->getAttributes(),
         );
     }
 }

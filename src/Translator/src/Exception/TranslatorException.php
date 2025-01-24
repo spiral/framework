@@ -7,6 +7,4 @@ namespace Spiral\Translator\Exception;
 /**
  * Generic translation exception.
  */
-class TranslatorException extends \RuntimeException
-{
-}
+class TranslatorException extends \RuntimeException {}

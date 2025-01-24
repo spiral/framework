@@ -17,7 +17,7 @@ final class FilterBagTest extends BaseTestCase
         $bag = new FilterBag(
             $filter = m::mock(FilterInterface::class),
             $entity = m::mock(AbstractEntity::class),
-            $schema = ['foo' => 'bar',]
+            $schema = ['foo' => 'bar',],
         );
 
         self::assertSame($filter, $bag->filter);

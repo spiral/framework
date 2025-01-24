@@ -24,7 +24,7 @@ if (!\function_exists('l')) {
         $container = ContainerScope::getContainer();
         if ($container === null || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
-                '`TranslatorInterface` binding is missing or container scope is not set'
+                '`TranslatorInterface` binding is missing or container scope is not set',
             );
         }
 
@@ -53,7 +53,7 @@ if (!\function_exists('p')) {
         $container = ContainerScope::getContainer();
         if (empty($container) || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
-                '`TranslatorInterface` binding is missing or container scope is not set'
+                '`TranslatorInterface` binding is missing or container scope is not set',
             );
         }
 

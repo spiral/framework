@@ -12,7 +12,7 @@ final class BucketFactory implements BucketFactoryInterface
     public function createFromAdapter(
         FilesystemAdapter $adapter,
         ?string $name = null,
-        ?UriResolverInterface $resolver = null
+        ?UriResolverInterface $resolver = null,
     ): BucketInterface {
         return Bucket::fromAdapter($adapter, $name, $resolver);
     }

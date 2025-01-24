@@ -36,7 +36,7 @@ final class ContextProcessor implements ProcessorInterface
                         return $matches['default'] ?? throw $e;
                     }
                 },
-                $source->getCode()
+                $source->getCode(),
             ),
         );
     }

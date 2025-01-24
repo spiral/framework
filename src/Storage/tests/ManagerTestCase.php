@@ -4,24 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Storage;
 
-use League\Flysystem\Local\LocalFilesystemAdapter;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage;
-use Spiral\Storage\Bucket;
 use Spiral\Storage\Visibility;
 
 #[\PHPUnit\Framework\Attributes\Group('unit')]
 class ManagerTestCase extends TestCase
 {
     private Storage $manager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->manager = new Storage();
-        $this->manager->add(Storage::DEFAULT_STORAGE, $this->local);
-    }
 
     public function testDefaultResolver(): void
     {
@@ -61,7 +51,7 @@ class ManagerTestCase extends TestCase
         $resolvers = \iterator_to_array($manager->getIterator());
         self::assertSame([
             Storage::DEFAULT_STORAGE => $this->local,
-            'example'                => $this->second
+            'example'                => $this->second,
         ], $resolvers);
     }
 
@@ -81,7 +71,7 @@ class ManagerTestCase extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
             'URI argument must be a valid URI in ' .
-            '"[STORAGE]://[PATH_TO_FILE]" format, but `test://` given'
+            '"[STORAGE]://[PATH_TO_FILE]" format, but `test://` given',
         );
 
         $this->manager->create('test://');
@@ -147,7 +137,7 @@ class ManagerTestCase extends TestCase
         $this->markTestSkipped(
             'This test [' . __FUNCTION__ . '] returns incorrect visibility ' .
                 'of files on Windows OS. ' .
-            'It is required to understand the situation'
+            'It is required to understand the situation',
         );
 
         $this->manager->create('file.txt');
@@ -300,5 +290,13 @@ class ManagerTestCase extends TestCase
         $this->manager->write('file.txt', 'content');
 
         self::assertSame('text/plain', $this->manager->getMimeType('file.txt'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->manager = new Storage();
+        $this->manager->add(Storage::DEFAULT_STORAGE, $this->local);
     }
 }

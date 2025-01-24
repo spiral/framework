@@ -22,7 +22,7 @@ final class JsonRenderer extends AbstractRenderer
                 $exception::class,
                 $exception->getMessage(),
                 $exception->getFile(),
-                $exception->getLine()
+                $exception->getLine(),
             ),
             'stacktrace' => \iterator_to_array($this->renderTrace($exception->getTrace(), $verbosity)),
         ]);
@@ -38,12 +38,12 @@ final class JsonRenderer extends AbstractRenderer
                     '%s%s%s()',
                     $item['class'],
                     $item['type'],
-                    $item['function']
+                    $item['function'],
                 );
             } else {
                 $result['function'] = \sprintf(
                     '%s()',
-                    $item['function']
+                    $item['function'],
                 );
             }
 

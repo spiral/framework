@@ -15,6 +15,7 @@ interface TranslatorInterface extends \Symfony\Contracts\Translation\TranslatorI
      * Default set of braces to be used in classes or views for indication of translatable content.
      */
     public const I18N_PREFIX  = '[[';
+
     public const I18N_POSTFIX = ']]';
 
     /**

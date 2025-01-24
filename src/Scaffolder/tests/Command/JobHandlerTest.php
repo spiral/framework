@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
-use Throwable;
-
 class JobHandlerTest extends AbstractCommandTestCase
 {
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffold(): void
     {
@@ -20,13 +16,13 @@ class JobHandlerTest extends AbstractCommandTestCase
 
         $this->console()->run('create:jobHandler', [
             'name'      => 'sample',
-            '--comment' => 'Sample Job Handler'
+            '--comment' => 'Sample Job Handler',
         ]);
 
         clearstatcache();
         self::assertTrue(class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('strict_types=1', $content);
@@ -38,8 +34,8 @@ class JobHandlerTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffoldWithCustomNamespace(): void
     {
@@ -47,13 +43,13 @@ class JobHandlerTest extends AbstractCommandTestCase
 
         $this->console()->run('create:jobHandler', [
             'name' => 'sample',
-            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Job'
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Job',
         ]);
 
         clearstatcache();
         self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('App/Custom/Job/SampleJob.php', \str_replace('\\', '/', $reflection->getFileName()));
@@ -66,7 +62,7 @@ class JobHandlerTest extends AbstractCommandTestCase
 
         $result = $this->console()->run('create:jobHandler', [
             'name'      => 'sample',
-            '--comment' => 'Sample Job Handler'
+            '--comment' => 'Sample Job Handler',
         ]);
 
         $output = $result->getOutput()->fetch();

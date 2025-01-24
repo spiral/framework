@@ -14,7 +14,7 @@ final class ScopeContainerLeakedException extends ScopeException
         array $parents,
     ) {
         $scopes = \implode('->', \array_map(
-            static fn (?string $scope): string => $scope === null ? 'null' : "\"$scope\"",
+            static fn(?string $scope): string => $scope === null ? 'null' : "\"$scope\"",
             [...\array_reverse($parents), $scope],
         ));
         parent::__construct(

@@ -64,7 +64,6 @@ class ImportBundleTest extends BaseTestCase
         self::assertSame('<a href="google.com">hello world</a>', $builder->compile('root')->getContent());
     }
 
-
     protected function getBuilder(LoaderInterface $loader, array $visitors): Builder
     {
         $builder = parent::getBuilder($loader, $visitors);
@@ -86,7 +85,7 @@ class ImportBundleTest extends BaseTestCase
     {
         return [
             new DefineAttributes(),
-            new DefineBlocks()
+            new DefineBlocks(),
         ];
     }
 }

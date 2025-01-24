@@ -10,7 +10,6 @@ use Spiral\Core\BinderInterface;
 class SampleBootWithMethodBoot extends Bootloader
 {
     public const BOOT = true;
-
     public const BINDINGS   = ['abc' => self::class];
     public const SINGLETONS = ['single' => self::class];
 

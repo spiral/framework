@@ -33,12 +33,12 @@ trait TraitAware
     {
         $traits = \array_filter(
             $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof TraitType
+            static fn(ClassLike $element): bool => $element instanceof TraitType,
         );
 
         return new Traits(\array_map(
-            static fn (TraitType $trait): TraitDeclaration => TraitDeclaration::fromElement($trait),
-            $traits
+            static fn(TraitType $trait): TraitDeclaration => TraitDeclaration::fromElement($trait),
+            $traits,
         ));
     }
 }

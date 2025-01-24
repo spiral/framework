@@ -21,7 +21,7 @@ class MixedTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 1, '<?="my-tag"?>'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 14, '>'),
             ],
-            ('<<?="my-tag"?>>')
+            ('<<?="my-tag"?>>'),
         );
     }
 
@@ -31,7 +31,7 @@ class MixedTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '<<?"my-tag"?>>'),
             ],
-            ('<<?"my-tag"?>>')
+            ('<<?"my-tag"?>>'),
         );
     }
 
@@ -45,7 +45,7 @@ class MixedTest extends BaseTestCase
                 new Token(PHPGrammar::TYPE_CODE, 15, '<?php echo "hello" ?>'),
                 new Token(Token::TYPE_RAW, 36, 'end'),
             ],
-            ('<<?="my-tag"?>><?php echo "hello" ?>end')
+            ('<<?="my-tag"?>><?php echo "hello" ?>end'),
         );
     }
 
@@ -61,7 +61,7 @@ class MixedTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_KEYWORD, 30, 'script'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 36, '>'),
             ],
-            ('<script>alert("<<?="a"?>>");</script>')
+            ('<script>alert("<<?="a"?>>");</script>'),
         );
     }
 
@@ -77,7 +77,7 @@ class MixedTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_ATTRIBUTE, 10, '"${name}"'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 19, '>'),
             ],
-            ('<tag name="${name}">')
+            ('<tag name="${name}">'),
         );
     }
 
@@ -93,7 +93,7 @@ class MixedTest extends BaseTestCase
                 new Token(HTMLGrammar::TYPE_ATTRIBUTE, 20, '"${name}"'),
                 new Token(HTMLGrammar::TYPE_CLOSE, 29, '>'),
             ],
-            ('<<?="my-tag"?> name="${name}">')
+            ('<<?="my-tag"?> name="${name}">'),
         );
     }
 }

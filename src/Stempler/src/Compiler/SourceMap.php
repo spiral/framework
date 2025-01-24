@@ -14,21 +14,24 @@ final class SourceMap
 {
     /** @var Source[]|null */
     private ?array $sourceCache = null;
+
     private array $paths = [];
     private array $lines = [];
 
-    public function __serialize(): array
+    public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap
     {
-        return [
-            'paths' => $this->paths,
-            'lines' => $this->lines,
-        ];
-    }
+        $map = new self();
 
-    public function __unserialize(array $data): void
-    {
-        $this->paths = $data['paths'];
-        $this->lines = $data['lines'];
+        foreach ($locations as $offset => $location) {
+            $line = Source::resolveLine($content, $offset);
+            if (!isset($map->lines[$line])) {
+                $map->lines[$line] = $map->calculateLine($location, $loader);
+            }
+        }
+
+        $map->sourceCache = null;
+
+        return $map;
     }
 
     /**
@@ -83,20 +86,18 @@ final class SourceMap
         $this->__unserialize(\json_decode($serialized, true));
     }
 
-    public static function calculate(string $content, array $locations, LoaderInterface $loader): SourceMap
+    public function __serialize(): array
     {
-        $map = new self();
+        return [
+            'paths' => $this->paths,
+            'lines' => $this->lines,
+        ];
+    }
 
-        foreach ($locations as $offset => $location) {
-            $line = Source::resolveLine($content, $offset);
-            if (!isset($map->lines[$line])) {
-                $map->lines[$line] = $map->calculateLine($location, $loader);
-            }
-        }
-
-        $map->sourceCache = null;
-
-        return $map;
+    public function __unserialize(array $data): void
+    {
+        $this->paths = $data['paths'];
+        $this->lines = $data['lines'];
     }
 
     private function unpack(array &$result, array $line): void

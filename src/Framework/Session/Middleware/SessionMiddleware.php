@@ -33,9 +33,8 @@ final class SessionMiddleware implements MiddlewareInterface
         private readonly HttpConfig $httpConfig,
         private readonly CookiesConfig $cookiesConfig,
         private readonly SessionFactoryInterface $factory,
-        private readonly ScopeInterface $scope
-    ) {
-    }
+        private readonly ScopeInterface $scope,
+    ) {}
 
     /**
      * @throws \Throwable
@@ -45,7 +44,7 @@ final class SessionMiddleware implements MiddlewareInterface
         //Initiating session, this can only be done once!
         $session = $this->factory->initSession(
             $this->clientSignature($request),
-            $this->fetchID($request)
+            $this->fetchID($request),
         );
 
         try {
@@ -61,7 +60,7 @@ final class SessionMiddleware implements MiddlewareInterface
     protected function commitSession(
         SessionInterface $session,
         Request $request,
-        Response $response
+        Response $response,
     ): Response {
         if (!$session->isStarted()) {
             return $response;
@@ -95,7 +94,7 @@ final class SessionMiddleware implements MiddlewareInterface
     {
         return $response->withAddedHeader(
             'Set-Cookie',
-            $this->sessionCookie($request->getUri(), $id)->createHeader()
+            $this->sessionCookie($request->getUri(), $id)->createHeader(),
         );
     }
 
@@ -128,7 +127,7 @@ final class SessionMiddleware implements MiddlewareInterface
             $this->cookiesConfig->resolveDomain($uri),
             $this->config->isSecure(),
             true,
-            $this->config->getSameSite()
+            $this->config->getSameSite(),
         );
     }
 }

@@ -9,6 +9,6 @@ use Spiral\Filters\Model\Filter;
 class BadRequest extends Filter
 {
     public const SCHEMA = [
-        'name' => 'invalid:section.name'
+        'name' => 'invalid:section.name',
     ];
 }

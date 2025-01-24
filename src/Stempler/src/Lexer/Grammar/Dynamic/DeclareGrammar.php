@@ -27,6 +27,17 @@ final class DeclareGrammar implements GrammarInterface
 
     private array $keyword = [];
 
+    public static function tokenName(int $token): string
+    {
+        return match ($token) {
+            self::TYPE_KEYWORD => 'DECLARE:KEYWORD',
+            self::TYPE_EQUAL => 'DECLARE:EQUAL',
+            self::TYPE_COMMA => 'DECLARE:COMMA',
+            self::TYPE_QUOTED => 'DECLARE:QUOTED',
+            default => 'DECLARE:UNDEFINED',
+        };
+    }
+
     /**
      * TODO issue #767
      * @link https://github.com/spiral/framework/issues/767
@@ -89,16 +100,5 @@ final class DeclareGrammar implements GrammarInterface
         if ($this->keyword !== []) {
             yield $this->packToken($this->keyword, self::TYPE_KEYWORD);
         }
-    }
-
-    public static function tokenName(int $token): string
-    {
-        return match ($token) {
-            self::TYPE_KEYWORD => 'DECLARE:KEYWORD',
-            self::TYPE_EQUAL => 'DECLARE:EQUAL',
-            self::TYPE_COMMA => 'DECLARE:COMMA',
-            self::TYPE_QUOTED => 'DECLARE:QUOTED',
-            default => 'DECLARE:UNDEFINED',
-        };
     }
 }

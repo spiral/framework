@@ -9,6 +9,8 @@ use Spiral\Core\ContainerScope;
 
 class DummyController
 {
+    public static function inner(): void {}
+
     public function index(string $name = 'Dave')
     {
         return "Hello, {$name}.";
@@ -27,9 +29,5 @@ class DummyController
     public function globalScope(int $id)
     {
         return ContainerScope::getContainer();
-    }
-
-    public static function inner(): void
-    {
     }
 }

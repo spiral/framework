@@ -15,9 +15,9 @@ class PHPTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(Token::TYPE_RAW, 0, 'raw body')
+                new Token(Token::TYPE_RAW, 0, 'raw body'),
             ],
-            ('raw body')
+            ('raw body'),
         );
     }
 
@@ -25,9 +25,9 @@ class PHPTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(PHPGrammar::TYPE_CODE, 0, '<?php echo "raw body"?>')
+                new Token(PHPGrammar::TYPE_CODE, 0, '<?php echo "raw body"?>'),
             ],
-            ('<?php echo "raw body"?>')
+            ('<?php echo "raw body"?>'),
         );
     }
 
@@ -35,9 +35,9 @@ class PHPTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(PHPGrammar::TYPE_CODE, 0, '<?php echo "raw body", 123 ?>')
+                new Token(PHPGrammar::TYPE_CODE, 0, '<?php echo "raw body", 123 ?>'),
             ],
-            ('<?php echo "raw body", 123 ?>')
+            ('<?php echo "raw body", 123 ?>'),
         );
     }
 
@@ -45,9 +45,9 @@ class PHPTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(PHPGrammar::TYPE_CODE, 0, '<?="raw body"?>')
+                new Token(PHPGrammar::TYPE_CODE, 0, '<?="raw body"?>'),
             ],
-            ('<?="raw body"?>')
+            ('<?="raw body"?>'),
         );
     }
 
@@ -61,7 +61,7 @@ class PHPTest extends BaseTestCase
                 new Token(PHPGrammar::TYPE_CODE, 19, '<?="2"?>'),
                 new Token(Token::TYPE_RAW, 27, 'end'),
             ],
-            ('start<?="1"?>middle<?="2"?>end')
+            ('start<?="1"?>middle<?="2"?>end'),
         );
     }
 }

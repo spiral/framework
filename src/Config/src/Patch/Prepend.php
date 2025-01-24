@@ -18,7 +18,7 @@ final class Prepend implements PatchInterface
     public function __construct(
         string $position,
         private readonly ?string $key,
-        private mixed $value
+        private mixed $value,
     ) {
         $this->position = $position === '.' ? '' : $position;
     }

@@ -27,7 +27,7 @@ final class Injector
 
     public function __construct(
         ?Lexer $lexer = null,
-        private readonly PrettyPrinterAbstract $printer = new Standard()
+        private readonly PrettyPrinterAbstract $printer = new Standard(),
     ) {
         $this->lexer = $lexer ?? new Lexer\Emulative([
             'usedAttributes' => [

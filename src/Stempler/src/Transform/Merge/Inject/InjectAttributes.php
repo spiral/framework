@@ -21,9 +21,8 @@ use Spiral\Stempler\VisitorInterface;
 final class InjectAttributes implements VisitorInterface
 {
     public function __construct(
-        private readonly BlockClaims $blocks
-    ) {
-    }
+        private readonly BlockClaims $blocks,
+    ) {}
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {
@@ -87,8 +86,8 @@ final class InjectAttributes implements VisitorInterface
             default => new Mixin(\array_merge(
                 [new Raw('"')],
                 \is_array($value) ? $value : [$value],
-                [new Raw('"')]
-            ))
+                [new Raw('"')],
+            )),
         };
     }
 }

@@ -20,7 +20,7 @@ class TestRequest extends Filter
     public string $method;
 
     // TODO: add tests for validation
-//    public const VALIDATES = [
-//        'name' => ['notEmpty', 'string']
-//    ];
+    //    public const VALIDATES = [
+    //        'name' => ['notEmpty', 'string']
+    //    ];
 }

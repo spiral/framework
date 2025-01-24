@@ -21,7 +21,7 @@ final class ParameterTest extends TestCase
 
         $param->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
-            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
+            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
         ]);
         self::assertCount(2, $param->getAttributes());
     }

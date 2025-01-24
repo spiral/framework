@@ -15,7 +15,7 @@ final class Directories implements DirectoriesInterface
      * @param array<non-empty-string, string> $directories
      */
     public function __construct(
-        private array $directories = []
+        private array $directories = [],
     ) {
         foreach ($directories as $name => $directory) {
             $this->set($name, $directory);

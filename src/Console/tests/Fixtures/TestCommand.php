@@ -17,6 +17,6 @@ class TestCommand extends Command
 
     public function perform(): void
     {
-        $this->write('Hello World - '.($this->count++));
+        $this->write('Hello World - ' . ($this->count++));
     }
 }

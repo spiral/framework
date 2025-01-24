@@ -20,9 +20,8 @@ final class GroupRegistry implements \IteratorAggregate
     private array $groups = [];
 
     public function __construct(
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     /**
      * @param non-empty-string $name

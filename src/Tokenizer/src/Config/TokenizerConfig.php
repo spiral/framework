@@ -48,7 +48,7 @@ final class TokenizerConfig extends InjectableConfig
 
     public function isDebug(): bool
     {
-        return (bool)($this->config['debug'] ?? false);
+        return (bool) ($this->config['debug'] ?? false);
     }
 
     /**
@@ -56,7 +56,7 @@ final class TokenizerConfig extends InjectableConfig
      */
     public function getDirectories(): array
     {
-        return $this->config['directories'] ?? [(string)\getcwd()];
+        return $this->config['directories'] ?? [(string) \getcwd()];
     }
 
     /**
@@ -91,7 +91,7 @@ final class TokenizerConfig extends InjectableConfig
      */
     public function isCacheEnabled(): bool
     {
-        return (bool)($this->config['cache']['enabled'] ?? false);
+        return (bool) ($this->config['cache']['enabled'] ?? false);
     }
 
     /**
@@ -107,16 +107,16 @@ final class TokenizerConfig extends InjectableConfig
 
     public function isLoadClassesEnabled(): bool
     {
-        return (bool)($this->config['load']['classes'] ?? true);
+        return (bool) ($this->config['load']['classes'] ?? true);
     }
 
     public function isLoadEnumsEnabled(): bool
     {
-        return (bool)($this->config['load']['enums'] ?? false);
+        return (bool) ($this->config['load']['enums'] ?? false);
     }
 
     public function isLoadInterfacesEnabled(): bool
     {
-        return (bool)($this->config['load']['interfaces'] ?? false);
+        return (bool) ($this->config['load']['interfaces'] ?? false);
     }
 }

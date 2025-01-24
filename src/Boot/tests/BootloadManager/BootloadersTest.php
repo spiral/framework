@@ -26,13 +26,13 @@ final class BootloadersTest extends TestCase
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
         ], [
-            static function(Container $container, SampleBoot $boot): void {
+            static function (Container $container, SampleBoot $boot): void {
                 $container->bind('efg', $boot);
-            }
+            },
         ], [
-            static function(Container $container, SampleBoot $boot): void {
+            static function (Container $container, SampleBoot $boot): void {
                 $container->bind('ghi', $boot);
-            }
+            },
         ]);
 
         self::assertTrue($this->container->has('abc'));
@@ -81,7 +81,7 @@ final class BootloadersTest extends TestCase
         $bootloader = $this->getBootloadManager();
 
         $bootloader->bootload([
-            new class () extends Bootloader {
+            new class extends Bootloader {
                 public const BINDINGS = ['abc' => self::class];
                 public const SINGLETONS = ['single' => self::class];
 
@@ -150,7 +150,7 @@ final class BootloadersTest extends TestCase
 
         self::assertSame(\array_merge($classes, [
             BootloaderA::class,
-            BootloaderB::class
+            BootloaderB::class,
         ]), $bootloader->getClasses());
     }
 }

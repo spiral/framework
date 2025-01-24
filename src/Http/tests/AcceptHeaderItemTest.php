@@ -11,13 +11,6 @@ use Spiral\Http\Header\AcceptHeaderItem;
 
 class AcceptHeaderItemTest extends TestCase
 {
-    #[DataProvider('emptyItemProvider')]
-    public function testEmptyItem(AcceptHeaderItem $item): void
-    {
-        self::assertEmpty($item->getValue());
-        self::assertSame('', (string)$item);
-    }
-
     public static function emptyItemProvider(): iterable
     {
         $values = ['', ' '];
@@ -30,44 +23,12 @@ class AcceptHeaderItemTest extends TestCase
         }
     }
 
-    #[DataProvider('valueProvider')]
-    public function testValue(string $value): void
-    {
-        $item = AcceptHeaderItem::fromString($value);
-        self::assertSame($value, $item->getValue());
-
-        $acceptHeader = new AcceptHeader([$item]);
-        self::assertCount(1, $acceptHeader->getAll());
-
-        $item = AcceptHeaderItem::fromString(" $value ");
-        self::assertSame($value, $item->getValue());
-
-        $acceptHeader = new AcceptHeader([$item]);
-        self::assertCount(1, $acceptHeader->getAll());
-        self::assertSame($value, (string)$acceptHeader->getAll()[0]);
-    }
-
     public static function valueProvider(): \Traversable
     {
         yield ['text/html'];
         yield ['text/*'];
         yield ['*/*'];
         yield ['*'];
-    }
-
-    #[DataProvider('qualityBoundariesProvider')]
-    public function testItemQualityBoundaries(float $quality, AcceptHeaderItem $item): void
-    {
-        if ($quality > 1) {
-            self::assertEqualsWithDelta(1.0, $item->getQuality(), PHP_FLOAT_EPSILON);
-        }
-
-        if ($quality < 0) {
-            self::assertEqualsWithDelta(0.0, $item->getQuality(), PHP_FLOAT_EPSILON);
-        }
-
-        self::assertGreaterThanOrEqual(0, $item->getQuality());
-        self::assertLessThanOrEqual(1, $item->getQuality());
     }
 
     public static function qualityBoundariesProvider(): iterable
@@ -83,27 +44,21 @@ class AcceptHeaderItemTest extends TestCase
         }
     }
 
-    #[DataProvider('paramsProvider')]
-    public function testParams(array $params, AcceptHeaderItem $item): void
-    {
-        self::assertSame($params, $item->getParams());
-    }
-
     public static function paramsProvider(): iterable
     {
         $set = [
             [
                 'expected' => [],
-                'passed'   => []
+                'passed'   => [],
             ],
             [
                 'expected' => ['a' => 'b'],
-                'passed'   => ['a' => 'b']
+                'passed'   => ['a' => 'b'],
             ],
             [
                 'expected' => [],
-                'passed'   => ['c', '' => 'd', false, true, null, 1, '1' => 'e']
-            ]
+                'passed'   => ['c', '' => 'd', false, true, null, 1, '1' => 'e'],
+            ],
         ];
 
         foreach ($set as $params) {
@@ -125,14 +80,8 @@ class AcceptHeaderItemTest extends TestCase
         $invalid = ['c', '' => 'd', false, true, null, [], new \stdClass(), 1, '1' => 'e'];
         yield from [
             [[], new AcceptHeaderItem('*', 0, $invalid)],
-            [[], (new AcceptHeaderItem('*'))->withParams($invalid)]
+            [[], (new AcceptHeaderItem('*'))->withParams($invalid)],
         ];
-    }
-
-    #[DataProvider('itemProvider')]
-    public function testItem(string $expected, AcceptHeaderItem $item): void
-    {
-        self::assertSame($expected, (string)$item);
     }
 
     public static function itemProvider(): iterable
@@ -158,8 +107,59 @@ class AcceptHeaderItemTest extends TestCase
             ["$value; q=$quality; a=b; c=d", AcceptHeaderItem::fromString("$value;Q=$quality;a=b ; c = d")],
             [
                 "$value; q=$quality; a=b; c=d",
-                (new AcceptHeaderItem(''))->withValue($value)->withQuality($quality)->withParams($params)
+                (new AcceptHeaderItem(''))->withValue($value)->withQuality($quality)->withParams($params),
             ],
         ];
+    }
+
+    #[DataProvider('emptyItemProvider')]
+    public function testEmptyItem(AcceptHeaderItem $item): void
+    {
+        self::assertEmpty($item->getValue());
+        self::assertSame('', (string) $item);
+    }
+
+    #[DataProvider('valueProvider')]
+    public function testValue(string $value): void
+    {
+        $item = AcceptHeaderItem::fromString($value);
+        self::assertSame($value, $item->getValue());
+
+        $acceptHeader = new AcceptHeader([$item]);
+        self::assertCount(1, $acceptHeader->getAll());
+
+        $item = AcceptHeaderItem::fromString(" $value ");
+        self::assertSame($value, $item->getValue());
+
+        $acceptHeader = new AcceptHeader([$item]);
+        self::assertCount(1, $acceptHeader->getAll());
+        self::assertSame($value, (string) $acceptHeader->getAll()[0]);
+    }
+
+    #[DataProvider('qualityBoundariesProvider')]
+    public function testItemQualityBoundaries(float $quality, AcceptHeaderItem $item): void
+    {
+        if ($quality > 1) {
+            self::assertEqualsWithDelta(1.0, $item->getQuality(), PHP_FLOAT_EPSILON);
+        }
+
+        if ($quality < 0) {
+            self::assertEqualsWithDelta(0.0, $item->getQuality(), PHP_FLOAT_EPSILON);
+        }
+
+        self::assertGreaterThanOrEqual(0, $item->getQuality());
+        self::assertLessThanOrEqual(1, $item->getQuality());
+    }
+
+    #[DataProvider('paramsProvider')]
+    public function testParams(array $params, AcceptHeaderItem $item): void
+    {
+        self::assertSame($params, $item->getParams());
+    }
+
+    #[DataProvider('itemProvider')]
+    public function testItem(string $expected, AcceptHeaderItem $item): void
+    {
+        self::assertSame($expected, (string) $item);
     }
 }

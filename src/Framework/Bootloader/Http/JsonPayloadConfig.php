@@ -10,7 +10,6 @@ class JsonPayloadConfig extends InjectableConfig
 {
     public const CONFIG = 'json-payload';
 
-    /** @var array */
     protected array $config = [
         'contentTypes' => [
             'application/json',

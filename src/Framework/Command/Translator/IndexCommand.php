@@ -26,7 +26,7 @@ final class IndexCommand extends Command
         TranslatorConfig $config,
         CatalogueManager $manager,
         InvocationsInterface $invocations,
-        ScopedClassesInterface $classes
+        ScopedClassesInterface $classes,
     ): int {
         $catalogue = $manager->load($this->argument('locale') ?? $config->getDefaultLocale());
 
@@ -40,7 +40,7 @@ final class IndexCommand extends Command
 
         $this->sprintf(
             "Saving collected translations into `<comment>%s</comment>` locale.\n",
-            $catalogue->getLocale()
+            $catalogue->getLocale(),
         );
 
         $manager->save($catalogue->getLocale());

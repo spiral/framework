@@ -15,23 +15,16 @@ use Spiral\Tests\Framework\HttpTestCase;
 #[TestScope(Spiral::Http)]
 final class SessionTest extends HttpTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->enableMiddlewares();
-    }
-
     public function testSetSid(): void
     {
-        $this->setHttpHandler(fn (): int => ++$this->session()->getSection('cli')->value);
+        $this->setHttpHandler(fn(): int => ++$this->session()->getSection('cli')->value);
 
         $this->fakeHttp()->get('/')->assertOk()->assertBodySame('1')->assertCookieExists('sid');
     }
 
     public function testSessionResume(): void
     {
-        $this->setHttpHandler(fn (): int => ++$this->session()->getSection('cli')->value);
+        $this->setHttpHandler(fn(): int => ++$this->session()->getSection('cli')->value);
 
         $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('1')->assertCookieExists('sid');
 
@@ -50,7 +43,7 @@ final class SessionTest extends HttpTestCase
 
     public function testSessionRegenerateId(): void
     {
-        $this->setHttpHandler(fn (): int => ++$this->session()->getSection('cli')->value);
+        $this->setHttpHandler(fn(): int => ++$this->session()->getSection('cli')->value);
 
         $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('1')->assertCookieExists('sid');
 
@@ -78,7 +71,7 @@ final class SessionTest extends HttpTestCase
 
     public function testDestroySession(): void
     {
-        $this->setHttpHandler(fn (): int => ++$this->session()->getSection('cli')->value);
+        $this->setHttpHandler(fn(): int => ++$this->session()->getSection('cli')->value);
 
         $result = $this->fakeHttp()->get('/')->assertOk()->assertBodySame('1')->assertCookieExists('sid');
 
@@ -86,7 +79,7 @@ final class SessionTest extends HttpTestCase
             ->fakeHttp()
             ->get(
                 uri: '/',
-                cookies: ['sid' => $result->getCookies()['sid']]
+                cookies: ['sid' => $result->getCookies()['sid']],
             )
             ->assertOk()
             ->assertBodySame('2');
@@ -130,6 +123,13 @@ final class SessionTest extends HttpTestCase
         $this->expectException(InvalidRequestScopeException::class);
 
         $session->getID();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->enableMiddlewares();
     }
 
     private function session(): SessionInterface

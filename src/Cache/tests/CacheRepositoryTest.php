@@ -24,6 +24,14 @@ final class CacheRepositoryTest extends TestCase
 {
     public const DEFAULT_TTL = 50;
 
+    public static function keysDataProvider(): \Traversable
+    {
+        yield ['data'];
+        yield ['data', ''];
+        yield ['data', null];
+        yield ['user_data', 'user_'];
+    }
+
     public function testKeyWriteAndCacheHitEventsShouldBeDispatched(): void
     {
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -359,13 +367,5 @@ final class CacheRepositoryTest extends TestCase
         $repository = new CacheRepository(storage: $storage, prefix: $prefix);
 
         $repository->has('data');
-    }
-
-    public static function keysDataProvider(): \Traversable
-    {
-        yield ['data'];
-        yield ['data', ''];
-        yield ['data', null];
-        yield ['user_data', 'user_'];
     }
 }

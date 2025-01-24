@@ -14,13 +14,13 @@ enum DebugMode implements InjectableEnumInterface
     case Enabled;
     case Disabled;
 
-    public function isEnabled(): bool
-    {
-        return $this === self::Enabled;
-    }
-
     public static function detect(EnvironmentInterface $environment): self
     {
         return \filter_var($environment->get('DEBUG'), \FILTER_VALIDATE_BOOL) ? self::Enabled : self::Disabled;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this === self::Enabled;
     }
 }

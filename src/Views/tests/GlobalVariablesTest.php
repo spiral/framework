@@ -12,7 +12,7 @@ final class GlobalVariablesTest extends TestCase
     public function testSets(): void
     {
         $variables = new GlobalVariables([
-            'foo' => 'bar'
+            'foo' => 'bar',
         ]);
 
         self::assertSame('bar', $variables->getAll()['foo']);

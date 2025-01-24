@@ -16,8 +16,7 @@ final class RetryContext implements \Stringable
      */
     public function __construct(
         public \Stringable|string|null $context = null,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

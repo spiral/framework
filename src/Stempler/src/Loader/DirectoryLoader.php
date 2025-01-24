@@ -13,9 +13,8 @@ final class DirectoryLoader implements LoaderInterface
 {
     public function __construct(
         private readonly string $directory,
-        private readonly string $extension = '.dark.php'
-    ) {
-    }
+        private readonly string $extension = '.dark.php',
+    ) {}
 
     /**
      * @throws LoaderException
@@ -28,7 +27,7 @@ final class DirectoryLoader implements LoaderInterface
             '%s/%s%s',
             $this->directory,
             $path,
-            $this->extension
+            $this->extension,
         );
 
         if (!\file_exists($filename)) {

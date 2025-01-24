@@ -19,12 +19,12 @@ class GroupTest extends BaseTestCase
         $cf->modify('scope', new Group(
             new Prepend('.', 'other', ['a' => 'b']),
             new Delete('other', 'a'),
-            new Append('other', 'c', 'd')
+            new Append('other', 'c', 'd'),
         ));
 
         self::assertSame([
             'other' => ['c' => 'd'],
-            'value' => 'value!'
+            'value' => 'value!',
         ], $cf->getConfig('scope'));
     }
 }

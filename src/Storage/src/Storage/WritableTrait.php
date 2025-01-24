@@ -36,7 +36,7 @@ trait WritableTrait
     public function setVisibility(
         string|\Stringable $id,
         #[ExpectedValues(valuesFromClass: Visibility::class)]
-        string $visibility
+        string $visibility,
     ): FileInterface {
         [$name, $pathname] = $this->parseUri($id);
 
@@ -46,7 +46,7 @@ trait WritableTrait
     public function copy(
         string|\Stringable $source,
         string|\Stringable $destination,
-        array $config = []
+        array $config = [],
     ): FileInterface {
         [$sourceName, $sourcePathname] = $this->parseUri($source);
         [$destName, $destPathname] = $this->parseUri($destination, false);
@@ -60,7 +60,7 @@ trait WritableTrait
     public function move(
         string|\Stringable $source,
         string|\Stringable $destination,
-        array $config = []
+        array $config = [],
     ): FileInterface {
         [$sourceName, $sourcePathname] = $this->parseUri($source);
         [$destName, $destPathname] = $this->parseUri($destination, false);

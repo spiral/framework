@@ -11,7 +11,6 @@ final class MiddlewareProcessing
 {
     public function __construct(
         public readonly ServerRequestInterface $request,
-        public readonly MiddlewareInterface $middleware
-    ) {
-    }
+        public readonly MiddlewareInterface $middleware,
+    ) {}
 }

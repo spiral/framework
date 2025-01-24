@@ -37,7 +37,7 @@ final class ListCommand extends Command
                         $this->getPattern($route),
                         $this->getTarget($route, $kernel),
                         \implode(', ', $this->getRouteGroups($registry, $name)),
-                    ]
+                    ],
                 );
             }
         }
@@ -77,7 +77,7 @@ final class ListCommand extends Command
                 'post' => '<fg=blue>POST</>',
                 'patch' => '<fg=cyan>PATCH</>',
                 'put' => '<fg=yellow>PUT</>',
-                'delete' => '<fg=red>DELETE</>'
+                'delete' => '<fg=red>DELETE</>',
             };
         }
 
@@ -91,21 +91,20 @@ final class ListCommand extends Command
         $pattern = \str_replace(
             '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}',
             'uuid',
-            $pattern
+            $pattern,
         );
 
         /** @var string $pattern */
         $pattern = \preg_replace_callback(
             '/<([^>]*)>/',
-            static fn ($m) => \sprintf('<fg=magenta>%s</>', $m[0]),
-            !empty($prefix) ? $prefix . '/' . \trim($pattern, '/') : $pattern
+            static fn($m) => \sprintf('<fg=magenta>%s</>', $m[0]),
+            !empty($prefix) ? $prefix . '/' . \trim($pattern, '/') : $pattern,
         );
 
         return $pattern;
     }
 
     /**
-     *
      * @throws \ReflectionException
      */
     private function getTarget(RouteInterface $route, KernelInterface $kernel): string
@@ -118,20 +117,20 @@ final class ListCommand extends Command
                 return \sprintf(
                     'Closure(%s:%s)',
                     \basename($reflection->getFileName()),
-                    $reflection->getStartLine()
+                    $reflection->getStartLine(),
                 );
 
             case $target instanceof Action:
                 return \sprintf(
                     '%s->%s',
                     $this->relativeClass($this->getValue($target, 'controller'), $kernel),
-                    \implode('|', (array)$this->getValue($target, 'action'))
+                    \implode('|', (array) $this->getValue($target, 'action')),
                 );
 
             case $target instanceof Controller:
                 return \sprintf(
                     '%s->*',
-                    $this->relativeClass($this->getValue($target, 'controller'), $kernel)
+                    $this->relativeClass($this->getValue($target, 'controller'), $kernel),
                 );
 
             case $target instanceof Group:
@@ -146,7 +145,7 @@ final class ListCommand extends Command
                 return \sprintf(
                     '%s\*%s->*',
                     $this->relativeClass($this->getValue($target, 'namespace'), $kernel),
-                    $this->getValue($target, 'postfix')
+                    $this->getValue($target, 'postfix'),
                 );
             default:
                 return $target::class;

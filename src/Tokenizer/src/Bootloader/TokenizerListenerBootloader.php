@@ -37,7 +37,6 @@ final class TokenizerListenerBootloader extends Bootloader implements TokenizerL
         AttributesBootloader::class,
         TokenizerBootloader::class,
     ];
-
     protected const SINGLETONS = [
         TokenizerListenerRegistryInterface::class => self::class,
         ClassesLoaderInterface::class => [self::class, 'initCachedClassesLoader'],

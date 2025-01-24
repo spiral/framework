@@ -17,8 +17,8 @@ final class InterceptorTest extends BaseTestCase
 
     public const CONFIG = [
         'interceptors' => [
-            'foo'
-        ]
+            'foo',
+        ],
     ];
 
     public function testInterceptorShouldBeResolved(): void
@@ -37,7 +37,7 @@ final class InterceptorTest extends BaseTestCase
                     && $action === 'perform'
                     && $parameters['input'] instanceof InputInterface
                     && $parameters['output'] instanceof OutputInterface
-                    && $parameters['command'] instanceof TestCommand
+                    && $parameters['command'] instanceof TestCommand,
             )->andReturnUsing(
                 static fn(
                     string $controller,
@@ -48,7 +48,7 @@ final class InterceptorTest extends BaseTestCase
             );
 
         $core = $this->getCore($this->getStaticLocator([
-            TestCommand::class
+            TestCommand::class,
         ]));
 
         $core->run('test');

@@ -22,6 +22,112 @@ use Spiral\Tests\Core\Fixtures\WithPrivateConstructor;
 
 class ExceptionsTest extends TestCase
 {
+    public static function exceptionTraceDataProvider(): \Traversable
+    {
+        $binding = new Container();
+        $binding->bind('Spiral\Tests\Core\Fixtures\InvalidClass', ['invalid', 'invalid']);
+
+        $notConstructed = new Container();
+        $notConstructed->bind('Spiral\Tests\Core\Fixtures\InvalidClass', WithPrivateConstructor::class);
+
+        $withClosure = new Container();
+        $withClosure->bind('Spiral\Tests\Core\Fixtures\InvalidClass', static fn(): string => 'FooBar');
+
+        $closureWithContainer = new Container();
+        $closureWithContainer->bind(
+            'Spiral\Tests\Core\Fixtures\InvalidClass',
+            static fn(ContainerInterface $container) => $container->get('invalid'),
+        );
+
+        yield 'empty container' => [
+            new Container(),
+            <<<'MARKDOWN'
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
+            Container trace list:
+            - action: 'autowire'
+              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+              context: null
+            - action: 'resolve arguments'
+              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
+              - action: 'autowire'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
+            MARKDOWN,
+        ];
+        yield 'binding' => [
+            $binding,
+            <<<'MARKDOWN'
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
+            Container trace list:
+            - action: 'autowire'
+              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+              context: null
+            - action: 'resolve arguments'
+              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
+              - action: 'resolve from binding'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                scope: 'root'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
+                binding: Deferred factory 'invalid'->invalid()
+                - action: 'autowire'
+                  alias: 'invalid'
+                  context: null
+            MARKDOWN,
+        ];
+        yield 'notConstructed' => [
+            $notConstructed,
+            <<<'MARKDOWN'
+            Class `Spiral\Tests\Core\Fixtures\WithPrivateConstructor` can not be constructed.
+            Container trace list:
+            - action: 'autowire'
+              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+              context: null
+            - action: 'resolve arguments'
+              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
+              - action: 'resolve from binding'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                scope: 'root'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
+                binding: Alias to `Spiral\Tests\Core\Fixtures\WithPrivateConstructor`
+                - action: 'autowire'
+                  alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
+                  context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
+            MARKDOWN,
+        ];
+        yield 'withClosure' => [
+            $withClosure,
+            <<<'MARKDOWN'
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`. Invalid argument value type for the `class` parameter when validating arguments for `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency::__construct`.
+            Container trace list:
+            - action: 'autowire'
+              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+              context: null
+            - action: 'resolve arguments'
+              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
+            MARKDOWN,
+        ];
+        yield 'closureWithContainer' => [
+            $closureWithContainer,
+            <<<'MARKDOWN'
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
+            Container trace list:
+            - action: 'autowire'
+              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
+              context: null
+            - action: 'resolve arguments'
+              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
+              - action: 'resolve from binding'
+                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
+                scope: 'root'
+                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
+                binding: Factory from static function (Psr\Container\ContainerInterface $container)
+                - action: 'autowire'
+                  alias: 'invalid'
+                  context: null
+            MARKDOWN,
+        ];
+    }
+
     public function testInvalidBinding(): void
     {
         $this->expectExceptionMessage('Invalid binding for `invalid`');
@@ -42,7 +148,7 @@ class ExceptionsTest extends TestCase
     {
         $this->expectException(ContainerException::class);
         $this->expectExceptionMessage(
-            'Can\'t resolve `Spiral\Tests\Core\InvalidClass`: undefined class or binding `Spiral\Tests\Core\InvalidClass`.'
+            'Can\'t resolve `Spiral\Tests\Core\InvalidClass`: undefined class or binding `Spiral\Tests\Core\InvalidClass`.',
         );
 
         $container = new Container();
@@ -66,7 +172,7 @@ class ExceptionsTest extends TestCase
 
         $e = new ArgumentException(
             $method->getParameters()[0],
-            $method
+            $method,
         );
 
         self::assertInstanceOf(AutowireException::class, $e);
@@ -155,7 +261,7 @@ class ExceptionsTest extends TestCase
             - action: 'autowire'
               alias: 'invalid-other'
               context: null
-            MARKDOWN
+            MARKDOWN,
         );
 
         $container->get('invalid-other');
@@ -175,113 +281,5 @@ class ExceptionsTest extends TestCase
         }
     }
 
-    public static function exceptionTraceDataProvider(): \Traversable
-    {
-        $binding = new Container();
-        $binding->bind('Spiral\Tests\Core\Fixtures\InvalidClass', ['invalid', 'invalid']);
-
-        $notConstructed = new Container();
-        $notConstructed->bind('Spiral\Tests\Core\Fixtures\InvalidClass', WithPrivateConstructor::class);
-
-        $withClosure = new Container();
-        $withClosure->bind('Spiral\Tests\Core\Fixtures\InvalidClass', static fn(): string => 'FooBar');
-
-        $closureWithContainer = new Container();
-        $closureWithContainer->bind(
-            'Spiral\Tests\Core\Fixtures\InvalidClass',
-            static fn(ContainerInterface $container) => $container->get('invalid')
-        );
-
-        yield 'empty container' => [
-            new Container(),
-            <<<'MARKDOWN'
-            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
-            Container trace list:
-            - action: 'autowire'
-              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: null
-            - action: 'resolve arguments'
-              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'autowire'
-                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
-            MARKDOWN
-        ];
-        yield 'binding' => [
-            $binding,
-            <<<'MARKDOWN'
-            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
-            Container trace list:
-            - action: 'autowire'
-              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: null
-            - action: 'resolve arguments'
-              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'resolve from binding'
-                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                scope: 'root'
-                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
-                binding: Deferred factory 'invalid'->invalid()
-                - action: 'autowire'
-                  alias: 'invalid'
-                  context: null
-            MARKDOWN
-        ];
-        yield 'notConstructed' => [
-            $notConstructed,
-            <<<'MARKDOWN'
-            Class `Spiral\Tests\Core\Fixtures\WithPrivateConstructor` can not be constructed.
-            Container trace list:
-            - action: 'autowire'
-              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: null
-            - action: 'resolve arguments'
-              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'resolve from binding'
-                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                scope: 'root'
-                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
-                binding: Alias to `Spiral\Tests\Core\Fixtures\WithPrivateConstructor`
-                - action: 'autowire'
-                  alias: 'Spiral\Tests\Core\Fixtures\WithPrivateConstructor'
-                  context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
-            MARKDOWN
-        ];
-        yield 'withClosure' => [
-            $withClosure,
-            <<<'MARKDOWN'
-            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`. Invalid argument value type for the `class` parameter when validating arguments for `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency::__construct`.
-            Container trace list:
-            - action: 'autowire'
-              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: null
-            - action: 'resolve arguments'
-              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-            MARKDOWN
-        ];
-        yield 'closureWithContainer' => [
-            $closureWithContainer,
-            <<<'MARKDOWN'
-            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`: undefined class or binding `invalid`.
-            Container trace list:
-            - action: 'autowire'
-              alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
-              context: null
-            - action: 'resolve arguments'
-              signature: function (Spiral\Tests\Core\Fixtures\InvalidClass $class)
-              - action: 'resolve from binding'
-                alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
-                scope: 'root'
-                context: Parameter #0 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
-                binding: Factory from static function (Psr\Container\ContainerInterface $container)
-                - action: 'autowire'
-                  alias: 'invalid'
-                  context: null
-            MARKDOWN
-        ];
-    }
-
-    protected function invalidInjection(InvalidClass $class): void
-    {
-    }
+    protected function invalidInjection(InvalidClass $class): void {}
 }

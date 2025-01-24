@@ -35,41 +35,8 @@ final class RouteConfigurator
     public function __construct(
         private readonly string $name,
         private readonly string $pattern,
-        private readonly RouteCollection $collection
-    ) {
-    }
-
-    public function __destruct()
-    {
-        if ($this->target === null) {
-            throw new TargetException(
-                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`,
-                    `namespaced`, `groupControllers`, `callable`, `handler` methods.', $this->name)
-            );
-        }
-
-        $this->collection->add($this->name, $this);
-    }
-
-    /**
-     * @internal
-     *
-     * Don't use this method. For internal use only.
-     */
-    public function __get(string $name): mixed
-    {
-        return match ($name) {
-            'core' => $this->core,
-            'target' => $this->target,
-            'defaults' => $this->defaults,
-            'group' => $this->group,
-            'middleware' => $this->middleware,
-            'methods' => $this->methods,
-            'pattern' => $this->pattern,
-            'prefix' => \trim($this->prefix, '/'),
-            default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name))
-        };
-    }
+        private readonly RouteCollection $collection,
+    ) {}
 
     public function controller(string $controller, int $options = 0, string $defaultAction = 'index'): self
     {
@@ -157,5 +124,37 @@ final class RouteConfigurator
         $this->methods = (array) $methods;
 
         return $this;
+    }
+
+    /**
+     * @internal
+     *
+     * Don't use this method. For internal use only.
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'core' => $this->core,
+            'target' => $this->target,
+            'defaults' => $this->defaults,
+            'group' => $this->group,
+            'middleware' => $this->middleware,
+            'methods' => $this->methods,
+            'pattern' => $this->pattern,
+            'prefix' => \trim($this->prefix, '/'),
+            default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name)),
+        };
+    }
+
+    public function __destruct()
+    {
+        if ($this->target === null) {
+            throw new TargetException(
+                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`,
+                    `namespaced`, `groupControllers`, `callable`, `handler` methods.', $this->name),
+            );
+        }
+
+        $this->collection->add($this->name, $this);
     }
 }

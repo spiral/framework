@@ -12,7 +12,7 @@ final class ArgumentResolvingException extends ResolvingException
 
     public function __construct(
         \ReflectionFunctionAbstract $reflection,
-        private readonly string $parameter
+        private readonly string $parameter,
     ) {
         $pattern = "Unable to resolve required argument `{$parameter}` when resolving `%s` %s.";
         parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));

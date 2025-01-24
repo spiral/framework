@@ -27,12 +27,12 @@ class MiddlewareTest extends BaseTestingCase
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])))->withMiddleware(HeaderMiddleware::class)
+            ])))->withMiddleware(HeaderMiddleware::class),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame('Value*', $response->getHeaderLine('Header'));
 
         $r = $router->getRoute('group')->withMiddleware(HeaderMiddleware::class);
@@ -40,7 +40,7 @@ class MiddlewareTest extends BaseTestingCase
         $r = $r->match(new ServerRequest('GET', new Uri('/test')));
         $response = $r->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
@@ -52,12 +52,12 @@ class MiddlewareTest extends BaseTestingCase
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])))->withMiddleware(new HeaderMiddleware())
+            ])))->withMiddleware(new HeaderMiddleware()),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame('Value*', $response->getHeaderLine('Header'));
     }
 
@@ -69,17 +69,17 @@ class MiddlewareTest extends BaseTestingCase
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])))->withMiddleware([new HeaderMiddleware(), HeaderMiddleware::class])
+            ])))->withMiddleware([new HeaderMiddleware(), HeaderMiddleware::class]),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
@@ -92,7 +92,7 @@ class MiddlewareTest extends BaseTestingCase
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])))->withMiddleware($this)
+            ])))->withMiddleware($this),
         );
     }
 
@@ -105,7 +105,7 @@ class MiddlewareTest extends BaseTestingCase
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])))->withMiddleware([[]])
+            ])))->withMiddleware([[]]),
         );
     }
 
@@ -121,7 +121,7 @@ class MiddlewareTest extends BaseTestingCase
         $r = $r->match(new ServerRequest('GET', new Uri('/test')));
         $response = $r->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 

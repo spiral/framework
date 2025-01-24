@@ -18,33 +18,6 @@ final class QueueManagerTest extends TestCase
     private m\MockInterface|FactoryInterface $factory;
     private QueueManager $manager;
 
-    protected function setUp(): void
-    {
-        $config = new QueueConfig([
-            'default' => 'sync',
-            'aliases' => [
-                'user-data' => 'sync',
-            ],
-            'connections' => [
-                'sync' => [
-                    'driver' => 'sync',
-                ]
-            ],
-            'driverAliases' => [
-                'sync' => SyncDriver::class,
-            ],
-        ]);
-
-        $container = new Container();
-        $container->bind(CoreInterface::class, m::mock(CoreInterface::class));
-
-        $this->factory = \Mockery::mock(FactoryInterface::class);
-
-        parent::setUp();
-
-        $this->manager = new QueueManager($config, $container, $this->factory);
-    }
-
     public function testGetsDefaultConnection(): void
     {
         $this->factory->shouldReceive('make')
@@ -75,5 +48,32 @@ final class QueueManagerTest extends TestCase
         $queue = $this->manager->getConnection('user-data');
 
         self::assertSame($queue, $this->manager->getConnection('sync'));
+    }
+
+    protected function setUp(): void
+    {
+        $config = new QueueConfig([
+            'default' => 'sync',
+            'aliases' => [
+                'user-data' => 'sync',
+            ],
+            'connections' => [
+                'sync' => [
+                    'driver' => 'sync',
+                ],
+            ],
+            'driverAliases' => [
+                'sync' => SyncDriver::class,
+            ],
+        ]);
+
+        $container = new Container();
+        $container->bind(CoreInterface::class, m::mock(CoreInterface::class));
+
+        $this->factory = \Mockery::mock(FactoryInterface::class);
+
+        parent::setUp();
+
+        $this->manager = new QueueManager($config, $container, $this->factory);
     }
 }

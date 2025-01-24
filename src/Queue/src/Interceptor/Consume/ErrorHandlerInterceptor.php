@@ -15,11 +15,12 @@ use Spiral\Queue\Failed\FailedJobHandlerInterface;
 final class ErrorHandlerInterceptor implements LegacyInterceptor, InterceptorInterface
 {
     public function __construct(
-        private readonly FailedJobHandlerInterface $handler
-    ) {
-    }
+        private readonly FailedJobHandlerInterface $handler,
+    ) {}
 
-    /** @psalm-suppress ParamNameMismatch */
+    /**
+     * @psalm-suppress ParamNameMismatch
+     */
     public function process(string $name, string $action, array $parameters, CoreInterface $core): mixed
     {
         try {
@@ -31,7 +32,7 @@ final class ErrorHandlerInterceptor implements LegacyInterceptor, InterceptorInt
                     $parameters['queue'],
                     $name,
                     $parameters['payload'],
-                    $e
+                    $e,
                 );
             }
 

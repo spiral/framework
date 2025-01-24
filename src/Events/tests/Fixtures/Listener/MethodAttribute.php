@@ -10,7 +10,5 @@ use Spiral\Tests\Events\Fixtures\Event\BarEvent;
 final class MethodAttribute
 {
     #[Listener]
-    public function __invoke(BarEvent $event): void
-    {
-    }
+    public function __invoke(BarEvent $event): void {}
 }

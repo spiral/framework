@@ -22,11 +22,13 @@ abstract class Bootloader implements BootloaderInterface, DependedInterface
      * @psalm-var TConstantBinding
      */
     protected const BINDINGS = [];
+
     /**
      * @var array<string, class-string|callable>
      * @psalm-var TConstantBinding
      */
     protected const SINGLETONS = [];
+
     /** @var class-string<BootloaderInterface>[]|class-string<DependedInterface>[] */
     protected const DEPENDENCIES = [];
 

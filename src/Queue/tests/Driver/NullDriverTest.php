@@ -12,11 +12,13 @@ final class NullDriverTest extends TestCase
 {
     private NullDriver $queue;
 
-    protected function setUp(): void
+    public static function payloadDataProvider(): \Traversable
     {
-        parent::setUp();
-
-        $this->queue = new NullDriver();
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
     }
 
     #[DataProvider('payloadDataProvider')]
@@ -26,12 +28,10 @@ final class NullDriverTest extends TestCase
         self::assertNotNull($id);
     }
 
-    public static function payloadDataProvider(): \Traversable
+    protected function setUp(): void
     {
-        yield [['baz' => 'baf']];
-        yield [new \stdClass()];
-        yield ['some string'];
-        yield [123];
-        yield [null];
+        parent::setUp();
+
+        $this->queue = new NullDriver();
     }
 }

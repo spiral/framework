@@ -21,6 +21,6 @@ final class FiltersConfig extends InjectableConfig
      */
     public function getInterceptors(): array
     {
-        return (array)($this->config['interceptors'] ?? []);
+        return (array) ($this->config['interceptors'] ?? []);
     }
 }

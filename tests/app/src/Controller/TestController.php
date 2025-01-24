@@ -35,9 +35,7 @@ class TestController
         return ['name' => $r->name, 'sectionValue' => $r->sectionValue];
     }
 
-    public function filter2(BadRequest $r): void
-    {
-    }
+    public function filter2(BadRequest $r): void {}
 
     public function input(InputScope $i)
     {

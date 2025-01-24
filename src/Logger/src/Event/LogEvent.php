@@ -11,9 +11,8 @@ final class LogEvent
         private readonly string $channel,
         private readonly string $level,
         private readonly string $message,
-        private readonly array $context = []
-    ) {
-    }
+        private readonly array $context = [],
+    ) {}
 
     public function getTime(): \DateTimeInterface
     {

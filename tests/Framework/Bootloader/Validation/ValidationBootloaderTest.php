@@ -29,7 +29,7 @@ final class ValidationBootloaderTest extends BaseTestCase
         $this->getContainer()->bind(ValidationConfig::class, new ValidationConfig(['defaultValidator' => 'foo']));
         $this->getContainer()
             ->get(ValidationProviderInterface::class)
-            ->register('foo', static fn (): ValidationInterface => $validator);
+            ->register('foo', static fn(): ValidationInterface => $validator);
 
         $this->assertContainerBoundAsSingleton(ValidationInterface::class, $validator::class);
     }
@@ -53,7 +53,7 @@ final class ValidationBootloaderTest extends BaseTestCase
         $validator = $this->createValidator();
         $this->getContainer()
             ->get(ValidationProviderInterface::class)
-            ->register('bar', static fn (): ValidationInterface => $validator);
+            ->register('bar', static fn(): ValidationInterface => $validator);
 
         $bootloader = $this->getContainer()->get(ValidationBootloader::class);
         $bootloader->setDefaultValidator('bar');
@@ -75,11 +75,8 @@ final class ValidationBootloaderTest extends BaseTestCase
 
     private function createValidator(): ValidationInterface
     {
-        return new class implements ValidationInterface
-        {
-            public function validate(object|array $data, array $rules, mixed $context = null): ValidatorInterface
-            {
-            }
+        return new class implements ValidationInterface {
+            public function validate(object|array $data, array $rules, mixed $context = null): ValidatorInterface {}
         };
     }
 }

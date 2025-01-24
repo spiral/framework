@@ -10,9 +10,8 @@ final class CommandOutput
 {
     public function __construct(
         private readonly int $code,
-        private readonly OutputInterface $output
-    ) {
-    }
+        private readonly OutputInterface $output,
+    ) {}
 
     public function getCode(): int
     {

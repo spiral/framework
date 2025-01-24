@@ -23,7 +23,6 @@ final class Tag implements NodeInterface, AttributedInterface
     use AttributeTrait;
 
     public bool $void = false;
-
     public Mixin|string|null $name = null;
 
     /** @var Attr[] */

@@ -11,9 +11,8 @@ final class Snapshot implements SnapshotInterface
 {
     public function __construct(
         private readonly string $id,
-        private readonly \Throwable $exception
-    ) {
-    }
+        private readonly \Throwable $exception,
+    ) {}
 
     public function getID(): string
     {
@@ -32,7 +31,7 @@ final class Snapshot implements SnapshotInterface
             $this->exception::class,
             $this->exception->getMessage(),
             $this->exception->getFile(),
-            $this->exception->getLine()
+            $this->exception->getLine(),
         );
     }
 

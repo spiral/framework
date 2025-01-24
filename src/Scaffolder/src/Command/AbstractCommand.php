@@ -40,7 +40,7 @@ abstract class AbstractCommand extends Command
         return $this->factory->make(
             $class,
             [
-                'name' => (string)$this->argument('name'),
+                'name' => (string) $this->argument('name'),
                 'comment' => $this->getComment(),
                 'namespace' => $this->getNamespace(),
             ] + $params + $this->config->declarationOptions($class::TYPE),
@@ -54,7 +54,7 @@ abstract class AbstractCommand extends Command
     {
         $filename = $this->config->classFilename(
             $declaration::TYPE,
-            (string)$this->argument('name'),
+            (string) $this->argument('name'),
             $this->getNamespace(),
         );
 
@@ -85,7 +85,7 @@ abstract class AbstractCommand extends Command
             $this->writeln('<fg=green>Next steps:</fg=green>');
 
             foreach ($declaration->getInstructions() as $i => $instruction) {
-                $this->writeln(\sprintf('%d. %s', (string)(++$i), $instruction));
+                $this->writeln(\sprintf('%d. %s', (string) (++$i), $instruction));
             }
         }
     }

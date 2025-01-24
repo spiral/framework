@@ -13,17 +13,10 @@ use Spiral\Tests\Console\Fixtures\Attribute\WithSymfonyAttributeCommand;
 
 final class AttributeTest extends BaseTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container->bind(ReaderInterface::class, AttributeReader::class);
-    }
-
     public function testCommandWithName(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            WithNameCommand::class
+            WithNameCommand::class,
         ]));
 
         self::assertSame('attribute-with-name', $core->run(command: 'attribute-with-name')->getOutput()->fetch());
@@ -32,7 +25,7 @@ final class AttributeTest extends BaseTestCase
     public function testCommandWithDescription(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            WithDescriptionCommand::class
+            WithDescriptionCommand::class,
         ]));
 
         self::assertSame('Some description text', $core->run(command: 'attribute-with-description')->getOutput()->fetch());
@@ -41,7 +34,7 @@ final class AttributeTest extends BaseTestCase
     public function testCommandWithHelp(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            WithHelpCommand::class
+            WithHelpCommand::class,
         ]));
 
         self::assertSame('Some help message', $core->run(command: 'attribute-with-help')->getOutput()->fetch());
@@ -50,9 +43,16 @@ final class AttributeTest extends BaseTestCase
     public function testCommandWithSymfonyAttribute(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            WithSymfonyAttributeCommand::class
+            WithSymfonyAttributeCommand::class,
         ]));
 
         self::assertSame('Some description text|attribute-with-sf-command-attr', $core->run(command: 'attribute-with-sf-command-attr')->getOutput()->fetch());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bind(ReaderInterface::class, AttributeReader::class);
     }
 }

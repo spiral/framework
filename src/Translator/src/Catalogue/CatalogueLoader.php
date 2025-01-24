@@ -15,9 +15,8 @@ final class CatalogueLoader implements LoaderInterface
     use LoggerTrait;
 
     public function __construct(
-        private readonly TranslatorConfig $config
-    ) {
-    }
+        private readonly TranslatorConfig $config,
+    ) {}
 
     public function hasLocale(string $locale): bool
     {
@@ -69,9 +68,9 @@ final class CatalogueLoader implements LoaderInterface
             $this->getLogger()->info(
                 \sprintf(
                     "found locale domain file '%s'",
-                    $file->getFilename()
+                    $file->getFilename(),
                 ),
-                ['file' => $file->getFilename()]
+                ['file' => $file->getFilename()],
             );
 
             //Per application agreement domain name must present in filename
@@ -81,9 +80,9 @@ final class CatalogueLoader implements LoaderInterface
                 $this->getLogger()->warning(
                     \sprintf(
                         "unable to load domain file '%s', no loader found",
-                        $file->getFilename()
+                        $file->getFilename(),
                     ),
-                    ['file' => $file->getFilename()]
+                    ['file' => $file->getFilename()],
                 );
 
                 continue;
@@ -91,10 +90,10 @@ final class CatalogueLoader implements LoaderInterface
 
             $catalogue->mergeFrom(
                 $this->config->getLoader($file->getExtension())->load(
-                    (string)$file,
+                    (string) $file,
                     $locale,
-                    $domain
-                )
+                    $domain,
+                ),
             );
         }
 

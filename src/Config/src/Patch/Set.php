@@ -18,9 +18,8 @@ final class Set implements PatchInterface
 
     public function __construct(
         private string $key,
-        private mixed $value
-    ) {
-    }
+        private mixed $value,
+    ) {}
 
     public function patch(array $config): array
     {

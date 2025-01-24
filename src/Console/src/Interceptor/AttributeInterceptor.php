@@ -13,9 +13,8 @@ use Symfony\Component\Console\Input\InputInterface;
 final class AttributeInterceptor implements CoreInterceptorInterface
 {
     public function __construct(
-        private readonly Parser $parser
-    ) {
-    }
+        private readonly Parser $parser,
+    ) {}
 
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): int
     {

@@ -15,8 +15,7 @@ final class DeferredFactory extends Binding
     public function __construct(
         public readonly array $factory,
         public readonly bool $singleton = false,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

@@ -10,8 +10,7 @@ final class ScopeController
 {
     public function __construct(
         private readonly ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     public function construct(): string
     {

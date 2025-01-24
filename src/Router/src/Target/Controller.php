@@ -14,13 +14,13 @@ final class Controller extends AbstractTarget
     public function __construct(
         private readonly string $controller,
         int $options = 0,
-        string $defaultAction = 'index'
+        string $defaultAction = 'index',
     ) {
         parent::__construct(
             ['action' => null],
             ['action' => null],
             $options,
-            $defaultAction
+            $defaultAction,
         );
     }
 

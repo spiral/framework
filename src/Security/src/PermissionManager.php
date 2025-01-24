@@ -28,11 +28,12 @@ final class PermissionManager implements PermissionsInterface
      * Roles associated with their permissions.
      */
     private array $permissions = [];
+
     private readonly Matcher $matcher;
 
     public function __construct(
         private readonly RulesInterface $rules,
-        private readonly string $defaultRule = ForbidRule::class
+        private readonly string $defaultRule = ForbidRule::class,
     ) {
         $this->matcher = new Matcher();
     }
@@ -117,7 +118,6 @@ final class PermissionManager implements PermissionsInterface
     }
 
     /**
-     *
      * @throws PermissionException
      */
     private function findRule(string $role, string $permission): string

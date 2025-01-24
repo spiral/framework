@@ -15,9 +15,8 @@ class StorageSnapshot
         protected readonly StorageInterface $storage,
         protected readonly Verbosity $verbosity,
         protected readonly ExceptionRendererInterface $renderer,
-        protected readonly ?string $directory = null
-    ) {
-    }
+        protected readonly ?string $directory = null,
+    ) {}
 
     public function create(\Throwable $e): SnapshotInterface
     {
@@ -46,7 +45,7 @@ class StorageSnapshot
         return \sprintf(
             '%s-%s.txt',
             $time->format('d.m.Y-Hi.s'),
-            (new \ReflectionClass($snapshot->getException()))->getShortName()
+            (new \ReflectionClass($snapshot->getException()))->getShortName(),
         );
     }
 

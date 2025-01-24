@@ -11,7 +11,5 @@ class ExtendedModel extends TestModel
     protected $getters  = ['name' => 'strtoupper'];
     protected $secured  = ['name'];
 
-    protected function methodB(): void
-    {
-    }
+    protected function methodB(): void {}
 }

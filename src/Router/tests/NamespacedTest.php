@@ -22,8 +22,8 @@ class NamespacedTest extends BaseTestCase
             'group',
             new Route(
                 '/<controller>/<action>',
-                new Namespaced('Spiral\Tests\Router\Fixtures')
-            )
+                new Namespaced('Spiral\Tests\Router\Fixtures'),
+            ),
         );
 
         $router->handle(new ServerRequest('GET', ''));
@@ -36,21 +36,21 @@ class NamespacedTest extends BaseTestCase
             'group',
             new Route(
                 '/<controller>[/<action>[/<id>]]',
-                new Namespaced('Spiral\Tests\Router\Fixtures')
-            )
+                new Namespaced('Spiral\Tests\Router\Fixtures'),
+            ),
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test/id/900')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('900', (string)$response->getBody());
+        self::assertSame('900', (string) $response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/other/action')));
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('action!', (string)$response->getBody());
+        self::assertSame('action!', (string) $response->getBody());
     }
 
     public function testBypass(): void

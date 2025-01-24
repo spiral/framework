@@ -12,7 +12,5 @@ use Spiral\Tests\Events\Fixtures\Event\FooEvent;
 #[Listener]
 final class ClassDoubleTheSameAttribute
 {
-    public function __invoke(FooEvent|BarEvent $event): void
-    {
-    }
+    public function __invoke(FooEvent|BarEvent $event): void {}
 }

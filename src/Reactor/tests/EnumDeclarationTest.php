@@ -153,7 +153,8 @@ final class EnumDeclarationTest extends TestCase
         $enum = new EnumDeclaration('MyEnum');
         $enum->addImplement(\Countable::class)->addComment("Description of enum.\nSecond line\n");
         $enum->addCase('First', 'first');
-        $enum->addCase('Second', 'second');;
+        $enum->addCase('Second', 'second');
+        ;
 
         self::assertSame($expect, preg_replace('/\s+/', '', $enum->render()));
         self::assertSame($expect, preg_replace('/\s+/', '', $enum->__toString()));

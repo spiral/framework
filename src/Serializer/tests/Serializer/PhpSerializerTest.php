@@ -19,7 +19,7 @@ final class PhpSerializerTest extends TestCase
 
         self::assertSame('a:2:{i:0;s:4:"some";i:1;s:8:"elements";}', $serializer->serialize(['some', 'elements']));
         self::assertSame(['some', 'elements'], $serializer->unserialize('a:2:{i:0;s:4:"some";i:1;s:8:"elements";}'));
-        self::assertSame(['some', 'elements'], $serializer->unserialize(new class() implements \Stringable {
+        self::assertSame(['some', 'elements'], $serializer->unserialize(new class implements \Stringable {
             public function __toString(): string
             {
                 return 'a:2:{i:0;s:4:"some";i:1;s:8:"elements";}';
@@ -28,7 +28,7 @@ final class PhpSerializerTest extends TestCase
 
         $object = $serializer->unserialize(
             'O:41:"Spiral\Tests\Serializer\Fixture\SomeClass":3:{s:2:"id";i:2;s:4:"text";s:4:"text";s:6:"active";b:0;}',
-            SomeClass::class
+            SomeClass::class,
         );
         self::assertInstanceOf(SomeClass::class, $object);
         self::assertSame(2, $object->id);
@@ -37,7 +37,7 @@ final class PhpSerializerTest extends TestCase
 
         $byInterface = $serializer->unserialize(
             'O:41:"Spiral\Tests\Serializer\Fixture\SomeClass":3:{s:2:"id";i:2;s:4:"text";s:4:"text";s:6:"active";b:0;}',
-            SomeInterface::class
+            SomeInterface::class,
         );
         self::assertInstanceOf(SomeClass::class, $byInterface);
         self::assertSame(2, $byInterface->id);
@@ -69,7 +69,7 @@ final class PhpSerializerTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $serializer->unserialize(
             'O:41:"Spiral\Tests\Serializer\Fixture\SomeClass":3:{s:2:"id";i:2;s:4:"text";s:4:"text";s:6:"active";b:0;}',
-            \stdClass::class
+            \stdClass::class,
         );
     }
 }

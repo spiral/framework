@@ -11,9 +11,8 @@ final class TestRetryException extends \Exception implements RetryableExceptionI
 {
     public function __construct(
         private readonly bool $retryable = true,
-        private readonly ?RetryPolicyInterface $retryPolicy = null
-    ) {
-    }
+        private readonly ?RetryPolicyInterface $retryPolicy = null,
+    ) {}
 
     public function isRetryable(): bool
     {

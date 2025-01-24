@@ -19,7 +19,7 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<a href="" attr:aggregate></a>'
+            '<a href="" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -39,7 +39,7 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<a href="${href}" attr:aggregate="prefix:a-"></a>'
+            '<a href="${href}" attr:aggregate="prefix:a-"></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -60,7 +60,7 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<a href="${href}" attr:aggregate="include:style"></a>'
+            '<a href="${href}" attr:aggregate="include:style"></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -81,7 +81,7 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<a href="${href}" attr:aggregate="exclude:style"></a>'
+            '<a href="${href}" attr:aggregate="exclude:style"></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -102,12 +102,12 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="element" as="element"/><element href="google.com" style="color:red"/>'
+            '<use:element path="element" as="element"/><element href="google.com" style="color:red"/>',
         );
 
         $loader->set(
             'element',
-            '<a href="${href}" attr:aggregate></a>'
+            '<a href="${href}" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -120,11 +120,11 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="element" as="element"/><element href="google.com" blue/>'
+            '<use:element path="element" as="element"/><element href="google.com" blue/>',
         );
         $loader->set(
             'element',
-            '<a href="${href}" attr:aggregate></a>'
+            '<a href="${href}" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -138,11 +138,11 @@ class AttributesTest extends BaseTestCase
         $loader->set(
             'root',
             '<use:element path="element" as="element"/>'
-            . '<element href="google.com" blue><block:green>orange</block:green></element>'
+            . '<element href="google.com" blue><block:green>orange</block:green></element>',
         );
         $loader->set(
             'element',
-            '<a href="${href}" attr:aggregate></a>'
+            '<a href="${href}" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -156,11 +156,11 @@ class AttributesTest extends BaseTestCase
         $loader->set(
             'root',
             '<use:element path="element" as="element"/>'
-            . '<element href="google.com" {!! $value ? "checked" : "" !!}/>'
+            . '<element href="google.com" {!! $value ? "checked" : "" !!}/>',
         );
         $loader->set(
             'element',
-            '<a href="${href}" attr:aggregate></a>'
+            '<a href="${href}" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -173,11 +173,11 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="element" as="element"/><element href="google.com" style="color: <?=\'red\'?>"/>'
+            '<use:element path="element" as="element"/><element href="google.com" style="color: <?=\'red\'?>"/>',
         );
         $loader->set(
             'element',
-            '<a href="${href}" attr:aggregate></a>'
+            '<a href="${href}" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -190,11 +190,11 @@ class AttributesTest extends BaseTestCase
         $loader ??= new StringLoader();
         $loader->set(
             'root',
-            '<use:element path="element" as="element"/><element href="google.com" class=<?=\'red\'?>/>'
+            '<use:element path="element" as="element"/><element href="google.com" class=<?=\'red\'?>/>',
         );
         $loader->set(
             'element',
-            '<a href="${href}" attr:aggregate></a>'
+            '<a href="${href}" attr:aggregate></a>',
         );
 
         $builder = $this->getBuilder($loader, []);
@@ -214,7 +214,7 @@ class AttributesTest extends BaseTestCase
     {
         return [
             new DefineBlocks(),
-            new DefineAttributes()
+            new DefineAttributes(),
         ];
     }
 }

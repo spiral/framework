@@ -11,7 +11,5 @@ use Spiral\Tests\Events\Fixtures\Event\FooEvent;
 #[Listener]
 final class ClassAttributeUnionType
 {
-    public function __invoke(FooEvent|BarEvent $event): void
-    {
-    }
+    public function __invoke(FooEvent|BarEvent $event): void {}
 }

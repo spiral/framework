@@ -33,12 +33,12 @@ trait ClassAware
     {
         $classes = \array_filter(
             $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof ClassType
+            static fn(ClassLike $element): bool => $element instanceof ClassType,
         );
 
         return new Classes(\array_map(
-            static fn (ClassType $class): ClassDeclaration => ClassDeclaration::fromElement($class),
-            $classes
+            static fn(ClassType $class): ClassDeclaration => ClassDeclaration::fromElement($class),
+            $classes,
         ));
     }
 }

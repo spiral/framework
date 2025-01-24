@@ -30,7 +30,7 @@ trait MixinTrait
          */
         $parser->parseTokens(
             new Assembler($mixin, 'nodes'),
-            $token->tokens
+            $token->tokens,
         );
 
         return $mixin;

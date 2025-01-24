@@ -29,16 +29,15 @@ final class RoutesBootloader extends BaseRoutesBootloader
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly PipelineInterceptor $pipelineInterceptor,
-        private readonly Core $core
-    ) {
-    }
+        private readonly Core $core,
+    ) {}
 
     protected function globalMiddleware(): array
     {
         return [
             ErrorHandlerMiddleware::class,
             JsonPayloadMiddleware::class,
-            HttpCollector::class
+            HttpCollector::class,
         ];
     }
 
@@ -53,7 +52,7 @@ final class RoutesBootloader extends BaseRoutesBootloader
                 SessionMiddleware::class,
                 CsrfMiddleware::class,
                 AuthMiddleware::class,
-            ]
+            ],
         ];
     }
 
