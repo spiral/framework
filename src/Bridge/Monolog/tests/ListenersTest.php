@@ -27,7 +27,7 @@ class ListenersTest extends TestCase
 
         /** @var LogEvent[]|array $records */
         $records = [];
-        $l->addListener(function (LogEvent $e) use (&$records): void {
+        $l->addListener(static function (LogEvent $e) use (&$records): void {
             $records[] = $e;
         });
 
@@ -58,7 +58,7 @@ class ListenersTest extends TestCase
 
         /** @var LogEvent[]|array $records */
         $records = [];
-        $ll->addListener($l = function (LogEvent $e) use (&$records): void {
+        $ll->addListener($l = static function (LogEvent $e) use (&$records): void {
             $records[] = $e;
         });
 

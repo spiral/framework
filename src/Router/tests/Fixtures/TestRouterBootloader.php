@@ -24,7 +24,7 @@ final class TestRouterBootloader extends Bootloader
     public function defineSingletons(): array
     {
         return [
-            LoaderRegistryInterface::class => fn(Container $container) => new LoaderRegistry([
+            LoaderRegistryInterface::class => static fn(Container $container) => new LoaderRegistry([
                 new PhpFileLoader($container, $container),
                 new TestLoader(),
             ]),

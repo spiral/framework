@@ -62,7 +62,7 @@ final class CommonCasesTest extends BaseTestCase
         $this->expectExceptionMessage('Enum `Spiral\Tests\Core\Stub\EnumObject` can not be constructed.');
 
         $this->resolveClosure(
-            static function (EnumObject $enum) {},
+            static function (EnumObject $enum): void {},
         );
     }
 
@@ -74,7 +74,7 @@ final class CommonCasesTest extends BaseTestCase
         );
 
         $this->resolveClosure(
-            static function (TestTrait $enum) {},
+            static function (TestTrait $enum): void {},
         );
     }
 }

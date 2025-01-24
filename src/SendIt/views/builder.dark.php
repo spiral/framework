@@ -17,13 +17,13 @@ if (injected('from')) {
  */
 ?><stack:collect name="partials"/>${context}<?php
 
-ob_start(); ?>${html}<?php $_html_ = ob_get_clean();
+\ob_start(); ?>${html}<?php $_html_ = \ob_get_clean();
 
 if (!empty($_html_)) {
     $_msg_->html($_html_);
 }
 
-ob_start(); ?>${text}<?php $_text_ = ob_get_clean();
+\ob_start(); ?>${text}<?php $_text_ = \ob_get_clean();
 
 if (!empty($_text_)) {
     $_msg_->text($_text_);

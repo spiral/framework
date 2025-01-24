@@ -65,7 +65,7 @@ class BindingsTest extends TestCase
         $options = new Options();
         $options->allowSingletonsRebinding = true;
         $container = new Container(options: $options);
-        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+        $container->bindSingleton('sampleClass', static fn(): SampleClass => new SampleClass());
 
         $instance = $container->get('sampleClass');
         $container->bindSingleton('sampleClass', new SampleClass());
@@ -78,7 +78,7 @@ class BindingsTest extends TestCase
         $options = new Options();
         $options->allowSingletonsRebinding = false;
         $container = new Container(options: $options);
-        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+        $container->bindSingleton('sampleClass', static fn(): SampleClass => new SampleClass());
 
         $instance = $container->get('sampleClass');
         $container->bindSingleton('sampleClass', new SampleClass(), true);
@@ -111,7 +111,7 @@ class BindingsTest extends TestCase
     {
         $container = new Container();
 
-        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+        $container->bindSingleton('sampleClass', static fn(): SampleClass => new SampleClass());
 
         $container->get('sampleClass');
 
@@ -138,7 +138,7 @@ class BindingsTest extends TestCase
         $options->allowSingletonsRebinding = false;
         $container = new Container(options: $options);
 
-        $container->bindSingleton('sampleClass', fn(): SampleClass => new SampleClass());
+        $container->bindSingleton('sampleClass', static fn(): SampleClass => new SampleClass());
 
         $container->get('sampleClass');
 

@@ -64,7 +64,7 @@ class GuardedTraitTest extends TestCase
         $container = new Container();
         $container->bind(GuardInterface::class, $this->guard);
 
-        ContainerScope::runScope($container, function () use ($guarded): void {
+        ContainerScope::runScope($container, static function () use ($guarded): void {
             self::assertTrue($guarded->allows(static::OPERATION, static::CONTEXT));
             self::assertFalse($guarded->denies(static::OPERATION, static::CONTEXT));
         });

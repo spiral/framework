@@ -138,7 +138,7 @@ final class PHPMixin
                     if ($level === 0) {
                         $this->blocks[$name] = [
                             'start' => $start,
-                            'value' => trim($value),
+                            'value' => \trim($value),
                             'end'   => $position,
                         ];
 

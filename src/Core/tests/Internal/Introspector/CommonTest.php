@@ -21,7 +21,7 @@ final class CommonTest extends TestCase
 
         $container->invoke(static fn() => self::assertSame('root', Introspector::scopeName()));
 
-        $container->runScope(new Scope('test'), function (ContainerInterface $container): void {
+        $container->runScope(new Scope('test'), static function (ContainerInterface $container): void {
             self::assertSame('test', Introspector::scopeName($container));
             self::assertSame('test', Introspector::scopeName());
         });
@@ -31,9 +31,9 @@ final class CommonTest extends TestCase
     {
         $container = new Container();
 
-        $container->runScope(new Scope('test'), function (Container $c): void {
-            $c->runScope(new Scope(), function (Container $c): void {
-                $c->runScope(new Scope('bar'), function (Container $c): void {
+        $container->runScope(new Scope('test'), static function (Container $c): void {
+            $c->runScope(new Scope(), static function (Container $c): void {
+                $c->runScope(new Scope('bar'), static function (Container $c): void {
                     self::assertSame(['bar', null, 'test', 'root'], Introspector::scopeNames($c));
                     self::assertSame(['bar', null, 'test', 'root'], Introspector::scopeNames());
                 });
@@ -45,9 +45,9 @@ final class CommonTest extends TestCase
     {
         $container = new Container();
 
-        $container->runScope(new Scope('test'), function (Container $c): void {
-            $c->runScope(new Scope(), function (Container $c): void {
-                $c->runScope(new Scope('bar'), function (Container $c, #[Proxy] ContainerInterface $proxy): void {
+        $container->runScope(new Scope('test'), static function (Container $c): void {
+            $c->runScope(new Scope(), static function (Container $c): void {
+                $c->runScope(new Scope('bar'), static function (Container $c, #[Proxy] ContainerInterface $proxy): void {
                     self::assertSame(['bar', null, 'test', 'root'], Introspector::scopeNames($proxy));
                 });
             });

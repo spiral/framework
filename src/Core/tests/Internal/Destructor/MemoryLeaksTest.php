@@ -34,7 +34,7 @@ class MemoryLeaksTest extends TestCase
     {
         $map = new \WeakMap();
 
-        $fn = function (\WeakMap $map) {
+        $fn = function (\WeakMap $map): void {
             foreach ($this as $key => $value) {
                 if (\is_object($value)) {
                     $map->offsetSet($value, $key);

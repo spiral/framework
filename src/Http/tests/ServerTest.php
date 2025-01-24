@@ -173,7 +173,7 @@ class ServerTest extends TestCase
 
         $this->container->bind(ServerRequestInterface::class, $request);
 
-        self::assertSame(['PATH' => 'sample',], iterator_to_array($this->input->server));
+        self::assertSame(['PATH' => 'sample',], \iterator_to_array($this->input->server));
     }
 
     public function testSetAndExceptions(): void

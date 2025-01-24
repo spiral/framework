@@ -259,13 +259,13 @@ final class CsrfTest extends TestCase
 
         foreach ($response->getHeaders() as $header) {
             foreach ($header as $headerLine) {
-                $chunk = explode(';', $headerLine);
-                if (mb_strpos($chunk[0], '=') === false) {
+                $chunk = \explode(';', $headerLine);
+                if (\mb_strpos($chunk[0], '=') === false) {
                     continue;
                 }
 
-                $cookie = explode('=', $chunk[0]);
-                $result[$cookie[0]] = rawurldecode($cookie[1]);
+                $cookie = \explode('=', $chunk[0]);
+                $result[$cookie[0]] = \rawurldecode($cookie[1]);
             }
         }
 

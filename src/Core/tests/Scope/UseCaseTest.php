@@ -46,7 +46,7 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
         $root->bind('foo', SampleClass::class);
 
-        $root->runScoped(function (ContainerInterface $c1): void {
+        $root->runScoped(static function (ContainerInterface $c1): void {
             $c1->get('foo');
         }, bindings: ['foo' => SampleClass::class]);
 
@@ -79,7 +79,7 @@ final class UseCaseTest extends BaseTestCase
     {
         $root = new Container();
 
-        $root->runScoped(function (ContainerInterface $c1) use ($theSame, $alias): void {
+        $root->runScoped(static function (ContainerInterface $c1) use ($theSame, $alias): void {
             $obj1 = $c1->get($alias);
             $obj2 = $c1->get($alias);
 
@@ -140,7 +140,7 @@ final class UseCaseTest extends BaseTestCase
             self::assertInstanceOf(\stdClass::class, $obj1);
             // Singleton must be the same
             self::assertSame($c1->get('bar'), $root->get('bar'));
-            $c1->runScoped(function (ContainerInterface $c2) use ($root, $obj1): void {
+            $c1->runScoped(static function (ContainerInterface $c2) use ($root, $obj1): void {
                 $obj2 = $c2->get('foo');
 
                 self::assertInstanceOf(\stdClass::class, $obj2);
@@ -195,7 +195,7 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
         $root->getBinder('scope1')->bindSingleton('foo', $factory->makeStdClass(...));
 
-        $getter = fn(): mixed => $root->runScoped(static function (Container $c1) use ($factory): mixed {
+        $getter = static fn(): mixed => $root->runScoped(static function (Container $c1) use ($factory): mixed {
             self::assertFalse($c1->has('bar'));
             $c1->bindSingleton('bar', $factory->makeStdClass(...));
 
@@ -216,12 +216,12 @@ final class UseCaseTest extends BaseTestCase
         $factory = new Factory();
         $root = new Container();
 
-        $root->runScoped(function (Container $c1) use ($factory): void {
+        $root->runScoped(static function (Container $c1) use ($factory): void {
             $c1->getBinder('scope1')->bindSingleton('bar', $factory->makeStdClass(...));
             self::assertFalse($c1->has('bar'));
         }, name: 'scope1');
 
-        $root->runScoped(function (Container $c1): void {
+        $root->runScoped(static function (Container $c1): void {
             self::assertTrue($c1->has('bar'));
             self::assertInstanceOf(\stdClass::class, $c1->get('bar'));
         }, name: 'scope1');
@@ -258,7 +258,7 @@ final class UseCaseTest extends BaseTestCase
 
         self::assertSame('a', $c->get('bucket')->getName());
 
-        self::assertTrue($c->runScoped(function (ContainerInterface $c): bool {
+        self::assertTrue($c->runScoped(static function (ContainerInterface $c): bool {
             self::assertSame('b', $c->get('bucket')->getName());
 
             return $c->get('bucket')->getName() === 'b';
@@ -282,7 +282,7 @@ final class UseCaseTest extends BaseTestCase
     public function testRegisterContainerOnGet(): void
     {
         $root = new Container();
-        $root->bind('foo', function () use ($root): void {
+        $root->bind('foo', static function () use ($root): void {
             self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
             self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
         });
@@ -293,7 +293,7 @@ final class UseCaseTest extends BaseTestCase
     public function testRegisterContainerOnMake(): void
     {
         $root = new Container();
-        $root->bind('foo', function () use ($root): void {
+        $root->bind('foo', static function () use ($root): void {
             self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
             self::assertSame($root, \Spiral\Core\ContainerScope::getContainer());
         });
@@ -311,7 +311,7 @@ final class UseCaseTest extends BaseTestCase
         $root->bind('isFoo', new Scalar(false));
         $root->getBinder('foo')->bind('isFoo', new Scalar(true));
 
-        $root->bind('foo', function (#[Proxy] ContainerInterface $c, ContainerInterface $r) use ($root): void {
+        $root->bind('foo', static function (#[Proxy] ContainerInterface $c, ContainerInterface $r) use ($root): void {
             // Direct
             self::assertNotNull(\Spiral\Core\ContainerScope::getContainer());
             self::assertNotSame($root, \Spiral\Core\ContainerScope::getContainer());
@@ -326,7 +326,7 @@ final class UseCaseTest extends BaseTestCase
 
         $root->runScope(
             new Scope('foo'),
-            function (ContainerInterface $c): void {
+            static function (ContainerInterface $c): void {
                 self::assertTrue($c->get('isFoo'));
                 $c->get('foo');
             },
@@ -339,7 +339,7 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
         $root->getBinder($scope)->bindSingleton('foo', SampleClass::class);
 
-        $root->runScope(new Scope($scope), function (Container $container): void {
+        $root->runScope(new Scope($scope), static function (Container $container): void {
             self::assertTrue($container->has('foo'));
             self::assertInstanceOf(SampleClass::class, $container->get('foo'));
         });
@@ -351,20 +351,20 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
         $root->bindSingleton('sampleClass', SampleClass::class);
 
-        $root->runScope(new Scope('foo'), function (Container $container): void {
+        $root->runScope(new Scope('foo'), static function (Container $container): void {
             self::assertTrue($container->has('sampleClass'));
         });
 
-        $root->runScope(new Scope('foo'), function (Container $container): void {
-            $container->runScope(new Scope('bar'), function (Container $container): void {
+        $root->runScope(new Scope('foo'), static function (Container $container): void {
+            $container->runScope(new Scope('bar'), static function (Container $container): void {
                 self::assertTrue($container->has('sampleClass'));
             });
         });
 
-        $root->runScope(new Scope('foo'), function (Container $container): void {
+        $root->runScope(new Scope('foo'), static function (Container $container): void {
             $container->bindSingleton('otherClass', SampleClass::class);
 
-            $container->runScope(new Scope('bar'), function (Container $container): void {
+            $container->runScope(new Scope('bar'), static function (Container $container): void {
                 self::assertTrue($container->has('sampleClass'));
                 self::assertTrue($container->has('otherClass'));
             });
@@ -376,33 +376,33 @@ final class UseCaseTest extends BaseTestCase
         $root = new Container();
         $root->getBinder('foo')->bindSingleton('sampleClass', AttrScopeFoo::class);
 
-        $root->runScope(new Scope('foo'), function (Container $container): void {
+        $root->runScope(new Scope('foo'), static function (Container $container): void {
             self::assertTrue($container->has('sampleClass'));
         });
 
-        $root->runScope(new Scope('bar'), function (Container $container): void {
+        $root->runScope(new Scope('bar'), static function (Container $container): void {
             self::assertFalse($container->has('sampleClass'));
         });
 
-        $root->runScope(new Scope('foo'), function (Container $container): void {
-            $container->runScope(new Scope('bar'), function (Container $container): void {
+        $root->runScope(new Scope('foo'), static function (Container $container): void {
+            $container->runScope(new Scope('bar'), static function (Container $container): void {
                 self::assertTrue($container->has('sampleClass'));
             });
         });
 
-        $root->runScope(new Scope('foo'), function (Container $container): void {
+        $root->runScope(new Scope('foo'), static function (Container $container): void {
             $container->bindSingleton('otherClass', AttrScopeFoo::class);
 
-            $container->runScope(new Scope('bar'), function (Container $container): void {
+            $container->runScope(new Scope('bar'), static function (Container $container): void {
                 self::assertTrue($container->has('sampleClass'));
                 self::assertTrue($container->has('otherClass'));
             });
         });
 
-        $root->runScope(new Scope('baz'), function (Container $container): void {
+        $root->runScope(new Scope('baz'), static function (Container $container): void {
             $container->getBinder('foo')->bindSingleton('otherClass', AttrScopeFoo::class);
 
-            $container->runScope(new Scope('bar'), function (Container $container): void {
+            $container->runScope(new Scope('bar'), static function (Container $container): void {
                 self::assertFalse($container->has('sampleClass'));
                 self::assertFalse($container->has('otherClass'));
             });

@@ -25,7 +25,7 @@ final class EnumDeclarationTest extends TestCase
             ->setReturnType('string')
             ->addBody('return self::First->value;');
 
-        self::assertSame(preg_replace('/\s+/', '', '
+        self::assertSame(\preg_replace('/\s+/', '', '
             /**
              * Description of enum
              */
@@ -42,7 +42,7 @@ final class EnumDeclarationTest extends TestCase
                     return self::First->value;
                 }
              }
-        '), preg_replace('/\s+/', '', (string) $enum));
+        '), \preg_replace('/\s+/', '', (string) $enum));
     }
 
     public function testName(): void
@@ -138,7 +138,7 @@ final class EnumDeclarationTest extends TestCase
 
     public function testRender(): void
     {
-        $expect = preg_replace('/\s+/', '', '
+        $expect = \preg_replace('/\s+/', '', '
             /**
              * Description of enum.
              * Second line
@@ -156,8 +156,8 @@ final class EnumDeclarationTest extends TestCase
         $enum->addCase('Second', 'second');
         ;
 
-        self::assertSame($expect, preg_replace('/\s+/', '', $enum->render()));
-        self::assertSame($expect, preg_replace('/\s+/', '', $enum->__toString()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $enum->render()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $enum->__toString()));
     }
 
     public function testFromElement(): void

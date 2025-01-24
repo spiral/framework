@@ -21,8 +21,8 @@ class ControllerTest extends AbstractCommandTestCase
             '-a'        => ['index', 'save'],
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
@@ -52,8 +52,8 @@ class ControllerTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Controller',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
@@ -74,8 +74,8 @@ class ControllerTest extends AbstractCommandTestCase
             '--prototype' => true,
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $traits = $reflection->getTraitNames();

@@ -39,7 +39,7 @@ class TestController
 
     public function echo(): void
     {
-        ob_start();
+        \ob_start();
         echo 'echoed';
     }
 

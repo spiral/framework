@@ -43,7 +43,7 @@ final class ProxyTest extends TestCase
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
             #[Proxy/*proxyOverloads: true*/] EmptyInterface $empty,
-        ) use ($var) {
+        ) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             $proxy->bar(name: 'foo'); // Possible to run
@@ -60,7 +60,7 @@ final class ProxyTest extends TestCase
 
         self::expectExceptionMessageMatches('/Call to undefined method/i');
 
-        $root->invoke(static function (#[Proxy] EmptyInterface $proxy) {
+        $root->invoke(static function (#[Proxy] EmptyInterface $proxy): void {
             $proxy->bar(name: 'foo'); // Possible to run
         });
     }
@@ -75,7 +75,7 @@ final class ProxyTest extends TestCase
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
             #[Proxy/*proxyOverloads: true*/] EmptyInterface $empty,
-        ) use ($var) {
+        ) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extra('foo', 'bar', 'baz', 69));
@@ -95,7 +95,7 @@ final class ProxyTest extends TestCase
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
             #[Proxy/*proxyOverloads: true*/] EmptyInterface $empty,
-        ) use ($var) {
+        ) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             self::assertSame(['foo', 'bar', 'baz', 69], $proxy->extraVariadic('foo', 'bar', 'baz', 69));
@@ -117,7 +117,7 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             $str = 'bar';
@@ -137,7 +137,7 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
 
@@ -160,7 +160,7 @@ final class ProxyTest extends TestCase
         $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
         $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
 
-        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var) {
+        $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
             $proxy = $$var;
             $str1 = 'bar';
@@ -201,7 +201,7 @@ final class ProxyTest extends TestCase
         $this->assertInstanceOf($interface, $proxy);
         $this->assertNotInstanceOf(MockInterfaceImpl::class, $proxy);
 
-        $root->runScope(new Scope('foo'), static function (Container $container) use ($interface, $proxy) {
+        $root->runScope(new Scope('foo'), static function (Container $container) use ($interface, $proxy): void {
             $proxy->bar(name: 'foo'); // Possible to run
             self::assertSame('foo', $proxy->baz('foo', 42));
             self::assertSame(123, $proxy->qux(age: 123));
@@ -251,7 +251,7 @@ final class ProxyTest extends TestCase
         $proxy = $root->get($interface);
         $this->assertInstanceOf($interface, $proxy);
 
-        $root->runScope(new Scope('foo'), static function () use ($proxy) {
+        $root->runScope(new Scope('foo'), static function () use ($proxy): void {
             $proxy->bar(name: 'foo'); // Possible to run
             self::assertSame('foo', $proxy->baz('foo', 42));
             self::assertSame(123, $proxy->qux(age: 123));
@@ -279,7 +279,7 @@ final class ProxyTest extends TestCase
         $proxy = $root->get($interface);
         $this->assertInstanceOf($interface, $proxy);
 
-        $root->runScope(new Scope('foo'), static function () use ($proxy) {
+        $root->runScope(new Scope('foo'), static function () use ($proxy): void {
             $proxy->bar(name: 'foo'); // Possible to run
             self::assertSame('foo', $proxy->baz('foo', 42));
             self::assertSame(123, $proxy->qux(age: 123));
@@ -308,7 +308,7 @@ final class ProxyTest extends TestCase
         $proxy = $root->get($interface);
         $this->assertInstanceOf($interface, $proxy);
 
-        $root->runScope(new Scope('foo'), static function () use ($proxy) {
+        $root->runScope(new Scope('foo'), static function () use ($proxy): void {
             $proxy->bar(name: 'foo'); // Possible to run
             self::assertSame('foo', $proxy->baz('foo', 42));
             self::assertSame(123, $proxy->qux(age: 123));
@@ -330,7 +330,7 @@ final class ProxyTest extends TestCase
         $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\DeprecationProxy($interface, true, 'foo', '4.0'));
 
-        $root->runScope(new Scope('foo'), static function (Container $container) use ($interface) {
+        $root->runScope(new Scope('foo'), static function (Container $container) use ($interface): void {
             $proxy = $container->get($interface);
 
             $proxy->bar(name: 'foo'); // Possible to run

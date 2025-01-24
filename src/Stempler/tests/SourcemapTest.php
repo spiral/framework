@@ -20,7 +20,7 @@ class SourcemapTest extends BaseTestCase
     {
         $res = $this->getBuilder($this->getFixtureLoader())->compile('bundle-import');
 
-        self::assertSame('<a href="abc">cde</a>', trim($res->getContent()));
+        self::assertSame('<a href="abc">cde</a>', \trim($res->getContent()));
     }
 
     public function testGetTemplates(): void
@@ -37,12 +37,12 @@ class SourcemapTest extends BaseTestCase
     {
         $res = $this->getBuilder($this->getFixtureLoader())->compile('import-php');
 
-        self::assertSame(preg_replace("/\s+/", '', '
+        self::assertSame(\preg_replace("/\s+/", '', '
 <div>
     <?php foreach ([\'a\', \'b\', \'c\'] as $value): ?>
     <b><?php echo htmlspecialchars((string) ($value), ENT_QUOTES | ENT_SUBSTITUTE, \'utf-8\'); ?></b>
     <?php endforeach; ?>
-</div>'), preg_replace("/\s+/", '', $res->getContent()));
+</div>'), \preg_replace("/\s+/", '', $res->getContent()));
     }
 
     public function testCompress(): void
@@ -51,7 +51,7 @@ class SourcemapTest extends BaseTestCase
 
         $sm = $res->getSourceMap($this->getFixtureLoader());
 
-        $sm2 = unserialize(serialize($sm));
+        $sm2 = \unserialize(\serialize($sm));
 
         self::assertEquals($sm, $sm2);
     }

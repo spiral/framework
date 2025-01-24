@@ -67,8 +67,8 @@ final class FactoryTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ((int) session_status() === PHP_SESSION_ACTIVE) {
-            session_abort();
+        if ((int) \session_status() === PHP_SESSION_ACTIVE) {
+            \session_abort();
         }
     }
 }

@@ -31,7 +31,7 @@ final class HeaderTransportTest extends BaseTestCase
                 } else {
                     echo $request->getAttribute('authContext')->getToken()->getID();
                     echo ':';
-                    echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
+                    echo \json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
             },
         );
@@ -55,7 +55,7 @@ final class HeaderTransportTest extends BaseTestCase
                 } else {
                     echo $request->getAttribute('authContext')->getToken()->getID();
                     echo ':';
-                    echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
+                    echo \json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
             },
         );
@@ -79,7 +79,7 @@ final class HeaderTransportTest extends BaseTestCase
                 } else {
                     echo $request->getAttribute('authContext')->getToken()->getID();
                     echo ':';
-                    echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
+                    echo \json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
             },
         );

@@ -12,6 +12,6 @@ final class Scalar extends Binding
 
     public function __toString(): string
     {
-        return sprintf('Scalar value (%s) %s', \gettype($this->value), \var_export($this->value, true));
+        return \sprintf('Scalar value (%s) %s', \gettype($this->value), \var_export($this->value, true));
     }
 }

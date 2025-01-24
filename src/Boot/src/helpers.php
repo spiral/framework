@@ -9,7 +9,7 @@ use Spiral\Boot\Exception\DirectoryException;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\ScopeException;
 
-if (!function_exists('spiral')) {
+if (!\function_exists('spiral')) {
     /**
      * Resolve given alias in current IoC scope.
      *
@@ -34,7 +34,7 @@ if (!function_exists('spiral')) {
     }
 }
 
-if (!function_exists('directory')) {
+if (!\function_exists('directory')) {
     /**
      * Get directory alias value. Uses application core from the current global scope.
      *
@@ -49,7 +49,7 @@ if (!function_exists('directory')) {
     }
 }
 
-if (!function_exists('env')) {
+if (!\function_exists('env')) {
     /**
      * Gets the value of an environment variable. Uses application core from the current global scope.
      *

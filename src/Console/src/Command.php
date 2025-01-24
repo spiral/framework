@@ -93,7 +93,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
             throw new ScopeException('Container is not set');
         }
 
-        $method = method_exists($this, 'perform') ? 'perform' : '__invoke';
+        $method = \method_exists($this, 'perform') ? 'perform' : '__invoke';
 
         try {
             [$this->input, $this->output] = [$this->prepareInput($input), $this->prepareOutput($input, $output)];

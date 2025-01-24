@@ -259,7 +259,7 @@ final class MethodTest extends TestCase
 
     public function testRender(): void
     {
-        $expect = preg_replace('/\s+/', '', '
+        $expect = \preg_replace('/\s+/', '', '
             public function test(): int
             {
                 return 1;
@@ -268,7 +268,7 @@ final class MethodTest extends TestCase
         $method = new Method('test');
         $method->setReturnType('int')->setPublic()->setBody('return 1;');
 
-        self::assertSame($expect, preg_replace('/\s+/', '', $method->__toString()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $method->__toString()));
     }
 
     public function testFromElement(): void

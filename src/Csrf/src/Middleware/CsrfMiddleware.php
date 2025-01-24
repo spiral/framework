@@ -75,7 +75,7 @@ final class CsrfMiddleware implements MiddlewareInterface
     private function random(int $length = 32): string
     {
         try {
-            if (empty($string = random_bytes($length))) {
+            if (empty($string = \random_bytes($length))) {
                 throw new \RuntimeException('Unable to generate random string');
             }
         } catch (\Throwable $e) {

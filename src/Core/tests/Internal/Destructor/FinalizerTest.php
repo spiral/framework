@@ -11,7 +11,7 @@ class FinalizerTest extends TestCase
 {
     public function testInternalServicesDontBlockContainer(): void
     {
-        (static function () {
+        (static function (): void {
             $container = new Container();
             $finalizer = new class {
                 public ?\Closure $closure = null;
@@ -23,7 +23,7 @@ class FinalizerTest extends TestCase
                     }
                 }
             };
-            $finalizer->closure = static function () use ($container) {
+            $finalizer->closure = static function () use ($container): void {
                 $container->hasInstance('finalizer');
             };
             $container->bind('finalizer', $finalizer);

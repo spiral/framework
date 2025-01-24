@@ -35,6 +35,7 @@ final class Accessor
 
     public function __get(string $name): object
     {
-        return (fn(PublicContainer $c): object => $c->$name)->call($this->publicContainer, $this->publicContainer);
+        return (static fn(PublicContainer $c): object => $c->$name)
+            ->bindTo(null, $this->publicContainer)($this->publicContainer);
     }
 }

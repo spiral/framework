@@ -46,7 +46,7 @@ class FormatTest extends BaseTestCase
 
     </pre>
   extra spaces
-</div>', str_replace("\r", '', $s->get('format/f4', new ViewContext())->render([])));
+</div>', \str_replace("\r", '', $s->get('format/f4', new ViewContext())->render([])));
     }
 
     public function testFormatDiv5(): void

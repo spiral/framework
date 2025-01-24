@@ -108,7 +108,7 @@ final class ProxyClassRenderer
 
         $traitsStr = $traits === [] ? '' : \implode(
             "\n    ",
-            \array_map(fn(string $trait): string => 'use \\' . \ltrim($trait, '\\') . ';', $traits),
+            \array_map(static fn(string $trait): string => 'use \\' . \ltrim($trait, '\\') . ';', $traits),
         );
         return <<<PHP
             $classNamespaceStr

@@ -39,7 +39,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function add(string $name, RouteConfigurator $route)
+    public function add(string $name, RouteConfigurator $route): void
     {
         $this->routes[$name] = $route;
     }
@@ -83,7 +83,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function remove(string|array $name)
+    public function remove(string|array $name): void
     {
         foreach ((array) $name as $n) {
             unset($this->routes[$n]);
@@ -95,7 +95,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function addCollection(self $collection)
+    public function addCollection(self $collection): void
     {
         foreach ($collection->all() as $name => $route) {
             $this->routes[$name] = $route;
@@ -111,7 +111,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function group(string $group)
+    public function group(string $group): void
     {
         foreach ($this->routes as $route) {
             $route->group($group);

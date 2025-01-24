@@ -163,12 +163,12 @@ final class Console
                 $inputStream = $input->getStream();
             }
 
-            if ($inputStream !== null && !@posix_isatty($inputStream) && getenv('SHELL_INTERACTIVE') === false) {
+            if ($inputStream !== null && !@posix_isatty($inputStream) && \getenv('SHELL_INTERACTIVE') === false) {
                 $input->setInteractive(false);
             }
         }
 
-        match ($shellVerbosity = (int) getenv('SHELL_VERBOSITY')) {
+        match ($shellVerbosity = (int) \getenv('SHELL_VERBOSITY')) {
             -1 => $output->setVerbosity(OutputInterface::VERBOSITY_QUIET),
             1 => $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE),
             2 => $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE),

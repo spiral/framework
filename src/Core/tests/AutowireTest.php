@@ -337,7 +337,7 @@ class AutowireTest extends TestCase
     {
         $wire = new Container\Autowire('sample-binding', ['a' => new Container\Autowire('b')]);
 
-        $wireb = unserialize(serialize($wire));
+        $wireb = \unserialize(\serialize($wire));
 
         self::assertEquals($wire, $wireb);
     }

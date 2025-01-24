@@ -14,7 +14,7 @@ class FinalizerTest extends TestCase
         $f = new Finalizer();
 
         $value = 1;
-        $f->addFinalizer(function () use (&$value): void {
+        $f->addFinalizer(static function () use (&$value): void {
             $value = 2;
         });
 

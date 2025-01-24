@@ -98,10 +98,10 @@ class DynamicToPHPTest extends BaseTestCase
 
     private function eval(string $body): string
     {
-        ob_start();
+        \ob_start();
 
         eval('?>' . $body);
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 }

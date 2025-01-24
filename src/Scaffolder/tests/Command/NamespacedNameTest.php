@@ -21,8 +21,8 @@ class NamespacedNameTest extends AbstractCommandTestCase
             '-a' => ['index', 'save'],
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists(self::CLASS_NAME));
+        \clearstatcache();
+        self::assertTrue(\class_exists(self::CLASS_NAME));
 
         $reflection = new \ReflectionClass(self::CLASS_NAME);
 

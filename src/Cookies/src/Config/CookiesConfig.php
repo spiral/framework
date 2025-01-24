@@ -56,7 +56,7 @@ final class CookiesConfig extends InjectableConfig
             $pattern = \ltrim((string) $pattern, '.');
         }
 
-        if (!str_contains((string) $pattern, '%s')) {
+        if (!\str_contains((string) $pattern, '%s')) {
             //Forced domain
             return $pattern;
         }

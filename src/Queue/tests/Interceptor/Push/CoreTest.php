@@ -40,7 +40,7 @@ final class CoreTest extends TestCase
 
         $queue->shouldReceive('push')->once()
             ->withArgs(
-                fn(string $name, mixed $p = [], ?OptionsInterface $options = null): bool => $name === 'foo'
+                static fn(string $name, mixed $p = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === $p
                 && $options instanceof Options,
             );
@@ -87,14 +87,14 @@ final class CoreTest extends TestCase
 
 
         $tracer->shouldReceive('getContext')->once()->andReturn(['foo' => ['bar']]);
-        $tracer->shouldReceive('trace')->once()->andReturnUsing(fn($name, $callback) => $callback());
+        $tracer->shouldReceive('trace')->once()->andReturnUsing(static fn($name, $callback) => $callback());
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
+            ->withArgs(static fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === ['baz' => 'baf']
                 && $options->getHeader('foo') === ['bar']);
 
-        ContainerScope::runScope($container, function () use ($core): void {
+        ContainerScope::runScope($container, static function () use ($core): void {
             $core->callAction('foo', 'bar', [
                 'id' => 'job-id',
                 'payload' => ['baz' => 'baf'],
@@ -113,7 +113,7 @@ final class CoreTest extends TestCase
         $tracer->shouldNotReceive('getContext');
 
         $queue->shouldReceive('push')->once()
-            ->withArgs(fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
+            ->withArgs(static fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
                 && $payload === ['baz' => 'baf']
                 && $options !== null);
 

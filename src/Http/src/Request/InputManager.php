@@ -176,7 +176,7 @@ final class InputManager
         try {
             $request = $this->container->get(Request::class);
         } catch (ContainerExceptionInterface $e) {
-            $scope = implode('.', \array_reverse(Introspector::scopeNames($this->container)));
+            $scope = \implode('.', \array_reverse(Introspector::scopeNames($this->container)));
             throw new ScopeException(
                 "Unable to get `ServerRequestInterface` in the `$scope` container scope",
                 $e->getCode(),

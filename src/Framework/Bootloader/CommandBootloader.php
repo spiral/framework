@@ -78,7 +78,7 @@ final class CommandBootloader extends Bootloader
         $console->addCommand(Translator\ResetCommand::class);
 
         $console->addConfigureSequence(
-            function (FilesInterface $files, TranslatorConfig $config, OutputInterface $output): void {
+            static function (FilesInterface $files, TranslatorConfig $config, OutputInterface $output): void {
                 $files->ensureDirectory($config->getLocaleDirectory($config->getDefaultLocale()));
                 $output->writeln('<info>The default locale directory has been ensured.</info>');
             },

@@ -24,7 +24,7 @@ class IdentityScopedMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         return $this->scope->runScope(
             new Scope(name: 'idenity', bindings: ['identity' => 'test-identity']),
-            fn() => $handler->handle($request),
+            static fn() => $handler->handle($request),
         );
     }
 }

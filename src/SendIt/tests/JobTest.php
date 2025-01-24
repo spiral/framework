@@ -38,7 +38,7 @@ class JobTest extends TestCase
         $this->getHandler()->handle(
             MailQueue::JOB_NAME,
             'id',
-            json_encode(MessageSerializer::pack($this->getMail())),
+            \json_encode(MessageSerializer::pack($this->getMail())),
         );
     }
 
@@ -54,7 +54,7 @@ class JobTest extends TestCase
             $this->getHandler()->handle(
                 MailQueue::JOB_NAME,
                 'id',
-                json_encode(MessageSerializer::pack($this->getMail())),
+                \json_encode(MessageSerializer::pack($this->getMail())),
             );
         } catch (TransportException) {
         }
@@ -122,7 +122,7 @@ class JobTest extends TestCase
     private function expectRenderer(Email $email): void
     {
         $this->renderer->expects('render')->withArgs(
-            function (Message $message): bool {
+            static function (Message $message): bool {
                 self::assertSame('test', $message->getSubject());
                 return true;
             },

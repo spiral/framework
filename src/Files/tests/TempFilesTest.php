@@ -42,7 +42,7 @@ class TempFilesTest extends TestCase
         self::assertTrue($files->exists($tempFilename));
 
         self::assertSame('txt', $files->extension($tempFilename));
-        self::assertSame($files->normalizePath(self::FIXTURE_DIRECTORY, true), $files->normalizePath(dirname($tempFilename), true));
+        self::assertSame($files->normalizePath(self::FIXTURE_DIRECTORY, true), $files->normalizePath(\dirname($tempFilename), true));
 
         self::assertSame('', $files->read($tempFilename));
 

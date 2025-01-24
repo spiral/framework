@@ -20,7 +20,7 @@ final class ClassDeclarationTest extends TestCase
             ->addComment("Description of class.\nSecond line\n")
             ->addComment('@property-read Nette\Forms\Form $form');
 
-        self::assertSame(preg_replace('/\s+/', '', '/**
+        self::assertSame(\preg_replace('/\s+/', '', '/**
             * Description of class.
             * Second line
             *
@@ -28,7 +28,7 @@ final class ClassDeclarationTest extends TestCase
             */
             final class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
             {
-            }'), preg_replace('/\s+/', '', (string) $declaration));
+            }'), \preg_replace('/\s+/', '', (string) $declaration));
     }
 
     public function testClassDeclarationWithConstants(): void
@@ -62,7 +62,7 @@ final class ClassDeclarationTest extends TestCase
             ->addConstant('WITH_ATTRIBUTE', 'attr')
             ->addAttribute('Foo\Cached', ['mode' => true]);
 
-        self::assertSame(preg_replace('/\s+/', '', '
+        self::assertSame(\preg_replace('/\s+/', '', '
         class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
             {
                 private const PRIVATE = 123;
@@ -75,7 +75,7 @@ final class ClassDeclarationTest extends TestCase
 
                 #[Foo\Cached(mode: true)]
                 public const WITH_ATTRIBUTE = \'attr\';
-            }'), preg_replace('/\s+/', '', (string) $declaration));
+            }'), \preg_replace('/\s+/', '', (string) $declaration));
     }
 
     public function testClassDeclarationWithMethods(): void
@@ -96,7 +96,7 @@ final class ClassDeclarationTest extends TestCase
             ->setReference()
             ->setType('array');
 
-        self::assertSame(preg_replace('/\s+/', '', '
+        self::assertSame(\preg_replace('/\s+/', '', '
         class MyClass extends Spiral\Tests\Reactor\ClassDeclarationTest implements Countable
         {
            /**
@@ -106,7 +106,7 @@ final class ClassDeclarationTest extends TestCase
             {
                 return count($items ?: $this->items);
             }
-        }'), preg_replace('/\s+/', '', (string) $declaration));
+        }'), \preg_replace('/\s+/', '', (string) $declaration));
     }
 
     public function testName(): void
@@ -224,7 +224,7 @@ final class ClassDeclarationTest extends TestCase
 
     public function testRender(): void
     {
-        $expect = preg_replace('/\s+/', '', '/**
+        $expect = \preg_replace('/\s+/', '', '/**
             * Description of class.
             * Second line
             *
@@ -241,8 +241,8 @@ final class ClassDeclarationTest extends TestCase
             ->addComment("Description of class.\nSecond line\n")
             ->addComment('@property-read $form');
 
-        self::assertSame($expect, preg_replace('/\s+/', '', $class->render()));
-        self::assertSame($expect, preg_replace('/\s+/', '', $class->__toString()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $class->render()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $class->__toString()));
     }
 
     public function testRenderPromotedParameter(): void

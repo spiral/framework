@@ -62,7 +62,7 @@ final class Files implements FilesInterface
         }
 
         foreach (\array_reverse($directoryChain) as $dir) {
-            if (!mkdir($baseDirectory = \sprintf('%s/%s', $baseDirectory, $dir))) {
+            if (!\mkdir($baseDirectory = \sprintf('%s/%s', $baseDirectory, $dir))) {
                 return false;
             }
 

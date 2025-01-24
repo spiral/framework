@@ -19,7 +19,7 @@ class MiddlewareTest extends AbstractCommandTestCase
             '--comment' => 'Sample Middleware',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
@@ -45,7 +45,7 @@ class MiddlewareTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Middleware',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);

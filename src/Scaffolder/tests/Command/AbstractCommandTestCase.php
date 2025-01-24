@@ -23,12 +23,12 @@ abstract class AbstractCommandTestCase extends BaseTestCase
 
     protected function deleteDeclaration(string $class): void
     {
-        if (class_exists($class)) {
+        if (\class_exists($class)) {
             try {
                 $reflection = new \ReflectionClass($class);
                 $this->files()->delete($reflection->getFileName());
             } catch (\Throwable $exception) {
-                var_dump($exception->getMessage());
+                \var_dump($exception->getMessage());
             }
         }
     }

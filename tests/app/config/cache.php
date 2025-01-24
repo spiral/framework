@@ -19,7 +19,7 @@ return [
         ],
         'file' => [
             'type' => FileStorage::class,
-            'path' => sys_get_temp_dir() . '/spiral/cache',
+            'path' => \sys_get_temp_dir() . '/spiral/cache',
         ],
         'inMemory' => [
             'type' => 'array',

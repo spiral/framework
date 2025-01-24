@@ -40,8 +40,8 @@ final class CommandTest extends AbstractCommandTestCase
 
         $this->console()->run('create:command', $input);
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
 
         $reflection = new \ReflectionClass($className);
         $content = $this->files()->read($reflection->getFileName());
@@ -69,7 +69,7 @@ final class CommandTest extends AbstractCommandTestCase
             '--argument' => ['username', 'password'],
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($className));
 
         $reflection = new \ReflectionClass($className);
@@ -96,7 +96,7 @@ final class CommandTest extends AbstractCommandTestCase
             '--option' => ['isAdmin'],
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($className));
 
         $reflection = new \ReflectionClass($className);
@@ -116,8 +116,8 @@ final class CommandTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Command',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
 
         $reflection = new \ReflectionClass($className);
         $content = $this->files()->read($reflection->getFileName());

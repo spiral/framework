@@ -17,7 +17,7 @@ final class ValidationProviderTest extends TestCase
     public function testRegisterValidator(): void
     {
         $validation = m::mock(ValidationInterface::class);
-        $resolver = fn() => $validation;
+        $resolver = static fn() => $validation;
         $params = ['baz' => 'bar'];
 
         $this->provider->register('foo', $resolver);

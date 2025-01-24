@@ -53,7 +53,7 @@ final class PositionArgumentTest extends BaseTestCase
     {
         $result = $this->resolveClosure(
             static fn(callable $callable) => null,
-            [$callable = fn() => true],
+            [$callable = static fn() => true],
         );
 
         $this->assertSame([$callable], $result);

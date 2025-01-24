@@ -27,7 +27,7 @@ final class PipelineTest extends TestCase
     {
         $pipeline = new Pipeline($this->container);
 
-        $handler = new CallableHandler(fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
+        $handler = new CallableHandler(static fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
         $response = $pipeline->withHandler($handler)->handle(new ServerRequest('GET', ''));
 
@@ -40,7 +40,7 @@ final class PipelineTest extends TestCase
     {
         $pipeline = new Pipeline($this->container);
 
-        $handler = new CallableHandler(fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
+        $handler = new CallableHandler(static fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
         $response = $pipeline->process(new ServerRequest('GET', ''), $handler);
 
@@ -66,7 +66,7 @@ final class PipelineTest extends TestCase
             }
         };
         $request = new ServerRequest('GET', '');
-        $handler = new CallableHandler(fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
+        $handler = new CallableHandler(static fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
@@ -106,9 +106,9 @@ final class PipelineTest extends TestCase
 
         $this->container->runScope(
             new \Spiral\Core\Scope(name: 'http'),
-            function (ScopeInterface $c) use ($middleware): void {
+            static function (ScopeInterface $c) use ($middleware): void {
                 $request = new ServerRequest('GET', '');
-                $handler = new CallableHandler(fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
+                $handler = new CallableHandler(static fn(): string => 'response', new ResponseFactory(new HttpConfig(['headers' => []])));
 
                 $pipeline = new Pipeline($c, null, new NullTracer($c));
 

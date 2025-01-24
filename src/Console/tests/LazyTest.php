@@ -23,7 +23,7 @@ class LazyTest extends BaseTestCase
             },
         );
         $commands = $locator->locateCommands();
-        $command = reset($commands);
+        $command = \reset($commands);
 
         self::assertInstanceOf(LazyCommand::class, $command);
         self::assertSame('lazy', $command->getName());
@@ -34,7 +34,7 @@ class LazyTest extends BaseTestCase
     {
         $locator = $this->getStaticLocator([LazyLoadedCommand::class]);
         $commands = $locator->locateCommands();
-        $command = reset($commands);
+        $command = \reset($commands);
 
         self::assertInstanceOf(LazyCommand::class, $command);
         self::assertSame('lazy', $command->getName());

@@ -54,7 +54,7 @@ class ScopesTest extends TestCase
         self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass(),
-        ], function ($c): bool {
+        ], static function ($c): bool {
             self::assertSame('b', $c->get('bucket')->getName());
             self::assertTrue($c->has('other'));
 
@@ -76,7 +76,7 @@ class ScopesTest extends TestCase
         self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
             'other'  => new SampleClass(),
-        ], function ($c): bool {
+        ], static function ($c): bool {
             self::assertSame('b', $c->get('bucket')->getName());
             self::assertTrue($c->has('other'));
 
@@ -87,7 +87,7 @@ class ScopesTest extends TestCase
             self::assertTrue($c->runScope([
                 'bucket' => new Bucket('b'),
                 'other'  => new SampleClass(),
-            ], function () use ($c): void {
+            ], static function () use ($c): void {
                 throw new RuntimeException('exception');
             }));
         } catch (\Throwable) {
@@ -123,7 +123,7 @@ class ScopesTest extends TestCase
 
         self::assertTrue($c->runScope([
             'bucket' => new Bucket('b'),
-        ], function ($c): bool {
+        ], static function ($c): bool {
             self::assertSame('b', $c->get('bucket')->getName());
 
             return $c->get('bucket')->getName() === 'b';
@@ -138,7 +138,7 @@ class ScopesTest extends TestCase
         $container->bindSingleton('test', new #[Singleton] class {});
         $container->make('test');
 
-        $container->runScoped(function (Container $container): void {
+        $container->runScoped(static function (Container $container): void {
             self::assertTrue($container->hasInstance('test'));
         });
     }
@@ -149,7 +149,7 @@ class ScopesTest extends TestCase
         $container->bindSingleton('test', SampleClass::class);
         $container->make('test');
 
-        $container->runScoped(function (Container $container): void {
+        $container->runScoped(static function (Container $container): void {
             self::assertTrue($container->hasInstance('test'));
         });
     }
@@ -164,7 +164,7 @@ class ScopesTest extends TestCase
         $container->bindSingleton('bar', 'foo');
         $container->make('bar');
 
-        $container->runScoped(function (Container $container): void {
+        $container->runScoped(static function (Container $container): void {
             self::assertTrue($container->hasInstance('bar'));
         });
     }

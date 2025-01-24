@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Queue\Core;
 
 use Mockery as m;

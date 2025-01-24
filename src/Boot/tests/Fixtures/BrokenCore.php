@@ -27,7 +27,7 @@ class BrokenCore extends AbstractKernel
             $directories['app'] = $directories['root'] . '/app/';
         }
 
-        return array_merge([
+        return \array_merge([
             // public root
             'public' => $directories['root'] . '/public/',
 

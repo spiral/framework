@@ -43,7 +43,7 @@ final class StemplerConfig extends InjectableConfig
     {
         $processors = [];
         foreach ($this->config['processors'] as $processor) {
-            if (is_object($processor) && !$processor instanceof Autowire) {
+            if (\is_object($processor) && !$processor instanceof Autowire) {
                 $processors[] = $processor;
                 continue;
             }

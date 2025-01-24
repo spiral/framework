@@ -21,7 +21,7 @@ class IOTest extends TestCase
         $files->write($filename, 'some-data');
         self::assertTrue($files->exists($filename));
 
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
     }
 
     public function testWriteAndEnsureDirectory(): void
@@ -40,7 +40,7 @@ class IOTest extends TestCase
 
         self::assertTrue($files->isDirectory($directory));
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
     }
 
     public function testRead(): void
@@ -95,10 +95,10 @@ class IOTest extends TestCase
         $files->append($filename, 'some-data');
         self::assertTrue($files->exists($filename));
 
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         $files->append($filename, ';other-data');
-        self::assertSame('some-data;other-data', file_get_contents($filename));
+        self::assertSame('some-data;other-data', \file_get_contents($filename));
     }
 
     public function testAppendEnsureDirectory(): void
@@ -117,10 +117,10 @@ class IOTest extends TestCase
 
         self::assertTrue($files->isDirectory($directory));
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         $files->append($filename, ';other-data', null, true);
-        self::assertSame('some-data;other-data', file_get_contents($filename));
+        self::assertSame('some-data;other-data', \file_get_contents($filename));
     }
 
     public function testTouch(): void
@@ -167,7 +167,7 @@ class IOTest extends TestCase
         $files->write($filename, 'some-data');
 
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         self::assertFalse($files->exists($destination));
 
@@ -175,7 +175,7 @@ class IOTest extends TestCase
         self::assertTrue($files->exists($destination));
         self::assertTrue($files->exists($filename));
 
-        self::assertSame(file_get_contents($filename), file_get_contents($destination));
+        self::assertSame(\file_get_contents($filename), \file_get_contents($destination));
     }
 
     public function testCopyMissingFile(): void
@@ -201,7 +201,7 @@ class IOTest extends TestCase
         $files->write($filename, 'some-data');
 
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         self::assertFalse($files->exists($destination));
 
@@ -209,7 +209,7 @@ class IOTest extends TestCase
         self::assertTrue($files->exists($destination));
         self::assertFalse($files->exists($filename));
 
-        self::assertSame('some-data', file_get_contents($destination));
+        self::assertSame('some-data', \file_get_contents($destination));
     }
 
     public function testMoveMissingFile(): void

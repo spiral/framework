@@ -47,7 +47,7 @@ final class LogTracerTest extends TestCase
                 $scope[SpanInterface::class] instanceof Span
                 && $scope[SpanInterface::class]->getName() === 'foo',
             )
-            ->andReturnUsing(fn(array $scope, callable $callable) => $callable($invoker));
+            ->andReturnUsing(static fn(array $scope, callable $callable) => $callable($invoker));
 
         self::assertSame('hello', $tracer->trace('foo', $callable, ['foo' => 'bar']));
         self::assertSame(['telemetry' => $uuid->toString()], $tracer->getContext());

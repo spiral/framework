@@ -151,7 +151,7 @@ final class Translator implements TranslatorInterface
             throw new PluralizationException($e->getMessage(), $e->getCode(), $e);
         }
 
-        if (empty($parameters['n']) && is_numeric($number)) {
+        if (empty($parameters['n']) && \is_numeric($number)) {
             $parameters['n'] = $number;
         }
 

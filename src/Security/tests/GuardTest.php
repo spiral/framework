@@ -24,7 +24,7 @@ class GuardTest extends TestCase
     public function testAllows(): void
     {
         $this->permission->method('hasRole')
-            ->willReturnCallback(function (...$args) {
+            ->willReturnCallback(static function (...$args) {
                 static $series = [
                     [['user'], false],
                     [['admin'], true],

@@ -103,7 +103,7 @@ class FactoryTest extends BaseTestCase
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
         $this->container->bind(LogFactory::class, $factory);
 
-        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger): void {
+        $this->container->invoke(static function (#[LoggerChannel('foo')] LoggerInterface $logger): void {
             self::assertSame('foo', $logger->getName());
         });
     }
