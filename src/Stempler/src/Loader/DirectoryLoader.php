@@ -22,10 +22,11 @@ final class DirectoryLoader implements LoaderInterface
      */
     public function load(string $path): Source
     {
+        $path = \str_replace('\\', '/', $path);
+
         $filename = \sprintf(
-            '%s%s%s%s',
+            '%s/%s%s',
             $this->directory,
-            DIRECTORY_SEPARATOR,
             $path,
             $this->extension
         );

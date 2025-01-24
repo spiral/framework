@@ -93,7 +93,7 @@ final class ExtendsParent implements VisitorInterface
         if (\str_starts_with($tag->name, $this->extendsKeyword . ':')) {
             $name = \substr($tag->name, \strlen($this->extendsKeyword) + 1);
 
-            return \str_replace(['.'], DIRECTORY_SEPARATOR, $name);
+            return \str_replace('.', '/', $name);
         }
 
         foreach ($tag->attrs as $attr) {

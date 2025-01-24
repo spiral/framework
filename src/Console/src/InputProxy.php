@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 /**
  * Provides the ability to inject desired command name into Symfony\Console\Application->doRun();
  */
-final class InputProxy implements InputInterface
+final class InputProxy implements InputInterface, \Stringable
 {
     public function __construct(
         private readonly InputInterface $input,

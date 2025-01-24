@@ -131,7 +131,7 @@ class ImportedStackTest extends BaseTestCase
         );
 
         $loader->set(
-            'grid' . DIRECTORY_SEPARATOR . 'render',
+            'grid/render',
             '
 <table>
 <thead>
@@ -146,7 +146,7 @@ class ImportedStackTest extends BaseTestCase
         );
 
         $loader->set(
-            'grid' . DIRECTORY_SEPARATOR . 'cell',
+            'grid/cell',
             '
 <stack:push name="head"><tr>${title}</tr></stack:push>
 <stack:push name="body"><td>${context}</td></stack:push>

@@ -15,8 +15,8 @@ final class Context
     private array $values = [];
 
     public function __construct(
-        private Token $token,
-        private ?string $path = null
+        private readonly Token $token,
+        private readonly ?string $path = null
     ) {
     }
 

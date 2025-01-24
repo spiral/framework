@@ -34,8 +34,8 @@ final class Directory implements ImportInterface
         }
 
         $path = TagHelper::stripPrefix($name, $this->prefix);
-        $path = \str_replace('.', DIRECTORY_SEPARATOR, $path);
+        $path = \str_replace('.', '/', $path);
 
-        return $builder->load($this->path . DIRECTORY_SEPARATOR . $path);
+        return $builder->load("{$this->path}/{$path}");
     }
 }
