@@ -1,20 +1,44 @@
 # CHANGELOG
 
-## Unreleased
+## 3.15.0 - 2025-01-24
+
+- Core
+  - `AppEnvironment` enum: added aliases for `production` and `test` environments by @roxblnfk.
+  - Added a new option in the container to control default behavior when rebinding singletons.
+    In the future, the container will be stricter by default,
+    so it's recommended to set `allowSingletonsRebinding` to `false` right away.
+  - Fixed resolving of scoped Autowire objects.
+- Cache
+  - Added events that are dispatched before cache operations like `KeyWriting`, `CacheRetrieving`, `KeyDeleting`
+    and failed operations like `KeyWriteFailed`, `KeyDeleteFailed`.
+  - Optimized operations with multiple cache records.
+  - Added an ability to set custom cache storage.
+- Router
+  - The `ServerRequestInterface` object is now passed into the call context of interceptors
+  - Added a new middleware pipeline `LazyPipeline`.
+    The pipeline resolves middleware from the container right before execution to avoid ignoring container scopes.
+  - `\Spiral\Http\Pipeline` is deprecated now.
+  - Added strict mode for `UriHandler`. Strict mode ensures all required URI segments are validated.
+    If any are missing, an exception is thrown.
+- Telemetry
+  - `AbstractTracer::runScope()` method does not open a container scope anymore.
+  - Spans are no longer created for each Middleware: the pipeline fills the list with called middlewares in one span.
+    The number of pipelines equals the number of spans.
+  - The `http.response_content_length` field is no longer filled.
 
 ## 3.14.10 - 2025-01-22
 
 - **Bug Fixes**
-    - [spiral/telemetry] Improve types for `SpanInterface`
-    - [spiral/stempler] Fix parsing of `@` inside a string that is not a directive
+  - [spiral/telemetry] Improve types for `SpanInterface`
+  - [spiral/stempler] Fix parsing of `@` inside a string that is not a directive
 
 ## 3.14.9 - 2025-01-07
 
 - **Bug Fixes**
-    - [spiral/core] Define Auth* middleware in `http` scope
-    - [spiral/auth-http] Fixed injectors binding via `Binder::bind` method
-    - [spiral/telemetry] Fixed returning type in TelemetryProcessor for Monolog
-    - [spiral/stempler] Fixed directory import in stempler component
+  - [spiral/core] Define Auth* middleware in `http` scope
+  - [spiral/auth-http] Fixed injectors binding via `Binder::bind` method
+  - [spiral/telemetry] Fixed returning type in TelemetryProcessor for Monolog
+  - [spiral/stempler] Fixed directory import in stempler component
 
 ## 3.14.8 - 2024-12-11
 
@@ -30,8 +54,8 @@
 ## 3.14.6 - 2024-10-22
 
 - **Bug Fixes**
-    - [spiral/core] `ServerRequestInterface` is always resolved into a Proxy in the `http` scope
-    - [spiral/cache] `EventDispatcher` is now injected into `CacheManager`
+  - [spiral/core] `ServerRequestInterface` is always resolved into a Proxy in the `http` scope
+  - [spiral/cache] `EventDispatcher` is now injected into `CacheManager`
 
 ## 3.14.4 - 2024-09-23
 
