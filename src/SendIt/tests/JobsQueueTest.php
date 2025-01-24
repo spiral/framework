@@ -33,7 +33,7 @@ class JobsQueueTest extends TestCase
         $mail->setBCC('admin2@google.com');
 
         $queue->expects('push')->withArgs(
-            function ($job, $data, Options $options) use ($mail): bool {
+            static function ($job, $data, Options $options) use ($mail): bool {
                 self::assertSame(MailQueue::JOB_NAME, $job);
                 self::assertSame($data, MessageSerializer::pack($mail));
                 self::assertSame('mailer', $options->getQueue());

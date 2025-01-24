@@ -113,7 +113,7 @@ class KernelTest extends BaseTestCase
 
     public function testDispatcherWithoutNamedScope(): void
     {
-        $this->beforeBooting(function (AbstractKernel $kernel): void {
+        $this->beforeBooting(static function (AbstractKernel $kernel): void {
             $kernel->addDispatcher(DispatcherWithoutScope::class);
         });
 
@@ -128,7 +128,7 @@ class KernelTest extends BaseTestCase
     #[DataProvider('dispatchersDataProvider')]
     public function testDispatchersShouldBeBoundInCorrectScope(string $dispatcher, string $scope): void
     {
-        $this->beforeBooting(function (AbstractKernel $kernel) use ($dispatcher): void {
+        $this->beforeBooting(static function (AbstractKernel $kernel) use ($dispatcher): void {
             $kernel->addDispatcher($dispatcher);
         });
 

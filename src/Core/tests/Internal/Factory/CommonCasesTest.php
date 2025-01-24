@@ -61,7 +61,7 @@ final class CommonCasesTest extends BaseTestCase
             'other-parameter' => true,
         ]);
 
-        $this->assertSame(basename(__FILE__), $object->getFilename());
+        $this->assertSame(\basename(__FILE__), $object->getFilename());
     }
 
     public function testMakeInternalClassWithOptional(): void
@@ -89,7 +89,7 @@ final class CommonCasesTest extends BaseTestCase
 
     public function testClosureFactory(): void
     {
-        $this->bind(Bucket::class, function ($data) {
+        $this->bind(Bucket::class, static function ($data) {
             return new Bucket('via-closure', $data);
         });
 
@@ -129,7 +129,7 @@ final class CommonCasesTest extends BaseTestCase
         $sample = new SampleClass();
 
         $this->bind(Bucket::class, [Factory::class, 'makeBucketWithSample']);
-        $this->bind(SampleClass::class, function () use ($sample) {
+        $this->bind(SampleClass::class, static function () use ($sample) {
             return $sample;
         });
 

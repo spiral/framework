@@ -138,7 +138,7 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $container->bindSingleton('singleton', 'sampleClass');
 
-        $container->bind('sampleClass', fn(): SampleClass => new SampleClass());
+        $container->bind('sampleClass', static fn(): SampleClass => new SampleClass());
 
         $instance = $container->get('singleton');
 

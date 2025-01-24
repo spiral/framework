@@ -33,7 +33,7 @@ final class CookieTransportTest extends BaseTestCase
                 } else {
                     echo $request->getAttribute('authContext')->getToken()->getID();
                     echo ':';
-                    echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
+                    echo \json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
             },
         );
@@ -57,7 +57,7 @@ final class CookieTransportTest extends BaseTestCase
                 } else {
                     echo $request->getAttribute('authContext')->getToken()->getID();
                     echo ':';
-                    echo json_encode($request->getAttribute('authContext')->getToken()->getPayload());
+                    echo \json_encode($request->getAttribute('authContext')->getToken()->getPayload());
                 }
             },
         );
@@ -143,7 +143,7 @@ final class CookieTransportTest extends BaseTestCase
 
         $response = $http->handle(new ServerRequest('GET', '', body: 'php://input'));
 
-        $cookie = explode('; ', $response->getHeader('Set-Cookie')[0]);
+        $cookie = \explode('; ', $response->getHeader('Set-Cookie')[0]);
 
         self::assertSame(
             'auth-token=new-token',
@@ -151,7 +151,7 @@ final class CookieTransportTest extends BaseTestCase
         );
 
         self::assertSame(
-            'Expires=' . gmdate(DATE_COOKIE, time() + 3600),
+            'Expires=' . \gmdate(DATE_COOKIE, \time() + 3600),
             $cookie[1],
         );
 

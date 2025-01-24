@@ -56,7 +56,7 @@ class TestApp extends Boot\AbstractKernel
             $directories['app'] = $directories['root'] . '/';
         }
 
-        return array_merge([
+        return \array_merge([
             'vendor'  => $directories['root'] . '/vendor/',
             'runtime' => $directories['root'] . '/runtime/',
             'config'  => $directories['app'] . '/config/',

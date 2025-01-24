@@ -40,7 +40,7 @@ final class AuthMiddlewareTest extends HttpTestCase
     {
         $user = new \stdClass();
 
-        $this->setHttpHandler(function (ServerRequestInterface $request) use ($user): void {
+        $this->setHttpHandler(static function (ServerRequestInterface $request) use ($user): void {
             /** @var \Spiral\Auth\AuthContextInterface $authContext */
             $authContext = $request->getAttribute(AuthMiddleware::ATTRIBUTE);
 

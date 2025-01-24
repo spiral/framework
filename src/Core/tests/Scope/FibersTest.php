@@ -89,7 +89,7 @@ final class FibersTest extends BaseTestCase
 
         FiberHelper::runInFiber(
             static fn(): mixed => (new Container())->runScoped(
-                function (): string {
+                static function (): string {
                     $result = '';
                     $result .= \Fiber::suspend('foo');
                     $result .= \Fiber::suspend('bar');
@@ -106,7 +106,7 @@ final class FibersTest extends BaseTestCase
     {
         $result = FiberHelper::runInFiber(
             static fn(): mixed => (new Container())->runScoped(
-                function (): string {
+                static function (): string {
                     $result = '';
                     $result .= \Fiber::suspend('foo');
                     $result .= \Fiber::suspend('bar');

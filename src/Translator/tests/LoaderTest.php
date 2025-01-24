@@ -45,8 +45,8 @@ class LoaderTest extends TestCase
 
         $compared = $loader->getLocales();
         $shouldBe = ['en', 'ru'];
-        sort($shouldBe);
-        sort($compared);
+        \sort($shouldBe);
+        \sort($compared);
 
         self::assertSame($shouldBe, $compared);
     }
@@ -60,8 +60,8 @@ class LoaderTest extends TestCase
 
         $compared = $loader->getLocales();
         $shouldBe = ['en', 'ru', 'fr'];
-        sort($shouldBe);
-        sort($compared);
+        \sort($shouldBe);
+        \sort($compared);
 
         self::assertSame($shouldBe, $compared);
     }

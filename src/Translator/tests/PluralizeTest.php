@@ -38,7 +38,7 @@ class PluralizeTest extends TestCase
             'c' => 3,
         ]));
 
-        self::assertSame('2,220 dogs', $this->translator()->transChoice('{n} dog|{n} dogs', 2, ['n' => number_format(2220)]));
+        self::assertSame('2,220 dogs', $this->translator()->transChoice('{n} dog|{n} dogs', 2, ['n' => \number_format(2220)]));
     }
 
     public function testRussian(): void

@@ -26,7 +26,7 @@ class RawTest extends BaseTestCase
     {
         $parsed = $this->tokens($source);
 
-        if (count($tokens) !== count($parsed)) {
+        if (\count($tokens) !== \count($parsed)) {
             $this->fail('Token count mismatch');
         }
 

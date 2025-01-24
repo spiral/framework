@@ -216,15 +216,15 @@ final class SessionTest extends TestCase
             'cookie'   => 'SID',
             'secure'   => false,
             'handler'  => new Container\Autowire(FileHandler::class, [
-                'directory' => sys_get_temp_dir(),
+                'directory' => \sys_get_temp_dir(),
             ]),
         ]), $this->container);
     }
 
     protected function tearDown(): void
     {
-        if ((int) session_status() === PHP_SESSION_ACTIVE) {
-            session_abort();
+        if ((int) \session_status() === PHP_SESSION_ACTIVE) {
+            \session_abort();
         }
     }
 }

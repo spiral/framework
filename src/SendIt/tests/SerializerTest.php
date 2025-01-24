@@ -21,7 +21,7 @@ class SerializerTest extends TestCase
 
         $data = MessageSerializer::pack($mail);
 
-        self::assertSame(['subject', 'data', 'to', 'cc', 'bcc', 'from', 'replyTo', 'options'], array_keys($data));
+        self::assertSame(['subject', 'data', 'to', 'cc', 'bcc', 'from', 'replyTo', 'options'], \array_keys($data));
         self::assertEquals($mail, MessageSerializer::unpack($data));
     }
 }

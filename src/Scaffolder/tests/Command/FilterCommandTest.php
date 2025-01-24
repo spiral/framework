@@ -17,7 +17,7 @@ final class FilterCommandTest extends AbstractCommandTestCase
             '--comment' => 'Sample Filter',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
@@ -41,7 +41,7 @@ final class FilterCommandTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Filter',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
@@ -67,7 +67,7 @@ final class FilterCommandTest extends AbstractCommandTestCase
             ],
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);

@@ -26,7 +26,7 @@ final class ViewRenderer implements RendererInterface
      */
     public static function escapeSubject(string $subject): string
     {
-        if (!preg_match('/[^\x20-\x7e]/', $subject)) {
+        if (!\preg_match('/[^\x20-\x7e]/', $subject)) {
             // ascii-only subject, return as-is
             return $subject;
         }

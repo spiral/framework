@@ -42,7 +42,7 @@ final class SerializerBootloaderTest extends TestCase
         $this->configureSerializer();
 
         $registry = $this->container->get(SerializerRegistryInterface::class);
-        $registry->register('callback', new CallbackSerializer(fn() => null, fn() => null));
+        $registry->register('callback', new CallbackSerializer(static fn() => null, static fn() => null));
 
         $manager = $this->container->get(SerializerManager::class);
         self::assertInstanceOf(SerializerManager::class, $manager);

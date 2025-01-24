@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Framework\Auth\Config;
 
 use Spiral\Auth\Config\AuthConfig;

@@ -315,7 +315,7 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(
             new Scope(),
-            fn(#[Proxy] UserInterface $user): string => $user->getName(),
+            static fn(#[Proxy] UserInterface $user): string => $user->getName(),
         );
     }
 
@@ -337,7 +337,7 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(
             new Scope(),
-            fn(#[Proxy] UserInterface $user): string => $user->getName(),
+            static fn(#[Proxy] UserInterface $user): string => $user->getName(),
         );
     }
 
@@ -370,7 +370,7 @@ final class ProxyTest extends BaseTestCase
 
         $name = $root->runScope(
             new Scope(),
-            fn(#[Proxy] UserInterface $user): string => $user->getName(),
+            static fn(#[Proxy] UserInterface $user): string => $user->getName(),
         );
 
         self::assertSame('Foo', $name);

@@ -67,7 +67,7 @@ class AcceptHeaderItemTest extends TestCase
                 $formattedParams[] = "$k=$v";
             }
 
-            $formattedParams = implode(';', $formattedParams);
+            $formattedParams = \implode(';', $formattedParams);
 
             yield from [
                 [$params['expected'], AcceptHeaderItem::fromString("*;$formattedParams")],

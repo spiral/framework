@@ -125,7 +125,7 @@ class ConsoleRenderer extends AbstractRenderer
 
         $length = 0;
         \array_walk($lines, static function ($v) use (&$length): void {
-            $length = max($length, \mb_strlen($v));
+            $length = \max($length, \mb_strlen($v));
         });
 
         $length += $padding;

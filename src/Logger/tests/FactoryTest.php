@@ -85,7 +85,7 @@ class FactoryTest extends TestCase
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([LoggerBootloader::class]);
         $this->container->bindSingleton(LogsInterface::class, $factory);
 
-        $this->container->invoke(function (#[LoggerChannel('foo')] LoggerInterface $logger): void {
+        $this->container->invoke(static function (#[LoggerChannel('foo')] LoggerInterface $logger): void {
             self::assertSame('foo', $logger->getName());
         });
     }
@@ -93,7 +93,7 @@ class FactoryTest extends TestCase
     public function testEvent(): void
     {
         $l = new ListenerRegistry();
-        $l->addListener(function (LogEvent $event): void {
+        $l->addListener(static function (LogEvent $event): void {
             self::assertSame('error', $event->getMessage());
             self::assertSame('default', $event->getChannel());
             self::assertSame(LogLevel::CRITICAL, $event->getLevel());

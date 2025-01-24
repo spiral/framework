@@ -229,7 +229,7 @@ final class ReflectionFile
     /**
      * Import cached reflection schema.
      */
-    protected function importSchema(array $cache)
+    protected function importSchema(array $cache): void
     {
         [$this->hasIncludes, $this->declarations, $this->functions, $this->namespaces] = $cache;
     }
@@ -237,7 +237,7 @@ final class ReflectionFile
     /**
      * Locate every class, interface, trait or function definition.
      */
-    protected function locateDeclarations()
+    protected function locateDeclarations(): void
     {
         foreach ($this->getTokens() as $tokenID => $token) {
             if (!\in_array($token[self::TOKEN_TYPE], self::$processTokens)) {
@@ -359,8 +359,8 @@ final class ReflectionFile
         }
 
         if (empty($localAlias)) {
-            $names = explode('\\', $class);
-            $localAlias = end($names);
+            $names = \explode('\\', $class);
+            $localAlias = \end($names);
         }
 
         $this->namespaces[$namespace][self::N_USES][\trim($localAlias)] = \trim($class);

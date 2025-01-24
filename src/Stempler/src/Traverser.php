@@ -130,7 +130,7 @@ final class Traverser
 
                     default:
                         throw new \LogicException(
-                            'leaveNode() returned invalid value of type ' . gettype($result),
+                            'leaveNode() returned invalid value of type ' . \gettype($result),
                         );
                 }
 

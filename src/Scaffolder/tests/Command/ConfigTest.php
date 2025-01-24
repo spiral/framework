@@ -21,8 +21,8 @@ class ConfigTest extends AbstractCommandTestCase
             '--comment' => 'Sample Config',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
@@ -53,8 +53,8 @@ class ConfigTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Config',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
@@ -71,8 +71,8 @@ class ConfigTest extends AbstractCommandTestCase
         $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
         $this->console()->run(null, new StringInput('create:config reversed -r'));
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
     }
 
     /**
@@ -87,8 +87,8 @@ class ConfigTest extends AbstractCommandTestCase
             '--reverse' => true,
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
 
         $reflection = new \ReflectionClass($className);
 
@@ -142,7 +142,7 @@ class ConfigTest extends AbstractCommandTestCase
             }
         }
 
-        self::assertCount(count($methods), $reflectionMethods);
+        self::assertCount(\count($methods), $reflectionMethods);
     }
 
     /**
@@ -157,8 +157,8 @@ class ConfigTest extends AbstractCommandTestCase
             '--reverse' => true,
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
 
         $reflection = new \ReflectionClass($className);
 
@@ -186,7 +186,7 @@ class ConfigTest extends AbstractCommandTestCase
             self::assertContains($method->name, $methods);
         }
 
-        self::assertCount(count($methods), $reflectionMethods);
+        self::assertCount(\count($methods), $reflectionMethods);
     }
 
     /**
@@ -261,7 +261,7 @@ class ConfigTest extends AbstractCommandTestCase
             '--comment' => $comment,
         ]);
 
-        clearstatcache();
+        \clearstatcache();
 
         $filename = $this->app->directory('config') . "$name.php";
         self::assertFileExists($filename);

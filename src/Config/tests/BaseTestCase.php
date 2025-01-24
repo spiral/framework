@@ -25,7 +25,7 @@ abstract class BaseTestCase extends TestCase
 
     protected function getFactory(?string $directory = null, bool $strict = true): ConfigManager
     {
-        if (is_null($directory)) {
+        if (\is_null($directory)) {
             $directory = __DIR__ . '/fixtures';
         }
 

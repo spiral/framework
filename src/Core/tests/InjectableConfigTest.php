@@ -108,8 +108,8 @@ class InjectableConfigTest extends TestCase
             'keyB' => 'valueB',
         ]);
 
-        $serialized = serialize($config);
-        self::assertEquals($config, unserialize($serialized));
+        $serialized = \serialize($config);
+        self::assertEquals($config, \unserialize($serialized));
 
         self::assertEquals($config, TestConfig::__set_state([
             'config' => [

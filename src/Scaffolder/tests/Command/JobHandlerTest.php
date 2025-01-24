@@ -19,8 +19,8 @@ class JobHandlerTest extends AbstractCommandTestCase
             '--comment' => 'Sample Job Handler',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
@@ -46,7 +46,7 @@ class JobHandlerTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Job',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);

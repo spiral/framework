@@ -144,7 +144,7 @@ class AcceptHeaderTest extends TestCase
         $acceptHeader = $acceptHeader->add($item);
 
         $headers = $acceptHeader->getAll();
-        self::assertCount(count($expected), $headers);
+        self::assertCount(\count($expected), $headers);
 
         foreach ($expected as $i => $value) {
             self::assertSame($value, $headers[$i]->getValue());
@@ -157,7 +157,7 @@ class AcceptHeaderTest extends TestCase
         $acceptHeader = AcceptHeader::fromString($items);
 
         $headers = $acceptHeader->getAll();
-        self::assertCount(count($expected), $headers);
+        self::assertCount(\count($expected), $headers);
 
         foreach ($expected as $i => $value) {
             self::assertSame($value, (string) $headers[$i]);

@@ -81,8 +81,8 @@ final class HttpBootloader extends Bootloader
          */
         $this->binder->bindSingleton(
             Http::class,
-            function (InvokerInterface $invoker, #[Proxy] ContainerInterface $container): Http {
-                @trigger_error(\sprintf(
+            static function (InvokerInterface $invoker, #[Proxy] ContainerInterface $container): Http {
+                @\trigger_error(\sprintf(
                     'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version 4.0.',
                     Http::class,
                     Spiral::Http->value,

@@ -166,7 +166,7 @@ trait HelpersTrait
     protected function alert(string $string): void
     {
         $length = \mb_strlen(\strip_tags($string)) + 12;
-        $stringLines = explode("\n", wordwrap($string, 300));
+        $stringLines = \explode("\n", \wordwrap($string, 300));
 
         $this->comment(\str_repeat('*', $length));
         foreach ($stringLines as $line) {

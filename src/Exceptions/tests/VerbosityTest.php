@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Exceptions;
 
 use PHPUnit\Framework\Attributes\DataProvider;

@@ -158,7 +158,7 @@ class UriTest extends BaseTestCase
         $route = $router->getRoute('article');
 
         $uriHandler = $route->getUriHandler()->withPathSegmentEncoder(
-            fn(string $segment): string => \rawurlencode($segment),
+            static fn(string $segment): string => \rawurlencode($segment),
         );
         $route = $route->withUriHandler($uriHandler);
 
@@ -185,7 +185,7 @@ class UriTest extends BaseTestCase
         $route = $router->getRoute('article');
 
         $uriHandler = $route->getUriHandler()->withPathSegmentEncoder(
-            fn(string $segment): string => \rawurlencode($segment),
+            static fn(string $segment): string => \rawurlencode($segment),
         );
         $uriHandler->setStrict(true);
         $route = $route->withUriHandler($uriHandler);
@@ -211,7 +211,7 @@ class UriTest extends BaseTestCase
         $route = $router->getRoute('article');
 
         $uriHandler = $route->getUriHandler()->withPathSegmentEncoder(
-            fn(string $segment): string => \rawurlencode($segment),
+            static fn(string $segment): string => \rawurlencode($segment),
         );
         $uriHandler->setStrict(true);
         $route = $route->withUriHandler($uriHandler);

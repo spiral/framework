@@ -187,7 +187,7 @@ class ScaffolderConfig extends InjectableConfig
     {
         $name = \str_replace('/', '\\', $name);
 
-        if (str_contains($name, '\\')) {
+        if (\str_contains($name, '\\')) {
             $names = \explode('\\', $name);
             $class = \array_pop($names);
 

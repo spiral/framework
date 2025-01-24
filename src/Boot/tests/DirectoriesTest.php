@@ -93,7 +93,7 @@ class DirectoriesTest extends TestCase
 
     private function assertDir($path, $value): void
     {
-        $path = str_replace(['\\', '//'], '/', $path);
-        self::assertSame(rtrim($path, '/') . '/', $value);
+        $path = \str_replace(['\\', '//'], '/', $path);
+        self::assertSame(\rtrim($path, '/') . '/', $value);
     }
 }

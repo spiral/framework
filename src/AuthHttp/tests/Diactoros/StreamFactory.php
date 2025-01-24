@@ -12,15 +12,15 @@ final class StreamFactory implements StreamFactoryInterface
 {
     public function createStream(string $content = ''): StreamInterface
     {
-        $resource = fopen('php://temp', 'rb+');
-        fwrite($resource, $content);
-        rewind($resource);
+        $resource = \fopen('php://temp', 'rb+');
+        \fwrite($resource, $content);
+        \rewind($resource);
         return $this->createStreamFromResource($resource);
     }
 
     public function createStreamFromFile(string $file, string $mode = 'rb'): StreamInterface
     {
-        $resource = fopen($file, $mode);
+        $resource = \fopen($file, $mode);
         return $this->createStreamFromResource($resource);
     }
 

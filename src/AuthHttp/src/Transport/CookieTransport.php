@@ -87,6 +87,6 @@ final class CookieTransport implements HttpTransportInterface
             return null;
         }
 
-        return max($expiresAt->getTimestamp() - time(), 0);
+        return \max($expiresAt->getTimestamp() - \time(), 0);
     }
 }

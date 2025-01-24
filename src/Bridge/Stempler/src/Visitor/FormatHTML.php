@@ -110,7 +110,7 @@ final class FormatHTML implements VisitorInterface
             }
 
             if ($position === self::BEFORE_CLOSE) {
-                $result .= $line . "\n" . \str_repeat(self::INDENT, max($level - 1, 0));
+                $result .= $line . "\n" . \str_repeat(self::INDENT, \max($level - 1, 0));
                 break;
             }
 

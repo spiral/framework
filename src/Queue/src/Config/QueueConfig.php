@@ -128,7 +128,7 @@ final class QueueConfig extends InjectableConfig
         $connections = $this->getConnections();
 
         if (!isset($connections[$name])) {
-            throw new InvalidArgumentException(sprintf('Queue connection with given name `%s` is not defined.', $name));
+            throw new InvalidArgumentException(\sprintf('Queue connection with given name `%s` is not defined.', $name));
         }
 
         if (!isset($connections[$name]['driver'])) {

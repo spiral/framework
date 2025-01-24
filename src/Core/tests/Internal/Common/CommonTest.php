@@ -50,7 +50,7 @@ final class CommonTest extends TestCase
 
         $this->expectException(\TypeError::class);
 
-        $container->invoke(fn(int $x): int => $x, [
+        $container->invoke(static fn(int $x): int => $x, [
             'x' => 'string',
         ]);
     }
@@ -63,7 +63,7 @@ final class CommonTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $container->invoke(fn(int $x): int => $x, [
+        $container->invoke(static fn(int $x): int => $x, [
             'x' => 'string',
         ]);
     }

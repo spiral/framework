@@ -38,7 +38,7 @@ final class DeprecationProxy extends Proxy
             $this->version,
         );
 
-        @trigger_error($message, \E_USER_DEPRECATED);
+        @\trigger_error($message, \E_USER_DEPRECATED);
 
         return parent::getInterface();
     }

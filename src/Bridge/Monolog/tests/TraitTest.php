@@ -39,7 +39,7 @@ final class TraitTest extends BaseTestCase
     {
         $c = new Container();
         $mock = $this->createMock(LogsInterface::class);
-        $logger = new \Spiral\Logger\NullLogger(fn() => null, '');
+        $logger = new \Spiral\Logger\NullLogger(static fn() => null, '');
         $mock->method('getLogger')->willReturn($logger);
 
         $c->bind(LogsInterface::class, $mock);

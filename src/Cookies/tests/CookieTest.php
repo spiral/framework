@@ -38,7 +38,7 @@ class CookieTest extends TestCase
 
         self::assertSame('cookie', $cookie->getName());
         self::assertSame('value', $cookie->getValue());
-        self::assertSame(time() + 100, $cookie->getExpires());
+        self::assertSame(\time() + 100, $cookie->getExpires());
         self::assertSame('.domain.com', $cookie->getDomain());
         self::assertTrue($cookie->isSecure());
         self::assertTrue($cookie->isHttpOnly());
@@ -58,7 +58,7 @@ class CookieTest extends TestCase
 
         self::assertSame('cookie', $cookie->getName());
         self::assertSame('value', $cookie->getValue());
-        self::assertSame(time() + 100, $cookie->getExpires());
+        self::assertSame(\time() + 100, $cookie->getExpires());
         self::assertSame('.domain.com', $cookie->getDomain());
         self::assertTrue($cookie->isSecure());
         self::assertTrue($cookie->isHttpOnly());

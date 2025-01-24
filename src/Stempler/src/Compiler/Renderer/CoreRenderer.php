@@ -28,7 +28,7 @@ final class CoreRenderer implements RendererInterface
             case $node instanceof Template || $node instanceof Block || $node instanceof Aggregate:
                 $result->withinContext(
                     $node->getContext(),
-                    function (Compiler\Result $source) use ($node, $compiler): void {
+                    static function (Compiler\Result $source) use ($node, $compiler): void {
                         foreach ($node->nodes as $child) {
                             $compiler->compile($child, $source);
                         }
@@ -40,7 +40,7 @@ final class CoreRenderer implements RendererInterface
             case $node instanceof Mixin:
                 $result->withinContext(
                     $node->getContext(),
-                    function (Compiler\Result $source) use ($node, $compiler): void {
+                    static function (Compiler\Result $source) use ($node, $compiler): void {
                         foreach ($node->nodes as $child) {
                             if (\is_string($child)) {
                                 $source->push($child, null);

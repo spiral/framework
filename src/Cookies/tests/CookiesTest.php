@@ -30,7 +30,7 @@ final class CookiesTest extends TestCase
     public function testCookieQueueInRequestAttribute(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r): string {
+        $core->setHandler(static function (ServerRequestInterface $r): string {
             self::assertInstanceOf(CookieQueue::class, $r->getAttribute(CookieQueue::ATTRIBUTE));
             return 'all good';
         });
@@ -43,7 +43,7 @@ final class CookiesTest extends TestCase
     public function testSetEncryptedCookie(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r): string {
+        $core->setHandler(static function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -61,7 +61,7 @@ final class CookiesTest extends TestCase
     public function testSetNotProtectedCookie(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r): string {
+        $core->setHandler(static function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('PHPSESSID', 'value');
 
             return 'all good';
@@ -79,7 +79,7 @@ final class CookiesTest extends TestCase
     public function testDecrypt(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
+        $core->setHandler(static fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
 
         $value = $this->container->get(EncrypterInterface::class)->encrypt('cookie-value');
 
@@ -91,7 +91,7 @@ final class CookiesTest extends TestCase
     public function testDecryptArray(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name'][0]);
+        $core->setHandler(static fn(ServerRequestInterface $r) => $r->getCookieParams()['name'][0]);
 
         $value[] = $this->container->get(EncrypterInterface::class)->encrypt('cookie-value');
 
@@ -103,7 +103,7 @@ final class CookiesTest extends TestCase
     public function testDecryptBroken(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
+        $core->setHandler(static fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
 
         $value = $this->container->get(EncrypterInterface::class)->encrypt('cookie-value') . 'BROKEN';
 
@@ -115,7 +115,7 @@ final class CookiesTest extends TestCase
     public function testDelete(): void
     {
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r): string {
+        $core->setHandler(static function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
             $r->getAttribute(CookieQueue::ATTRIBUTE)->delete('name');
 
@@ -140,7 +140,7 @@ final class CookiesTest extends TestCase
         ]));
 
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r): string {
+        $core->setHandler(static function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -164,7 +164,7 @@ final class CookiesTest extends TestCase
         ]));
 
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
+        $core->setHandler(static fn(ServerRequestInterface $r) => $r->getCookieParams()['name']);
 
         $value = 'cookie-value';
 
@@ -182,7 +182,7 @@ final class CookiesTest extends TestCase
         ]));
 
         $core = $this->httpCore([CookiesMiddleware::class]);
-        $core->setHandler(function (ServerRequestInterface $r): string {
+        $core->setHandler(static function (ServerRequestInterface $r): string {
             $r->getAttribute(CookieQueue::ATTRIBUTE)->set('name', 'value');
 
             return 'all good';
@@ -195,7 +195,7 @@ final class CookiesTest extends TestCase
         $cookies = $this->fetchCookies($response);
         self::assertArrayHasKey('name', $cookies);
 
-        $core->setHandler(fn($r) => $r->getCookieParams()['name']);
+        $core->setHandler(static fn($r) => $r->getCookieParams()['name']);
 
         $response = $this->get($core, '/', [], [], $cookies);
         self::assertSame(200, $response->getStatusCode());
@@ -271,11 +271,11 @@ final class CookiesTest extends TestCase
         $result = [];
 
         foreach ($response->getHeaders() as $line) {
-            $cookie = explode('=', implode('', $line));
-            $result[$cookie[0]] = rawurldecode(substr(
+            $cookie = \explode('=', \implode('', $line));
+            $result[$cookie[0]] = \rawurldecode(\substr(
                 $cookie[1],
                 0,
-                (int) strpos($cookie[1], ';'),
+                (int) \strpos($cookie[1], ';'),
             ));
         }
 

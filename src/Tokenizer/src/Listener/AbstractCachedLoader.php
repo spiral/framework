@@ -42,7 +42,7 @@ abstract class AbstractCachedLoader
 
             $classes = $this->readCache ? $this->memory->loadData($cacheKey) : null;
             if ($classes === null) {
-                $this->memory->saveData($cacheKey, $classes = call_user_func($locator, $target));
+                $this->memory->saveData($cacheKey, $classes = \call_user_func($locator, $target));
             }
 
             $names = \array_merge($names, $classes);

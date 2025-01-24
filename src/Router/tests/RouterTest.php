@@ -85,7 +85,7 @@ class RouterTest extends BaseTestCase
         $router = $this->makeRouter('https://host.com', $this->createMock(EventDispatcherInterface::class));
 
         $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
-        $configurator->add('foo', '//<host>/register')->callable(fn() => null);
+        $configurator->add('foo', '//<host>/register')->callable(static fn() => null);
 
         $router->import($configurator);
         $this->getContainer()->get(GroupRegistry::class)->registerRoutes($router);

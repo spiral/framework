@@ -19,7 +19,7 @@ final class DeferredFactory extends Binding
 
     public function __toString(): string
     {
-        return sprintf(
+        return \sprintf(
             "Deferred factory '%s'->%s()",
             \is_string($this->factory[0]) ? $this->factory[0] : \get_debug_type($this->factory[0]),
             $this->factory[1],

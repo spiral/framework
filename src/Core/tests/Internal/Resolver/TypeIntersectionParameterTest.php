@@ -15,7 +15,7 @@ final class TypeIntersectionParameterTest extends BaseTestCase
     public function testTypeIntersectionParameterAndUnnamedArgument(): void
     {
         $result = $this->resolveClosure(
-            fn(EngineInterface&MadeInUssrInterface $engines) => $engines,
+            static fn(EngineInterface&MadeInUssrInterface $engines) => $engines,
             $args = [new EngineZIL130()],
         );
 
@@ -28,7 +28,7 @@ final class TypeIntersectionParameterTest extends BaseTestCase
     public function testVariadicTypeIntersectionParameterAndUnnamedArguments(): void
     {
         $result = $this->resolveClosure(
-            fn(EngineInterface&MadeInUssrInterface ...$engines) => $engines,
+            static fn(EngineInterface&MadeInUssrInterface ...$engines) => $engines,
             [[new EngineZIL130(), new EngineVAZ2101(), new \stdClass(), new EngineMarkTwo(), new \stdClass()]],
             validate: false,
         );

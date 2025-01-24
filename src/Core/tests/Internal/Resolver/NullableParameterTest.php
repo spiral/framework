@@ -89,7 +89,7 @@ final class NullableParameterTest extends BaseTestCase
 
     public function testNullableClassThatCreatedWithFail(): void
     {
-        $this->bind(\DateTimeInterface::class, fn() => throw new \RuntimeException('fail!'));
+        $this->bind(\DateTimeInterface::class, static fn() => throw new \RuntimeException('fail!'));
 
         $result = $this->resolveClosure(
             static fn(?\DateTimeInterface $param) => $param,
@@ -100,7 +100,7 @@ final class NullableParameterTest extends BaseTestCase
 
     public function testNotNullableClassThatCreatedWithFail(): void
     {
-        $this->bind(\DateTimeInterface::class, fn() => throw new \RuntimeException('fail!'));
+        $this->bind(\DateTimeInterface::class, static fn() => throw new \RuntimeException('fail!'));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('fail!');

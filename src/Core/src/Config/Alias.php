@@ -16,6 +16,6 @@ final class Alias extends Binding
 
     public function __toString(): string
     {
-        return sprintf('Alias to `%s`', $this->alias);
+        return \sprintf('Alias to `%s`', $this->alias);
     }
 }

@@ -22,8 +22,8 @@ class FilesTest extends TestCase
         $request = new ServerRequest('GET', '');
         $request = $request->withUploadedFiles([
             'file' => new UploadedFile(
-                fopen(__FILE__, 'r'),
-                filesize(__FILE__),
+                \fopen(__FILE__, 'r'),
+                \filesize(__FILE__),
                 0,
                 __FILE__,
             ),
@@ -40,8 +40,8 @@ class FilesTest extends TestCase
         $request = new ServerRequest('GET', '');
         $request = $request->withUploadedFiles([
             'file' => new UploadedFile(
-                fopen(__FILE__, 'r'),
-                filesize(__FILE__),
+                \fopen(__FILE__, 'r'),
+                \filesize(__FILE__),
                 0,
                 __FILE__,
             ),
@@ -53,7 +53,7 @@ class FilesTest extends TestCase
         $filename = $this->input->files->getFilename('file');
         self::assertFileExists($filename);
 
-        self::assertSame(file_get_contents(__FILE__), file_get_contents($filename));
+        self::assertSame(\file_get_contents(__FILE__), \file_get_contents($filename));
     }
 
     public function testGetFilenameMissing(): void
@@ -61,8 +61,8 @@ class FilesTest extends TestCase
         $request = new ServerRequest('GET', '');
         $request = $request->withUploadedFiles([
             'file' => new UploadedFile(
-                fopen(__FILE__, 'r'),
-                filesize(__FILE__),
+                \fopen(__FILE__, 'r'),
+                \filesize(__FILE__),
                 0,
                 __FILE__,
             ),

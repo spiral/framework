@@ -96,7 +96,7 @@ final class AutowireHandlerTest extends TestCase
     {
         $handler = $this->createHandler();
         $ctx = new CallContext(
-            Target::fromReflectionFunction(new \ReflectionFunction(fn(string $value): string => \strtoupper($value))),
+            Target::fromReflectionFunction(new \ReflectionFunction(static fn(string $value): string => \strtoupper($value))),
         );
         $ctx = $ctx->withArguments(['word' => 'world!', 'value' => 'hello']);
 

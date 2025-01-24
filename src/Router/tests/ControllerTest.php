@@ -8,7 +8,6 @@ use Spiral\Core\CoreInterface;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Interceptors\Handler\AutowireHandler;
 use Spiral\Interceptors\HandlerInterface;
-use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
@@ -77,7 +76,7 @@ class ControllerTest extends BaseTestCase
         $this->getContainer()->removeBinding(CoreInterface::class);
 
         $core = $target->getHandler($this->getContainer(), []);
-        $handler = (fn(CoreHandler $core): HandlerInterface|CoreInterface => $core->core)->call($core, $core);
+        $handler = (static fn(): HandlerInterface|CoreInterface => $core->core)->bindTo(null, $core)();
 
         self::assertInstanceOf(AutowireHandler::class, $handler);
     }

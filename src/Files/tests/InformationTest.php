@@ -16,7 +16,7 @@ class InformationTest extends TestCase
         $filename = self::FIXTURE_DIRECTORY . '/test.txt';
 
         $files->write($filename, 'data', FilesInterface::READONLY);
-        self::assertEquals(filemtime($filename), $files->time($filename));
+        self::assertEquals(\filemtime($filename), $files->time($filename));
     }
 
     public function testTimeMissingFile(): void
@@ -36,8 +36,8 @@ class InformationTest extends TestCase
         $filename = self::FIXTURE_DIRECTORY . '/test.txt';
 
         $files->write($filename, 'data');
-        self::assertEquals(md5_file($filename), $files->md5($filename));
-        self::assertSame(md5('data'), $files->md5($filename));
+        self::assertEquals(\md5_file($filename), $files->md5($filename));
+        self::assertSame(\md5('data'), $files->md5($filename));
     }
 
     public function testMD5MissingFile(): void
@@ -66,11 +66,11 @@ class InformationTest extends TestCase
         $filename = self::FIXTURE_DIRECTORY . '/test.txt';
 
         self::assertFalse($files->exists($filename));
-        self::assertSame(file_exists($filename), $files->exists($filename));
+        self::assertSame(\file_exists($filename), $files->exists($filename));
 
         $files->write($filename, 'data');
         self::assertTrue($files->exists($filename));
-        self::assertSame(file_exists($filename), $files->exists($filename));
+        self::assertSame(\file_exists($filename), $files->exists($filename));
     }
 
     public function testSize(): void
@@ -82,7 +82,7 @@ class InformationTest extends TestCase
         $files->write($filename, 'some-data-string');
         self::assertTrue($files->exists($filename));
 
-        self::assertSame(strlen('some-data-string'), $files->size($filename));
+        self::assertSame(\strlen('some-data-string'), $files->size($filename));
     }
 
     public function testSizeMissingFile(): void
@@ -117,10 +117,10 @@ class InformationTest extends TestCase
         self::assertTrue($files->exists($filename));
 
         self::assertTrue($files->isFile($filename));
-        self::assertSame(is_file($filename), $files->isFile($filename));
+        self::assertSame(\is_file($filename), $files->isFile($filename));
 
         self::assertFalse($files->isDirectory($filename));
-        self::assertSame(is_dir($filename), $files->isDirectory($filename));
+        self::assertSame(\is_dir($filename), $files->isDirectory($filename));
     }
 
     public function testIsMissingFile(): void
@@ -131,10 +131,10 @@ class InformationTest extends TestCase
         self::assertFalse($files->exists($filename));
 
         self::assertFalse($files->isFile($filename));
-        self::assertSame(is_file($filename), $files->isFile($filename));
+        self::assertSame(\is_file($filename), $files->isFile($filename));
 
         self::assertFalse($files->isDirectory($filename));
-        self::assertSame(is_dir($filename), $files->isDirectory($filename));
+        self::assertSame(\is_dir($filename), $files->isDirectory($filename));
     }
 
     public function testIsDirectory(): void
@@ -147,10 +147,10 @@ class InformationTest extends TestCase
         self::assertTrue($files->exists($directory));
 
         self::assertFalse($files->isFile($directory));
-        self::assertSame(is_file($directory), $files->isFile($directory));
+        self::assertSame(\is_file($directory), $files->isFile($directory));
 
         self::assertTrue($files->isDirectory($directory));
-        self::assertSame(is_dir($directory), $files->isDirectory($directory));
+        self::assertSame(\is_dir($directory), $files->isDirectory($directory));
     }
 
     public function testIsMissingDirectory(): void
@@ -161,10 +161,10 @@ class InformationTest extends TestCase
         self::assertFalse($files->exists($directory));
 
         self::assertFalse($files->isFile($directory));
-        self::assertSame(is_file($directory), $files->isFile($directory));
+        self::assertSame(\is_file($directory), $files->isFile($directory));
 
         self::assertFalse($files->isDirectory($directory));
-        self::assertSame(is_dir($directory), $files->isDirectory($directory));
+        self::assertSame(\is_dir($directory), $files->isDirectory($directory));
     }
 
     public function testIsDirectoryNoSlash(): void
@@ -177,10 +177,10 @@ class InformationTest extends TestCase
         self::assertTrue($files->exists($directory));
 
         self::assertFalse($files->isFile($directory));
-        self::assertSame(is_file($directory), $files->isFile($directory));
+        self::assertSame(\is_file($directory), $files->isFile($directory));
 
         self::assertTrue($files->isDirectory($directory));
-        self::assertSame(is_dir($directory), $files->isDirectory($directory));
+        self::assertSame(\is_dir($directory), $files->isDirectory($directory));
     }
 
     protected function setUp(): void

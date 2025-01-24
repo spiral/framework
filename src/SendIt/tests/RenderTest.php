@@ -57,8 +57,8 @@ class RenderTest extends TestCase
     {
         parent::tearDown();
 
-        foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
-            @unlink($file);
+        foreach (\glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
+            @\unlink($file);
         }
     }
 
@@ -67,7 +67,7 @@ class RenderTest extends TestCase
         $this->getContainer()->get(MailJob::class)->handle(
             MailQueue::JOB_NAME,
             'id',
-            json_encode(MessageSerializer::pack($message)),
+            \json_encode(MessageSerializer::pack($message)),
         );
 
         return $this->getContainer()->get(MailerInterface::class)->getLast();

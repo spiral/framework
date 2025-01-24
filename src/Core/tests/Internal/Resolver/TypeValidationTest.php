@@ -31,7 +31,7 @@ final class TypeValidationTest extends TestCase
     public function testEmptySignatureWithoutArgs(): void
     {
         $this->validateClosureArguments(
-            fn() => null,
+            static fn() => null,
             [],
         );
     }
@@ -39,7 +39,7 @@ final class TypeValidationTest extends TestCase
     public function testEmptySignatureWithArgs(): void
     {
         $this->validateClosureArguments(
-            fn() => null,
+            static fn() => null,
             ['foo', 'bar'],
         );
     }
@@ -47,7 +47,7 @@ final class TypeValidationTest extends TestCase
     public function testScalarParamsWithArgs(): void
     {
         $this->validateClosureArguments(
-            fn(int $a, string $b, float $c, bool $e) => null,
+            static fn(int $a, string $b, float $c, bool $e) => null,
             [42, 'foo', .1, false],
         );
     }
@@ -55,7 +55,7 @@ final class TypeValidationTest extends TestCase
     public function testScalarNullableParamsWithArgs(): void
     {
         $this->validateClosureArguments(
-            fn(?int $a, ?string $b, ?float $c, ?bool $e) => null,
+            static fn(?int $a, ?string $b, ?float $c, ?bool $e) => null,
             [42, 'foo', .1, false],
         );
     }
@@ -63,7 +63,7 @@ final class TypeValidationTest extends TestCase
     public function testMixedAndVariadicParamsWithArgs(): void
     {
         $this->validateClosureArguments(
-            fn(mixed $a, $b, ...$e) => null,
+            static fn(mixed $a, $b, ...$e) => null,
             [42, 'foo', .1, false],
         );
     }
@@ -71,7 +71,7 @@ final class TypeValidationTest extends TestCase
     public function testFloatWithNan(): void
     {
         $this->validateClosureArguments(
-            fn(float $b) => null,
+            static fn(float $b) => null,
             [NAN],
         );
     }
@@ -79,7 +79,7 @@ final class TypeValidationTest extends TestCase
     public function testIterable(): void
     {
         $this->validateClosureArguments(
-            fn(iterable $a, iterable $b) => null,
+            static fn(iterable $a, iterable $b) => null,
             [[1, 2, NAN], new \EmptyIterator()],
         );
     }
@@ -87,7 +87,7 @@ final class TypeValidationTest extends TestCase
     public function testArray(): void
     {
         $this->validateClosureArguments(
-            fn(array $b) => null,
+            static fn(array $b) => null,
             [[1, 2, NAN]],
         );
     }
@@ -95,7 +95,7 @@ final class TypeValidationTest extends TestCase
     public function testObject(): void
     {
         $this->validateClosureArguments(
-            fn(object $a, object $b) => null,
+            static fn(object $a, object $b) => null,
             [new \stdClass(), new \DateTimeImmutable()],
         );
     }
@@ -103,15 +103,15 @@ final class TypeValidationTest extends TestCase
     public function testCallable(): void
     {
         $this->validateClosureArguments(
-            fn(callable $a, callable $b) => null,
-            [fn() => true, [$this, 'testCallable']],
+            static fn(callable $a, callable $b) => null,
+            [static fn() => true, [$this, 'testCallable']],
         );
     }
 
     public function testInterfaceAndClass(): void
     {
         $this->validateClosureArguments(
-            fn(\DateTimeInterface $a, \DateTimeImmutable $b) => null,
+            static fn(\DateTimeInterface $a, \DateTimeImmutable $b) => null,
             [new \DateTimeImmutable(), new \DateTimeImmutable()],
         );
     }
@@ -119,7 +119,7 @@ final class TypeValidationTest extends TestCase
     public function testUnionType(): void
     {
         $this->validateClosureArguments(
-            fn(array|\Traversable $a, array|\Traversable $b) => null,
+            static fn(array|\Traversable $a, array|\Traversable $b) => null,
             [[1, 2, NAN], new \EmptyIterator()],
         );
     }
@@ -127,7 +127,7 @@ final class TypeValidationTest extends TestCase
     public function testNullableUnionType(): void
     {
         $this->validateClosureArguments(
-            fn(null|array|\Traversable $a, null|array|\Traversable $b) => null,
+            static fn(null|array|\Traversable $a, null|array|\Traversable $b) => null,
             [null, new \EmptyIterator()],
         );
     }
@@ -135,7 +135,7 @@ final class TypeValidationTest extends TestCase
     public function testTypeIntersection(): void
     {
         $this->validateClosureArguments(
-            fn(EngineInterface&MadeInUssrInterface $a) => null,
+            static fn(EngineInterface&MadeInUssrInterface $a) => null,
             [new EngineZIL130()],
         );
     }
@@ -143,7 +143,7 @@ final class TypeValidationTest extends TestCase
     public function testMissingOptionalArguments(): void
     {
         $this->validateClosureArguments(
-            $fn = fn(int $b, int $a = 0, $c = null) => \func_get_args(),
+            $fn = static fn(int $b, int $a = 0, $c = null) => \func_get_args(),
             $args = [1],
         );
         $this->assertSame($args, $fn(...$args));
@@ -152,7 +152,7 @@ final class TypeValidationTest extends TestCase
     public function testVariadicParamWithoutArguments(): void
     {
         $this->validateClosureArguments(
-            $fn = fn(EngineInterface ...$engines) => $engines,
+            $fn = static fn(EngineInterface ...$engines) => $engines,
             $args = [],
         );
         $this->assertSame($args, $fn(...$args));
@@ -163,7 +163,7 @@ final class TypeValidationTest extends TestCase
     public function testWrongIntStrict(): void
     {
         $this->validateClosureArguments(
-            fn(int $a) => null,
+            static fn(int $a) => null,
             ['42'],
             'a',
         );
@@ -172,7 +172,7 @@ final class TypeValidationTest extends TestCase
     public function testWrongStringStrict(): void
     {
         $this->validateClosureArguments(
-            fn(string $a) => null,
+            static fn(string $a) => null,
             [42],
             'a',
         );
@@ -181,7 +181,7 @@ final class TypeValidationTest extends TestCase
     public function testWrongArrayStrict(): void
     {
         $this->validateClosureArguments(
-            fn(array $a) => null,
+            static fn(array $a) => null,
             [null],
             'a',
         );
@@ -190,7 +190,7 @@ final class TypeValidationTest extends TestCase
     public function testWrongUnionType(): void
     {
         $this->validateClosureArguments(
-            fn(array|\Traversable $a) => null,
+            static fn(array|\Traversable $a) => null,
             ['foo'],
             'a',
         );
@@ -199,7 +199,7 @@ final class TypeValidationTest extends TestCase
     public function testWrongTypeIntersection(): void
     {
         $this->validateClosureArguments(
-            fn(EngineInterface&MadeInUssrInterface $a) => null,
+            static fn(EngineInterface&MadeInUssrInterface $a) => null,
             [new EngineMarkTwo()],
             'a',
         );
@@ -210,7 +210,7 @@ final class TypeValidationTest extends TestCase
     public function testOneNamedArgument(): void
     {
         $this->validateClosureArguments(
-            fn(EngineInterface&MadeInUssrInterface $a) => null,
+            static fn(EngineInterface&MadeInUssrInterface $a) => null,
             ['a' => new EngineZIL130()],
         );
     }
@@ -218,7 +218,7 @@ final class TypeValidationTest extends TestCase
     public function testOnePositionalOneNamedArguments(): void
     {
         $this->validateClosureArguments(
-            fn(int $a, string $b) => null,
+            static fn(int $a, string $b) => null,
             [42, 'b' => 'bar'],
         );
     }
@@ -226,7 +226,7 @@ final class TypeValidationTest extends TestCase
     public function testOnePositionalOneNamedArgumentsSkipOptional(): void
     {
         $this->validateClosureArguments(
-            $fn = fn(int $a, ?\stdClass $b = null, string $c = 'bar') => [$a, $b, $c],
+            $fn = static fn(int $a, ?\stdClass $b = null, string $c = 'bar') => [$a, $b, $c],
             $args = [42, 'c' => 'bar'],
         );
         $this->assertSame([42, null, 'bar'], $fn(...$args));
@@ -235,7 +235,7 @@ final class TypeValidationTest extends TestCase
     public function testShuffledPositionalArgs(): void
     {
         $this->validateClosureArguments(
-            $fn = fn(int $a, int $b, int $c) => [$a, $b, $c],
+            $fn = static fn(int $a, int $b, int $c) => [$a, $b, $c],
             $args = [1 => 1, 2 => 2, 0 => 0],
         );
         $this->assertSame([1, 2, 0], $fn(...$args));
@@ -244,7 +244,7 @@ final class TypeValidationTest extends TestCase
     public function testVariadicParameterWithPositionalArgs(): void
     {
         $this->validateClosureArguments(
-            $fn = fn(int ...$c) => $c,
+            $fn = static fn(int ...$c) => $c,
             $args = [1 => 1, 2 => 2, 0 => 0],
         );
         $this->assertSame([1, 2, 0], $fn(...$args));
@@ -253,7 +253,7 @@ final class TypeValidationTest extends TestCase
     public function testVariadicParameterWithPositionalAnNamedArgs(): void
     {
         $this->validateClosureArguments(
-            $fn = fn(int ...$c) => $c,
+            $fn = static fn(int ...$c) => $c,
             $args = [1 => 1, 2 => 2, 0 => 0, 'foo' => 42, 'bar' => 0],
         );
         $this->assertSame([1, 2, 0, 'foo' => 42, 'bar' => 0], $fn(...$args));
@@ -262,7 +262,7 @@ final class TypeValidationTest extends TestCase
     public function testVariadicParameterWithWrongPositionalArgs(): void
     {
         $this->validateClosureArguments(
-            fn(int $i, int ...$c) => $c,
+            static fn(int $i, int ...$c) => $c,
             [0, 1, 2, 'foo'],
             'c',
         );
@@ -271,7 +271,7 @@ final class TypeValidationTest extends TestCase
     public function testUnusedNamedArgs(): void
     {
         $this->validateClosureArguments(
-            fn(int $b, int $a) => \func_get_args(),
+            static fn(int $b, int $a) => \func_get_args(),
             [1, 'a' => 0, 'c' => 2],
             invalidParameter: 'c',
             exceptionClass: UnknownParameterException::class,
@@ -281,7 +281,7 @@ final class TypeValidationTest extends TestCase
     public function testMissingRequiredArgument(): void
     {
         $this->validateClosureArguments(
-            fn(int $b, int $a) => \func_get_args(),
+            static fn(int $b, int $a) => \func_get_args(),
             [1],
             invalidParameter: 'a',
             exceptionClass: MissingRequiredArgumentException::class,
@@ -291,7 +291,7 @@ final class TypeValidationTest extends TestCase
     public function testPositionalArgsAfterNamedVariadic(): void
     {
         $this->validateClosureArguments(
-            fn(string $a, ...$b) => \func_get_args(),
+            static fn(string $a, ...$b) => \func_get_args(),
             ['a' => 'foo', 's' => 'ff', 'bar'],
             invalidParameter: '#0',
             exceptionClass: PositionalArgumentException::class,
@@ -301,7 +301,7 @@ final class TypeValidationTest extends TestCase
     public function testPositionalArgsAfterNamed(): void
     {
         $this->validateClosureArguments(
-            fn(string $a, $b = null, $c = null) => \func_get_args(),
+            static fn(string $a, $b = null, $c = null) => \func_get_args(),
             ['a' => 'foo', 'bar'],
             invalidParameter: '#0',
             exceptionClass: PositionalArgumentException::class,

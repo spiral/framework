@@ -82,7 +82,7 @@ final class RouteConfiguratorTest extends BaseTestCase
     public function testCallable(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $configurator->callable(fn() => null);
+        $configurator->callable(static fn() => null);
 
         self::assertInstanceOf(\Closure::class, $configurator->target);
     }

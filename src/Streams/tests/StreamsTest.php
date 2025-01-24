@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Streams;
 
 use PHPUnit\Framework\TestCase;
@@ -20,20 +22,20 @@ class StreamsTest extends TestCase
         $filename = StreamWrapper::getFilename($stream);
 
         self::assertFileExists($filename);
-        self::assertSame(strlen('sample text'), filesize($filename));
-        self::assertSame(md5('sample text'), md5_file($filename));
+        self::assertSame(\strlen('sample text'), \filesize($filename));
+        self::assertSame(\md5('sample text'), \md5_file($filename));
 
         $newFilename = self::FIXTURE_DIRECTORY . '/test.txt';
-        copy($filename, $newFilename);
+        \copy($filename, $newFilename);
 
         self::assertFileExists($newFilename);
-        self::assertSame(strlen('sample text'), filesize($newFilename));
-        self::assertSame(md5('sample text'), md5_file($newFilename));
+        self::assertSame(\strlen('sample text'), \filesize($newFilename));
+        self::assertSame(\md5('sample text'), \md5_file($newFilename));
 
         //Rewinding
         self::assertFileExists($newFilename);
-        self::assertSame(strlen('sample text'), filesize($newFilename));
-        self::assertSame(md5('sample text'), md5_file($newFilename));
+        self::assertSame(\strlen('sample text'), \filesize($newFilename));
+        self::assertSame(\md5('sample text'), \md5_file($newFilename));
 
         self::assertTrue(StreamWrapper::has($filename));
         self::assertFalse(StreamWrapper::has($newFilename));
@@ -49,14 +51,14 @@ class StreamsTest extends TestCase
         self::assertTrue(StreamWrapper::has($stream));
 
         self::assertIsResource($resource);
-        self::assertSame('sample text', stream_get_contents($resource, -1, 0));
+        self::assertSame('sample text', \stream_get_contents($resource, -1, 0));
 
         //Rewinding
-        self::assertSame('sample text', stream_get_contents($resource, -1, 0));
+        self::assertSame('sample text', \stream_get_contents($resource, -1, 0));
 
-        fseek($resource, 7);
-        self::assertSame('text', stream_get_contents($resource, -1));
-        self::assertSame('sample', stream_get_contents($resource, 6, 0));
+        \fseek($resource, 7);
+        self::assertSame('text', \stream_get_contents($resource, -1));
+        self::assertSame('sample', \stream_get_contents($resource, 6, 0));
     }
 
     /**
@@ -65,13 +67,13 @@ class StreamsTest extends TestCase
     public function testException(): void
     {
         try {
-            fopen('spiral://non-exists', 'rb');
+            \fopen('spiral://non-exists', 'rb');
         } catch (\Throwable $e) {
             self::assertStringContainsString('failed to open stream', $e->getMessage());
         }
 
         try {
-            filemtime('spiral://non-exists');
+            \filemtime('spiral://non-exists');
         } catch (\Throwable $e) {
             self::assertStringContainsString('stat failed', $e->getMessage());
         }
@@ -83,13 +85,13 @@ class StreamsTest extends TestCase
     public function testExceptionPHP8(): void
     {
         try {
-            fopen('spiral://non-exists', 'rb');
+            \fopen('spiral://non-exists', 'rb');
         } catch (\Throwable $e) {
             self::assertStringContainsString('Failed to open stream', $e->getMessage());
         }
 
         try {
-            filemtime('spiral://non-exists');
+            \filemtime('spiral://non-exists');
         } catch (\Throwable $e) {
             self::assertStringContainsString('stat failed', $e->getMessage());
         }
@@ -97,12 +99,12 @@ class StreamsTest extends TestCase
 
     public function testWriteIntoStream(): void
     {
-        $stream = Stream::create(fopen('php://temp', 'wrb+'));
+        $stream = Stream::create(\fopen('php://temp', 'wrb+'));
         $file = StreamWrapper::getFilename($stream);
 
-        file_put_contents($file, 'test');
+        \file_put_contents($file, 'test');
 
-        self::assertSame('test', file_get_contents($file));
+        self::assertSame('test', \file_get_contents($file));
 
         StreamWrapper::release($file);
     }

@@ -84,7 +84,7 @@ final class StorageBootloaderTest extends BaseTestCase
             $bucket = m::mock(BucketFactoryInterface::class),
         );
 
-        $bucket->shouldReceive('createFromAdapter')->withArgs(fn(
+        $bucket->shouldReceive('createFromAdapter')->withArgs(static fn(
             FilesystemAdapter $adapter,
             string $name,
             ?UriResolverInterface $resolver = null,

@@ -37,7 +37,7 @@ final class HeaderTransport implements HttpTransportInterface
             return $response;
         }
 
-        return $response->withAddedHeader($this->header, sprintf($this->valueFormat, $tokenID));
+        return $response->withAddedHeader($this->header, \sprintf($this->valueFormat, $tokenID));
     }
 
     public function removeToken(Request $request, Response $response, string $tokenID): Response
@@ -50,7 +50,7 @@ final class HeaderTransport implements HttpTransportInterface
         $headerLine = $request->getHeaderLine($this->header);
 
         if ($this->valueFormat !== '%s') {
-            [$token] = sscanf($headerLine, $this->valueFormat);
+            [$token] = \sscanf($headerLine, $this->valueFormat);
 
             return $token !== null ? (string) $token : null;
         }

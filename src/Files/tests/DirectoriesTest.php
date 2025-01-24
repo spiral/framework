@@ -32,7 +32,7 @@ class DirectoriesTest extends TestCase
         self::assertFalse($files->exists($directory));
         self::assertFalse($files->isDirectory($directory));
 
-        mkdir($directory);
+        \mkdir($directory);
 
         self::assertTrue($files->exists($directory));
         self::assertTrue($files->isDirectory($directory));
@@ -79,9 +79,9 @@ class DirectoriesTest extends TestCase
         self::assertFalse($files->exists($directory));
         self::assertFalse($files->isDirectory($directory));
 
-        mkdir(self::FIXTURE_DIRECTORY . 'directory');
-        mkdir(self::FIXTURE_DIRECTORY . 'directory/sub');
-        mkdir(self::FIXTURE_DIRECTORY . 'directory/sub/other');
+        \mkdir(self::FIXTURE_DIRECTORY . 'directory');
+        \mkdir(self::FIXTURE_DIRECTORY . 'directory/sub');
+        \mkdir(self::FIXTURE_DIRECTORY . 'directory/sub/other');
 
         self::assertTrue($files->exists($directory));
         self::assertTrue($files->isDirectory($directory));
@@ -201,7 +201,7 @@ class DirectoriesTest extends TestCase
     public function testGetFilesRecursive(): void
     {
         $files = new Files();
-        self::assertNotEmpty($files->getFiles(dirname(__DIR__)));
+        self::assertNotEmpty($files->getFiles(\dirname(__DIR__)));
     }
 
     public function testGetFilesPattern(): void

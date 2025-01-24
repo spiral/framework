@@ -21,7 +21,7 @@ final class BootloaderTest extends AbstractCommandTestCase
             '--comment' => 'Sample Bootloader',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
@@ -56,7 +56,7 @@ final class BootloaderTest extends AbstractCommandTestCase
             '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
@@ -76,7 +76,7 @@ final class BootloaderTest extends AbstractCommandTestCase
             '--domain' => true,
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
         $reflection = new \ReflectionClass($class);
