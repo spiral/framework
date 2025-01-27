@@ -40,7 +40,7 @@
         "spiral/logger": "^3.16",
         "spiral/mailer": "^3.16",
         "spiral/views": "^3.16",
-        "symfony/mailer": "^5.1 || ^6.0 || ^7.0",
+        "symfony/mailer": "^5.4.45 || ^6.4.17 || ^7.2",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {

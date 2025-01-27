@@ -37,7 +37,7 @@
         "spiral/core": "^3.16",
         "spiral/logger": "^3.16",
         "spiral/tokenizer": "^3.16",
-        "symfony/translation": "^5.1 || ^6.0 || ^7.0",
+        "symfony/translation": "^5.4.45 || ^6.4.17 || ^7.2",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
