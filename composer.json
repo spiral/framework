@@ -61,7 +61,6 @@
         "symfony/finder": "^5.4.45 || ^6.4.17 || ^7.2",
         "symfony/mailer": "^5.4.45 || ^6.4.17 || ^7.2",
         "symfony/translation": "^5.4.45 || ^6.4.17 || ^7.2",
-        "symfony/translation-contracts": "^2.5.3 || ^3.5.1",
         "vlucas/phpdotenv": "^5.4"
     },
     "autoload": {
