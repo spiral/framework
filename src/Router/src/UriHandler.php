@@ -428,6 +428,7 @@ final class UriHandler
 
     /**
      * Interpolate string with given values.
+     * @psalm-suppress InvalidNullableReturnType,NullableReturnStatement
      */
     private function interpolate(string $string, array $values): string
     {

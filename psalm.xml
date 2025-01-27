@@ -25,12 +25,6 @@
         <UnusedClosureParam errorLevel="suppress" />
         <UnusedPsalmSuppress errorLevel="suppress" />
         <UnsupportedPropertyReferenceUsage errorLevel="suppress" />
-        <InvalidThrow>
-            <errorLevel type="suppress">
-                <referencedClass name="Psr\Container\NotFoundExceptionInterface"/>
-                <referencedClass name="Psr\Container\ContainerExceptionInterface"/>
-            </errorLevel>
-        </InvalidThrow>
         <RedundantCast>
             <errorLevel type="suppress">
                 <file name="src/Core/src/Internal/Proxy/ProxyClassRenderer.php"/>
