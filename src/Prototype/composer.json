@@ -47,7 +47,7 @@
         }
     },
     "require-dev": {
-        "mockery/mockery": "^1.6",
+        "mockery/mockery": "^1.6.12",
         "nyholm/psr7": "^1.8",
         "phpunit/phpunit": "^10.5.41",
         "spiral/dumper": "^3.3",

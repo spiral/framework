@@ -40,7 +40,7 @@
         "symfony/finder": "^5.3.7 || ^6.0 || ^7.0"
     },
     "require-dev": {
-        "mockery/mockery": "^1.6",
+        "mockery/mockery": "^1.6.12",
         "spiral/attributes": "^2.8|^3.0",
         "spiral/boot": "^3.16",
         "spiral/files": "^3.16",

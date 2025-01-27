@@ -46,9 +46,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5.41",
-        "mockery/mockery": "^1.6",
+        "mockery/mockery": "^1.6.12",
         "spiral/nyholm-bridge": "^1.3",
-        "spiral/testing": "^2.8",
+        "spiral/testing": "^2.8.3",
         "vimeo/psalm": "^6.0"
     },
     "autoload": {

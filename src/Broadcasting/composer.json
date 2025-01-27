@@ -48,7 +48,7 @@
         }
     },
     "require-dev": {
-        "mockery/mockery": "^1.6",
+        "mockery/mockery": "^1.6.12",
         "phpunit/phpunit": "^10.5.41",
         "spiral/boot": "^3.16",
         "vimeo/psalm": "^6.0"

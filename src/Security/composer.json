@@ -45,7 +45,7 @@
     "require-dev": {
         "spiral/console": "^3.16",
         "phpunit/phpunit": "^10.5.41",
-        "mockery/mockery": "^1.6",
+        "mockery/mockery": "^1.6.12",
         "vimeo/psalm": "^6.0"
     },
     "autoload-dev": {

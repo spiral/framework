@@ -105,9 +105,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'require-dev'  => [
             'phpunit/phpunit'           => '^10.5.41',
-            'mockery/mockery'           => '^1.6',
+            'mockery/mockery'           => '^1.6.12',
             'spiral/code-style'         => '^2.2.2',
-            'symplify/monorepo-builder' => '^10.2.7',
+            'symplify/monorepo-builder' => '^10.3.3',
             'vimeo/psalm'               => '^6.0',
         ],
         'conflict' => [
