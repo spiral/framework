@@ -26,7 +26,7 @@
     "require-dev": {
         "spiral/boot": "^3.16",
         "google/protobuf": "^3.25",
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0"
     },
     "autoload-dev": {

@@ -40,7 +40,7 @@
     },
     "require-dev": {
         "spiral/storage": "^3.16",
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0"
     },
     "autoload": {

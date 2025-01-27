@@ -39,7 +39,7 @@
         "defuse/php-encryption": "^2.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0"
     },
     "autoload": {

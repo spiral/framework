@@ -39,7 +39,7 @@
         "spiral/cache": "^3.16"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0",
         "mockery/mockery": "^1.6"
     },

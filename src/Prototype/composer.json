@@ -49,7 +49,7 @@
     "require-dev": {
         "mockery/mockery": "^1.6",
         "nyholm/psr7": "^1.8",
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "spiral/dumper": "^3.3",
         "vimeo/psalm": "^6.0"
     },

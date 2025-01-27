@@ -11,8 +11,7 @@ use PhpParser\ParserFactory;
 
 class Extractor
 {
-    /** @var Parser */
-    private $parser;
+    private readonly Parser $parser;
 
     public function __construct(?Parser $parser = null)
     {
@@ -21,7 +20,7 @@ class Extractor
 
     public function extractFromFilename(string $filename): array
     {
-        return $this->extractFromString(file_get_contents($filename));
+        return $this->extractFromString(\file_get_contents($filename));
     }
 
     public function extractFromString(string $code): array

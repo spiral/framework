@@ -42,7 +42,7 @@
         "spiral/core": "^3.16"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "spiral/boot": "^3.16",
         "spiral/testing": "^2.8",
         "mockery/mockery": "^1.6",
