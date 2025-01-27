@@ -29,14 +29,6 @@ final class HttpTest extends TestCase
 
     private Container $container;
 
-    public function setUp(): void
-    {
-        $options = new Options();
-        $options->checkScope = false;
-        $this->container = new Container(options: $options);
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
-    }
-
     public function testGetPipeline(): void
     {
         $core = $this->getCore();
@@ -47,10 +39,10 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn(): string => 'hello world');
+        $core->setHandler(static fn(): string => 'hello world');
 
         $response = $core->handle(new ServerRequest('GET', ''));
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testNoHandler(): void
@@ -60,25 +52,25 @@ final class HttpTest extends TestCase
         $core = $this->getCore();
 
         $response = $core->handle(new ServerRequest('GET', ''));
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testHandlerInterface(): void
     {
         $core = $this->getCore();
         $core->setHandler(
-            new CallableHandler(fn(): string => 'hello world', new ResponseFactory(new HttpConfig(['headers' => []])))
+            new CallableHandler(static fn(): string => 'hello world', new ResponseFactory(new HttpConfig(['headers' => []]))),
         );
 
         $response = $core->handle(new ServerRequest('GET', ''));
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testDefaultHeaders(): void
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn($req, $resp) => $resp->withAddedHeader('hello', 'value'));
+        $core->setHandler(static fn($req, $resp) => $resp->withAddedHeader('hello', 'value'));
 
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
@@ -89,7 +81,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(function ($req, $resp) {
+        $core->setHandler(static function ($req, $resp) {
             echo 'hello!';
 
             return $resp->withAddedHeader('hello', 'value');
@@ -98,14 +90,14 @@ final class HttpTest extends TestCase
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         self::assertSame(['value'], $response->getHeader('hello'));
-        self::assertSame('hello!', (string)$response->getBody());
+        self::assertSame('hello!', (string) $response->getBody());
     }
 
     public function testOutputAndWrite(): void
     {
         $core = $this->getCore();
 
-        $core->setHandler(function ($req, $resp) {
+        $core->setHandler(static function ($req, $resp) {
             echo 'hello!';
             $resp->getBody()->write('world ');
 
@@ -115,35 +107,35 @@ final class HttpTest extends TestCase
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         self::assertSame(['value'], $response->getHeader('hello'));
-        self::assertSame('world hello!', (string)$response->getBody());
+        self::assertSame('world hello!', (string) $response->getBody());
     }
 
     public function testNestedOutput(): void
     {
         $core = $this->getCore();
 
-        $core->setHandler(function (): string {
-            ob_start();
-            ob_start();
+        $core->setHandler(static function (): string {
+            \ob_start();
+            \ob_start();
             echo 'hello!';
-            ob_start();
-            ob_start();
+            \ob_start();
+            \ob_start();
 
             return 'world ';
         });
 
-        self::assertSame(1, ob_get_level());
+        self::assertSame(1, \ob_get_level());
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-        self::assertSame('world hello!', (string)$response->getBody());
-        self::assertSame(1, ob_get_level());
+        self::assertSame('world hello!', (string) $response->getBody());
+        self::assertSame(1, \ob_get_level());
     }
 
     public function testJson(): void
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn(): array => [
+        $core->setHandler(static fn(): array => [
             'status' => 404,
             'message' => 'not found',
         ]);
@@ -157,7 +149,7 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore();
 
-        $core->setHandler(fn(): Json => new Json([
+        $core->setHandler(static fn(): Json => new Json([
             'status' => 404,
             'message' => 'not found',
         ]));
@@ -171,12 +163,12 @@ final class HttpTest extends TestCase
     {
         $core = $this->getCore([HeaderMiddleware::class]);
 
-        $core->setHandler(fn(): string => 'hello?');
+        $core->setHandler(static fn(): string => 'hello?');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         self::assertSame(['Value*'], $response->getHeader('header'));
-        self::assertSame('hello?', (string)$response->getBody());
+        self::assertSame('hello?', (string) $response->getBody());
     }
 
     public function testMiddlewareTrait(): void
@@ -186,12 +178,12 @@ final class HttpTest extends TestCase
         $core->getPipeline()->pushMiddleware(new Header2Middleware());
         $core->getPipeline()->riseMiddleware(new HeaderMiddleware());
 
-        $core->setHandler(fn(): string => 'hello?');
+        $core->setHandler(static fn(): string => 'hello?');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         self::assertSame(['Value+', 'Value*'], $response->getHeader('header'));
-        self::assertSame('hello?', (string)$response->getBody());
+        self::assertSame('hello?', (string) $response->getBody());
     }
 
     public function testMiddlewareTraitReversed(): void
@@ -201,12 +193,12 @@ final class HttpTest extends TestCase
         $core->getPipeline()->pushMiddleware(new HeaderMiddleware());
         $core->getPipeline()->riseMiddleware(new Header2Middleware());
 
-        $core->setHandler(fn(): string => 'hello?');
+        $core->setHandler(static fn(): string => 'hello?');
 
         $response = $core->handle(new ServerRequest('GET', ''));
         self::assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
         self::assertSame(['Value*', 'Value+'], $response->getHeader('header'));
-        self::assertSame('hello?', (string)$response->getBody());
+        self::assertSame('hello?', (string) $response->getBody());
     }
 
     public function testPassException(): void
@@ -215,7 +207,7 @@ final class HttpTest extends TestCase
 
         $core = $this->getCore();
 
-        $core->setHandler(function ($req, $resp): void {
+        $core->setHandler(static function ($req, $resp): never {
             throw new \RuntimeException('error');
         });
 
@@ -237,10 +229,10 @@ final class HttpTest extends TestCase
 
         $core = $this->getCore();
 
-        $core->setHandler(fn(): string => 'hello world');
+        $core->setHandler(static fn(): string => 'hello world');
 
         $response = $core->handle($request);
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testPassingTracerIntoScope(): void
@@ -256,7 +248,7 @@ final class HttpTest extends TestCase
             $tracerFactory = m::mock(TracerFactoryInterface::class),
         );
 
-        $http->setHandler(fn(): string => 'hello world');
+        $http->setHandler(static fn(): string => 'hello world');
 
         $tracerFactory
             ->shouldReceive('make')
@@ -265,7 +257,7 @@ final class HttpTest extends TestCase
             ->andReturn(new NullTracer($this->container));
 
         $response = $http->handle($request);
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testTraceAttributesAreSet(): void
@@ -319,10 +311,10 @@ final class HttpTest extends TestCase
             $tracerFactory,
         );
 
-        $http->setHandler(fn(): string => 'hello world');
+        $http->setHandler(static fn(): string => 'hello world');
 
         $response = $http->handle($request);
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
     }
 
     public function testTraceContextIsAppliedToResponse(): void
@@ -338,7 +330,7 @@ final class HttpTest extends TestCase
             $tracerFactory = m::mock(TracerFactoryInterface::class),
         );
 
-        $http->setHandler(fn(): string => 'hello world');
+        $http->setHandler(static fn(): string => 'hello world');
 
         $tracerFactory
             ->shouldReceive('make')
@@ -348,10 +340,11 @@ final class HttpTest extends TestCase
         $tracer
             ->shouldReceive('trace')
             ->once()
-            ->andReturnUsing(fn($name, $callback, $attributes, $scoped, $traceKind) => $this
-                ->container
-                ->get(TracerInterface::class)
-                ->trace($name, $callback, $attributes, $scoped, $traceKind),
+            ->andReturnUsing(
+                fn($name, $callback, $attributes, $scoped, $traceKind) => $this
+                    ->container
+                    ->get(TracerInterface::class)
+                    ->trace($name, $callback, $attributes, $scoped, $traceKind),
             );
 
         $tracer
@@ -361,8 +354,27 @@ final class HttpTest extends TestCase
             ->andReturn(['baz' => 'quux']);
 
         $response = $http->handle($request);
-        self::assertSame('hello world', (string)$response->getBody());
+        self::assertSame('hello world', (string) $response->getBody());
         self::assertSame(['quux'], $response->getHeader('baz'));
+    }
+
+    public function getHttpConfig(array $middleware = []): HttpConfig
+    {
+        return new HttpConfig([
+            'basePath' => '/',
+            'headers' => [
+                'Content-Type' => 'text/html; charset=UTF-8',
+            ],
+            'middleware' => $middleware,
+        ]);
+    }
+
+    protected function setUp(): void
+    {
+        $options = new Options();
+        $options->checkScope = false;
+        $this->container = new Container(options: $options);
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
     }
 
     protected function getCore(array $middleware = []): Http
@@ -378,16 +390,5 @@ final class HttpTest extends TestCase
                 ? $this->container->get(EventDispatcherInterface::class)
                 : null,
         );
-    }
-
-    public function getHttpConfig(array $middleware = []): HttpConfig
-    {
-        return new HttpConfig([
-            'basePath' => '/',
-            'headers' => [
-                'Content-Type' => 'text/html; charset=UTF-8',
-            ],
-            'middleware' => $middleware,
-        ]);
     }
 }

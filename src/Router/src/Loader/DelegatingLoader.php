@@ -9,9 +9,8 @@ use Spiral\Router\Exception\LoaderLoadException;
 final class DelegatingLoader implements LoaderInterface
 {
     public function __construct(
-        private readonly LoaderRegistryInterface $registry
-    ) {
-    }
+        private readonly LoaderRegistryInterface $registry,
+    ) {}
 
     public function load(mixed $resource, ?string $type = null): mixed
     {

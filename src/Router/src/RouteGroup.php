@@ -36,9 +36,8 @@ final class RouteGroup
         /** @deprecated since v3.3.0 */
         private readonly ?RouterInterface $router = null,
         /** @deprecated since v3.3.0 */
-        private readonly ?UriHandler $handler = null
-    ) {
-    }
+        private readonly ?UriHandler $handler = null,
+    ) {}
 
     /**
      * Check if group has a route with given name
@@ -114,7 +113,7 @@ final class RouteGroup
                 $name,
                 $route
                     ->withUriHandler($uriHandler->withPrefix($this->prefix))
-                    ->withMiddleware(...$this->middleware)
+                    ->withMiddleware(...$this->middleware),
             );
         }
     }

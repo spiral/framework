@@ -16,11 +16,11 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 #[Question(
     question: 'What is the locale that you would like to export translations for?',
-    argument: 'locale'
+    argument: 'locale',
 )]
 #[Question(
     question: 'What is the path to where you would like to export the translations?',
-    argument: 'path'
+    argument: 'path',
 )]
 #[Singleton]
 final class ExportCommand extends Command
@@ -47,13 +47,13 @@ final class ExportCommand extends Command
         $mc = $this->getMessageCatalogue(
             $config,
             $manager,
-            $manager->get($this->argument('locale'))
+            $manager->get($this->argument('locale')),
         );
 
         if ($this->isVerbose() && !empty($mc->getDomains())) {
             $this->sprintf(
                 "<info>Exporting domain(s):</info> %s\n",
-                \implode(',', $mc->getDomains())
+                \implode(',', $mc->getDomains()),
             );
         }
 
@@ -65,7 +65,7 @@ final class ExportCommand extends Command
                 'path'           => $this->argument('path'),
                 'default_locale' => $config->getDefaultLocale(),
                 'xliff_version'  => '2.0', // forcing default version for xliff dumper only
-            ]
+            ],
         );
 
         $this->writeln('Export successfully completed using <info>' . $dumper::class . '</info>');
@@ -77,11 +77,11 @@ final class ExportCommand extends Command
     protected function getMessageCatalogue(
         TranslatorConfig $config,
         CatalogueManager $manager,
-        CatalogueInterface $catalogue
+        CatalogueInterface $catalogue,
     ): MessageCatalogue {
         $messageCatalogue = new MessageCatalogue(
             $catalogue->getLocale(),
-            $catalogue->getData()
+            $catalogue->getData(),
         );
 
         if ($this->option('fallback')) {

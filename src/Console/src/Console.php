@@ -38,8 +38,7 @@ final class Console
         #[Proxy] private readonly ContainerInterface $container = new Container(),
         private readonly ScopeInterface $scope = new Container(),
         private readonly ?EventDispatcherInterface $dispatcher = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Run console application.
@@ -84,7 +83,7 @@ final class Console
                     OutputInterface::class => $output,
                 ],
             ),
-            fn (): int => $this->getApplication()->doRun($input, $output),
+            fn(): int => $this->getApplication()->doRun($input, $output),
         );
 
         return new CommandOutput($code ?? self::CODE_NONE, $output);
@@ -164,17 +163,17 @@ final class Console
                 $inputStream = $input->getStream();
             }
 
-            if ($inputStream !== null && !@posix_isatty($inputStream) && false === getenv('SHELL_INTERACTIVE')) {
+            if ($inputStream !== null && !@posix_isatty($inputStream) && \getenv('SHELL_INTERACTIVE') === false) {
                 $input->setInteractive(false);
             }
         }
 
-        match ($shellVerbosity = (int)getenv('SHELL_VERBOSITY')) {
+        match ($shellVerbosity = (int) \getenv('SHELL_VERBOSITY')) {
             -1 => $output->setVerbosity(OutputInterface::VERBOSITY_QUIET),
             1 => $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE),
             2 => $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE),
             3 => $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG),
-            default => $shellVerbosity = 0
+            default => $shellVerbosity = 0,
         };
 
         if ($input->hasParameterOption(['--quiet', '-q'], true)) {
@@ -184,14 +183,14 @@ final class Console
             if (
                 $input->hasParameterOption('-vvv', true)
                 || $input->hasParameterOption('--verbose=3', true)
-                || 3 === $input->getParameterOption('--verbose', false, true)
+                || $input->getParameterOption('--verbose', false, true) === 3
             ) {
                 $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
                 $shellVerbosity = 3;
             } elseif (
                 $input->hasParameterOption('-vv', true)
                 || $input->hasParameterOption('--verbose=2', true)
-                || 2 === $input->getParameterOption('--verbose', false, true)
+                || $input->getParameterOption('--verbose', false, true) === 2
             ) {
                 $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
                 $shellVerbosity = 2;
@@ -206,7 +205,7 @@ final class Console
             }
         }
 
-        if (-1 === $shellVerbosity) {
+        if ($shellVerbosity === -1) {
             $input->setInteractive(false);
         }
 

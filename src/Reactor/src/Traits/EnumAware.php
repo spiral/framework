@@ -33,12 +33,12 @@ trait EnumAware
     {
         $enums = \array_filter(
             $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof EnumType
+            static fn(ClassLike $element): bool => $element instanceof EnumType,
         );
 
         return new Enums(\array_map(
-            static fn (EnumType $enum): EnumDeclaration => EnumDeclaration::fromElement($enum),
-            $enums
+            static fn(EnumType $enum): EnumDeclaration => EnumDeclaration::fromElement($enum),
+            $enums,
         ));
     }
 }

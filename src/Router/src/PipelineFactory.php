@@ -16,9 +16,8 @@ final class PipelineFactory
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     /**
      * @throws RouteException
@@ -47,7 +46,7 @@ final class PipelineFactory
 
                 $pipeline->pushMiddleware($item);
             } else {
-                $name = get_debug_type($item);
+                $name = \get_debug_type($item);
                 throw new RouteException(\sprintf('Invalid middleware `%s`', $name));
             }
         }

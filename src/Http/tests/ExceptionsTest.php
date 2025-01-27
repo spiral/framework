@@ -15,6 +15,21 @@ use Spiral\Http\Exception\ClientException\UnauthorizedException;
 
 class ExceptionsTest extends TestCase
 {
+    public static function allExceptionsWithPreviousSet(): \Generator
+    {
+        yield [new Exception\ClientException\BadRequestException('', new \Exception())];
+        yield [new Exception\ClientException\ForbiddenException('', new \Exception())];
+        yield [new Exception\ClientException\NotFoundException('', new \Exception())];
+        yield [new Exception\ClientException\UnauthorizedException('', new \Exception())];
+        yield [new Exception\ClientException\ServerErrorException('', new \Exception())];
+        yield [new Exception\ClientException(0, '', new \Exception())];
+        yield [new Exception\DotNotFoundException('', 0, new \Exception())];
+        yield [new Exception\HttpException('', 0, new \Exception())];
+        yield [new Exception\InputException('', 0, new \Exception())];
+        yield [new Exception\PipelineException('', 0, new \Exception())];
+        yield [new Exception\ResponseException('', 0, new \Exception())];
+    }
+
     public function testClientException(): void
     {
         $e = new ClientException();
@@ -55,20 +70,5 @@ class ExceptionsTest extends TestCase
     public function testPreviousSetter(\Throwable $exception): void
     {
         self::assertInstanceOf(\Throwable::class, $exception->getPrevious());
-    }
-
-    public static function allExceptionsWithPreviousSet(): \Generator
-    {
-        yield [new Exception\ClientException\BadRequestException('', new \Exception())];
-        yield [new Exception\ClientException\ForbiddenException('', new \Exception())];
-        yield [new Exception\ClientException\NotFoundException('', new \Exception())];
-        yield [new Exception\ClientException\UnauthorizedException('', new \Exception())];
-        yield [new Exception\ClientException\ServerErrorException('', new \Exception())];
-        yield [new Exception\ClientException(0, '', new \Exception())];
-        yield [new Exception\DotNotFoundException('', 0, new \Exception())];
-        yield [new Exception\HttpException('', 0, new \Exception())];
-        yield [new Exception\InputException('', 0, new \Exception())];
-        yield [new Exception\PipelineException('', 0, new \Exception())];
-        yield [new Exception\ResponseException('', 0, new \Exception())];
     }
 }

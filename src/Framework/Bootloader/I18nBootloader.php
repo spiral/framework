@@ -41,9 +41,8 @@ final class I18nBootloader extends Bootloader
     ];
 
     public function __construct(
-        private readonly ConfiguratorInterface $config
-    ) {
-    }
+        private readonly ConfiguratorInterface $config,
+    ) {}
 
     public function init(EnvironmentInterface $env, DirectoriesInterface $dirs, DebugMode $debugMode): void
     {
@@ -75,7 +74,7 @@ final class I18nBootloader extends Bootloader
                     // by default we can store all messages in one domain
                     'messages' => ['*'],
                 ],
-            ]
+            ],
         );
     }
 

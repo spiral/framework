@@ -94,7 +94,7 @@ trait HelpersTrait
         array $choices,
         mixed $default = null,
         ?int $attempts = null,
-        bool $multiselect = false
+        bool $multiselect = false,
     ): mixed {
         $question = new ChoiceQuestion($question, $choices, $default);
 
@@ -166,7 +166,7 @@ trait HelpersTrait
     protected function alert(string $string): void
     {
         $length = \mb_strlen(\strip_tags($string)) + 12;
-        $stringLines = explode("\n", wordwrap($string, 300));
+        $stringLines = \explode("\n", \wordwrap($string, 300));
 
         $this->comment(\str_repeat('*', $length));
         foreach ($stringLines as $line) {
@@ -185,7 +185,7 @@ trait HelpersTrait
         $styled = $style ? "<$style>$string</$style>" : $string;
 
         $this->writeln(
-            messages: $styled
+            messages: $styled,
         );
     }
 
@@ -204,7 +204,7 @@ trait HelpersTrait
     {
         $this->write(
             messages: \sprintf($format, ...$args),
-            newline: false
+            newline: false,
         );
     }
 

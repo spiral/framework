@@ -13,7 +13,7 @@ final class PHPMixin
 
     public function __construct(
         private readonly array $tokens,
-        string $func
+        string $func,
     ) {
         $this->parse($func);
     }
@@ -138,7 +138,7 @@ final class PHPMixin
                     if ($level === 0) {
                         $this->blocks[$name] = [
                             'start' => $start,
-                            'value' => trim($value),
+                            'value' => \trim($value),
                             'end'   => $position,
                         ];
 

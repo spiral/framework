@@ -6,16 +6,16 @@ namespace Spiral\Tests\Core\Internal\Destructor;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Tests\Core\Fixtures\Finalizer;
 
 class FinalizerTest extends TestCase
 {
     public function testInternalServicesDontBlockContainer(): void
     {
-        (static function () {
+        (static function (): void {
             $container = new Container();
             $finalizer = new class {
                 public ?\Closure $closure = null;
+
                 public function __destruct()
                 {
                     if ($this->closure !== null) {
@@ -23,7 +23,7 @@ class FinalizerTest extends TestCase
                     }
                 }
             };
-            $finalizer->closure = static function () use ($container) {
+            $finalizer->closure = static function () use ($container): void {
                 $container->hasInstance('finalizer');
             };
             $container->bind('finalizer', $finalizer);

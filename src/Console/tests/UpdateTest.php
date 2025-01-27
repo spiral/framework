@@ -12,15 +12,13 @@ use Spiral\Tests\Console\Fixtures\FailedCommand;
 use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
 use Spiral\Tests\Console\Fixtures\UpdateClass;
-use Throwable;
 
 class UpdateTest extends BaseTestCase
 {
     public const TOKENIZER_CONFIG = [
-        'directories' => [__DIR__.'/../src/Command', __DIR__.'/Fixtures/'],
+        'directories' => [__DIR__ . '/../src/Command', __DIR__ . '/Fixtures/'],
         'exclude' => [],
     ];
-
     public const CONFIG = [
         'locateCommands' => false,
         'commands' => [],
@@ -29,9 +27,9 @@ class UpdateTest extends BaseTestCase
                 ['command' => 'test', 'header' => 'Test Command'],
                 ['command' => 'helper', 'options' => ['helper' => 'writeln'], 'footer' => 'Good!'],
                 ['invoke' => [UpdateClass::class, 'do']],
-                ['invoke' => UpdateClass::class.'::do'],
+                ['invoke' => UpdateClass::class . '::do'],
                 'Spiral\Tests\Console\ok',
-                ['invoke' => UpdateClass::class.'::err'],
+                ['invoke' => UpdateClass::class . '::err'],
             ],
         ],
     ];
@@ -43,7 +41,7 @@ class UpdateTest extends BaseTestCase
                 HelperCommand::class,
                 TestCommand::class,
                 UpdateCommand::class,
-            ])
+            ]),
         );
 
         $this->container->bind(Console::class, $core);
@@ -71,7 +69,7 @@ text;
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testBreakFailure(): void
     {
@@ -87,7 +85,7 @@ text;
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testIgnoreAndBreakFailure(): void
     {
@@ -103,7 +101,7 @@ text;
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testNoBreakFailure(): void
     {
@@ -128,7 +126,7 @@ text;
                 UpdateCommand::class,
                 FailedCommand::class,
                 AnotherFailedCommand::class,
-            ])
+            ]),
         );
         $this->container->bind(
             ConsoleConfig::class,
@@ -141,7 +139,7 @@ text;
                         ['command' => 'failed:another', 'header' => 'Another failed Command'],
                     ],
                 ],
-            ])
+            ]),
         );
         $this->container->bind(Console::class, $core);
 

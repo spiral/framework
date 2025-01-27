@@ -25,6 +25,13 @@ final class DirectoryTest extends BaseTestCase
         yield ['tes:span'];
     }
 
+    public static function correctNamespaceProvider(): iterable
+    {
+        yield ['test.span'];
+        yield ['test:span'];
+        yield ['test/span'];
+    }
+
     #[DataProvider('wrongNamespaceProvider')]
     public function testResolveTagWithWrongNamespace(string $tag): void
     {
@@ -34,13 +41,6 @@ final class DirectoryTest extends BaseTestCase
         self::assertNull(
             $directory->resolve(new Builder($loader), $tag),
         );
-    }
-
-    public static function correctNamespaceProvider(): iterable
-    {
-        yield ['test.span'];
-        yield ['test:span'];
-        yield ['test/span'];
     }
 
     #[DataProvider('correctNamespaceProvider')]

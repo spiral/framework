@@ -7,6 +7,4 @@ namespace Spiral\Models\Exception;
 /**
  * Errors related to field setting.
  */
-interface AccessExceptionInterface extends EntityExceptionInterface
-{
-}
+interface AccessExceptionInterface extends EntityExceptionInterface {}

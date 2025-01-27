@@ -97,7 +97,7 @@ final class BootloadersTest extends TestCase
         $bootloader = $this->getBootloadManager();
 
         $bootloader->bootload([
-            new class () extends Bootloader {
+            new class extends Bootloader {
                 public const BINDINGS = ['abc' => self::class];
                 public const SINGLETONS = ['single' => self::class];
 

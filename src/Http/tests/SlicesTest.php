@@ -13,27 +13,20 @@ use Nyholm\Psr7\ServerRequest;
 class SlicesTest extends TestCase
 {
     private Container $container;
-
     private InputManager $input;
-
-    public function setUp(): void
-    {
-        $this->container = new Container();
-        $this->input = new InputManager($this->container);
-    }
 
     public function testNoSlice(): void
     {
         $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
             'array' => [
-                'key' => 'value'
-            ]
+                'key' => 'value',
+            ],
         ]));
 
         self::assertSame([
             'array' => [
-                'key' => 'value'
-            ]
+                'key' => 'value',
+            ],
         ], $this->input->data->all());
     }
 
@@ -41,12 +34,12 @@ class SlicesTest extends TestCase
     {
         $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
             'array' => [
-                'key' => 'value'
-            ]
+                'key' => 'value',
+            ],
         ]));
 
         self::assertSame([
-            'key' => 'value'
+            'key' => 'value',
         ], $this->input->withPrefix('array')->data->all());
     }
 
@@ -54,8 +47,8 @@ class SlicesTest extends TestCase
     {
         $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
             'array' => [
-                'key' => 'value'
-            ]
+                'key' => 'value',
+            ],
         ]));
 
         self::assertSame([], $this->input->withPrefix('other')->data->all());
@@ -66,27 +59,27 @@ class SlicesTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
             'array' => [
                 'key' => [
-                    'name' => 'value'
-                ]
-            ]
+                    'name' => 'value',
+                ],
+            ],
         ]));
 
         self::assertSame([
-            'name' => 'value'
+            'name' => 'value',
         ], $this->input->withPrefix('array.key')->data->all());
 
         $input = $this->input->withPrefix('array');
 
         self::assertSame([
             'key' => [
-                'name' => 'value'
-            ]
+                'name' => 'value',
+            ],
         ], $input->data->all());
 
         $input = $input->withPrefix('key');
 
         self::assertSame([
-            'name' => 'value'
+            'name' => 'value',
         ], $input->data->all());
 
         $input = $input->withPrefix('', false);
@@ -94,12 +87,18 @@ class SlicesTest extends TestCase
         self::assertSame([
             'array' => [
                 'key' => [
-                    'name' => 'value'
-                ]
-            ]
+                    'name' => 'value',
+                ],
+            ],
         ], $input->data->all());
 
         self::assertSame('value', $input->data('array.key.name'));
         self::assertSame('value', $input->post('array.key.name'));
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->input = new InputManager($this->container);
     }
 }

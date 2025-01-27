@@ -24,7 +24,7 @@ class CloudFrontResolver extends ExpirationAwareResolver
         string $keyPairId,
         string $privateKey,
         private readonly string $domain,
-        private readonly ?string $prefix = null
+        private readonly ?string $prefix = null,
     ) {
         $this->assertCloudFrontAvailable();
         $this->factory = new AmazonUriFactory();

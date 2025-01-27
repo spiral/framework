@@ -22,7 +22,7 @@ final class CallableSequence extends AbstractSequence
     public function __construct(
         string|array|callable $function,
         string $header = '',
-        string $footer = ''
+        string $footer = '',
     ) {
         $this->function = $function;
         parent::__construct($header, $footer);

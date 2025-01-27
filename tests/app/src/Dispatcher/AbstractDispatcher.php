@@ -12,8 +12,7 @@ abstract class AbstractDispatcher implements DispatcherInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     public static function canServe(EnvironmentInterface $env): bool
     {
@@ -27,7 +26,7 @@ abstract class AbstractDispatcher implements DispatcherInterface
         return [
             'dispatcher' => $this->container->get(static::class),
             'foo' => $this->container->has('foo') ? $this->container->get('foo') : null,
-            'scope' => (new \ReflectionProperty($scope, 'scopeName'))->getValue($scope)
+            'scope' => (new \ReflectionProperty($scope, 'scopeName'))->getValue($scope),
         ];
     }
 }

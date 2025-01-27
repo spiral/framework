@@ -15,7 +15,7 @@ final class ContainerRegistry implements HandlerRegistryInterface
     private readonly Inflector $inflector;
 
     public function __construct(
-        private readonly ContainerInterface $container
+        private readonly ContainerInterface $container,
     ) {
         $this->inflector = (new InflectorFactory())->build();
     }
@@ -38,7 +38,7 @@ final class ContainerRegistry implements HandlerRegistryInterface
     private function className(string $jobType): string
     {
         $names = \explode('.', $jobType);
-        $names = \array_map(fn (string $value): string => $this->inflector->classify($value), $names);
+        $names = \array_map(fn(string $value): string => $this->inflector->classify($value), $names);
 
         return \implode('\\', $names);
     }

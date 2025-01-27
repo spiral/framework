@@ -15,7 +15,7 @@ final class SnapshotsBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             SnapshotterInterface::class,
-            FileSnapshooter::class
+            FileSnapshooter::class,
         );
     }
 
@@ -23,7 +23,7 @@ final class SnapshotsBootloaderTest extends BaseTestCase
     {
         $this->assertContainerBoundAsSingleton(
             FileSnapshot::class,
-            FileSnapshot::class
+            FileSnapshot::class,
         );
     }
 }

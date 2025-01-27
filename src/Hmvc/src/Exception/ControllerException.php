@@ -19,6 +19,7 @@ if (!\class_exists(TargetCallException::class)) {
          * Pre-defined controller error codes.
          */
         public const NOT_FOUND = 0;
+
         public const BAD_ACTION = 1;
         public const BAD_ARGUMENT = 2;
         public const FORBIDDEN = 3;

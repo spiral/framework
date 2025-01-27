@@ -19,20 +19,19 @@ abstract class AbstractTracer implements TracerInterface
 {
     public function __construct(
         private readonly ?ScopeInterface $scope = new Container(),
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Throwable
      */
-    final protected function runScope(Span $span, callable $callback): mixed
+    final protected function runScope(SpanInterface $span, callable $callback): mixed
     {
         $container = ContainerScope::getContainer();
         if ($container === null) {
             return $this->scope->runScope([
                 SpanInterface::class => $span,
                 TracerInterface::class => $this,
-            ], static fn (InvokerInterface $invoker): mixed => $invoker->invoke($callback));
+            ], static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback));
         }
 
         if ($container instanceof Container) {

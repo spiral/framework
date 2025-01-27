@@ -16,9 +16,9 @@ class DynamicTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(Token::TYPE_RAW, 0, 'raw body')
+                new Token(Token::TYPE_RAW, 0, 'raw body'),
             ],
-            ('raw body')
+            ('raw body'),
         );
     }
 
@@ -28,9 +28,9 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(DynamicGrammar::TYPE_OPEN_TAG, 0, '{{'),
                 new Token(DynamicGrammar::TYPE_BODY, 2, ' $var '),
-                new Token(DynamicGrammar::TYPE_CLOSE_TAG, 8, '}}')
+                new Token(DynamicGrammar::TYPE_CLOSE_TAG, 8, '}}'),
             ],
-            ('{{ $var }}')
+            ('{{ $var }}'),
         );
     }
 
@@ -40,9 +40,9 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(DynamicGrammar::TYPE_OPEN_TAG, 0, '{{'),
                 new Token(DynamicGrammar::TYPE_BODY, 2, ' $var . "{{ hello world }}" '),
-                new Token(DynamicGrammar::TYPE_CLOSE_TAG, 30, '}}')
+                new Token(DynamicGrammar::TYPE_CLOSE_TAG, 30, '}}'),
             ],
-            ('{{ $var . "{{ hello world }}" }}')
+            ('{{ $var . "{{ hello world }}" }}'),
         );
     }
 
@@ -52,9 +52,9 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(DynamicGrammar::TYPE_OPEN_RAW_TAG, 0, '{!!'),
                 new Token(DynamicGrammar::TYPE_BODY, 3, ' $var '),
-                new Token(DynamicGrammar::TYPE_CLOSE_RAW_TAG, 9, '!!}')
+                new Token(DynamicGrammar::TYPE_CLOSE_RAW_TAG, 9, '!!}'),
             ],
-            ('{!! $var !!}')
+            ('{!! $var !!}'),
         );
     }
 
@@ -64,7 +64,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '{! $var }}'),
             ],
-            ('{! $var }}')
+            ('{! $var }}'),
         );
     }
 
@@ -74,7 +74,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '{{ $var !}'),
             ],
-            ('{{ $var !}')
+            ('{{ $var !}'),
         );
     }
 
@@ -84,7 +84,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 1, '{{ $var }}'),
             ],
-            ('@{{ $var }}')
+            ('@{{ $var }}'),
         );
     }
 
@@ -94,7 +94,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 1, '{!! $var !!}'),
             ],
-            ('@{!! $var !!}')
+            ('@{!! $var !!}'),
         );
     }
 
@@ -105,7 +105,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_DIRECTIVE, 0, '@'),
                 new Token(DynamicGrammar::TYPE_KEYWORD, 1, 'do'),
             ],
-            ('@do')
+            ('@do'),
         );
     }
 
@@ -117,7 +117,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_DIRECTIVE, 1, '@'),
                 new Token(DynamicGrammar::TYPE_KEYWORD, 2, 'do'),
             ],
-            (' @do')
+            (' @do'),
         );
     }
 
@@ -129,7 +129,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_KEYWORD, 1, 'do'),
                 new Token(Token::TYPE_RAW, 3, ' '),
             ],
-            ('@do ')
+            ('@do '),
         );
     }
 
@@ -141,7 +141,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_KEYWORD, 1, 'do'),
                 new Token(Token::TYPE_RAW, 3, ' ok'),
             ],
-            ('@do ok')
+            ('@do ok'),
         );
     }
 
@@ -154,7 +154,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_KEYWORD, 2, 'do'),
                 new Token(Token::TYPE_RAW, 4, '"'),
             ],
-            ('"@do"')
+            ('"@do"'),
         );
     }
 
@@ -167,7 +167,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_DIRECTIVE, 3, '@'),
                 new Token(DynamicGrammar::TYPE_KEYWORD, 4, 'other'),
             ],
-            ('@do@other')
+            ('@do@other'),
         );
     }
 
@@ -181,7 +181,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 4, 'var=foo'),
                 new Token(DynamicGrammar::TYPE_BODY_CLOSE, 11, ')'),
             ],
-            ('@do(var=foo)')
+            ('@do(var=foo)'),
         );
     }
 
@@ -197,7 +197,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_DIRECTIVE, 12, '@'),
                 new Token(DynamicGrammar::TYPE_KEYWORD, 13, 'other'),
             ],
-            ('@do(var=foo)@other')
+            ('@do(var=foo)@other'),
         );
     }
 
@@ -211,7 +211,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 4, 'var=(foo+(1))'),
                 new Token(DynamicGrammar::TYPE_BODY_CLOSE, 17, ')'),
             ],
-            ('@do(var=(foo+(1)))')
+            ('@do(var=(foo+(1)))'),
         );
     }
 
@@ -226,7 +226,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 5, 'var=foo'),
                 new Token(DynamicGrammar::TYPE_BODY_CLOSE, 12, ')'),
             ],
-            ('@do (var=foo)')
+            ('@do (var=foo)'),
         );
     }
 
@@ -241,7 +241,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 6, 'var=foo'),
                 new Token(DynamicGrammar::TYPE_BODY_CLOSE, 13, ')'),
             ],
-            ('@do  (var=foo)')
+            ('@do  (var=foo)'),
         );
     }
 
@@ -256,7 +256,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY_CLOSE, 14, ')'),
                 new Token(Token::TYPE_RAW, 15, ')'),
             ],
-            ('@do(var="(foo"))')
+            ('@do(var="(foo"))'),
         );
     }
 
@@ -266,7 +266,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 0, '@do(var=abc'),
             ],
-            ('@do(var=abc')
+            ('@do(var=abc'),
         );
     }
 
@@ -276,7 +276,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 8, ' ok'),
             ],
-            ('@declare ok')
+            ('@declare ok'),
         );
     }
 
@@ -286,7 +286,7 @@ class DynamicTest extends BaseTestCase
             [
                 new Token(Token::TYPE_RAW, 15, ' ok'),
             ],
-            ('@declare(hello) ok')
+            ('@declare(hello) ok'),
         );
     }
 
@@ -297,9 +297,9 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_OPEN_TAG, 0, '{{'),
                 new Token(DynamicGrammar::TYPE_BODY, 2, ' $name '),
                 new Token(DynamicGrammar::TYPE_CLOSE_TAG, 9, '}}'),
-                new Token(Token::TYPE_RAW, 37, '{{ $name }}')
+                new Token(Token::TYPE_RAW, 37, '{{ $name }}'),
             ],
-            ('{{ $name }}@declare( syntax = "off" ){{ $name }}')
+            ('{{ $name }}@declare( syntax = "off" ){{ $name }}'),
         );
     }
 
@@ -312,7 +312,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 52, ' $name '),
                 new Token(DynamicGrammar::TYPE_CLOSE_TAG, 59, '}}'),
             ],
-            ('@declare(syntax=off){{ $name }}@declare(syntax=on){{ $name }}')
+            ('@declare(syntax=off){{ $name }}@declare(syntax=on){{ $name }}'),
         );
     }
 
@@ -324,7 +324,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 33, ' $name '),
                 new Token(DynamicGrammar::TYPE_CLOSE_TAG, 40, '%}'),
             ],
-            ('@declare(open="{%", close="%}"){% $name %}')
+            ('@declare(open="{%", close="%}"){% $name %}'),
         );
     }
 
@@ -336,7 +336,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 39, ' $name '),
                 new Token(DynamicGrammar::TYPE_CLOSE_RAW_TAG, 46, '%}'),
             ],
-            ('@declare(openRaw="{%", closeRaw="%}"){% $name %}')
+            ('@declare(openRaw="{%", closeRaw="%}"){% $name %}'),
         );
     }
 
@@ -351,7 +351,7 @@ class DynamicTest extends BaseTestCase
                 new Token(DynamicGrammar::TYPE_BODY, 70, ' $name '),
                 new Token(DynamicGrammar::TYPE_CLOSE_TAG, 77, '}}'),
             ],
-            ('@declare(open="{%", close="%}"){% $name %}@declare(syntax="default"){{ $name }}')
+            ('@declare(open="{%", close="%}"){% $name %}@declare(syntax="default"){{ $name }}'),
         );
     }
 

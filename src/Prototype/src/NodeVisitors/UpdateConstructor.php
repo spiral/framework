@@ -16,9 +16,8 @@ use Spiral\Prototype\Dependency;
 final class UpdateConstructor extends NodeVisitorAbstract
 {
     public function __construct(
-        private readonly ClassNode $definition
-    ) {
-    }
+        private readonly ClassNode $definition,
+    ) {}
 
     public function leaveNode(Node $node): int|Node|null
     {
@@ -91,9 +90,9 @@ final class UpdateConstructor extends NodeVisitorAbstract
                     new Node\Expr\StaticCall(
                         new Node\Name('parent'),
                         '__construct',
-                        $parentConstructorDependencies
-                    )
-                )
+                        $parentConstructorDependencies,
+                    ),
+                ),
             );
         }
     }

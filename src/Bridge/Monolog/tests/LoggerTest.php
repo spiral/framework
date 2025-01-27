@@ -7,17 +7,14 @@ namespace Spiral\Tests\Monolog;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\Finalizer;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\LoaderInterface;
-use Spiral\Core\Container;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Bootloader\MonologBootloader;
-use Spiral\Monolog\LogFactory;
 
 class LoggerTest extends BaseTestCase
 {
@@ -26,7 +23,7 @@ class LoggerTest extends BaseTestCase
     public function testLoggerShouldBeReset(): void
     {
         $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
+            new class implements LoaderInterface {
                 public function has(string $section): bool
                 {
                     return false;
@@ -36,7 +33,7 @@ class LoggerTest extends BaseTestCase
                 {
                     return [];
                 }
-            }
+            },
         ));
 
         $this->container->bind(FinalizerInterface::class, $finalizer = new Finalizer());

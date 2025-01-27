@@ -25,13 +25,6 @@ final class TraitTest extends BaseTestCase
 {
     use LoggerTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->logger = null;
-    }
-
     public function testNoScope(): void
     {
         $c = new Container();
@@ -46,7 +39,7 @@ final class TraitTest extends BaseTestCase
     {
         $c = new Container();
         $mock = $this->createMock(LogsInterface::class);
-        $logger = new \Spiral\Logger\NullLogger(fn() => null, '');
+        $logger = new \Spiral\Logger\NullLogger(static fn() => null, '');
         $mock->method('getLogger')->willReturn($logger);
 
         $c->bind(LogsInterface::class, $mock);
@@ -73,7 +66,7 @@ final class TraitTest extends BaseTestCase
         $this->container->bind(
             ConfiguratorInterface::class,
             new ConfigManager(
-                new class() implements LoaderInterface {
+                new class implements LoaderInterface {
                     public function has(string $section): bool
                     {
                         return false;
@@ -94,5 +87,12 @@ final class TraitTest extends BaseTestCase
             self::assertInstanceOf(Logger::class, $this->getLogger());
             self::assertSame(self::class, $this->getLogger()->getName());
         });
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->logger = null;
     }
 }

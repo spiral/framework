@@ -25,7 +25,7 @@ use Spiral\Filters\InputInterface;
  *
  * After creating nested filters they will be validated.
  */
-#[Attribute(Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
+#[\Attribute(\Attribute::TARGET_PROPERTY), NamedArgumentConstructor]
 final class NestedArray
 {
     /**
@@ -35,9 +35,8 @@ final class NestedArray
     public function __construct(
         public readonly string $class,
         public readonly AbstractInput $input,
-        public readonly ?string $prefix = null
-    ) {
-    }
+        public readonly ?string $prefix = null,
+    ) {}
 
     public function getValue(InputInterface $input, \ReflectionProperty $property): mixed
     {

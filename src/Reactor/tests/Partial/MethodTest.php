@@ -25,7 +25,7 @@ final class MethodTest extends TestCase
 
         $method->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
-            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
+            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
         ]);
         self::assertCount(2, $method->getAttributes());
     }
@@ -82,7 +82,7 @@ final class MethodTest extends TestCase
 
         $method->setParameters(new Parameters([
             new Parameter('name'),
-            new Parameter('name2')
+            new Parameter('name2'),
         ]));
         self::assertCount(2, $method->getParameters());
         self::assertTrue($method->getParameters()->has('name'));
@@ -172,7 +172,8 @@ final class MethodTest extends TestCase
 
     public function testStatic(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
+        ;
 
         self::assertFalse($method->isStatic());
 
@@ -188,7 +189,8 @@ final class MethodTest extends TestCase
 
     public function testFinal(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
+        ;
 
         self::assertFalse($method->isFinal());
 
@@ -204,7 +206,8 @@ final class MethodTest extends TestCase
 
     public function testAbstract(): void
     {
-        $method = new Method('test');;
+        $method = new Method('test');
+        ;
 
         self::assertFalse($method->isAbstract());
 
@@ -256,7 +259,7 @@ final class MethodTest extends TestCase
 
     public function testRender(): void
     {
-        $expect = preg_replace('/\s+/', '', '
+        $expect = \preg_replace('/\s+/', '', '
             public function test(): int
             {
                 return 1;
@@ -265,7 +268,7 @@ final class MethodTest extends TestCase
         $method = new Method('test');
         $method->setReturnType('int')->setPublic()->setBody('return 1;');
 
-        self::assertSame($expect, preg_replace('/\s+/', '', $method->__toString()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $method->__toString()));
     }
 
     public function testFromElement(): void

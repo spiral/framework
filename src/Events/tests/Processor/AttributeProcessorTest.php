@@ -28,78 +28,6 @@ final class AttributeProcessorTest extends TestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testEventListenerShouldNotBeRegisteredWithoutListenerRegistry(): void
-    {
-        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
-        $reader = m::mock(ReaderInterface::class);
-        $factory = m::mock(ListenerFactoryInterface::class);
-
-        $tokenizerRegistry->shouldNotReceive('addListener');
-
-        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory);
-        $processor->process();
-    }
-
-    public function testEventListenerShouldNotBeRegisteredWithListenerRegistry(): void
-    {
-        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
-        $reader = m::mock(ReaderInterface::class);
-        $factory = m::mock(ListenerFactoryInterface::class);
-        $listenerRegistry = m::mock(ListenerRegistryInterface::class);
-
-        $tokenizerRegistry->shouldReceive('addListener')
-            ->once()
-            ->withArgs(fn (AttributeProcessor $attributeProcessor): bool => true);
-
-        new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
-    }
-
-    public function testEventListenerShouldThrowAnExceptionWhenListenerNotFinalized(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Tokenizer did not finalize Spiral\Events\Processor\AttributeProcessor listener.');
-
-        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
-        $reader = m::mock(ReaderInterface::class);
-        $factory = m::mock(ListenerFactoryInterface::class);
-        $listenerRegistry = m::mock(ListenerRegistryInterface::class);
-
-        $tokenizerRegistry->shouldReceive('addListener')->once();
-
-        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
-        $processor->process();
-    }
-
-    /**
-     * @param class-string $class
-     */
-    #[DataProvider('listenersDataProvider')]
-    public function testProcess(string $class, Listener $listener, array $args, int $listeners = 1): void
-    {
-        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
-        $reader = m::mock(ReaderInterface::class);
-        $factory = m::mock(ListenerFactoryInterface::class);
-        $registry = $this->createListenerRegistry();
-
-        $tokenizerRegistry->shouldReceive('addListener')->once();
-
-        $ref = new \ReflectionClass($class);
-        $reader->shouldReceive('getClassMetadata')->once()->with($ref, Listener::class)->andReturn([$listener]);
-        $reader->shouldReceive('getFunctionMetadata');
-        $factory->shouldReceive('create');
-
-        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $registry);
-        $processor->listen($ref);
-        $processor->finalize();
-
-        $processor->process();
-
-        self::assertSame((array)$args[0], $registry->events);
-        self::assertEquals($args[1], $registry->listener);
-        self::assertSame($args[2], $registry->priority);
-        self::assertSame($listeners, $registry->listeners);
-    }
-
     public static function listenersDataProvider(): \Traversable
     {
         yield [
@@ -166,6 +94,78 @@ final class AttributeProcessorTest extends TestCase
                 0,
             ],
         ];
+    }
+
+    public function testEventListenerShouldNotBeRegisteredWithoutListenerRegistry(): void
+    {
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+
+        $tokenizerRegistry->shouldNotReceive('addListener');
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory);
+        $processor->process();
+    }
+
+    public function testEventListenerShouldNotBeRegisteredWithListenerRegistry(): void
+    {
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+        $listenerRegistry = m::mock(ListenerRegistryInterface::class);
+
+        $tokenizerRegistry->shouldReceive('addListener')
+            ->once()
+            ->withArgs(static fn(AttributeProcessor $attributeProcessor): bool => true);
+
+        new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
+    }
+
+    public function testEventListenerShouldThrowAnExceptionWhenListenerNotFinalized(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Tokenizer did not finalize Spiral\Events\Processor\AttributeProcessor listener.');
+
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+        $listenerRegistry = m::mock(ListenerRegistryInterface::class);
+
+        $tokenizerRegistry->shouldReceive('addListener')->once();
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $listenerRegistry);
+        $processor->process();
+    }
+
+    /**
+     * @param class-string $class
+     */
+    #[DataProvider('listenersDataProvider')]
+    public function testProcess(string $class, Listener $listener, array $args, int $listeners = 1): void
+    {
+        $tokenizerRegistry = m::mock(TokenizerListenerRegistryInterface::class);
+        $reader = m::mock(ReaderInterface::class);
+        $factory = m::mock(ListenerFactoryInterface::class);
+        $registry = $this->createListenerRegistry();
+
+        $tokenizerRegistry->shouldReceive('addListener')->once();
+
+        $ref = new \ReflectionClass($class);
+        $reader->shouldReceive('getClassMetadata')->once()->with($ref, Listener::class)->andReturn([$listener]);
+        $reader->shouldReceive('getFunctionMetadata');
+        $factory->shouldReceive('create');
+
+        $processor = new AttributeProcessor($tokenizerRegistry, $reader, $factory, $registry);
+        $processor->listen($ref);
+        $processor->finalize();
+
+        $processor->process();
+
+        self::assertSame((array) $args[0], $registry->events);
+        self::assertEquals($args[1], $registry->listener);
+        self::assertSame($args[2], $registry->priority);
+        self::assertSame($listeners, $registry->listeners);
     }
 
     public function createListenerRegistry(): PlainListenerRegistry

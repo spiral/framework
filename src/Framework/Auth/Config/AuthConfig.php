@@ -45,7 +45,7 @@ final class AuthConfig extends InjectableConfig
     {
         if (!isset($this->config['storages'][$name])) {
             throw new InvalidArgumentException(
-                \sprintf('Token storage `%s` is not defined.', $name)
+                \sprintf('Token storage `%s` is not defined.', $name),
             );
         }
 

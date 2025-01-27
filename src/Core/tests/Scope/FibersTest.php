@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
-use DateTime;
-use DateTimeImmutable;
 use Fiber;
-use Generator;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
-use stdClass;
 
 final class FibersTest extends BaseTestCase
 {
@@ -93,12 +89,12 @@ final class FibersTest extends BaseTestCase
 
         FiberHelper::runInFiber(
             static fn(): mixed => (new Container())->runScoped(
-                function (): string {
+                static function (): string {
                     $result = '';
-                    $result .= Fiber::suspend('foo');
-                    $result .= Fiber::suspend('bar');
-                    return $result . Fiber::suspend('error');
-                }
+                    $result .= \Fiber::suspend('foo');
+                    $result .= \Fiber::suspend('bar');
+                    return $result . \Fiber::suspend('error');
+                },
             ),
             static fn(string $suspendValue): string => $suspendValue !== 'error'
                 ? $suspendValue
@@ -110,17 +106,17 @@ final class FibersTest extends BaseTestCase
     {
         $result = FiberHelper::runInFiber(
             static fn(): mixed => (new Container())->runScoped(
-                function (): string {
+                static function (): string {
                     $result = '';
-                    $result .= Fiber::suspend('foo');
-                    $result .= Fiber::suspend('bar');
+                    $result .= \Fiber::suspend('foo');
+                    $result .= \Fiber::suspend('bar');
                     try {
-                        $result .= Fiber::suspend('error');
+                        $result .= \Fiber::suspend('error');
                     } catch (\Throwable $e) {
                         $result .= $e->getMessage();
                     }
-                    return $result . Fiber::suspend('baz');
-                }
+                    return $result . \Fiber::suspend('baz');
+                },
             ),
             static fn(string $suspendValue): string => $suspendValue !== 'error'
                 ? $suspendValue
@@ -144,16 +140,16 @@ final class FibersTest extends BaseTestCase
     ): callable {
         return static function () use ($load, $container): array {
             // The function should be called in a fiber
-            self::assertNotNull(Fiber::getCurrent());
+            self::assertNotNull(\Fiber::getCurrent());
 
             // The function uses its own container
             $c1 = $container ?? new Container();
-            $c1->bindSingleton('resource', new stdClass());
+            $c1->bindSingleton('resource', new \stdClass());
 
             $result = $c1->runScoped(static function (Container $c2) use ($load) {
                 // check local binding
                 self::assertTrue($c2->has('foo'));
-                self::assertInstanceOf(DateTime::class, $c2->get('foo'));
+                self::assertInstanceOf(\DateTime::class, $c2->get('foo'));
 
                 return $c2->runScoped(
                     static function (ContainerInterface $c3) use ($load): \stdClass {
@@ -161,19 +157,19 @@ final class FibersTest extends BaseTestCase
                         self::assertTrue($c3->has('bar'));
 
                         $resource = $c3->get('resource');
-                        self::assertInstanceOf(DateTimeImmutable::class, $c3->get('bar'));
-                        self::assertInstanceOf(stdClass::class, $resource);
+                        self::assertInstanceOf(\DateTimeImmutable::class, $c3->get('bar'));
+                        self::assertInstanceOf(\stdClass::class, $resource);
                         foreach (self::TEST_DATA as $key => $value) {
                             $resource->$key = $value;
                             $load === null or $load();
-                            Fiber::suspend($value);
+                            \Fiber::suspend($value);
                             self::assertSame($c3, ContainerScope::getContainer());
                         }
                         return $resource;
                     },
-                    ['bar' => new DateTimeImmutable()],
+                    ['bar' => new \DateTimeImmutable()],
                 );
-            }, ['foo' => new DateTime()]);
+            }, ['foo' => new \DateTime()]);
             self::assertFalse($c1->has('foo'));
 
             self::assertSame(self::TEST_DATA, (array) $result);

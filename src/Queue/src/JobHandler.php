@@ -20,8 +20,7 @@ abstract class JobHandler implements HandlerInterface
 
     public function __construct(
         #[Proxy] protected InvokerInterface $invoker,
-    ) {
-    }
+    ) {}
 
     public function handle(string $name, string $id, mixed $payload, array $headers = []): void
     {
@@ -35,7 +34,7 @@ abstract class JobHandler implements HandlerInterface
             $this->invoker->invoke([$this, $this->getHandlerMethod()], $params);
         } catch (\Throwable $e) {
             $message = \sprintf('[%s] %s', static::class, $e->getMessage());
-            throw new JobException($message, (int)$e->getCode(), $e);
+            throw new JobException($message, (int) $e->getCode(), $e);
         }
     }
 

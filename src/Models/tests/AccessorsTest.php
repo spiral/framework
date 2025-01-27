@@ -14,10 +14,10 @@ class AccessorsTest extends TestCase
     {
         $e = new AccessedEntity();
         $e->name = 'antony';
-        self::assertSame('ANTONY', (string)$e->name);
+        self::assertSame('ANTONY', (string) $e->name);
 
         $e->setFields(['name' => 'bob']);
-        self::assertSame('BOB', (string)$e->name);
+        self::assertSame('BOB', (string) $e->name);
 
         self::assertSame([
             'name' => 'BOB',
@@ -41,7 +41,7 @@ class AccessorsTest extends TestCase
     public function testGetAccessor(): void
     {
         $e = new AccessedEntity();
-        self::assertSame('', (string)$e->name);
+        self::assertSame('', (string) $e->name);
         self::assertInstanceOf(NameValue::class, $e->name);
 
         self::assertEquals([

@@ -126,8 +126,7 @@ final class InterceptorPipelineTest extends TestCase
         array $interceptors = [],
         CoreInterface|HandlerInterface|null $lastHandler = null,
         EventDispatcherInterface|null $dispatcher = null,
-    ): InterceptorPipeline
-    {
+    ): InterceptorPipeline {
         $pipeline = new InterceptorPipeline($dispatcher);
 
         $lastHandler instanceof CoreInterface and $pipeline = $pipeline->withCore($lastHandler);

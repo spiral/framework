@@ -9,9 +9,7 @@ use Spiral\Views\ViewSource;
 
 class View implements ViewInterface
 {
-    public function __construct(private readonly ViewSource $source)
-    {
-    }
+    public function __construct(private readonly ViewSource $source) {}
 
     public function render(array $data = []): string
     {

@@ -26,20 +26,20 @@ abstract class TestCase extends BaseTestCase
      */
     protected $second;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->local = Bucket::fromAdapter(
-            new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY)
+            new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY),
         );
 
         $this->second = Bucket::fromAdapter(
-            new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY . '/second')
+            new LocalFilesystemAdapter(self::LOCAL_STORAGE_DIRECTORY . '/second'),
         );
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->cleanTempDirectory();
 
@@ -50,11 +50,11 @@ abstract class TestCase extends BaseTestCase
     {
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(self::LOCAL_STORAGE_DIRECTORY, \FilesystemIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
+            \RecursiveIteratorIterator::CHILD_FIRST,
         );
 
         /** @var \SplFileInfo $file */
-        foreach($iterator as $file) {
+        foreach ($iterator as $file) {
             if ($file->getFilename() === '.gitignore') {
                 continue;
             }

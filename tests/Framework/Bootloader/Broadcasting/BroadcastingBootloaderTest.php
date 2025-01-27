@@ -20,7 +20,7 @@ final class BroadcastingBootloaderTest extends BaseTestCase
 {
     public const ENV = [
         'BROADCAST_CONNECTION' => 'null',
-        'BROADCAST_AUTHORIZE_PATH' => '/ws'
+        'BROADCAST_AUTHORIZE_PATH' => '/ws',
     ];
 
     public function testBroadcastManagerInterfaceBinding(): void

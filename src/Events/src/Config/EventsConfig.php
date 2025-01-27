@@ -43,7 +43,7 @@ final class EventsConfig extends InjectableConfig
         foreach ($this->config['listeners'] as $event => $eventListeners) {
             $listeners[$event] = \array_map(
                 self::normalizeListener(...),
-                $eventListeners
+                $eventListeners,
             );
         }
 

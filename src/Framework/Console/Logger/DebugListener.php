@@ -26,35 +26,8 @@ final class DebugListener
     private ?OutputInterface $output = null;
 
     public function __construct(
-        private readonly ListenerRegistryInterface $listenerRegistry
-    ) {
-    }
-
-    /**
-     * Handle and display log event.
-     */
-    public function __invoke(LogEvent $event): void
-    {
-        if (empty($this->output)) {
-            return;
-        }
-
-        if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE) {
-            return;
-        }
-
-        /**
-         * We are going to format message our own style.
-         */
-        $this->output->writeln(
-            \sprintf(
-                '<%1$s>%2$s</%1$s> %3$s',
-                $this->getStyle($event->getLevel()),
-                $this->getChannel($event->getChannel()),
-                $this->getMessage($this->output->isDecorated(), $event->getMessage())
-            )
-        );
-    }
+        private readonly ListenerRegistryInterface $listenerRegistry,
+    ) {}
 
     /**
      * Configure listener with new output.
@@ -87,6 +60,32 @@ final class DebugListener
         $this->listenerRegistry->removeListener($this);
 
         return $this;
+    }
+
+    /**
+     * Handle and display log event.
+     */
+    public function __invoke(LogEvent $event): void
+    {
+        if (empty($this->output)) {
+            return;
+        }
+
+        if ($this->output->getVerbosity() < OutputInterface::VERBOSITY_VERY_VERBOSE) {
+            return;
+        }
+
+        /**
+         * We are going to format message our own style.
+         */
+        $this->output->writeln(
+            \sprintf(
+                '<%1$s>%2$s</%1$s> %3$s',
+                $this->getStyle($event->getLevel()),
+                $this->getChannel($event->getChannel()),
+                $this->getMessage($this->output->isDecorated(), $event->getMessage()),
+            ),
+        );
     }
 
     protected function getStyle(string $level): string

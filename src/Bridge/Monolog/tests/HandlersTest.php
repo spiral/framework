@@ -23,30 +23,6 @@ use Spiral\Monolog\Exception\ConfigException;
 
 class HandlersTest extends BaseTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
-        $finalizer->shouldReceive('addFinalizer')->once();
-
-        $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
-            new class() implements LoaderInterface {
-                public function has(string $section): bool
-                {
-                    return false;
-                }
-
-                public function load(string $section): array
-                {
-                    return [];
-                }
-            }
-        ));
-        $this->container->bindSingleton(ListenerRegistryInterface::class, new ListenerRegistry());
-        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
-    }
-
     public function testNoHandlers(): void
     {
         $this->container->bind(MonologConfig::class, new MonologConfig());
@@ -59,7 +35,7 @@ class HandlersTest extends BaseTestCase
     public function testDefaultHandler(): void
     {
         $this->container->bind(MonologConfig::class, new MonologConfig([
-            'globalHandler' => Logger::DEBUG
+            'globalHandler' => Logger::DEBUG,
         ]));
 
         $logger = $this->getLogger();
@@ -75,9 +51,9 @@ class HandlersTest extends BaseTestCase
             'globalHandler' => Logger::DEBUG,
             'handlers'      => [
                 'test' => [
-                    ['what?']
-                ]
-            ]
+                    ['what?'],
+                ],
+            ],
         ]));
 
         $this->getLogger();
@@ -88,9 +64,9 @@ class HandlersTest extends BaseTestCase
         $this->container->bind(MonologConfig::class, new MonologConfig([
             'handlers' => [
                 'test' => [
-                    new Container\Autowire(NullHandler::class)
-                ]
-            ]
+                    new Container\Autowire(NullHandler::class),
+                ],
+            ],
         ]));
 
         $logger = $this->getLogger();
@@ -105,9 +81,9 @@ class HandlersTest extends BaseTestCase
         $this->container->bind(MonologConfig::class, new MonologConfig([
             'handlers' => [
                 'test' => [
-                    'nullHandler'
-                ]
-            ]
+                    'nullHandler',
+                ],
+            ],
         ]));
 
         $logger = $this->getLogger();
@@ -123,10 +99,10 @@ class HandlersTest extends BaseTestCase
             'handlers' => [
                 'test' => [
                     [
-                        'class' => NullHandler::class
-                    ]
-                ]
-            ]
+                        'class' => NullHandler::class,
+                    ],
+                ],
+            ],
         ]));
 
         $logger = $this->getLogger();
@@ -143,11 +119,11 @@ class HandlersTest extends BaseTestCase
                     [
                         'class'   => NullHandler::class,
                         'options' => [
-                            'level' => Logger::CRITICAL
-                        ]
-                    ]
-                ]
-            ]
+                            'level' => Logger::CRITICAL,
+                        ],
+                    ],
+                ],
+            ],
         ]));
 
         $logger = $this->getLogger();
@@ -157,6 +133,30 @@ class HandlersTest extends BaseTestCase
 
         self::assertFalse($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::DEBUG)));
         self::assertTrue($logger->getHandlers()[0]->isHandling($this->createLogRecord(Logger::CRITICAL)));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bind(FinalizerInterface::class, $finalizer = \Mockery::mock(FinalizerInterface::class));
+        $finalizer->shouldReceive('addFinalizer')->once();
+
+        $this->container->bind(ConfiguratorInterface::class, new ConfigManager(
+            new class implements LoaderInterface {
+                public function has(string $section): bool
+                {
+                    return false;
+                }
+
+                public function load(string $section): array
+                {
+                    return [];
+                }
+            },
+        ));
+        $this->container->bindSingleton(ListenerRegistryInterface::class, new ListenerRegistry());
+        $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
     }
 
     protected function getLogger(): Logger

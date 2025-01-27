@@ -16,8 +16,8 @@ trait ConstantsAware
     public function setConstants(Constants $constants): static
     {
         $this->element->setConstants(\array_map(
-            static fn (Constant $constant): NetteConstant => $constant->getElement(),
-            \iterator_to_array($constants)
+            static fn(Constant $constant): NetteConstant => $constant->getElement(),
+            \iterator_to_array($constants),
         ));
 
         return $this;
@@ -26,8 +26,8 @@ trait ConstantsAware
     public function getConstants(): Constants
     {
         return new Constants(\array_map(
-            static fn (NetteConstant $constant): Constant => Constant::fromElement($constant),
-            $this->element->getConstants()
+            static fn(NetteConstant $constant): Constant => Constant::fromElement($constant),
+            $this->element->getConstants(),
         ));
     }
 

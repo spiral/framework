@@ -25,9 +25,8 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface
 
     public function __construct(
         private readonly ReaderInterface $reader,
-        private readonly ?string $namespace = null
-    ) {
-    }
+        private readonly ?string $namespace = null,
+    ) {}
 
     /**
      * Get method RBAC permission if any. Automatically merges with controller namespace.
@@ -63,8 +62,8 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface
                 $this->mapFailureException($guarded),
                 $guarded->errorMessage ?: \sprintf(
                     'Unauthorized access `%s`',
-                    $guarded->permission ?: $method->getName()
-                )
+                    $guarded->permission ?: $method->getName(),
+                ),
             );
         }
 
@@ -72,8 +71,8 @@ final class GuardPermissionsProvider implements PermissionsProviderInterface
             \sprintf(
                 'Unable to apply @Guarded without name or @GuardNamespace on `%s`->`%s`',
                 $method->getDeclaringClass()->getName(),
-                $method->getName()
-            )
+                $method->getName(),
+            ),
         );
     }
 

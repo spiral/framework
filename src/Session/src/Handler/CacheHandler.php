@@ -16,7 +16,7 @@ final class CacheHandler implements \SessionHandlerInterface
         CacheStorageProviderInterface $storageProvider,
         private readonly ?string $storage = null,
         private readonly int $ttl = 86400,
-        private readonly string $prefix = 'session:'
+        private readonly string $prefix = 'session:',
     ) {
         $this->cache = $storageProvider->storage($this->storage);
     }

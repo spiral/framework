@@ -22,7 +22,6 @@ use Spiral\Stempler\Parser\SyntaxInterface;
 final class Parser
 {
     private Lexer $lexer;
-
     private ?string $path = null;
 
     /** @var SyntaxInterface[] */
@@ -79,13 +78,13 @@ final class Parser
              */
             $this->parseTokens(
                 new Assembler($template, 'nodes'),
-                $this->lexer->parse($stream)
+                $this->lexer->parse($stream),
             );
         } catch (SyntaxException $e) {
             throw new ParserException(
                 $e->getMessage(),
                 new Context($e->getToken(), $this->getPath()),
-                $e
+                $e,
             );
         }
 
@@ -115,7 +114,7 @@ final class Parser
         if ($asm->getNode() !== $node) {
             throw new SyntaxException(
                 'Invalid node hierarchy, unclosed ' . $asm->getStackPath(),
-                $asm->getNode()->getContext()->getToken()
+                $asm->getNode()->getContext()->getToken(),
             );
         }
     }

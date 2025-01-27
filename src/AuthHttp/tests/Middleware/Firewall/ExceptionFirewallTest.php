@@ -19,14 +19,14 @@ final class ExceptionFirewallTest extends BaseFirewallTestCase
     {
         $http = $this->getCore(
             new ExceptionFirewall(new AuthException()),
-            new HeaderTransport()
+            new HeaderTransport(),
         );
 
 
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 echo 'OK';
-            }
+            },
         );
 
         $response = $http->handle(new ServerRequest('GET', '', ['X-Auth-Token' => $token], 'php://input'));
@@ -39,13 +39,13 @@ final class ExceptionFirewallTest extends BaseFirewallTestCase
     {
         $http = $this->getCore(
             new ExceptionFirewall(new AuthException('no user')),
-            new HeaderTransport()
+            new HeaderTransport(),
         );
 
         $http->setHandler(
             static function (ServerRequestInterface $request, ResponseInterface $response): void {
                 echo 'OK';
-            }
+            },
         );
 
         $this->expectException(AuthException::class);

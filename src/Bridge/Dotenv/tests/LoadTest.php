@@ -17,7 +17,7 @@ final class LoadTest extends TestCase
 
     public function testSetValue(): void
     {
-        $dirs = new Directories(['root' => __DIR__.'/']);
+        $dirs = new Directories(['root' => __DIR__ . '/']);
 
         $env = m::mock(EnvironmentInterface::class);
         $env
@@ -34,14 +34,14 @@ final class LoadTest extends TestCase
 
     public function testNotFound(): void
     {
-        $dirs = new Directories(['root' => __DIR__.'/']);
+        $dirs = new Directories(['root' => __DIR__ . '/']);
 
         $env = m::mock(EnvironmentInterface::class);
         $env
             ->shouldReceive('get')
             ->once()
             ->withSomeOfArgs('DOTENV_PATH')
-            ->andReturn($dirs->get('root').'.env');
+            ->andReturn($dirs->get('root') . '.env');
         $env
             ->shouldNotReceive('set')
             ->with('KEY', 'custom_value');

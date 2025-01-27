@@ -13,9 +13,8 @@ use Spiral\Filters\InputInterface;
 final class InputMapper
 {
     public function __construct(
-        private readonly FilterProviderInterface $provider
-    ) {
-    }
+        private readonly FilterProviderInterface $provider,
+    ) {}
 
     public function map(array $mappingSchema, InputInterface $input, array $setters = []): array
     {
@@ -80,7 +79,7 @@ final class InputMapper
     {
         $values = $input->getValue(
             $schema[Builder::SCHEMA_ITERATE_SOURCE],
-            $schema[Builder::SCHEMA_ITERATE_ORIGIN]
+            $schema[Builder::SCHEMA_ITERATE_ORIGIN],
         );
 
         if (empty($values) || !\is_array($values)) {

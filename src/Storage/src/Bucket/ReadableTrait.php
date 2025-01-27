@@ -97,7 +97,7 @@ trait ReadableTrait
 
         try {
             return $this->fromFlysystemVisibility(
-                $fs->visibility($pathname)
+                $fs->visibility($pathname),
             );
         } catch (FilesystemException $e) {
             throw new FileOperationException($e->getMessage(), $e->getCode(), $e);
@@ -109,7 +109,7 @@ trait ReadableTrait
     #[ExpectedValues(valuesFromClass: Visibility::class)]
     private function fromFlysystemVisibility(
         #[ExpectedValues(valuesFromClass: \League\Flysystem\Visibility::class)]
-        string $visibility
+        string $visibility,
     ): string {
         return $visibility === \League\Flysystem\Visibility::PUBLIC
             ? Visibility::VISIBILITY_PUBLIC

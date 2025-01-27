@@ -17,7 +17,7 @@ final class Delete implements PatchInterface
     public function __construct(
         string $position,
         private readonly ?string $key,
-        private mixed $value = null
+        private mixed $value = null,
     ) {
         $this->position = $position === '.' ? '' : $position;
     }

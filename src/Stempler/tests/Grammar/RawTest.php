@@ -16,9 +16,9 @@ class RawTest extends BaseTestCase
     {
         $this->assertTokens(
             [
-                new Token(Token::TYPE_RAW, 0, 'raw body')
+                new Token(Token::TYPE_RAW, 0, 'raw body'),
             ],
-            ('raw body')
+            ('raw body'),
         );
     }
 
@@ -26,7 +26,7 @@ class RawTest extends BaseTestCase
     {
         $parsed = $this->tokens($source);
 
-        if (count($tokens) !== count($parsed)) {
+        if (\count($tokens) !== \count($parsed)) {
             $this->fail('Token count mismatch');
         }
 

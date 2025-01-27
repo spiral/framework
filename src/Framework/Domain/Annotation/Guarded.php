@@ -29,7 +29,6 @@ final class Guarded
         public readonly ?string $permission = null,
         /** @Enum({"notFound","unauthorized","forbidden","badAction","error"}) */
         public readonly string $else = 'forbidden',
-        public readonly ?string $errorMessage = null
-    ) {
-    }
+        public readonly ?string $errorMessage = null,
+    ) {}
 }

@@ -23,7 +23,7 @@ abstract class FilterTestCase extends BaseTestCase
         array $post = [],
         array $query = [],
         array $headers = [],
-        string $method = 'POST'
+        string $method = 'POST',
     ): FilterInterface {
         $request = new ServerRequest($method, '/');
 
@@ -33,7 +33,7 @@ abstract class FilterTestCase extends BaseTestCase
 
         $this->getContainer()->bind(
             ServerRequestInterface::class,
-            $request->withParsedBody($post)->withQueryParams($query)
+            $request->withParsedBody($post)->withQueryParams($query),
         );
 
         $input = $this->getContainer()->get(InputScope::class);

@@ -33,7 +33,7 @@ final class InterceptorPipelineTest extends TestCase
                 'test2',
                 [],
                 $interceptor,
-                new CallContext(Target::fromPathArray(['test', 'test2']))
+                new CallContext(Target::fromPathArray(['test', 'test2'])),
             ));
 
         $pipeline = new InterceptorPipeline($dispatcher);

@@ -10,7 +10,6 @@ final class MessageNotSent
 {
     public function __construct(
         public readonly Email $message,
-        public readonly \Throwable $exception
-    ) {
-    }
+        public readonly \Throwable $exception,
+    ) {}
 }

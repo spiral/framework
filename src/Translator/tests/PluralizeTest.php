@@ -6,8 +6,6 @@ namespace Spiral\Tests\Translator;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Core\MemoryInterface;
-use Spiral\Core\NullMemory;
 use Spiral\Translator\Catalogue;
 use Spiral\Translator\Catalogue\LoaderInterface;
 use Spiral\Translator\Catalogue\RuntimeLoader;
@@ -33,14 +31,14 @@ class PluralizeTest extends TestCase
     {
         self::assertSame('20 dogs', $this->translator()->transChoice('{n} dog and {c} cat|{n} dogs', 100, [
             'n' => 20,
-            'c' => 3
+            'c' => 3,
         ]));
 
         self::assertSame('1 dog and 3 cat', $this->translator()->transChoice('{n} dog and {c} cat|{n} dogs', 1, [
-            'c' => 3
+            'c' => 3,
         ]));
 
-        self::assertSame('2,220 dogs', $this->translator()->transChoice('{n} dog|{n} dogs', 2, ['n' => number_format(2220)]));
+        self::assertSame('2,220 dogs', $this->translator()->transChoice('{n} dog|{n} dogs', 2, ['n' => \number_format(2220)]));
     }
 
     public function testRussian(): void
@@ -75,8 +73,8 @@ class PluralizeTest extends TestCase
         $container->bind(TranslatorConfig::class, new TranslatorConfig([
             'locale'  => 'en',
             'domains' => [
-                'messages' => ['*']
-            ]
+                'messages' => ['*'],
+            ],
         ]));
 
         $container->bindSingleton(TranslatorInterface::class, Translator::class);
@@ -88,13 +86,13 @@ class PluralizeTest extends TestCase
             'messages' => [
                 '{n} dog|{n} dogs' => '{n} dog|{n} dogs',
                 '{n} cat|{n} cats' => '{n} cat|{n} cats',
-            ]
+            ],
         ]));
 
         $loader->addCatalogue('ru', new Catalogue('en', [
             'messages' => [
                 '{n} dog|{n} dogs' => '{n} собака|{n} собаки|{n} собак',
-            ]
+            ],
         ]));
 
 

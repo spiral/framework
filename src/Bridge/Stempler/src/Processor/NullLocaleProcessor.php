@@ -21,9 +21,9 @@ final class NullLocaleProcessor implements ProcessorInterface
         return $source->withCode(
             \preg_replace_callback(
                 self::REGEXP,
-                static fn ($matches): string => $matches[1],
-                $source->getCode()
-            )
+                static fn($matches): string => $matches[1],
+                $source->getCode(),
+            ),
         );
     }
 }

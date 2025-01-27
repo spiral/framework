@@ -5,11 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot\BootloadManager;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use Spiral\Boot\BootloadManager\AttributeResolver;
-use Spiral\Boot\BootloadManager\BootloadManager;
-use Spiral\Boot\BootloadManager\Initializer;
-use Spiral\Boot\BootloadManager\InitializerInterface;
-use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderB;
@@ -31,6 +26,14 @@ use Spiral\Tests\Boot\TestCase;
 
 final class BootloadManagerTest extends TestCase
 {
+    public static function provideErrorBootloader(): iterable
+    {
+        yield [BootloaderL::class];
+        yield [BootloaderM::class];
+        yield [BootloaderO::class];
+        yield [BootloaderP::class];
+    }
+
     public function testWithoutInvokerStrategy(): void
     {
         $bootloader = $this->getBootloadManager();
@@ -140,13 +143,5 @@ final class BootloadManagerTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $bootloader->bootload([$bootloaderClass]);
-    }
-
-    public static function provideErrorBootloader(): iterable
-    {
-        yield [BootloaderL::class];
-        yield [BootloaderM::class];
-        yield [BootloaderO::class];
-        yield [BootloaderP::class];
     }
 }

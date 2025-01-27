@@ -12,6 +12,14 @@ use Spiral\Stempler\Lexer\Token;
 final class RawGrammar implements GrammarInterface
 {
     /**
+     * @codeCoverageIgnore
+     */
+    public static function tokenName(int $token): string
+    {
+        return 'RAW:RAW';
+    }
+
+    /**
      * @return \Generator<int, Byte|Token|null>
      */
     public function parse(Buffer $src): \Generator
@@ -42,13 +50,5 @@ final class RawGrammar implements GrammarInterface
         if ($buffer !== null) {
             yield new Token(Token::TYPE_RAW, $bufferOffset, $buffer);
         }
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public static function tokenName(int $token): string
-    {
-        return 'RAW:RAW';
     }
 }

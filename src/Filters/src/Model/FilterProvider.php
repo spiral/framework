@@ -23,10 +23,11 @@ use Spiral\Models\SchematicEntity;
 final class FilterProvider implements FilterProviderInterface
 {
     private readonly bool $isLegacy;
+
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly ResolverInterface $resolver,
-        private readonly HandlerInterface|CoreInterface $core
+        private readonly HandlerInterface|CoreInterface $core,
     ) {
         $this->isLegacy = !$core instanceof HandlerInterface;
     }
@@ -42,7 +43,7 @@ final class FilterProvider implements FilterProviderInterface
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
                 $mappingSchema,
-                $filter->filterDefinition()->mappingSchema()
+                $filter->filterDefinition()->mappingSchema(),
             );
         }
 

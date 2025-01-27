@@ -18,39 +18,8 @@ final class BroadcastManagerTest extends TestCase
 
     /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FactoryInterface */
     private $factory;
+
     private BroadcastManager $manager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $config = new BroadcastConfig([
-            'default' => 'log',
-            'aliases' => [
-                'firebase' => 'log',
-            ],
-            'driverAliases' => [
-                'pusher' => 'pusher-driver-class',
-            ],
-            'connections' => [
-                'log' => [
-                    'driver' => 'pusher-driver-class',
-                    'foo' => 'bar',
-                ],
-                'null' => [
-                    'driver' => 'null-driver-class',
-                    'foo' => 'baz',
-                ],
-                'inMemory' => [
-                    'driver' => 'pusher',
-                    'bar' => 'baz',
-                ],
-            ],
-        ]);
-
-        $this->factory = m::mock(FactoryInterface::class);
-        $this->manager = new BroadcastManager($this->factory, $config);
-    }
 
     public function testGetDefaultConnection(): void
     {
@@ -120,5 +89,37 @@ final class BroadcastManagerTest extends TestCase
 
         self::assertSame($connection2, $this->manager->connection('null'));
         self::assertSame($connection2, $this->manager->connection('null'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $config = new BroadcastConfig([
+            'default' => 'log',
+            'aliases' => [
+                'firebase' => 'log',
+            ],
+            'driverAliases' => [
+                'pusher' => 'pusher-driver-class',
+            ],
+            'connections' => [
+                'log' => [
+                    'driver' => 'pusher-driver-class',
+                    'foo' => 'bar',
+                ],
+                'null' => [
+                    'driver' => 'null-driver-class',
+                    'foo' => 'baz',
+                ],
+                'inMemory' => [
+                    'driver' => 'pusher',
+                    'bar' => 'baz',
+                ],
+            ],
+        ]);
+
+        $this->factory = m::mock(FactoryInterface::class);
+        $this->manager = new BroadcastManager($this->factory, $config);
     }
 }

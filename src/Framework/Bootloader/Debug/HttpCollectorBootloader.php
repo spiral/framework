@@ -7,7 +7,6 @@ namespace Spiral\Bootloader\Debug;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Bootloader\DebugBootloader;
-use Spiral\Bootloader\Http\HttpBootloader;
 use Spiral\Debug\StateCollector\HttpCollector;
 
 /**
@@ -22,7 +21,7 @@ final class HttpCollectorBootloader extends Bootloader
     public function init(
         HttpCollector $httpCollector,
         DebugBootloader $debug,
-        FinalizerInterface $finalizer
+        FinalizerInterface $finalizer,
     ): void {
         $debug->addStateCollector($httpCollector);
         $finalizer->addFinalizer([$httpCollector, 'reset']);

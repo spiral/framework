@@ -8,7 +8,6 @@ final class Logout
 {
     public function __construct(
         public readonly ?object $actor,
-        public readonly ?string $transport = null
-    ) {
-    }
+        public readonly ?string $transport = null,
+    ) {}
 }

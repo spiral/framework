@@ -24,7 +24,7 @@ final class Aggregate implements NodeInterface
 
     public function __construct(
         ?Context $context = null,
-        public string $pattern = '*'
+        public string $pattern = '*',
     ) {
         $this->context = $context;
     }
@@ -72,7 +72,7 @@ final class Aggregate implements NodeInterface
         if (isset($conditions['prefix'])) {
             $conditions['prefix'] = \rtrim($conditions['prefix'], ' *');
             if (\str_starts_with($name, $conditions['prefix'])) {
-                return substr($name, \strlen($conditions['prefix']));
+                return \substr($name, \strlen($conditions['prefix']));
             }
 
             return null;

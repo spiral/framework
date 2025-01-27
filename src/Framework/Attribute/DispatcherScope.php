@@ -11,7 +11,6 @@ namespace Spiral\Attribute;
 final class DispatcherScope
 {
     public function __construct(
-        public readonly string|\BackedEnum $scope
-    ) {
-    }
+        public readonly string|\BackedEnum $scope,
+    ) {}
 }

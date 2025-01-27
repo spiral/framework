@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Filters\Attribute;
 
-use Attribute;
 use Spiral\Attributes\NamedArgumentConstructor;
 use Spiral\Filters\Exception\SetterException;
 
@@ -17,7 +16,7 @@ use Spiral\Filters\Exception\SetterException;
  * Example 2:
  * #[\Spiral\Filters\Attribute\Setter(filter: [Foo::class, 'bar'])]
  */
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE), NamedArgumentConstructor]
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE), NamedArgumentConstructor]
 class Setter
 {
     public readonly \Closure $filter;

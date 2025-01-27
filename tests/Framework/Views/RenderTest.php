@@ -23,7 +23,7 @@ final class RenderTest extends BaseTestCase
     {
         $out = $this->getContainer()->get(ViewsInterface::class)->render(
             'stempler:null',
-            ['var' => null, 'users' => ['foo']]
+            ['var' => null, 'users' => ['foo']],
         );
 
         // any exceptions threw

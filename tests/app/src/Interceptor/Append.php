@@ -9,14 +9,12 @@ use Spiral\Core\CoreInterface;
 
 class Append implements CoreInterceptorInterface
 {
-    public function __construct(private readonly string $string)
-    {
-    }
+    public function __construct(private readonly string $string) {}
 
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): array
     {
         $result = $core->callAction($controller, $action, $parameters);
-        if (!is_array($result)) {
+        if (!\is_array($result)) {
             $result = [];
         }
         $result[] = $this->string;

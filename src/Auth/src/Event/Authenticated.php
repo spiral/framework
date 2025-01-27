@@ -10,7 +10,6 @@ final class Authenticated
 {
     public function __construct(
         public readonly TokenInterface $token,
-        public readonly ?string $transport = null
-    ) {
-    }
+        public readonly ?string $transport = null,
+    ) {}
 }

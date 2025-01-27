@@ -39,13 +39,13 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/reactor": "^3.15",
+        "spiral/reactor": "^3.16",
         "cocur/slugify": "^3.2 || ^4.0",
         "doctrine/inflector": "^1.4|^2.0",
         "nette/php-generator": "^4.1.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.1",
+        "phpunit/phpunit": "^10.5",
         "spiral/framework": "^3.1",
         "vimeo/psalm": "^5.9"
     },
@@ -64,7 +64,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.15.x-dev"
+            "dev-master": "3.16.x-dev"
         }
     },
     "config": {

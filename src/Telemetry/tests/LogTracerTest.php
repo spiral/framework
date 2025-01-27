@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactoryInterface;
-use Ramsey\Uuid\UuidInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ScopeInterface;
 use Spiral\Telemetry\ClockInterface;
@@ -25,7 +24,7 @@ final class LogTracerTest extends TestCase
             $scope = m::mock(ScopeInterface::class),
             $clock = m::mock(ClockInterface::class),
             $logger = m::mock(LoggerInterface::class),
-            $uuid = m::mock(UuidFactoryInterface::class)
+            $uuid = m::mock(UuidFactoryInterface::class),
         );
 
         $invoker = m::mock(InvokerInterface::class);
@@ -43,11 +42,12 @@ final class LogTracerTest extends TestCase
         $logger->shouldReceive('debug')->once();
 
         $scope->shouldReceive('runScope')
-            ->withArgs(static fn(array $scope): bool =>
+            ->withArgs(
+                static fn(array $scope): bool =>
                 $scope[SpanInterface::class] instanceof Span
-                && $scope[SpanInterface::class]->getName() === 'foo'
+                && $scope[SpanInterface::class]->getName() === 'foo',
             )
-            ->andReturnUsing(fn(array $scope, callable $callable) => $callable($invoker));
+            ->andReturnUsing(static fn(array $scope, callable $callable) => $callable($invoker));
 
         self::assertSame('hello', $tracer->trace('foo', $callable, ['foo' => 'bar']));
         self::assertSame(['telemetry' => $uuid->toString()], $tracer->getContext());

@@ -15,7 +15,7 @@ class ConfigTest extends TestCase
         $c = new CookiesConfig([
             'domain'   => '.%s',
             'method'   => CookiesConfig::COOKIE_ENCRYPT,
-            'excluded' => ['PHPSESSID', 'csrf-token']
+            'excluded' => ['PHPSESSID', 'csrf-token'],
 
         ]);
 

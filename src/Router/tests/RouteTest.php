@@ -10,10 +10,19 @@ use Spiral\Router\Route;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
-use Spiral\Tests\Router\Stub\TestMiddleware;
 
 class RouteTest extends BaseTestCase
 {
+    public static function prefixesDataProvider(): \Traversable
+    {
+        yield ['something', 'something'];
+        yield ['/something/', 'something'];
+        yield ['//something/', 'something'];
+        yield ['something//', 'something'];
+        yield ['something/other', 'something/other'];
+        yield ['/something/other/', 'something/other'];
+    }
+
     public function testEmptyPrefix(): void
     {
         $route = new Route('/action', Call::class);
@@ -53,15 +62,5 @@ class RouteTest extends BaseTestCase
         self::assertCount(1, $m);
         // Because of the pipeline is lazy
         self::assertSame($middleware, $m[0]);
-    }
-
-    public static function prefixesDataProvider(): \Traversable
-    {
-        yield ['something', 'something'];
-        yield ['/something/', 'something'];
-        yield ['//something/', 'something'];
-        yield ['something//', 'something'];
-        yield ['something/other', 'something/other'];
-        yield ['/something/other/', 'something/other'];
     }
 }

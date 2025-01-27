@@ -11,11 +11,18 @@ use Spiral\Core\Container;
 use Spiral\Tests\Core\Fixtures\DeclarativeSingleton;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
-
 use Spiral\Tests\Core\Fixtures\SingletonAttribute;
 
 class SingletonsTest extends TestCase
 {
+    public static function singletonWithCustomArgsProvider(): iterable
+    {
+        static $obj = new \stdClass();
+        yield 'array-factory' => ['sampleClass', [Factory::class, 'sampleClass']];
+        yield 'class-name' => ['sampleClass', SampleClass::class];
+        yield 'reference-existing' => ['stdClass', \WeakReference::create($obj)];
+    }
+
     public function testSingletonInstance(): void
     {
         $container = new Container();
@@ -116,14 +123,6 @@ class SingletonsTest extends TestCase
         self::assertSame($instance, $container->make('sampleClass'));
     }
 
-    public static function singletonWithCustomArgsProvider(): iterable
-    {
-        static $obj = new \stdClass();
-        yield 'array-factory' => ['sampleClass', [Factory::class, 'sampleClass']];
-        yield 'class-name' => ['sampleClass', SampleClass::class];
-        yield 'reference-existing' => ['stdClass', \WeakReference::create($obj)];
-    }
-
     public function testMakeResultWithCustomArgsWontBeStored(): void
     {
         $container = new Container();
@@ -139,7 +138,7 @@ class SingletonsTest extends TestCase
         $container = new Container();
         $container->bindSingleton('singleton', 'sampleClass');
 
-        $container->bind('sampleClass', fn(): SampleClass => new SampleClass());
+        $container->bind('sampleClass', static fn(): SampleClass => new SampleClass());
 
         $instance = $container->get('singleton');
 

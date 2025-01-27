@@ -15,6 +15,7 @@ final class CookiesConfig extends InjectableConfig
      * Cookie protection methods.
      */
     public const COOKIE_UNPROTECTED = 0;
+
     public const COOKIE_ENCRYPT     = 1;
     public const COOKIE_HMAC        = 2;
 
@@ -55,7 +56,7 @@ final class CookiesConfig extends InjectableConfig
             $pattern = \ltrim((string) $pattern, '.');
         }
 
-        if (!str_contains((string) $pattern, '%s')) {
+        if (!\str_contains((string) $pattern, '%s')) {
             //Forced domain
             return $pattern;
         }

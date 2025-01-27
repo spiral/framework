@@ -8,7 +8,6 @@ use Fiber;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Internal\Proxy;
-use Throwable;
 
 /**
  * Scope class provides ability to enable or disable global container access within specific access scope.
@@ -30,7 +29,7 @@ final class ContainerScope
     /**
      * Invokes given closure or function withing global IoC scope.
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     public static function runScope(ContainerInterface $container, callable $scope): mixed
     {
@@ -42,18 +41,18 @@ final class ContainerScope
         }
 
         try {
-            if (Fiber::getCurrent() === null) {
+            if (\Fiber::getCurrent() === null) {
                 return $scope(self::$container);
             }
 
             // Wrap scope into fiber
-            $fiber = new Fiber(static fn () => $scope(self::$container));
+            $fiber = new \Fiber(static fn() => $scope(self::$container));
             $value = $fiber->start();
             while (!$fiber->isTerminated()) {
                 self::$container = $previous;
                 try {
-                    $resume = Fiber::suspend($value);
-                } catch (Throwable $e) {
+                    $resume = \Fiber::suspend($value);
+                } catch (\Throwable $e) {
                     self::$container = $container;
                     $value = $fiber->throw($e);
                     continue;

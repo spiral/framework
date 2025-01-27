@@ -7,7 +7,6 @@ namespace Spiral\Core\Internal;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
-use ReflectionParameter;
 use Spiral\Core\Attribute;
 use Spiral\Core\BinderInterface;
 use Spiral\Core\Config;
@@ -30,8 +29,6 @@ use Spiral\Core\Internal\Proxy\RetryContext;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\Options;
 use Spiral\Core\ResolverInterface;
-use Stringable;
-use WeakReference;
 
 /**
  * @internal
@@ -64,11 +61,11 @@ final class Factory implements FactoryInterface
     }
 
     /**
-     * @param Stringable|string|null $context Related to parameter caused injection if any.
+     * @param \Stringable|string|null $context Related to parameter caused injection if any.
      *
      * @throws \Throwable
      */
-    public function make(string $alias, array $parameters = [], Stringable|string|null $context = null): mixed
+    public function make(string $alias, array $parameters = [], \Stringable|string|null $context = null): mixed
     {
         if ($parameters === [] && \array_key_exists($alias, $this->state->singletons)) {
             return $this->state->singletons[$alias];
@@ -140,16 +137,16 @@ final class Factory implements FactoryInterface
                     \sprintf(
                         "Class '%s' must be an instance of InjectorInterface for '%s'.",
                         $injectorInstance::class,
-                        $reflection->getName()
-                    )
+                        $reflection->getName(),
+                    ),
                 );
             }
 
             /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache reflection for extended injectors */
             static $cache = [];
             $extended = $cache[$injectorInstance::class] ??= (
-                static fn (\ReflectionType $type): bool =>
-                $type::class === \ReflectionUnionType::class || (string)$type === 'mixed'
+                static fn(\ReflectionType $type): bool =>
+                $type::class === \ReflectionUnionType::class || (string) $type === 'mixed'
             )(
                 ($refMethod = new \ReflectionMethod($injectorInstance, 'createInjection'))
                     ->getParameters()[1]->getType()
@@ -158,16 +155,16 @@ final class Factory implements FactoryInterface
             $asIs = $extended && (\is_string($context) || $this->validateArguments($extended, [$reflection, $context]));
             $instance = $injectorInstance->createInjection($reflection, match (true) {
                 $asIs => $context,
-                $context instanceof ReflectionParameter => $context->getName(),
-                default => (string)$context,
+                $context instanceof \ReflectionParameter => $context->getName(),
+                default => (string) $context,
             });
 
             if (!$reflection->isInstance($instance)) {
                 throw new InjectionException(
                     \sprintf(
                         "Invalid injection response for '%s'.",
-                        $reflection->getName()
-                    )
+                        $reflection->getName(),
+                    ),
                 );
             }
 
@@ -180,7 +177,7 @@ final class Factory implements FactoryInterface
     private function resolveAlias(
         Config\Alias $binding,
         string $alias,
-        Stringable|string|null $context,
+        \Stringable|string|null $context,
         array $arguments,
     ): mixed {
         $result = $binding->alias === $alias
@@ -198,7 +195,7 @@ final class Factory implements FactoryInterface
         return $result;
     }
 
-    private function resolveProxy(Config\Proxy $binding, string $alias, Stringable|string|null $context): mixed
+    private function resolveProxy(Config\Proxy $binding, string $alias, \Stringable|string|null $context): mixed
     {
         if ($context instanceof RetryContext) {
             return $binding->fallbackFactory === null
@@ -221,22 +218,29 @@ final class Factory implements FactoryInterface
     private function resolveShared(
         Config\Shared $binding,
         string $alias,
-        Stringable|string|null $context,
+        \Stringable|string|null $context,
         array $arguments,
     ): object {
         $avoidCache = $arguments !== [];
-        return $avoidCache
-            ? $this->createInstance(
+
+        if ($avoidCache) {
+            return $this->createInstance(
                 new Ctx(alias: $alias, class: $binding->value::class, context: $context),
                 $arguments,
-            )
-            : $binding->value;
+            );
+        }
+
+        if ($binding->singleton) {
+            $this->state->singletons[$alias] = $binding->value;
+        }
+
+        return $binding->value;
     }
 
     private function resolveAutowire(
         Config\Autowire $binding,
         string $alias,
-        Stringable|string|null $context,
+        \Stringable|string|null $context,
         array $arguments,
     ): mixed {
         $target = $binding->autowire->alias;
@@ -252,7 +256,7 @@ final class Factory implements FactoryInterface
     private function resolveFactory(
         Config\Factory|Config\DeferredFactory $binding,
         string $alias,
-        Stringable|string|null $context,
+        \Stringable|string|null $context,
         array $arguments,
     ): mixed {
         $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton);
@@ -274,14 +278,14 @@ final class Factory implements FactoryInterface
     private function resolveWeakReference(
         Config\WeakReference $binding,
         string $alias,
-        Stringable|string|null $context,
+        \Stringable|string|null $context,
         array $arguments,
     ): ?object {
         $avoidCache = $arguments !== [];
 
         if (($avoidCache || $binding->reference->get() === null) && \class_exists($alias)) {
             try {
-                $this->tracer->push(false, alias: $alias, source: WeakReference::class, context: $context);
+                $this->tracer->push(false, alias: $alias, source: \WeakReference::class, context: $context);
 
                 $object = $this->createInstance(
                     new Ctx(alias: $alias, class: $alias, context: $context),
@@ -290,7 +294,7 @@ final class Factory implements FactoryInterface
                 if ($avoidCache) {
                     return $object;
                 }
-                $binding->reference = WeakReference::create($object);
+                $binding->reference = \WeakReference::create($object);
             } catch (\Throwable) {
                 throw new ContainerException(
                     $this->tracer->combineTraceMessage(
@@ -298,8 +302,8 @@ final class Factory implements FactoryInterface
                             'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
                             $this->tracer->getRootAlias(),
                             $alias,
-                        )
-                    )
+                        ),
+                    ),
                 );
             } finally {
                 $this->tracer->pop();
@@ -312,7 +316,7 @@ final class Factory implements FactoryInterface
     private function resolveWithoutBinding(
         string $alias,
         array $parameters = [],
-        Stringable|string|null $context = null
+        \Stringable|string|null $context = null,
     ): mixed {
         $parent = $this->scope->getParentFactory();
 
@@ -475,8 +479,8 @@ final class Factory implements FactoryInterface
                         \sprintf(
                             'Can\'t resolve `%s`. %s',
                             $this->tracer->getRootAlias(),
-                            $e->getMessage()
-                        )
+                            $e->getMessage(),
+                        ),
                     ),
                 );
             } finally {

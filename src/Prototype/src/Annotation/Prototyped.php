@@ -24,7 +24,6 @@ class Prototyped
      * @psalm-param non-empty-string $property
      */
     public function __construct(
-        public readonly string $property
-    ) {
-    }
+        public readonly string $property,
+    ) {}
 }

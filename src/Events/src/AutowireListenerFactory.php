@@ -55,12 +55,12 @@ final class AutowireListenerFactory implements ListenerFactoryInterface
             throw match (true) {
                 \interface_exists($listener) => new \BadMethodCallException(
                     \sprintf('Listener interface `%s` does not contain `%s` method.', $listener, $method),
-                    previous: $e
+                    previous: $e,
                 ),
                 default => new \BadMethodCallException(
                     \sprintf('Listener `%s` does not contain `%s` method.', $listener, $method),
-                    previous: $e
-                )
+                    previous: $e,
+                ),
             };
         }
     }

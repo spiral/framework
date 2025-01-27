@@ -14,6 +14,14 @@ final class PHPGrammar implements GrammarInterface
     /** @var int */
     public const TYPE_CODE = 400;
 
+    /**
+     * @codeCoverageIgnore
+     */
+    public static function tokenName(int $token): string
+    {
+        return 'PHP:CODE';
+    }
+
     public function parse(Buffer $src): \Generator
     {
         while ($n = $src->next()) {
@@ -32,14 +40,6 @@ final class PHPGrammar implements GrammarInterface
             yield $php;
             $src->replay($n->offset + \strlen($php->content) - 1);
         }
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public static function tokenName(int $token): string
-    {
-        return 'PHP:CODE';
     }
 
     private function parseGrammar(string $content, int $offset): ?Token

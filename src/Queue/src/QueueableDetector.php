@@ -9,12 +9,11 @@ use Spiral\Queue\Attribute\Queueable;
 
 final class QueueableDetector
 {
-    public function __construct(private readonly ReaderInterface $reader)
-    {
-    }
+    public function __construct(private readonly ReaderInterface $reader) {}
 
     /**
      * @psalm-param class-string|object $object
+     * @param mixed $object
      */
     public function isQueueable($object): bool
     {
@@ -30,6 +29,7 @@ final class QueueableDetector
 
     /**
      * @psalm-param class-string|object $object
+     * @param mixed $object
      */
     public function getQueue($object): ?string
     {

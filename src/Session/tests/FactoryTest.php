@@ -13,13 +13,6 @@ use Spiral\Session\SessionInterface;
 
 final class FactoryTest extends TestCase
 {
-    public function tearDown(): void
-    {
-        if ((int)session_status() === PHP_SESSION_ACTIVE) {
-            session_abort();
-        }
-    }
-
     public function testConstructInvalid(): void
     {
         $this->expectException(SessionException::class);
@@ -30,7 +23,7 @@ final class FactoryTest extends TestCase
             'handler'  => FileHandler::class,
             'handlers' => [
                 //No directory
-            ]
+            ],
         ]), $this->container);
 
         $factory->initSession('sig', 'sessionid');
@@ -46,7 +39,7 @@ final class FactoryTest extends TestCase
             'handler'  => FileHandler::class,
             'handlers' => [
                 //No directory
-            ]
+            ],
         ]), $this->container);
 
         $factory->initSession('sig', 'sessionid');
@@ -61,7 +54,7 @@ final class FactoryTest extends TestCase
             'cookie'   => 'SID',
             'secure'   => false,
             'handler'  => null,
-            'handlers' => []
+            'handlers' => [],
         ]), $this->container);
 
         $this->container->bind(SessionInterface::class, Session::class);
@@ -70,5 +63,12 @@ final class FactoryTest extends TestCase
         $session->resume();
 
         $factory->initSession('sig', $session->getID());
+    }
+
+    protected function tearDown(): void
+    {
+        if ((int) \session_status() === PHP_SESSION_ACTIVE) {
+            \session_abort();
+        }
     }
 }

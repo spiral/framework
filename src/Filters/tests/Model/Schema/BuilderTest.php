@@ -13,12 +13,6 @@ final class BuilderTest extends BaseTestCase
 {
     private Builder $builder;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->builder = new Builder();
-    }
-
     public function testBuildSchema(): void
     {
         $schema = $this->builder->makeSchema('foo', [
@@ -28,7 +22,7 @@ final class BuilderTest extends BaseTestCase
             'nested1' => [NestedFilter::class, 'foo'],
             'nested2' => [NestedFilter::class],
             'nested3' => [NestedFilter::class, 'foo.*'],
-            'nested4' => [NestedFilter::class, 'query:foo.*']
+            'nested4' => [NestedFilter::class, 'query:foo.*'],
         ]);
 
         self::assertSame([
@@ -80,7 +74,7 @@ final class BuilderTest extends BaseTestCase
                 Builder::SCHEMA_OPTIONAL => false,
                 Builder::SCHEMA_ITERATE_SOURCE => 'query',
                 Builder::SCHEMA_ITERATE_ORIGIN => 'foo',
-            ]
+            ],
         ], $schema);
     }
 
@@ -98,5 +92,11 @@ final class BuilderTest extends BaseTestCase
         $this->expectExceptionMessage('Invalid schema definition at `foo`->`id`');
 
         $this->builder->makeSchema('foo', ['id' => []]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->builder = new Builder();
     }
 }

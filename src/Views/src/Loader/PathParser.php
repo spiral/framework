@@ -14,9 +14,8 @@ final class PathParser
 {
     public function __construct(
         private readonly string $defaultNamespace,
-        private readonly string $extension
-    ) {
-    }
+        private readonly string $extension,
+    ) {}
 
     public function getExtension(): string
     {
@@ -46,7 +45,7 @@ final class PathParser
         $filename = \preg_replace(
             '#/{2,}#',
             '/',
-            \str_replace('\\', '/', $path)
+            \str_replace('\\', '/', $path),
         );
 
         $namespace = $this->defaultNamespace;
@@ -58,7 +57,7 @@ final class PathParser
         }
 
         if (\str_contains((string) $filename, LoaderInterface::NS_SEPARATOR)) {
-            [$namespace, $filename] = explode(LoaderInterface::NS_SEPARATOR, (string) $filename);
+            [$namespace, $filename] = \explode(LoaderInterface::NS_SEPARATOR, (string) $filename);
         }
 
         //Twig like namespaces
@@ -75,7 +74,7 @@ final class PathParser
         return new ViewPath(
             $namespace,
             $this->fetchName($filename),
-            $filename
+            $filename,
         );
     }
 
@@ -107,16 +106,16 @@ final class PathParser
         $level = 0;
 
         foreach ($parts as $part) {
-            if ('..' === $part) {
+            if ($part === '..') {
                 --$level;
-            } elseif ('.' !== $part) {
+            } elseif ($part !== '.') {
                 ++$level;
             }
 
             if ($level < 0) {
                 throw new PathException(\sprintf(
                     'Looks like you try to load a view outside configured directories (%s)',
-                    $path
+                    $path,
                 ));
             }
         }

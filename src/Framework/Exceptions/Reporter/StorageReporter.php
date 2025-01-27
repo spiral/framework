@@ -11,8 +11,7 @@ class StorageReporter implements ExceptionReporterInterface
 {
     public function __construct(
         private StorageSnapshot $storageSnapshot,
-    ) {
-    }
+    ) {}
 
     public function report(\Throwable $exception): void
     {

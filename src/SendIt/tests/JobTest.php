@@ -23,16 +23,9 @@ class JobTest extends TestCase
 {
     /** @var MailerInterface */
     protected $mailer;
+
     /** @var RendererInterface */
     protected $renderer;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->mailer = m::mock(MailerInterface::class);
-        $this->renderer = m::mock(RendererInterface::class);
-    }
 
     public function testHandler(): void
     {
@@ -45,7 +38,7 @@ class JobTest extends TestCase
         $this->getHandler()->handle(
             MailQueue::JOB_NAME,
             'id',
-            json_encode(MessageSerializer::pack($this->getMail()))
+            \json_encode(MessageSerializer::pack($this->getMail())),
         );
     }
 
@@ -61,7 +54,7 @@ class JobTest extends TestCase
             $this->getHandler()->handle(
                 MailQueue::JOB_NAME,
                 'id',
-                json_encode(MessageSerializer::pack($this->getMail()))
+                \json_encode(MessageSerializer::pack($this->getMail())),
             );
         } catch (TransportException) {
         }
@@ -84,7 +77,7 @@ class JobTest extends TestCase
         $this->getHandler($dispatcher)->handle(
             MailQueue::JOB_NAME,
             'id',
-            \json_encode(MessageSerializer::pack($this->getMail()))
+            \json_encode(MessageSerializer::pack($this->getMail())),
         );
     }
 
@@ -106,8 +99,16 @@ class JobTest extends TestCase
         $this->getHandler($dispatcher)->handle(
             MailQueue::JOB_NAME,
             'id',
-            \json_encode(MessageSerializer::pack($this->getMail()))
+            \json_encode(MessageSerializer::pack($this->getMail())),
         );
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mailer = m::mock(MailerInterface::class);
+        $this->renderer = m::mock(RendererInterface::class);
     }
 
     private function getEmail(): Email
@@ -121,10 +122,10 @@ class JobTest extends TestCase
     private function expectRenderer(Email $email): void
     {
         $this->renderer->expects('render')->withArgs(
-            function (Message $message): bool {
+            static function (Message $message): bool {
                 self::assertSame('test', $message->getSubject());
                 return true;
-            }
+            },
         )->andReturn($email);
     }
 
@@ -134,7 +135,7 @@ class JobTest extends TestCase
             new MailerConfig(['from' => 'no-reply@spiral.dev']),
             $this->mailer,
             $this->renderer,
-            $dispatcher
+            $dispatcher,
         );
     }
 

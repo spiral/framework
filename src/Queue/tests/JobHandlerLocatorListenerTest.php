@@ -23,7 +23,7 @@ final class JobHandlerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             new Container(),
             new Container(),
-            $this->createMock(HandlerRegistryInterface::class)
+            $this->createMock(HandlerRegistryInterface::class),
         );
 
         $reader = $this->createMock(ReaderInterface::class);

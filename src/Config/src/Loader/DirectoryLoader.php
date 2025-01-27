@@ -16,7 +16,7 @@ final class DirectoryLoader implements LoaderInterface
      */
     public function __construct(
         string $directory,
-        private readonly array $loaders = []
+        private readonly array $loaders = [],
     ) {
         $this->directory = \rtrim($directory, '/');
     }

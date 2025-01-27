@@ -42,7 +42,7 @@ final class Compiler
 
         throw new CompilerException(
             \sprintf('Unable to compile %s, no renderer found', $node::class),
-            $node->getContext()
+            $node->getContext(),
         );
     }
 }

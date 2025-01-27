@@ -17,20 +17,13 @@ final class PopulateDataFromEntityInterceptorTest extends BaseTestCase
 {
     private PopulateDataFromEntityInterceptor $interceptor;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->interceptor = new PopulateDataFromEntityInterceptor();
-    }
-
     public function testDataShouldNotBeSetWhenNotFilterObject(): void
     {
         $core = m::mock(CoreInterface::class);
         $core->shouldReceive('callAction')->once()->andReturn($filter = m::mock(FilterInterface::class));
 
         self::assertSame($filter, $this->interceptor->process('foo', 'bar', [
-            'filterBag' => new FilterBag($filter, m::mock(AbstractEntity::class), [], [])
+            'filterBag' => new FilterBag($filter, m::mock(AbstractEntity::class), [], []),
         ], $core));
     }
 
@@ -45,5 +38,12 @@ final class PopulateDataFromEntityInterceptorTest extends BaseTestCase
         $filter->shouldReceive('setData')->once()->with($data);
 
         self::assertSame($filter, $this->interceptor->process('foo', 'bar', ['filterBag' => $bag], $core));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->interceptor = new PopulateDataFromEntityInterceptor();
     }
 }

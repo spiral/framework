@@ -11,8 +11,22 @@ final class Token implements TokenInterface
     public function __construct(
         private readonly string $id,
         private readonly array $payload,
-        private readonly ?\DateTimeInterface $expiresAt = null
-    ) {
+        private readonly ?\DateTimeInterface $expiresAt = null,
+    ) {}
+
+    /**
+     * Unpack token from serialized data.
+     *
+     * @throws \Throwable
+     */
+    public static function unpack(array $data): Token
+    {
+        $expiresAt = null;
+        if ($data['expiresAt'] !== null) {
+            $expiresAt = (new \DateTimeImmutable())->setTimestamp($data['expiresAt']);
+        }
+
+        return new Token($data['id'], $data['payload'], $expiresAt);
     }
 
     public function getID(): string
@@ -40,20 +54,5 @@ final class Token implements TokenInterface
             'expiresAt' => $this->expiresAt !== null ? $this->expiresAt->getTimestamp() : null,
             'payload'   => $this->payload,
         ];
-    }
-
-    /**
-     * Unpack token from serialized data.
-     *
-     * @throws \Throwable
-     */
-    public static function unpack(array $data): Token
-    {
-        $expiresAt = null;
-        if ($data['expiresAt'] !== null) {
-            $expiresAt = (new \DateTimeImmutable())->setTimestamp($data['expiresAt']);
-        }
-
-        return new Token($data['id'], $data['payload'], $expiresAt);
     }
 }

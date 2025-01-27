@@ -7,6 +7,4 @@ namespace Spiral\Cache\Event;
 /**
  * Triggered before cache item is deleted.
  */
-final class KeyDeleting extends CacheEvent
-{
-}
+final class KeyDeleting extends CacheEvent {}

@@ -11,6 +11,16 @@ use Spiral\Tests\Queue\Exception\TestRetryException;
 
 final class RetryPolicyTest extends TestCase
 {
+    public static function retryableDataProvider(): \Traversable
+    {
+        yield [new \DomainException(), 0, false];
+        yield [new \DomainException(), 1, false];
+        yield [new TestRetryException(), 0, true];
+        yield [new TestRetryException(), 1, false];
+        yield [new TestRetryException(false), 0, false];
+        yield [new TestRetryException(false), 1, false];
+    }
+
     public function testInvalidMaxAttempts(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -60,15 +70,5 @@ final class RetryPolicyTest extends TestCase
         self::assertSame(4_000, $policy->getDelay(2));
         self::assertSame(8_000, $policy->getDelay(3));
         self::assertSame(16_000, $policy->getDelay(4));
-    }
-
-    public static function retryableDataProvider(): \Traversable
-    {
-        yield [new \DomainException(), 0, false];
-        yield [new \DomainException(), 1, false];
-        yield [new TestRetryException(), 0, true];
-        yield [new TestRetryException(), 1, false];
-        yield [new TestRetryException(false), 0, false];
-        yield [new TestRetryException(false), 1, false];
     }
 }

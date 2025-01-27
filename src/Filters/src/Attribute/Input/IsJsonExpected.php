@@ -14,9 +14,8 @@ use Spiral\Filters\InputInterface;
 final class IsJsonExpected extends AbstractInput
 {
     public function __construct(
-        public readonly bool $softMatch = false
-    ) {
-    }
+        public readonly bool $softMatch = false,
+    ) {}
 
     /**
      * @see \Spiral\Http\Request\InputManager::isJsonExpected() from {@link https://github.com/spiral/http}

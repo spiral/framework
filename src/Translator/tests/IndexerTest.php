@@ -6,8 +6,6 @@ namespace Spiral\Tests\Translator;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
-use Spiral\Tokenizer\ClassesInterface;
-use Spiral\Tokenizer\ClassLocator;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
@@ -24,7 +22,7 @@ class IndexerTest extends TestCase
 
     public const MESSAGES = [
         '[[indexer-message]]',
-        'not-message'
+        'not-message',
     ];
 
     public function testIndexShortFunctions(): void
@@ -33,10 +31,10 @@ class IndexerTest extends TestCase
         $indexer = new Indexer(new TranslatorConfig([
             'domains' => [
                 'spiral'   => [
-                    'spiral-*'
+                    'spiral-*',
                 ],
-                'messages' => ['*']
-            ]
+                'messages' => ['*'],
+            ],
         ]), $catalogue);
 
         $indexer->indexInvocations($this->tContainer()->get(InvocationsInterface::class));
@@ -54,10 +52,10 @@ class IndexerTest extends TestCase
         $indexer = new Indexer(new TranslatorConfig([
             'domains' => [
                 'spiral'   => [
-                    'spiral-*'
+                    'spiral-*',
                 ],
-                'messages' => ['*']
-            ]
+                'messages' => ['*'],
+            ],
         ]), $catalogue);
 
         $indexer->indexClasses($this->tContainer()->get(ScopedClassesInterface::class));
@@ -78,7 +76,7 @@ class IndexerTest extends TestCase
         $catalogue->set('messages', 'hello', 'Bonjour');
 
         $indexer = new Indexer(new TranslatorConfig([
-            'domains' => ['spiral' => ['spiral-*'], 'messages' => ['*']]
+            'domains' => ['spiral' => ['spiral-*'], 'messages' => ['*']],
         ]), $catalogue);
 
         $indexer->indexInvocations($this->tContainer()->get(InvocationsInterface::class));
@@ -99,8 +97,8 @@ class IndexerTest extends TestCase
             'scopes' => [
                 'translations' => [
                     'directories' => [__DIR__],
-                ]
-            ]
+                ],
+            ],
         ]));
 
         return $container;

@@ -13,9 +13,8 @@ final class BlockClaims
     private array $claimed = [];
 
     public function __construct(
-        private readonly array $blocks
-    ) {
-    }
+        private readonly array $blocks,
+    ) {}
 
     public function has(string $name): bool
     {

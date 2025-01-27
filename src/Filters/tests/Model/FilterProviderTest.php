@@ -26,17 +26,6 @@ use Spiral\Tests\Filters\Fixtures\UserFilter;
 
 final class FilterProviderTest extends BaseTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
-        $this->container->bindSingleton(
-            CasterRegistryInterface::class,
-            static fn (): CasterRegistry => new CasterRegistry([new EnumCaster(), new UuidCaster()])
-        );
-    }
-
     public function testCreateNestedFilterWithIdenticalPropertyNames(): void
     {
         $request = new ServerRequest('POST', '/');
@@ -44,8 +33,8 @@ final class FilterProviderTest extends BaseTestCase
             'name' => 'John',
             'address' => [
                 'address' => 'Some street',
-                'city' => 'Portland'
-            ]
+                'city' => 'Portland',
+            ],
         ]);
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -69,7 +58,7 @@ final class FilterProviderTest extends BaseTestCase
     {
         $request = new ServerRequest('GET', '/');
         $request = $request->withQueryParams([
-            'token' => 'some'
+            'token' => 'some',
         ]);
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -119,5 +108,16 @@ final class FilterProviderTest extends BaseTestCase
         self::assertSame('f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c1d', $filter->groupUuid->toString());
         self::assertInstanceOf(UuidInterface::class, $filter->friendUuid);
         self::assertSame('f0a0b2c0-5b4b-4a5c-8d3e-6f7a8f9b0c2d', $filter->friendUuid->toString());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bindSingleton(ReaderInterface::class, (new Factory())->create());
+        $this->container->bindSingleton(
+            CasterRegistryInterface::class,
+            static fn(): CasterRegistry => new CasterRegistry([new EnumCaster(), new UuidCaster()]),
+        );
     }
 }

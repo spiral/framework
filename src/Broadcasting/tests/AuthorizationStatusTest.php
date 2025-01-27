@@ -45,7 +45,7 @@ final class AuthorizationStatusTest extends TestCase
             false,
             ['topic1'],
             ['foo' => 'bar'],
-            $response = m::mock(ResponseInterface::class)
+            $response = m::mock(ResponseInterface::class),
         );
 
         self::assertSame($response, $status->response);

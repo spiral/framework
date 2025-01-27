@@ -37,15 +37,22 @@ abstract class BaseTestCase extends TestCase
     protected Container $container;
     protected Router $router;
 
-    protected function getContainer(): Container
+    public static function middlewaresDataProvider(): \Traversable
     {
-        return $this->container;
+        yield [TestMiddleware::class];
+        yield [new TestMiddleware()];
+        yield [new Autowire(TestMiddleware::class)];
     }
 
     protected function setUp(): void
     {
         $this->initContainer();
         $this->initRouter();
+    }
+
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 
     protected function makeRouter(string $basePath = '', ?EventDispatcherInterface $dispatcher = null): RouterInterface
@@ -70,13 +77,6 @@ abstract class BaseTestCase extends TestCase
         $r = new \ReflectionObject($object);
 
         return $r->getProperty($property)->getValue($object);
-    }
-
-    public static function middlewaresDataProvider(): \Traversable
-    {
-        yield [TestMiddleware::class];
-        yield [new TestMiddleware()];
-        yield [new Autowire(TestMiddleware::class)];
     }
 
     private function initContainer(): void

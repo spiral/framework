@@ -6,6 +6,4 @@ namespace Spiral\Tests\Queue\Attribute\Stub;
 
 use Spiral\Queue\QueueableInterface;
 
-final class QueueableWithInterface implements QueueableInterface
-{
-}
+final class QueueableWithInterface implements QueueableInterface {}

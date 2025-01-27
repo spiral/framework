@@ -34,6 +34,11 @@ final class Factory extends Binding
         };
     }
 
+    public function getParametersCount(): int
+    {
+        return $this->parametersCount;
+    }
+
     public function __toString(): string
     {
         $this->definition ??= $this->renderClosureSignature(new \ReflectionFunction($this->factory));
@@ -42,10 +47,5 @@ final class Factory extends Binding
             'Factory from %s',
             $this->definition,
         );
-    }
-
-    public function getParametersCount(): int
-    {
-        return $this->parametersCount;
     }
 }

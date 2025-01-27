@@ -31,7 +31,7 @@ final class SerializerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             $container,
             $container,
-            $this->createMock(HandlerRegistryInterface::class)
+            $this->createMock(HandlerRegistryInterface::class),
         );
 
         $reader = m::mock(ReaderInterface::class);
@@ -48,8 +48,8 @@ final class SerializerLocatorListenerTest extends TestCase
             'registry' => [
                 'handlers' => [
                     $handler::class => $handler::class,
-                ]
-            ]
+                ],
+            ],
         ]));
         $listener->listen(new \ReflectionClass($handler::class));
 
@@ -67,7 +67,7 @@ final class SerializerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             $container,
             $container,
-            $this->createMock(HandlerRegistryInterface::class)
+            $this->createMock(HandlerRegistryInterface::class),
         );
 
         $reader = m::mock(ReaderInterface::class);
@@ -84,8 +84,8 @@ final class SerializerLocatorListenerTest extends TestCase
             'registry' => [
                 'handlers' => [
                     'test' => $handler::class,
-                ]
-            ]
+                ],
+            ],
         ]));
         $listener->listen(new \ReflectionClass($handler::class));
 
@@ -103,7 +103,7 @@ final class SerializerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             $container,
             $container,
-            $this->createMock(HandlerRegistryInterface::class)
+            $this->createMock(HandlerRegistryInterface::class),
         );
 
         $reader = m::mock(ReaderInterface::class);

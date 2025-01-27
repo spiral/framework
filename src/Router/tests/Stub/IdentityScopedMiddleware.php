@@ -20,11 +20,11 @@ class IdentityScopedMiddleware implements MiddlewareInterface
 
     public function process(
         ServerRequestInterface $request,
-        RequestHandlerInterface $handler
+        RequestHandlerInterface $handler,
     ): ResponseInterface {
         return $this->scope->runScope(
             new Scope(name: 'idenity', bindings: ['identity' => 'test-identity']),
-            fn() => $handler->handle($request),
+            static fn() => $handler->handle($request),
         );
     }
 }

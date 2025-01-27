@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
-use Spiral\Boot\BootloadManager\AttributeResolver;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Tests\Boot\TestCase;
 

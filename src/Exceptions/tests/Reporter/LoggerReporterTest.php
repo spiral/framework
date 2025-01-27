@@ -12,11 +12,6 @@ use Spiral\Exceptions\Reporter\LoggerReporter;
 
 final class LoggerReporterTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        m::close();
-    }
-
     public function testReport(): void
     {
         $exception = new \Exception();
@@ -27,13 +22,11 @@ final class LoggerReporterTest extends TestCase
             $exception::class,
             $exception->getMessage(),
             $exception->getFile(),
-            $exception->getLine()
+            $exception->getLine(),
         )])->once();
 
         $handler = new class extends ExceptionHandler {
-            protected function bootBasicHandlers(): void
-            {
-            }
+            protected function bootBasicHandlers(): void {}
         };
 
         $handler->addReporter(new LoggerReporter($logger));
@@ -46,9 +39,7 @@ final class LoggerReporterTest extends TestCase
     public function testReportWithoutLogger(): void
     {
         $handler = new class extends ExceptionHandler {
-            protected function bootBasicHandlers(): void
-            {
-            }
+            protected function bootBasicHandlers(): void {}
         };
 
         $handler->addReporter(new LoggerReporter());
@@ -57,5 +48,10 @@ final class LoggerReporterTest extends TestCase
 
         // any errors
         self::assertTrue(true);
+    }
+
+    protected function tearDown(): void
+    {
+        m::close();
     }
 }

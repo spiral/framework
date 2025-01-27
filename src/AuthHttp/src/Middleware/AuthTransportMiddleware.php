@@ -32,14 +32,14 @@ final class AuthTransportMiddleware implements MiddlewareInterface
         ActorProviderInterface $actorProvider,
         TokenStorageInterface $tokenStorage,
         TransportRegistry $transportRegistry,
-        ?EventDispatcherInterface $eventDispatcher = null
+        ?EventDispatcherInterface $eventDispatcher = null,
     ) {
         $this->authMiddleware = new AuthMiddleware(
             $scope,
             $actorProvider,
             $tokenStorage,
             $this->getTransportRegistry($transportRegistry, $transportName),
-            $eventDispatcher
+            $eventDispatcher,
         );
     }
 

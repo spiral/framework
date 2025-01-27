@@ -19,13 +19,6 @@ class LimitsTraitTest extends TestCase
 
     private object $trait;
 
-    public function setUp(): void
-    {
-        $this->trait = new class {
-            use LimitsTrait;
-        };
-    }
-
     public function testLimit(): void
     {
         self::assertEquals(static::DEFAULT_LIMIT, $this->trait->getLimit());
@@ -38,5 +31,12 @@ class LimitsTraitTest extends TestCase
         self::assertEquals(static::DEFAULT_OFFSET, $this->trait->getOffset());
         self::assertEquals($this->trait, $this->trait->offset(static::OFFSET));
         self::assertEquals(static::OFFSET, $this->trait->getOffset());
+    }
+
+    protected function setUp(): void
+    {
+        $this->trait = new class {
+            use LimitsTrait;
+        };
     }
 }

@@ -9,7 +9,6 @@ use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use Spiral\Tests\Core\Stub\EngineVAZ2101;
 use Spiral\Tests\Core\Stub\EngineZIL130;
-use stdClass;
 
 /**
  * Others variadic parameter tests:
@@ -27,7 +26,7 @@ final class VariadicParameterTest extends BaseTestCase
     public function testAloneScalarVariadicParameterAndNamedArrayArgument(): void
     {
         $result = $this->resolveClosure(
-            fn(int ...$var) => $var,
+            static fn(int ...$var) => $var,
             ['var' => [1, 2, 3]],
         );
 
@@ -37,7 +36,7 @@ final class VariadicParameterTest extends BaseTestCase
     public function testScalarVariadicParameterAndNamedAssocArrayArgument(): void
     {
         $result = $this->resolveClosure(
-            fn(string $foo, string ...$bar) => null,
+            static fn(string $foo, string ...$bar) => null,
             ['foo' => 'foo', 'bar' => ['foo' => 'baz', 'bar' => 'fiz']],
         );
 
@@ -47,7 +46,7 @@ final class VariadicParameterTest extends BaseTestCase
     public function testScalarVariadicParameterAndMixedArgumentsArray(): void
     {
         $result = $this->resolveClosure(
-            $fn = fn(string ...$bar) => $bar,
+            $fn = static fn(string ...$bar) => $bar,
             ['bar' => ($args = ['foo1', 'foo' => 'baz', 'bar' => 'fiz'])],
         );
 
@@ -59,11 +58,11 @@ final class VariadicParameterTest extends BaseTestCase
     {
         $this->expectException(ResolvingException::class);
         $this->expectExceptionMessage(
-            'Cannot use positional argument after named argument during unpacking named variadic argument'
+            'Cannot use positional argument after named argument during unpacking named variadic argument',
         );
 
         $this->resolveClosure(
-            fn(string ...$bar) => $bar,
+            static fn(string ...$bar) => $bar,
             ['bar' => ['foo1', 'foo' => 'baz', 'bar' => 'fiz', 'baz2']],
         );
     }
@@ -71,8 +70,8 @@ final class VariadicParameterTest extends BaseTestCase
     public function testScalarVariadicParameterAndNamedScalarArgumentNotInArray(): void
     {
         $result = $this->resolveClosure(
-            fn(int ...$var) => null,
-            ['var' => 42]
+            static fn(int ...$var) => null,
+            ['var' => 42],
         );
 
         $this->assertSame([42], $result);
@@ -81,8 +80,8 @@ final class VariadicParameterTest extends BaseTestCase
     public function testVariadicObjectParameterAndPositionArguments(): void
     {
         $result = $this->resolveClosure(
-            fn(object ...$engines) => $engines,
-            [$data = [new EngineZIL130(), new EngineVAZ2101(), new stdClass(), new EngineMarkTwo(), new stdClass()]]
+            static fn(object ...$engines) => $engines,
+            [$data = [new EngineZIL130(), new EngineVAZ2101(), new \stdClass(), new EngineMarkTwo(), new \stdClass()]],
         );
 
         $this->assertCount(5, $result);
@@ -96,12 +95,12 @@ final class VariadicParameterTest extends BaseTestCase
     {
         $result = $this->resolveClosure(
             static fn(mixed ...$engines) => $engines,
-            [[new EngineZIL130(), new EngineVAZ2101(), new EngineMarkTwo(), new stdClass()]]
+            [[new EngineZIL130(), new EngineVAZ2101(), new EngineMarkTwo(), new \stdClass()]],
         );
 
         $this->assertCount(4, $result);
         $checked = true;
-        \array_walk($result, function (mixed $value) use (&$checked): void {
+        \array_walk($result, static function (mixed $value) use (&$checked): void {
             $checked = $checked && ($value instanceof EngineInterface);
         });
         // The Resolver doesn't check arguments type
@@ -114,8 +113,8 @@ final class VariadicParameterTest extends BaseTestCase
     public function testNullableVariadicArgument(): void
     {
         $result = $this->resolveClosure(
-            fn(?EngineInterface ...$engines) => $engines,
-            []
+            static fn(?EngineInterface ...$engines) => $engines,
+            [],
         );
 
         $this->assertSame([], $result);
@@ -131,7 +130,7 @@ final class VariadicParameterTest extends BaseTestCase
 
         $result = $this->resolveClosure(
             static fn(EngineInterface ...$engines) => $engines,
-            []
+            [],
         );
 
         $this->assertCount(0, $result);
@@ -143,8 +142,8 @@ final class VariadicParameterTest extends BaseTestCase
     public function testVariadicParameterAndUnpackedArguments(): void
     {
         $result = $this->resolveClosure(
-            fn(EngineInterface ...$engines) => $engines,
-            [new EngineZIL130(), new EngineVAZ2101(), new EngineMarkTwo()]
+            static fn(EngineInterface ...$engines) => $engines,
+            [new EngineZIL130(), new EngineVAZ2101(), new EngineMarkTwo()],
         );
 
         $this->assertCount(1, $result);

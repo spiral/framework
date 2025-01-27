@@ -15,9 +15,8 @@ final class RuntimeDirectory
 {
     public function __construct(
         private readonly FilesInterface $files,
-        private readonly DirectoriesInterface $dirs
-    ) {
-    }
+        private readonly DirectoriesInterface $dirs,
+    ) {}
 
     public function ensure(OutputInterface $output): void
     {
@@ -43,8 +42,8 @@ final class RuntimeDirectory
                     \sprintf(
                         '<fg=red>[errored]</fg=red> `%s`: <fg=red>%s</fg=red>',
                         $this->files->relativePath($filename, $runtimeDirectory),
-                        $e->getMessage()
-                    )
+                        $e->getMessage(),
+                    ),
                 );
                 continue;
                 // @codeCoverageIgnoreEnd
@@ -54,8 +53,8 @@ final class RuntimeDirectory
                 $output->writeln(
                     \sprintf(
                         '<fg=green>[updated]</fg=green> `%s`',
-                        $this->files->relativePath($filename, $runtimeDirectory)
-                    )
+                        $this->files->relativePath($filename, $runtimeDirectory),
+                    ),
                 );
             }
         }

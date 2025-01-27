@@ -4,55 +4,52 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Factory;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use Spiral\Core\Config\Inflector;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 use Spiral\Tests\Core\Stub\EngineVAZ2101;
 use Spiral\Tests\Core\Stub\EngineZIL130;
 use Spiral\Tests\Core\Stub\LightEngine;
 use Spiral\Tests\Core\Stub\MadeInUssrInterface;
-use stdClass;
 
 final class InflectorTest extends BaseTestCase
 {
     public function testInflectStdClass(): void
     {
         $this->bind(
-            stdClass::class,
+            \stdClass::class,
             new Inflector(
-                static function (stdClass $object): stdClass {
+                static function (\stdClass $object): \stdClass {
                     $object->foo = 'bar';
 
                     return $object;
-                }
+                },
             ),
         );
 
-        $object = $this->make(stdClass::class);
+        $object = $this->make(\stdClass::class);
 
-        $this->assertInstanceOf(stdClass::class, $object);
+        $this->assertInstanceOf(\stdClass::class, $object);
         $this->assertObjectHasProperty('foo', $object);
         $this->assertSame($object->foo, 'bar');
     }
 
     public function testInflectAutowiring(): void
     {
-        $this->bind(DateTimeInterface::class, $time = new DateTimeImmutable());
+        $this->bind(\DateTimeInterface::class, $time = new \DateTimeImmutable());
         $this->bind(
-            stdClass::class,
+            \stdClass::class,
             new Inflector(
-                static function (stdClass $object, DateTimeInterface $time): stdClass {
+                static function (\stdClass $object, \DateTimeInterface $time): \stdClass {
                     $object->time = $time;
 
                     return $object;
-                }
+                },
             ),
         );
 
-        $object = $this->make(stdClass::class);
+        $object = $this->make(\stdClass::class);
 
-        $this->assertInstanceOf(stdClass::class, $object);
+        $this->assertInstanceOf(\stdClass::class, $object);
         $this->assertObjectHasProperty('time', $object);
         $this->assertSame($time, $object->time);
     }
@@ -64,7 +61,7 @@ final class InflectorTest extends BaseTestCase
             new Inflector(
                 static function (LightEngine $object): LightEngine {
                     return $object->withPower(999999);
-                }
+                },
             ),
         );
 
@@ -86,7 +83,7 @@ final class InflectorTest extends BaseTestCase
                     $result[] = $object;
 
                     return $object;
-                }
+                },
             ),
         );
 
@@ -107,7 +104,7 @@ final class InflectorTest extends BaseTestCase
                     $result1[] = $object;
 
                     return $object;
-                }
+                },
             ),
         );
         $this->bind(
@@ -117,7 +114,7 @@ final class InflectorTest extends BaseTestCase
                     $result2[] = $object;
 
                     return $object;
-                }
+                },
             ),
         );
 

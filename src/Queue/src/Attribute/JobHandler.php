@@ -21,7 +21,6 @@ use Spiral\Attributes\NamedArgumentConstructor;
 class JobHandler
 {
     public function __construct(
-        public readonly string $type
-    ) {
-    }
+        public readonly string $type,
+    ) {}
 }

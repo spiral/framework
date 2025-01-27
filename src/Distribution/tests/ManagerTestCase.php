@@ -11,18 +11,7 @@ use Spiral\Distribution\Resolver\StaticResolver;
 class ManagerTestCase extends TestCase
 {
     private StaticResolver $resolver;
-
     private Manager $manager;
-
-    public function setUp(): void
-    {
-        $this->resolver = new StaticResolver($this->uri('localhost'));
-
-        $this->manager = new Manager();
-        $this->manager->add(Manager::DEFAULT_RESOLVER, $this->resolver);
-
-        parent::setUp();
-    }
 
     public function testDefaultResolver(): void
     {
@@ -70,5 +59,15 @@ class ManagerTestCase extends TestCase
         $manager->add('example', $this->resolver);
 
         self::assertCount(2, $manager);
+    }
+
+    protected function setUp(): void
+    {
+        $this->resolver = new StaticResolver($this->uri('localhost'));
+
+        $this->manager = new Manager();
+        $this->manager->add(Manager::DEFAULT_RESOLVER, $this->resolver);
+
+        parent::setUp();
     }
 }

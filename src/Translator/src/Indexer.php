@@ -30,9 +30,8 @@ final class Indexer
      */
     public function __construct(
         private readonly TranslatorConfig $config,
-        private readonly CatalogueInterface $catalogue
-    ) {
-    }
+        private readonly CatalogueInterface $catalogue,
+    ) {}
 
     /**
      * Register string in active translator.
@@ -50,7 +49,7 @@ final class Indexer
 
         $this->getLogger()->debug(
             \sprintf('[%s]: `%s`', $domain, $string),
-            ['domain' => $domain, 'string' => $string]
+            ['domain' => $domain, 'string' => $string],
         );
     }
 
@@ -75,15 +74,15 @@ final class Indexer
     public function indexInvocations(InvocationsInterface $locator): void
     {
         $this->registerInvocations($locator->getInvocations(
-            new \ReflectionFunction('l')
+            new \ReflectionFunction('l'),
         ));
 
         $this->registerInvocations($locator->getInvocations(
-            new \ReflectionFunction('p')
+            new \ReflectionFunction('p'),
         ));
 
         $this->registerInvocations($locator->getInvocations(
-            new \ReflectionMethod(TranslatorTrait::class, 'say')
+            new \ReflectionMethod(TranslatorTrait::class, 'say'),
         ));
     }
 
@@ -132,7 +131,7 @@ final class Indexer
             //domain on export
             $strings = \array_merge(
                 $strings,
-                $this->fetchMessages($reflection->getParentClass(), true)
+                $this->fetchMessages($reflection->getParentClass(), true),
             );
         }
 
@@ -156,7 +155,7 @@ final class Indexer
         $argument = match (\strtolower($invocation->getName())) {
             'say', 'l' => $invocation->countArguments() >= 3 ? $invocation->getArgument(2) : null,
             'p' => $invocation->countArguments() >= 4 ? $invocation->getArgument(3) : null,
-            default => null
+            default => null,
         };
 
         if (!empty($argument) && $argument->getType() === ReflectionArgument::STRING) {

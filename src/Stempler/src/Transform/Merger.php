@@ -57,7 +57,7 @@ final class Merger
         $node->nodes = $this->traverse(
             $node->nodes,
             new IsolateBlocks($path),
-            new IsolatePHPBlocks($path)
+            new IsolatePHPBlocks($path),
         );
 
         return $node;

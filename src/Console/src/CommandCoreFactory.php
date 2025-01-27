@@ -20,8 +20,7 @@ final class CommandCoreFactory
 {
     public function __construct(
         private readonly ContainerInterface $container,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<class-string<CoreInterceptorInterface|InterceptorInterface>> $interceptors

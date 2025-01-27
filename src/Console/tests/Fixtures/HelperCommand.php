@@ -12,7 +12,7 @@ class HelperCommand extends Command
     public const NAME = 'helper';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public const ARGUMENTS = [
         ['helper', InputArgument::REQUIRED, 'Helper'],

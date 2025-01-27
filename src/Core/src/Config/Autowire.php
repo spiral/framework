@@ -14,8 +14,7 @@ final class Autowire extends Binding
     public function __construct(
         public readonly AutowireAlias $autowire,
         public readonly bool $singleton = false,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

@@ -7,6 +7,4 @@ namespace Spiral\Models\Exception;
 /**
  * Exception related to error while working with DataEntity .
  */
-interface EntityExceptionInterface extends \Throwable
-{
-}
+interface EntityExceptionInterface extends \Throwable {}

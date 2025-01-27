@@ -14,7 +14,7 @@ final class ImageDirective extends AbstractDirective
         return \sprintf(
             '<img title=%s src=%s size=%s type=%s>',
             $directive->values[0],
-            \str_starts_with($directive->values[1], '$') ? \sprintf('"<?php echo %s; ?>"', $directive->values[1]) :  $directive->values[1],
+            \str_starts_with($directive->values[1], '$') ? \sprintf('"<?php echo %s; ?>"', $directive->values[1]) : $directive->values[1],
             $directive->values[2],
             $directive->values[3],
         );

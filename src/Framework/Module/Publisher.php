@@ -14,15 +14,14 @@ use Symfony\Component\Finder\Finder;
 final class Publisher implements PublisherInterface
 {
     public function __construct(
-        private readonly FilesInterface $files
-    ) {
-    }
+        private readonly FilesInterface $files,
+    ) {}
 
     public function publish(
         string $filename,
         string $destination,
         string $mergeMode = self::FOLLOW,
-        int $mode = FilesInterface::READONLY
+        int $mode = FilesInterface::READONLY,
     ): void {
         if (!$this->files->isFile($filename)) {
             throw new PublishException(\sprintf("Given '%s' is not valid file", $filename));
@@ -51,7 +50,7 @@ final class Publisher implements PublisherInterface
         string $directory,
         string $destination,
         string $mergeMode = self::REPLACE,
-        int $mode = FilesInterface::READONLY
+        int $mode = FilesInterface::READONLY,
     ): void {
         if (!$this->files->isDirectory($directory)) {
             throw new PublishException(\sprintf("Given '%s' is not valid directory", $directory));
@@ -62,10 +61,10 @@ final class Publisher implements PublisherInterface
 
         foreach ($finder->getIterator() as $file) {
             $this->publish(
-                (string)$file,
+                (string) $file,
                 $destination . '/' . $file->getRelativePathname(),
                 $mergeMode,
-                $mode
+                $mode,
             );
         }
     }

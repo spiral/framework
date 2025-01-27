@@ -16,9 +16,8 @@ final class Context
 
     public function __construct(
         private Token $token,
-        private ?string $path = null
-    ) {
-    }
+        private ?string $path = null,
+    ) {}
 
     public function getToken(): Token
     {

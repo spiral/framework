@@ -23,7 +23,7 @@ final class NamedArgumentsTest extends BaseTestCase
 
         $result = $this->resolveClosure(
             static fn(EngineInterface $engine1, EngineInterface $engine2) => null,
-            ['engine2' => ($engineB = new EngineZIL130())]
+            ['engine2' => ($engineB = new EngineZIL130())],
         );
 
         $this->assertSame([$engineA, $engineB], $result);
@@ -39,7 +39,7 @@ final class NamedArgumentsTest extends BaseTestCase
                 'engine2' => ($engineB = new EngineZIL130()),
                 'engine3' => ($engineC = new EngineZIL130()),
                 'engine1' => ($engineA = new EngineZIL130()),
-            ]
+            ],
         );
 
         $this->assertSame([$engineA, $engineB, $engineC], $result);

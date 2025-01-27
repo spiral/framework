@@ -12,9 +12,8 @@ use Spiral\Filters\Model\FilterInterface;
 final class Mapper
 {
     public function __construct(
-        private readonly CasterRegistryInterface $registry
-    ) {
-    }
+        private readonly CasterRegistryInterface $registry,
+    ) {}
 
     /**
      * Set input data to the filter property.

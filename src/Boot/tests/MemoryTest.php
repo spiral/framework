@@ -14,7 +14,7 @@ class MemoryTest extends TestCase
     {
         $core = TestCore::create([
             'root'  => __DIR__,
-            'cache' => __DIR__ . '/cache'
+            'cache' => __DIR__ . '/cache',
         ])->run();
 
         /** @var MemoryInterface $memory */
@@ -24,7 +24,7 @@ class MemoryTest extends TestCase
         self::assertFileExists(__DIR__ . '/cache/test.php');
         self::assertSame('data', $memory->loadData('test'));
 
-        unlink(__DIR__ . '/cache/test.php');
+        \unlink(__DIR__ . '/cache/test.php');
         self::assertNull($memory->loadData('test'));
     }
 
@@ -32,16 +32,16 @@ class MemoryTest extends TestCase
     {
         $core = TestCore::create([
             'root'  => __DIR__,
-            'cache' => __DIR__ . '/cache'
+            'cache' => __DIR__ . '/cache',
         ])->run();
 
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);
 
-        file_put_contents(__DIR__ . '/cache/test.php', '<?php broken');
+        \file_put_contents(__DIR__ . '/cache/test.php', '<?php broken');
         self::assertNull($memory->loadData('test'));
 
-        unlink(__DIR__ . '/cache/test.php');
+        \unlink(__DIR__ . '/cache/test.php');
         self::assertNull($memory->loadData('test'));
     }
 }

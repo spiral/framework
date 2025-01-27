@@ -51,8 +51,8 @@ final class Handler
         return $tracer->trace(
             name: \sprintf('Job handling [%s:%s]', $name, $id),
             callback: $this->isLegacy
-                ? fn (): mixed => $this->core->callAction($name, 'handle', $arguments)
-                : fn (): mixed => $this->core->handle(new CallContext(Target::fromPair($name, 'handle'), $arguments)),
+                ? fn(): mixed => $this->core->callAction($name, 'handle', $arguments)
+                : fn(): mixed => $this->core->handle(new CallContext(Target::fromPair($name, 'handle'), $arguments)),
             attributes: [
                 'queue.driver' => $driver,
                 'queue.name' => $queue,

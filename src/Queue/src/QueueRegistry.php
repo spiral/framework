@@ -25,9 +25,8 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly FactoryInterface $factory,
-        private readonly HandlerRegistryInterface $fallbackHandlers
-    ) {
-    }
+        private readonly HandlerRegistryInterface $fallbackHandlers,
+    ) {}
 
     /**
      * Associate specific job type with handler class or object
@@ -110,7 +109,7 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
         if (!$serializer instanceof SerializerInterface) {
             throw new InvalidArgumentException(\sprintf(
                 'Serializer must be an instance of `SerializerInterface` but `%s` given.',
-                \get_debug_type($serializer)
+                \get_debug_type($serializer),
             ));
         }
 

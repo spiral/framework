@@ -48,7 +48,7 @@ final class EnumCaseTest extends TestCase
 
         $case->setAttributes([
             new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
-            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar'])
+            new Attribute('name', ['name' => 'foo', 'otherName' => 'bar']),
         ]);
         self::assertCount(2, $case->getAttributes());
     }

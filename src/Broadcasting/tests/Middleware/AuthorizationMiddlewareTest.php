@@ -16,7 +16,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Broadcasting\AuthorizationStatus;
 use Spiral\Broadcasting\BroadcastInterface;
 use Spiral\Broadcasting\Event\Authorized;
-use Spiral\Broadcasting\Event\AuthorizationSuccess;
 use Spiral\Broadcasting\GuardInterface;
 use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
 
@@ -24,12 +23,18 @@ final class AuthorizationMiddlewareTest extends TestCase
 {
     use m\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    public static function eventsDataProvider(): \Traversable
+    {
+        yield [Authorized::class, true, 200];
+        yield [Authorized::class, false, 403];
+    }
+
     public function testMiddlewareShouldBeSkippedWhenAuthorizationPathNotSet(): void
     {
         $middleware = new AuthorizationMiddleware(
             m::mock(BroadcastInterface::class),
             m::mock(ResponseFactoryInterface::class),
-            null
+            null,
         );
 
         $request = m::mock(ServerRequestInterface::class);
@@ -58,7 +63,7 @@ final class AuthorizationMiddlewareTest extends TestCase
         $uri->shouldReceive('getPath')->once()->andReturn('/auth');
 
         $responseFactory->shouldReceive('createResponse')->once()->with(200)->andReturn(
-            m::mock(ResponseInterface::class)
+            m::mock(ResponseInterface::class),
         );
 
         $middleware->process($request, $handler);
@@ -81,12 +86,14 @@ final class AuthorizationMiddlewareTest extends TestCase
         $broadcast->shouldReceive('authorize')->once()->with($request)
             ->andReturn(
                 new AuthorizationStatus(
-                    true, ['topic_name'], ['foo' => 'bar']
-                )
+                    true,
+                    ['topic_name'],
+                    ['foo' => 'bar'],
+                ),
             );
 
         $responseFactory->shouldReceive('createResponse')->once()->with(200)->andReturn(
-            m::mock(ResponseInterface::class)
+            m::mock(ResponseInterface::class),
         );
 
         $middleware->process($request, $handler);
@@ -109,12 +116,14 @@ final class AuthorizationMiddlewareTest extends TestCase
         $broadcast->shouldReceive('authorize')->once()->with($request)
             ->andReturn(
                 new AuthorizationStatus(
-                    false, ['topic_name'], ['foo' => 'bar']
-                )
+                    false,
+                    ['topic_name'],
+                    ['foo' => 'bar'],
+                ),
             );
 
         $responseFactory->shouldReceive('createResponse')->once()->with(403)->andReturn(
-            m::mock(ResponseInterface::class)
+            m::mock(ResponseInterface::class),
         );
 
         $middleware->process($request, $handler);
@@ -137,8 +146,11 @@ final class AuthorizationMiddlewareTest extends TestCase
         $broadcast->shouldReceive('authorize')->once()->with($request)
             ->andReturn(
                 new AuthorizationStatus(
-                    false, ['topic_name'], ['foo' => 'bar'], $response = m::mock(ResponseInterface::class)
-                )
+                    false,
+                    ['topic_name'],
+                    ['foo' => 'bar'],
+                    $response = m::mock(ResponseInterface::class),
+                ),
             );
 
         self::assertSame($response, $middleware->process($request, $handler));
@@ -159,7 +171,7 @@ final class AuthorizationMiddlewareTest extends TestCase
             $broadcast = m::mock(BroadcastInterface::class, GuardInterface::class),
             $responseFactory = m::mock(ResponseFactoryInterface::class),
             '/auth',
-            $dispatcher
+            $dispatcher,
         );
 
         $request->shouldReceive('getUri')
@@ -184,14 +196,14 @@ final class AuthorizationMiddlewareTest extends TestCase
             ->withArgs(
                 static fn(Authorized $event): bool => $event->status->success === true
                 && $event->status->topics === null
-                && $event->status->response === null
+                && $event->status->response === null,
             );
 
         $middleware = new AuthorizationMiddleware(
             m::mock(BroadcastInterface::class),
             $responseFactory = m::mock(ResponseFactoryInterface::class),
             '/auth',
-            $dispatcher
+            $dispatcher,
         );
 
         $request->shouldReceive('getUri')->once()->andReturn($uri = m::mock(UriInterface::class));
@@ -200,11 +212,5 @@ final class AuthorizationMiddlewareTest extends TestCase
             ->once()->with(200)->andReturn(m::mock(ResponseInterface::class));
 
         $middleware->process($request, $handler);
-    }
-
-    public static function eventsDataProvider(): \Traversable
-    {
-        yield [Authorized::class, true, 200];
-        yield [Authorized::class, false, 403];
     }
 }

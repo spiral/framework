@@ -22,7 +22,10 @@ final class FunctionDeclarationTest extends TestCase
 
     public function testRender(): void
     {
-        $expect = preg_replace('/\s+/', '', '
+        $expect = \preg_replace(
+            '/\s+/',
+            '',
+            '
            /**
             * Some function
             */
@@ -30,7 +33,7 @@ final class FunctionDeclarationTest extends TestCase
             function test(): string
             {
                 return \'Hello world\';
-            }'
+            }',
         );
 
         $fn = new FunctionDeclaration('test');
@@ -40,8 +43,8 @@ final class FunctionDeclarationTest extends TestCase
             ->addAttribute('SomeAttribute')
             ->addComment('Some function');
 
-        self::assertSame($expect, preg_replace('/\s+/', '', $fn->render()));
-        self::assertSame($expect, preg_replace('/\s+/', '', $fn->__toString()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $fn->render()));
+        self::assertSame($expect, \preg_replace('/\s+/', '', $fn->__toString()));
     }
 
     public function testFromElement(): void

@@ -16,18 +16,6 @@ use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
 final class PrototypeBootloaderTest extends BaseTestCase
 {
-    protected function setUp(): void
-    {
-        $this->beforeBooting(function (PrototypeBootloader $bootloader): void {
-            $bootloader->bindProperty(
-                'service.client.http',
-                HttpClient::class
-            );
-        });
-
-        parent::setUp();
-    }
-
     public function testDependencies(): void
     {
         $this->assertBootloaderRegistered(CoreBootloader::class);
@@ -69,5 +57,17 @@ final class PrototypeBootloaderTest extends BaseTestCase
         $this->getContainer()->get(PrototypeRegistry::class);
 
         self::assertInstanceOf(PrototypeRegistry::class, $stateRef->getValue($this->getContainer())->singletons[PrototypeRegistry::class]);
+    }
+
+    protected function setUp(): void
+    {
+        $this->beforeBooting(static function (PrototypeBootloader $bootloader): void {
+            $bootloader->bindProperty(
+                'service.client.http',
+                HttpClient::class,
+            );
+        });
+
+        parent::setUp();
     }
 }

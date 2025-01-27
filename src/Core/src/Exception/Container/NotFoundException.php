@@ -9,6 +9,4 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Caused when container is not able to find the proper binding.
  */
-class NotFoundException extends AutowireException implements NotFoundExceptionInterface
-{
-}
+class NotFoundException extends AutowireException implements NotFoundExceptionInterface {}

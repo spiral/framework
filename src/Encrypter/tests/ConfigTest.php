@@ -12,7 +12,7 @@ class ConfigTest extends TestCase
     public function testKey(): void
     {
         $config = new EncrypterConfig([
-            'key' => 'abc'
+            'key' => 'abc',
         ]);
 
         self::assertSame('abc', $config->getKey());

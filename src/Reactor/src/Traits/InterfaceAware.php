@@ -33,12 +33,12 @@ trait InterfaceAware
     {
         $interfaces = \array_filter(
             $this->element->getClasses(),
-            static fn (ClassLike $element): bool => $element instanceof InterfaceType
+            static fn(ClassLike $element): bool => $element instanceof InterfaceType,
         );
 
         return new Interfaces(\array_map(
-            static fn (InterfaceType $interface): InterfaceDeclaration => InterfaceDeclaration::fromElement($interface),
-            $interfaces
+            static fn(InterfaceType $interface): InterfaceDeclaration => InterfaceDeclaration::fromElement($interface),
+            $interfaces,
         ));
     }
 }

@@ -30,23 +30,10 @@ final class ValidateVersionReleaseWorkerTest extends TestCase
         '2.1.1',
         '3.0.0',
         '3.0.1',
-        '3.1.0'
+        '3.1.0',
     ];
 
     private ValidateVersionReleaseWorker $worker;
-
-    protected function setUp(): void
-    {
-        $this->worker = new ValidateVersionReleaseWorker($this->initTagParser(self::TAGS), '');
-    }
-
-    #[DataProvider('dataVersions')]
-    public function testFindMostRecentVersion(string $version, string $exceptMaxVersion): void
-    {
-        $method = new \ReflectionMethod($this->worker, 'findMostRecentVersion');
-
-        self::assertSame($method->invoke($this->worker, new Version(\strtolower($version))), $exceptMaxVersion);
-    }
 
     public static function dataVersions(): \Traversable
     {
@@ -76,14 +63,25 @@ final class ValidateVersionReleaseWorkerTest extends TestCase
         yield ['4.0', '3.1.0'];
     }
 
+    #[DataProvider('dataVersions')]
+    public function testFindMostRecentVersion(string $version, string $exceptMaxVersion): void
+    {
+        $method = new \ReflectionMethod($this->worker, 'findMostRecentVersion');
+
+        self::assertSame($method->invoke($this->worker, new Version(\strtolower($version))), $exceptMaxVersion);
+    }
+
+    protected function setUp(): void
+    {
+        $this->worker = new ValidateVersionReleaseWorker($this->initTagParser(self::TAGS), '');
+    }
+
     private function initTagParser(array $tags): TagParserInterface
     {
-        return (new class($tags) implements TagParserInterface
-        {
+        return (new class($tags) implements TagParserInterface {
             public function __construct(
-                private readonly array $tags
-            ) {
-            }
+                private readonly array $tags,
+            ) {}
 
             public function parse(string $gitDirectory): array
             {

@@ -12,12 +12,7 @@ class NameValue implements ValueInterface, \Stringable
 
     public function __construct($value)
     {
-        $this->setValue((string)$value);
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->value;
+        $this->setValue((string) $value);
     }
 
     public function setValue(mixed $data): self
@@ -35,5 +30,10 @@ class NameValue implements ValueInterface, \Stringable
     public function jsonSerialize()
     {
         return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->value;
     }
 }

@@ -19,7 +19,6 @@ final class CoreBootloader extends Bootloader
     protected const DEPENDENCIES = [
         ConfigurationBootloader::class,
     ];
-
     protected const SINGLETONS = [
         // core services and helpers
         FilesInterface::class => Files::class,
@@ -32,7 +31,7 @@ final class CoreBootloader extends Bootloader
 
     private function memory(
         DirectoriesInterface $directories,
-        FilesInterface $files
+        FilesInterface $files,
     ): MemoryInterface {
         return new Memory($directories->get('cache'), $files);
     }

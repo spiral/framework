@@ -23,10 +23,20 @@ class InputManagerTest extends TestCase
     private Container $container;
     private InputManager $input;
 
-    public function setUp(): void
+    public static function isJsonExpectedProvider(): \Traversable
     {
-        $this->container = new Container();
-        $this->input = new InputManager($this->container);
+        yield [false, null];
+        yield [false, 'text/html'];
+        yield [true, 'application/json'];
+        yield [true, 'application/vnd.api+json'];
+    }
+
+    public static function isJsonExpectedOnSoftMatchProvider(): \Traversable
+    {
+        yield [false, null];
+        yield [false, 'text/html'];
+        yield [true, 'text/json'];
+        yield [true, 'application/vnd.api+json'];
     }
 
     public function testCreateOutsideOfScope(): void
@@ -116,7 +126,7 @@ class InputManagerTest extends TestCase
         self::assertNull($this->input->bearerToken());
 
         $request = new ServerRequest(method: 'GET', uri: 'http://domain.com/hello-world', headers: [
-            'Authorization' => 'Bearer some-token'
+            'Authorization' => 'Bearer some-token',
         ]);
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -124,7 +134,7 @@ class InputManagerTest extends TestCase
 
         // Case with coma separated header values
         $request = new ServerRequest(method: 'GET', uri: 'http://domain.com/hello-world', headers: [
-            'Authorization' => 'Bearer some-token'
+            'Authorization' => 'Bearer some-token',
         ]);
 
         $this->container->bind(ServerRequestInterface::class, $request->withAddedHeader('Authorization', 'baz'));
@@ -142,7 +152,7 @@ class InputManagerTest extends TestCase
             'GET',
             'http://domain.com/hello-world',
             ['X-Requested-With' => 'xmlhttprequest'],
-            'php://input'
+            'php://input',
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -175,19 +185,11 @@ class InputManagerTest extends TestCase
             'GET',
             'http://domain.com/hello-world',
             $acceptHeader !== null ? ['Accept' => $acceptHeader] : [],
-            'php://input'
+            'php://input',
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
         self::assertSame($expected, $input->isJsonExpected());
-    }
-
-    public static function isJsonExpectedProvider(): \Traversable
-    {
-        yield [false, null];
-        yield [false, 'text/html'];
-        yield [true, 'application/json'];
-        yield [true, 'application/vnd.api+json'];
     }
 
     #[DataProvider('isJsonExpectedOnSoftMatchProvider')]
@@ -197,20 +199,12 @@ class InputManagerTest extends TestCase
             'GET',
             'http://domain.com/hello-world',
             $acceptHeader !== null ? ['Accept' => $acceptHeader] : [],
-            'php://input'
+            'php://input',
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
         self::assertFalse($this->input->isJsonExpected());
         self::assertSame($expected, $this->input->isJsonExpected(true));
-    }
-
-    public static function isJsonExpectedOnSoftMatchProvider(): \Traversable
-    {
-        yield [false, null];
-        yield [false, 'text/html'];
-        yield [true, 'text/json'];
-        yield [true, 'application/vnd.api+json'];
     }
 
     public function testRemoteIP(): void
@@ -219,7 +213,7 @@ class InputManagerTest extends TestCase
             'GET',
             'http://domain.com/hello-world',
             body: 'php://input',
-            serverParams: ['REMOTE_ADDR' => '127.0.0.1']
+            serverParams: ['REMOTE_ADDR' => '127.0.0.1'],
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -230,7 +224,7 @@ class InputManagerTest extends TestCase
             'http://domain.com/hello-world',
             ['Accept' => 'application/json'],
             'php://input',
-            serverParams: ['REMOTE_ADDR' => null]
+            serverParams: ['REMOTE_ADDR' => null],
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -244,7 +238,7 @@ class InputManagerTest extends TestCase
         $request = new ServerRequest(
             'GET',
             'http://domain.com/hello-world',
-            body: 'php://input'
+            body: 'php://input',
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
@@ -274,7 +268,7 @@ class InputManagerTest extends TestCase
         $request = new ServerRequest(
             'GET',
             'http://domain.com/hello-world',
-            body: 'php://input'
+            body: 'php://input',
         );
 
         $this->container->bind(ServerRequestInterface::class, $request);
@@ -286,15 +280,15 @@ class InputManagerTest extends TestCase
         $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
             'array' => [
                 'key' => [
-                    'name' => 'value'
-                ]
+                    'name' => 'value',
+                ],
             ],
-            'name'  => 'xx'
+            'name'  => 'xx',
         ])->withQueryParams([
             'name' => 'value',
-            'key'  => ['name' => 'hi']
+            'key'  => ['name' => 'hi'],
         ])->withAttribute('attr', 'value')->withCookieParams([
-            'cookie' => 'cookie-value'
+            'cookie' => 'cookie-value',
         ]));
 
         self::assertSame('value', $this->input->data('array.key.name'));
@@ -313,16 +307,22 @@ class InputManagerTest extends TestCase
     public function testAddCustomInputBag(): void
     {
         $input = new InputManager($this->container, new HttpConfig(
-            ['inputBags' => ['test' => ['class'  => InputBag::class, 'source' => 'getQueryParams']]]
+            ['inputBags' => ['test' => ['class'  => InputBag::class, 'source' => 'getQueryParams']]],
         ));
 
         $request = new ServerRequest(
             'GET',
             'http://domain.com/hello-world',
-            body: 'php://input'
+            body: 'php://input',
         );
         $this->container->bind(ServerRequestInterface::class, $request);
 
         self::assertInstanceOf(InputBag::class, $input->test);
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->input = new InputManager($this->container);
     }
 }

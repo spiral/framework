@@ -10,6 +10,4 @@ namespace Spiral\Core\Exception;
  *
  * Sugar conditions are avoidable.
  */
-class ScopeException extends LogicException
-{
-}
+class ScopeException extends LogicException {}

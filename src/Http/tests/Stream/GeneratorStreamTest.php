@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http\Stream;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use Spiral\Http\Stream\GeneratorStream;
 
 final class GeneratorStreamTest extends TestCase
@@ -32,7 +30,7 @@ final class GeneratorStreamTest extends TestCase
     {
         $stream = $this->createStream();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $stream->seek(5);
     }
@@ -68,7 +66,7 @@ final class GeneratorStreamTest extends TestCase
     {
         $stream = $this->createStream();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $stream->write('test');
     }
@@ -121,7 +119,7 @@ final class GeneratorStreamTest extends TestCase
 
         self::assertSame('', (string) $stream);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unable to read stream contents.');
 
         $stream->getContents();
@@ -132,7 +130,7 @@ final class GeneratorStreamTest extends TestCase
         $stream = $this->createStream();
         $stream->close();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Cannot read from non-readable stream.');
 
         $stream->read(1);
@@ -173,7 +171,7 @@ final class GeneratorStreamTest extends TestCase
 
     private function createStream(iterable $sequence = self::DEFAULT_SEQUENCE, $return = null): GeneratorStream
     {
-        $function = static function (iterable $iterable, $return): Generator {
+        $function = static function (iterable $iterable, $return): \Generator {
             yield from $iterable;
             return $return;
         };

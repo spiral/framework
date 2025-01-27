@@ -18,9 +18,8 @@ final class IsolatePHPBlocks implements VisitorInterface
     private const PHP_MARCO_EXISTS_FUNCTION = 'injected';
 
     public function __construct(
-        private readonly string $path
-    ) {
-    }
+        private readonly string $path,
+    ) {}
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {

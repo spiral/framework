@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Loader;
 
-use Spiral\Core\Container;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\ResolverInterface;
 use Spiral\Router\Exception\LoaderLoadException;
@@ -16,8 +15,7 @@ final class PhpFileLoader implements LoaderInterface
     public function __construct(
         private readonly FactoryInterface $factory,
         private readonly ResolverInterface $resolver,
-    ) {
-    }
+    ) {}
 
     /**
      * Loads a PHP file.
@@ -28,7 +26,7 @@ final class PhpFileLoader implements LoaderInterface
             throw new LoaderLoadException(\sprintf('File [%s] does not exist.', $resource));
         }
 
-        $load = static fn (string $path) => include $path;
+        $load = static fn(string $path) => include $path;
 
         $callback = $load($resource);
 

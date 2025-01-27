@@ -22,7 +22,7 @@ final class StemplerLoader implements StemplerLoaderInterface
 
     public function __construct(
         private readonly LoaderInterface $loader,
-        array $processors
+        array $processors,
     ) {
         $this->processors = $processors;
     }
@@ -35,9 +35,6 @@ final class StemplerLoader implements StemplerLoaderInterface
         $this->context = $context;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function load(string $path): Source
     {
         if ($this->context === null) {
@@ -46,7 +43,7 @@ final class StemplerLoader implements StemplerLoaderInterface
 
         $source = $this->process(
             $this->loader->load($path),
-            $this->context
+            $this->context,
         );
 
         return new Source($source->getCode(), $source->getFilename());

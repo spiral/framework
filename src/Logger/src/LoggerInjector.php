@@ -20,8 +20,7 @@ final class LoggerInjector implements InjectorInterface
 
     public function __construct(
         private readonly LogsInterface $factory,
-    ) {
-    }
+    ) {}
 
     /**
      * @param \ReflectionParameter|string|null $context may use extended context if possible.

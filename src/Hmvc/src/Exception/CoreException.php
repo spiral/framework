@@ -7,6 +7,4 @@ namespace Spiral\Core\Exception;
 /**
  * @deprecated will be removed in Spiral v4.0
  */
-class CoreException extends RuntimeException
-{
-}
+class CoreException extends RuntimeException {}

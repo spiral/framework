@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
 use Symfony\Component\Console\Input\StringInput;
-use Throwable;
 
 class ConfigTest extends AbstractCommandTestCase
 {
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffold(): void
     {
@@ -21,13 +18,13 @@ class ConfigTest extends AbstractCommandTestCase
 
         $this->console()->run('create:config', [
             'name' => 'sample',
-            '--comment' => 'Sample Config'
+            '--comment' => 'Sample Config',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('strict_types=1', $content);
@@ -44,8 +41,8 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffoldWithCustomNamespace(): void
     {
@@ -53,13 +50,13 @@ class ConfigTest extends AbstractCommandTestCase
 
         $this->console()->run('create:config', [
             'name' => 'sample',
-            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Config'
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Config',
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($class));
+        \clearstatcache();
+        self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('App/Custom/Config/SampleConfig.php', \str_replace('\\', '/', $reflection->getFileName()));
@@ -67,19 +64,19 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testReverse(): void
     {
         $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Config\\ReversedConfig';
         $this->console()->run(null, new StringInput('create:config reversed -r'));
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testReverseDefinition(): void
     {
@@ -87,13 +84,13 @@ class ConfigTest extends AbstractCommandTestCase
         $this->console()->run('create:config', [
             'name' => 'reversed',
             '--comment' => 'Reversed Config',
-            '--reverse' => true
+            '--reverse' => true,
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
 
         self::assertTrue($reflection->hasConstant('CONFIG'));
         self::assertTrue($reflection->hasProperty('config'));
@@ -145,11 +142,11 @@ class ConfigTest extends AbstractCommandTestCase
             }
         }
 
-        self::assertCount(count($methods), $reflectionMethods);
+        self::assertCount(\count($methods), $reflectionMethods);
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testReverseWeirdKeys(): void
     {
@@ -157,13 +154,13 @@ class ConfigTest extends AbstractCommandTestCase
         $this->console()->run('create:config', [
             'name' => 'weird',
             '--comment' => 'Weird Config',
-            '--reverse' => true
+            '--reverse' => true,
         ]);
 
-        clearstatcache();
-        self::assertTrue(class_exists($className));
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
 
         self::assertTrue($reflection->hasConstant('CONFIG'));
         self::assertTrue($reflection->hasProperty('config'));
@@ -176,7 +173,7 @@ class ConfigTest extends AbstractCommandTestCase
             'getAthello',
             'getWithSpaces',
             'getAndOtherChars',
-            'getWithUnderscoreAndDashes'
+            'getWithUnderscoreAndDashes',
         ];
 
         $reflectionMethods = [];
@@ -189,11 +186,11 @@ class ConfigTest extends AbstractCommandTestCase
             self::assertContains($method->name, $methods);
         }
 
-        self::assertCount(count($methods), $reflectionMethods);
+        self::assertCount(\count($methods), $reflectionMethods);
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testConfigFile(): void
     {
@@ -205,7 +202,7 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function testConfigFileExists(): void
     {
@@ -231,7 +228,7 @@ class ConfigTest extends AbstractCommandTestCase
 
         $result = $this->console()->run('create:config', [
             'name' => 'instruction',
-            '--comment' => 'Instruction Config'
+            '--comment' => 'Instruction Config',
         ]);
 
         $output = $result->getOutput()->fetch();
@@ -247,7 +244,7 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     private function deleteConfigFile(string $filename): void
     {
@@ -255,16 +252,16 @@ class ConfigTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     private function createConfig(string $name, string $comment): string
     {
         $this->console()->run('create:config', [
             'name' => $name,
-            '--comment' => $comment
+            '--comment' => $comment,
         ]);
 
-        clearstatcache();
+        \clearstatcache();
 
         $filename = $this->app->directory('config') . "$name.php";
         self::assertFileExists($filename);

@@ -13,21 +13,21 @@ final class DirectoryLoader implements LoaderInterface
 {
     public function __construct(
         private readonly string $directory,
-        private readonly string $extension = '.dark.php'
-    ) {
-    }
+        private readonly string $extension = '.dark.php',
+    ) {}
 
     /**
      * @throws LoaderException
      */
     public function load(string $path): Source
     {
+        $path = \str_replace('\\', '/', $path);
+
         $filename = \sprintf(
-            '%s%s%s%s',
+            '%s/%s%s',
             $this->directory,
-            DIRECTORY_SEPARATOR,
             $path,
-            $this->extension
+            $this->extension,
         );
 
         if (!\file_exists($filename)) {

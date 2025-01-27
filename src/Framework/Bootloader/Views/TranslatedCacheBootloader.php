@@ -18,15 +18,11 @@ final class TranslatedCacheBootloader extends Bootloader
     protected const DEPENDENCIES = [
         I18nBootloader::class,
     ];
-
     protected const SINGLETONS = [
         // Each engine expect to mount this process by itself
         LocaleProcessor::class => LocaleProcessor::class,
     ];
 
-    /**
-     * @param ViewsBootloader $views
-     */
     public function init(ViewsBootloader $views): void
     {
         $views->addCacheDependency(LocaleDependency::class);

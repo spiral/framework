@@ -15,9 +15,8 @@ class RedirectFirewall extends AbstractFirewall
     public function __construct(
         protected readonly UriInterface $uri,
         protected readonly ResponseFactoryInterface $responseFactory,
-        protected readonly int $status = 302
-    ) {
-    }
+        protected readonly int $status = 302,
+    ) {}
 
     protected function denyAccess(Request $request, RequestHandlerInterface $handler): Response
     {

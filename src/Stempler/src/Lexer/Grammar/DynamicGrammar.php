@@ -45,21 +45,39 @@ final class DynamicGrammar implements GrammarInterface
     private readonly BracesGrammar $raw;
 
     public function __construct(
-        private readonly ?DirectiveRendererInterface $directiveRenderer = null
+        private readonly ?DirectiveRendererInterface $directiveRenderer = null,
     ) {
         $this->echo = new BracesGrammar(
             '{{',
             '}}',
             self::TYPE_OPEN_TAG,
-            self::TYPE_CLOSE_TAG
+            self::TYPE_CLOSE_TAG,
         );
 
         $this->raw = new BracesGrammar(
             '{!!',
             '!!}',
             self::TYPE_OPEN_RAW_TAG,
-            self::TYPE_CLOSE_RAW_TAG
+            self::TYPE_CLOSE_RAW_TAG,
         );
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public static function tokenName(int $token): string
+    {
+        return match ($token) {
+            self::TYPE_OPEN_TAG => 'DYNAMIC:OPEN_TAG',
+            self::TYPE_CLOSE_TAG => 'DYNAMIC:CLOSE_TAG',
+            self::TYPE_OPEN_RAW_TAG => 'DYNAMIC:OPEN_RAW_TAG',
+            self::TYPE_CLOSE_RAW_TAG => 'DYNAMIC:CLOSE_RAW_TAG',
+            self::TYPE_BODY => 'DYNAMIC:BODY',
+            self::TYPE_DIRECTIVE => 'DYNAMIC:DIRECTIVE',
+            self::TYPE_KEYWORD => 'DYNAMIC:KEYWORD',
+            self::TYPE_WHITESPACE => 'DYNAMIC:WHITESPACE',
+            default => 'DYNAMIC:UNDEFINED',
+        };
     }
 
     /**
@@ -108,6 +126,10 @@ final class DynamicGrammar implements GrammarInterface
                     $src->replay($directive->getLastOffset());
                     continue;
                 }
+                // When we found directive char but it's not a directive, we need to clean the replay buffer
+                // because it may contain extra tokens that we don't need to return back to the stream
+                $src->cleanReplay();
+
 
                 $src->replay($n->offset);
             }
@@ -134,24 +156,6 @@ final class DynamicGrammar implements GrammarInterface
         }
 
         yield from $src;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public static function tokenName(int $token): string
-    {
-        return match ($token) {
-            self::TYPE_OPEN_TAG => 'DYNAMIC:OPEN_TAG',
-            self::TYPE_CLOSE_TAG => 'DYNAMIC:CLOSE_TAG',
-            self::TYPE_OPEN_RAW_TAG => 'DYNAMIC:OPEN_RAW_TAG',
-            self::TYPE_CLOSE_RAW_TAG => 'DYNAMIC:CLOSE_RAW_TAG',
-            self::TYPE_BODY => 'DYNAMIC:BODY',
-            self::TYPE_DIRECTIVE => 'DYNAMIC:DIRECTIVE',
-            self::TYPE_KEYWORD => 'DYNAMIC:KEYWORD',
-            self::TYPE_WHITESPACE => 'DYNAMIC:WHITESPACE',
-            default => 'DYNAMIC:UNDEFINED',
-        };
     }
 
     private function declare(?string $body): void

@@ -23,9 +23,8 @@ class PipelineInterceptor implements CoreInterceptorInterface
     public function __construct(
         private ReaderInterface $reader,
         private ContainerInterface $container,
-        private ?EventDispatcherInterface $dispatcher = null
-    ) {
-    }
+        private ?EventDispatcherInterface $dispatcher = null,
+    ) {}
 
     /**
      * @throws \Throwable

@@ -85,7 +85,7 @@ final class QueueBootloaderTest extends BaseTestCase
                     \Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor::class,
                     \Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor::class,
                 ],
-                'push' => []
+                'push' => [],
             ],
         ]);
     }
@@ -104,7 +104,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $bootloader->addConsumeInterceptor($autowire);
 
         self::assertSame([
-            'foo', $interceptor, $autowire
+            'foo', $interceptor, $autowire,
         ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['consume']);
     }
 
@@ -122,7 +122,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $bootloader->addPushInterceptor($autowire);
 
         self::assertSame([
-            'foo', $interceptor, $autowire
+            'foo', $interceptor, $autowire,
         ], $configs->getConfig(QueueConfig::CONFIG)['interceptors']['push']);
     }
 
@@ -135,7 +135,7 @@ final class QueueBootloaderTest extends BaseTestCase
         $bootloader->registerDriverAlias('foo', 'bar');
 
         self::assertSame([
-            'bar' => 'foo'
+            'bar' => 'foo',
         ], $configs->getConfig(QueueConfig::CONFIG)['driverAliases']);
     }
 }

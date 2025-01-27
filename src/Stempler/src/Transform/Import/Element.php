@@ -21,7 +21,7 @@ final class Element implements ImportInterface
     public function __construct(
         private string $path,
         ?string $alias = null,
-        ?Context $context = null
+        ?Context $context = null,
     ) {
         $this->alias = $alias ?? $path;
 

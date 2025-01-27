@@ -16,7 +16,7 @@ final class ValidateCommandTest extends ConsoleTestCase
 {
     public function testValidate(): void
     {
-        $this->beforeBooting(function (TokenizerListenerBootloader $tokenizer): void {
+        $this->beforeBooting(static function (TokenizerListenerBootloader $tokenizer): void {
             $tokenizer->addListener(new InvalidListener());
         });
         $this->initApp();

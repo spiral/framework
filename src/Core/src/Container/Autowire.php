@@ -25,14 +25,8 @@ final class Autowire
      */
     public function __construct(
         public readonly string $alias,
-        public readonly array $parameters = []
-    ) {
-    }
-
-    public static function __set_state(array $anArray): static
-    {
-        return new self($anArray['alias'], $anArray['parameters']);
-    }
+        public readonly array $parameters = [],
+    ) {}
 
     /**
      * Init the autowire based on string or array definition.
@@ -52,7 +46,7 @@ final class Autowire
         if (\is_array($definition) && isset($definition['class'])) {
             return new self(
                 $definition['class'],
-                $definition['options'] ?? $definition['params'] ?? []
+                $definition['options'] ?? $definition['params'] ?? [],
             );
         }
 
@@ -75,5 +69,10 @@ final class Autowire
     public function resolve(FactoryInterface $factory, array $parameters = []): object
     {
         return $this->target ?? $factory->make($this->alias, \array_merge($this->parameters, $parameters));
+    }
+
+    public static function __set_state(array $anArray): static
+    {
+        return new self($anArray['alias'], $anArray['parameters']);
     }
 }

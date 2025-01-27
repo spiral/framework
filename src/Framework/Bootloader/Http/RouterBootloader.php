@@ -41,8 +41,7 @@ final class RouterBootloader extends Bootloader
     public function __construct(
         private readonly ConfiguratorInterface $config,
         private readonly BinderInterface $binder,
-    ) {
-    }
+    ) {}
 
     public function defineDependencies(): array
     {
@@ -96,7 +95,7 @@ final class RouterBootloader extends Bootloader
         UriHandler $uriHandler,
         #[Proxy] ContainerInterface $container,
         TracerInterface $tracer,
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
     ): RouterInterface {
         return new Router(
             $this->config->getConfig(HttpConfig::CONFIG)['basePath'],

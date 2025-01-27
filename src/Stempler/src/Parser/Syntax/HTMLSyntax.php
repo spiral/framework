@@ -77,7 +77,7 @@ final class HTMLSyntax implements SyntaxInterface
                 $this->attr = new Attr(
                     $this->parseToken($parser, $token),
                     new Nil(),
-                    new Parser\Context($token, $parser->getPath())
+                    new Parser\Context($token, $parser->getPath()),
                 );
 
                 $this->node->attrs[] = $this->attr;
@@ -128,7 +128,7 @@ final class HTMLSyntax implements SyntaxInterface
                          */
                         throw new SyntaxException(
                             "Invalid closing tag `{$this->node->name}`, expected `{$asm->getNode()->name}`",
-                            $this->token
+                            $this->token,
                         );
                     }
 
@@ -185,7 +185,7 @@ final class HTMLSyntax implements SyntaxInterface
              */
             $parser->parseTokens(
                 new Assembler($verbatim, 'nodes'),
-                $token->tokens
+                $token->tokens,
             );
         }
 

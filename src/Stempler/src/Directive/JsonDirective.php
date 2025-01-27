@@ -16,7 +16,7 @@ final class JsonDirective extends AbstractDirective
             '<?php echo json_encode(%s, %s, %s) ?>',
             $directive->values[0] ?? $directive->body,
             $directive->values[1] ?? self::DEFAULT_OPTIONS,
-            $directive->values[2] ?? 512
+            $directive->values[2] ?? 512,
         );
     }
 }

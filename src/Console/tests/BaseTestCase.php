@@ -21,24 +21,23 @@ abstract class BaseTestCase extends TestCase
         'directories' => [__DIR__ . '/Fixtures/'],
         'exclude'     => ['User'],
     ];
-
     public const CONFIG = [
         'locateCommands' => false,
         'commands' => [
             UserCommand::class,
         ],
-        'interceptors' => []
+        'interceptors' => [],
     ];
 
     protected Container $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->container = new Container();
 
         $this->container->bind(
             ConsoleConfig::class,
-            new ConsoleConfig(static::CONFIG)
+            new ConsoleConfig(static::CONFIG),
         );
     }
 
@@ -50,7 +49,7 @@ abstract class BaseTestCase extends TestCase
             config: $config,
             locator: $locator ?? $this->getStaticLocator([]),
             container: $this->container,
-            dispatcher: $eventDispatcher
+            dispatcher: $eventDispatcher,
         );
     }
 
@@ -59,7 +58,7 @@ abstract class BaseTestCase extends TestCase
         return new StaticLocator(
             $commands,
             $this->container->get(ConsoleConfig::class)->getInterceptors(),
-            $this->container
+            $this->container,
         );
     }
 

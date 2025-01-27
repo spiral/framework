@@ -13,10 +13,10 @@ class GetEntity extends DataEntity
 
     protected static function filter($v)
     {
-        if (is_array($v)) {
+        if (\is_array($v)) {
             throw new RuntimeException("can't be array");
         }
 
-        return (int)$v;
+        return (int) $v;
     }
 }

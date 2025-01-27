@@ -54,7 +54,7 @@ class RouterTest extends BaseTestCase
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->callback(static fn (Routing|RouteMatched $event): bool => $event->request instanceof ServerRequest));
+            ->with($this->callback(static fn(Routing|RouteMatched $event): bool => $event->request instanceof ServerRequest));
 
         $router = $this->makeRouter('', $dispatcher);
         $router->setDefault($route);
@@ -71,7 +71,7 @@ class RouterTest extends BaseTestCase
             ->method('dispatch')
             ->with($this->logicalOr(
                 new Routing($request),
-                new RouteNotFound($request)
+                new RouteNotFound($request),
             ));
 
         $router = $this->makeRouter('', $dispatcher);
@@ -85,7 +85,7 @@ class RouterTest extends BaseTestCase
         $router = $this->makeRouter('https://host.com', $this->createMock(EventDispatcherInterface::class));
 
         $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
-        $configurator->add('foo', '//<host>/register')->callable(fn () => null);
+        $configurator->add('foo', '//<host>/register')->callable(static fn() => null);
 
         $router->import($configurator);
         $this->getContainer()->get(GroupRegistry::class)->registerRoutes($router);

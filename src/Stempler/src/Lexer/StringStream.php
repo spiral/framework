@@ -12,7 +12,7 @@ final class StringStream implements StreamInterface
     private int $offset;
 
     public function __construct(
-        private readonly string $source
+        private readonly string $source,
     ) {
         $this->length = \strlen($source);
         $this->offset = 0;

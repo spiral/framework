@@ -14,6 +14,48 @@ use Spiral\Http\ErrorHandler\PlainRenderer;
 #[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Http\ErrorHandler\PlainRenderer::class)]
 final class PlainRendererTest extends TestCase
 {
+    public static function dataResponseIsJson(): iterable
+    {
+        yield [
+            'application/json',
+        ];
+
+        //Client and Server set `Accept` header each
+        yield [
+            ['application/json', 'application/json'],
+        ];
+
+        yield [
+            'application/json, text/html;q=0.9, */*;q=0.8',
+        ];
+
+        yield [
+            [
+                'application/json',
+                'text/html, application/json;q=0.9, */*;q=0.8',
+            ],
+        ];
+    }
+
+    public static function dataResponseIsPlain(): iterable
+    {
+        //Accept header contains several mime types with `q` values. JSON is not prioritized
+        yield [
+            'text/html, application/json;q=0.9, */*;q=0.8',
+        ];
+
+        yield [
+            [
+                'text/html, application/json;q=0.9, */*;q=0.8',
+                'application/json',
+            ],
+        ];
+
+        yield [
+            'text/html, application/json, */*;q=0.9',
+        ];
+    }
+
     public function testContentTypeApplicationJson(): void
     {
         $renderer = new PlainRenderer($this->mockResponseFactory());
@@ -61,29 +103,6 @@ final class PlainRendererTest extends TestCase
         self::assertJsonStringEqualsJsonString('{"status": 400}', $stream->getContents());
     }
 
-    public static function dataResponseIsJson(): iterable
-    {
-        yield [
-            'application/json',
-        ];
-
-        //Client and Server set `Accept` header each
-        yield [
-            ['application/json', 'application/json'],
-        ];
-
-        yield [
-            'application/json, text/html;q=0.9, */*;q=0.8',
-        ];
-
-        yield [
-            [
-                'application/json',
-                'text/html, application/json;q=0.9, */*;q=0.8',
-            ],
-        ];
-    }
-
     #[DataProvider('dataResponseIsPlain')]
     public function testResponseIsPlain($acceptHeader): void
     {
@@ -94,25 +113,6 @@ final class PlainRendererTest extends TestCase
         $stream = $response->getBody();
         $stream->rewind();
         self::assertSame('Error code: 400', $stream->getContents());
-    }
-
-    public static function dataResponseIsPlain(): iterable
-    {
-        //Accept header contains several mime types with `q` values. JSON is not prioritized
-        yield [
-            'text/html, application/json;q=0.9, */*;q=0.8',
-        ];
-
-        yield [
-            [
-                'text/html, application/json;q=0.9, */*;q=0.8',
-                'application/json',
-            ],
-        ];
-
-        yield [
-            'text/html, application/json, */*;q=0.9',
-        ];
     }
 
     private function mockResponseFactory(): ResponseFactoryInterface

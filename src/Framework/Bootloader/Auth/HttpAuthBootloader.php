@@ -41,8 +41,7 @@ final class HttpAuthBootloader extends Bootloader
 {
     public function __construct(
         private readonly ConfiguratorInterface $config,
-    ) {
-    }
+    ) {}
 
     public function defineDependencies(): array
     {
@@ -65,7 +64,7 @@ final class HttpAuthBootloader extends Bootloader
             TransportRegistry::class => [self::class, 'transportRegistry'],
             TokenStorageProviderInterface::class => TokenStorageProvider::class,
             // Default token storage outside of HTTP scope
-            TokenStorageInterface::class => static fn (TokenStorageProviderInterface $provider): TokenStorageInterface
+            TokenStorageInterface::class => static fn(TokenStorageProviderInterface $provider): TokenStorageInterface
                 => $provider->getStorage(),
         ];
     }
@@ -77,12 +76,12 @@ final class HttpAuthBootloader extends Bootloader
         $httpBinder->bindSingleton(TokenStorageInterface::class, [self::class, 'getTokenStorage']);
         $httpBinder->bind(
             AuthContextInterface::class,
-            static fn (?ServerRequestInterface $request): AuthContextInterface =>
+            static fn(?ServerRequestInterface $request): AuthContextInterface =>
                 ($request ?? throw new InvalidRequestScopeException(AuthContextInterface::class))
                     ->getAttribute(AuthMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
-                AuthContextInterface::class,
-                AuthMiddleware::ATTRIBUTE,
-            )
+                        AuthContextInterface::class,
+                        AuthMiddleware::ATTRIBUTE,
+                    ),
         );
         // Bind middleware to `http` scope
         $httpBinder->bind(AuthMiddleware::class, AuthMiddleware::class);
@@ -101,7 +100,7 @@ final class HttpAuthBootloader extends Bootloader
                 'storages' => [
                     'session' => SessionTokenStorage::class,
                 ],
-            ]
+            ],
         );
     }
 
@@ -161,7 +160,7 @@ final class HttpAuthBootloader extends Bootloader
      */
     private function getTokenStorage(
         TokenStorageProviderInterface $provider,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): TokenStorageInterface {
         return $request->getAttribute(AuthMiddleware::TOKEN_STORAGE_ATTRIBUTE) ?? $provider->getStorage();
     }

@@ -15,19 +15,6 @@ final class CacheHandlerTest extends TestCase
     private CacheHandler $handler;
     private m\MockInterface|CacheInterface $cache;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $storage = m::mock(CacheStorageProviderInterface::class);
-
-        $storage->shouldReceive('storage')->once()->andReturn($this->cache = m::mock(CacheInterface::class));
-
-        $this->handler = new CacheHandler(
-            $storage
-        );
-    }
-
     public function testClose(): void
     {
         self::assertTrue($this->handler->close());
@@ -69,5 +56,18 @@ final class CacheHandlerTest extends TestCase
         $this->cache->shouldReceive('set')->with('session:foo', 'bar', 86400)->andReturn(true);
 
         self::assertTrue($this->handler->write('foo', 'bar'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $storage = m::mock(CacheStorageProviderInterface::class);
+
+        $storage->shouldReceive('storage')->once()->andReturn($this->cache = m::mock(CacheInterface::class));
+
+        $this->handler = new CacheHandler(
+            $storage,
+        );
     }
 }

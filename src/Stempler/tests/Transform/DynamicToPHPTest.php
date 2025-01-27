@@ -4,17 +4,33 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler\Transform;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Stempler\Directive\LoopDirective;
 use Spiral\Stempler\Node\PHP;
+use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Transform\Finalizer\DynamicToPHP;
 
 class DynamicToPHPTest extends BaseTestCase
 {
+    public static function provideStringWithoutDirective(): iterable
+    {
+        yield ['https://unpkg.com/tailwindcss@^1.6/dist/tailwind.min.css'];
+    }
+
     public function testOutput(): void
     {
         $doc = $this->parse('{{ $name }}');
 
         self::assertInstanceOf(PHP::class, $doc->nodes[0]);
+    }
+
+    #[DataProvider('provideStringWithoutDirective')]
+    public function testLinkWithReservedSymbol(string $string): void
+    {
+        $doc = $this->parse($string);
+
+        self::assertInstanceOf(Raw::class, $doc->nodes[0]);
+        self::assertSame($string, $doc->nodes[0]->content);
     }
 
     public function testDirective(): void
@@ -82,10 +98,10 @@ class DynamicToPHPTest extends BaseTestCase
 
     private function eval(string $body): string
     {
-        ob_start();
+        \ob_start();
 
         eval('?>' . $body);
 
-        return ob_get_clean();
+        return \ob_get_clean();
     }
 }

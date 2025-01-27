@@ -16,8 +16,8 @@ final class InitializerAttributesTest extends InitializerTestCase
             'initMethodF',
             'init',
             'initMethodB',
-            'initMethodE',
             'initMethodD',
+            'initMethodE',
             'initMethodC',
         ], $result[BootloaderWithAttributes::class]['init_methods']);
     }
@@ -30,8 +30,8 @@ final class InitializerAttributesTest extends InitializerTestCase
             'bootMethodF',
             'boot',
             'bootMethodB',
-            'bootMethodE',
             'bootMethodD',
+            'bootMethodE',
             'bootMethodC',
         ], $result[BootloaderWithAttributes::class]['boot_methods']);
     }

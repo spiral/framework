@@ -13,9 +13,8 @@ use Spiral\Console\Configurator\Attribute\Parser;
 final class AttributeBasedConfigurator implements ConfiguratorInterface
 {
     public function __construct(
-        private readonly Parser $parser
-    ) {
-    }
+        private readonly Parser $parser,
+    ) {}
 
     public function canConfigure(Command $command, \ReflectionClass $reflection): bool
     {

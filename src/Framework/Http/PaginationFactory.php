@@ -22,9 +22,8 @@ final class PaginationFactory implements PaginationProviderInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     /**
      * @throws ScopeException When no request are available.
@@ -42,7 +41,7 @@ final class PaginationFactory implements PaginationProviderInterface
         //Getting page number
         $page = 0;
         if (!empty($query[$parameter]) && \is_scalar($query[$parameter])) {
-            $page = (int)$query[$parameter];
+            $page = (int) $query[$parameter];
         }
 
         return $this->factory->make(Paginator::class, ['limit' => $limit, 'parameter' => $parameter])->withPage($page);

@@ -14,6 +14,72 @@ use Spiral\Tests\Boot\Fixtures\BootloaderD;
 
 final class BootloadConfigTest extends InitializerTestCase
 {
+    public static function allowEnvDataProvider(): \Traversable
+    {
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
+            [
+                BootloaderA::class => [
+                    'bootloader' => new BootloaderA(),
+                    'options' => [],
+                    'init_methods' => ['init'],
+                    'boot_methods' => ['boot'],
+                ],
+            ],
+        ];
+        yield [
+            ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
+            [],
+        ];
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
+            [],
+        ];
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
+            [],
+        ];
+    }
+
+    public static function denyEnvDataProvider(): \Traversable
+    {
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
+            [],
+        ];
+        yield [
+            ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
+            [
+                BootloaderA::class => [
+                    'bootloader' => new BootloaderA(),
+                    'options' => [],
+                    'init_methods' => ['init'],
+                    'boot_methods' => ['boot'],
+                ],
+            ],
+        ];
+    }
+
     public function testDefaultBootloadConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
@@ -176,71 +242,5 @@ final class BootloadConfigTest extends InitializerTestCase
         ]));
 
         self::assertSame([], $result);
-    }
-
-    public static function allowEnvDataProvider(): \Traversable
-    {
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            [
-                BootloaderA::class => [
-                    'bootloader' => new BootloaderA(),
-                    'options' => [],
-                    'init_methods' => ['init'],
-                    'boot_methods' => ['boot'],
-                ],
-            ],
-        ];
-        yield [
-            ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            [],
-        ];
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
-            [],
-        ];
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
-            [],
-        ];
-    }
-
-    public static function denyEnvDataProvider(): \Traversable
-    {
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            [
-                BootloaderA::class => [
-                    'bootloader' => new BootloaderA(),
-                    'options' => [],
-                    'init_methods' => ['init'],
-                    'boot_methods' => ['boot'],
-                ],
-            ],
-        ];
     }
 }

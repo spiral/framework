@@ -17,6 +17,5 @@ final class InterceptorCalling
         public readonly string $action,
         public readonly array $parameters,
         public readonly CoreInterceptorInterface|InterceptorInterface $interceptor,
-    ) {
-    }
+    ) {}
 }

@@ -34,8 +34,8 @@ class AutoRegisterTest extends TestCase
             'locale'       => 'en',
             'autoRegister' => true,
             'domains'      => [
-                'messages' => ['*']
-            ]
+                'messages' => ['*'],
+            ],
         ]));
 
         $container->bindSingleton(TranslatorInterface::class, Translator::class);
@@ -46,8 +46,8 @@ class AutoRegisterTest extends TestCase
         $loader->addCatalogue('en', new Catalogue('en', [
             'messages' => [
                 'Welcome, {name}!' => 'Welcome, {name}!',
-                'Bye, {1}!'        => 'Bye, {1}!'
-            ]
+                'Bye, {1}!'        => 'Bye, {1}!',
+            ],
         ]));
 
         $container->bind(LoaderInterface::class, $loader);

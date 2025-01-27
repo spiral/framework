@@ -17,7 +17,7 @@ final class NullTracer extends AbstractTracer
         array $attributes = [],
         bool $scoped = false,
         ?TraceKind $traceKind = null,
-        ?int $startTime = null
+        ?int $startTime = null,
     ): mixed {
         $span = new Span($name);
         $span->setAttributes($attributes);

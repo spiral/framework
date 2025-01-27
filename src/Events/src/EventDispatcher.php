@@ -13,6 +13,7 @@ use Spiral\Interceptors\HandlerInterface;
 final class EventDispatcher implements EventDispatcherInterface
 {
     private readonly bool $isLegacy;
+
     public function __construct(
         private readonly HandlerInterface|CoreInterface $core,
     ) {

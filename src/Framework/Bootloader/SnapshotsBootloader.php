@@ -25,7 +25,6 @@ final class SnapshotsBootloader extends Bootloader
         FileSnapshot::class => [self::class, 'fileSnapshot'],
         SnapshotterInterface::class => FileSnapshooter::class,
     ];
-
     private const MAX_SNAPSHOTS = 25;
 
     /**
@@ -34,14 +33,14 @@ final class SnapshotsBootloader extends Bootloader
     private function fileSnapshot(
         EnvironmentInterface $env,
         DirectoriesInterface $dirs,
-        FilesInterface $files
+        FilesInterface $files,
     ): FileSnapshot {
         return new FileSnapshot(
             $dirs->get('runtime') . '/snapshots/',
             (int) $env->get('SNAPSHOT_MAX_FILES', self::MAX_SNAPSHOTS),
-            Verbosity::tryFrom((int)($env->get('SNAPSHOT_VERBOSITY') ?? Verbosity::VERBOSE->value)),
+            Verbosity::tryFrom((int) ($env->get('SNAPSHOT_VERBOSITY') ?? Verbosity::VERBOSE->value)),
             new PlainRenderer(),
-            $files
+            $files,
         );
     }
 }

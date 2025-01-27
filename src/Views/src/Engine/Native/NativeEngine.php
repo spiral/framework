@@ -15,7 +15,7 @@ final class NativeEngine extends AbstractEngine
 
     public function __construct(
         private readonly ContainerInterface $container,
-        string $extension = self::EXTENSION
+        string $extension = self::EXTENSION,
     ) {
         $this->extension = $extension;
     }

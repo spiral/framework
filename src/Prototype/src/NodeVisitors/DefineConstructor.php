@@ -50,7 +50,7 @@ final class DefineConstructor extends NodeVisitorAbstract
          */
         $constructor->flags = BuilderHelpers::addModifier(
             $constructor->flags,
-            Node\Stmt\Class_::MODIFIER_PUBLIC
+            Node\Stmt\Class_::MODIFIER_PUBLIC,
         );
 
         return $constructor;

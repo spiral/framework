@@ -17,9 +17,8 @@ use Spiral\Stempler\VisitorInterface;
 final class InjectBlocks implements VisitorInterface
 {
     public function __construct(
-        private readonly BlockClaims $blocks
-    ) {
-    }
+        private readonly BlockClaims $blocks,
+    ) {}
 
     public function enterNode(mixed $node, VisitorContext $ctx): mixed
     {

@@ -7,6 +7,4 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Attribute\BootloadConfig;
 
 #[BootloadConfig(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true])]
-class BootloaderJ extends AbstractBootloader
-{
-}
+class BootloaderJ extends AbstractBootloader {}

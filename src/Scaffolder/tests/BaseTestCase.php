@@ -7,7 +7,6 @@ namespace Spiral\Tests\Scaffolder;
 use PHPUnit\Framework\Attributes\RequiresFunction;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tests\Scaffolder\App\TestApp;
-use Throwable;
 
 #[RequiresFunction('\Spiral\Framework\Kernel::init')]
 abstract class BaseTestCase extends TestCase
@@ -16,9 +15,9 @@ abstract class BaseTestCase extends TestCase
     protected $app;
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->app = TestApp::create([
             'root' => __DIR__ . '/App',

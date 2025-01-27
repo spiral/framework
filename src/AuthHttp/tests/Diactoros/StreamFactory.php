@@ -10,29 +10,20 @@ use Nyholm\Psr7\Stream;
 
 final class StreamFactory implements StreamFactoryInterface
 {
-    /**
-     * @inheritdoc
-     */
     public function createStream(string $content = ''): StreamInterface
     {
-        $resource = fopen('php://temp', 'rb+');
-        fwrite($resource, $content);
-        rewind($resource);
+        $resource = \fopen('php://temp', 'rb+');
+        \fwrite($resource, $content);
+        \rewind($resource);
         return $this->createStreamFromResource($resource);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function createStreamFromFile(string $file, string $mode = 'rb'): StreamInterface
     {
-        $resource = fopen($file, $mode);
+        $resource = \fopen($file, $mode);
         return $this->createStreamFromResource($resource);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function createStreamFromResource($resource): StreamInterface
     {
         return Stream::create($resource);

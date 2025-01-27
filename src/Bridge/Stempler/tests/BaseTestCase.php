@@ -19,7 +19,7 @@ abstract class BaseTestCase extends TestCase
     {
         return [
             StemplerBootloader::class,
-            PrettyPrintBootloader::class
+            PrettyPrintBootloader::class,
         ];
     }
 
@@ -32,7 +32,7 @@ abstract class BaseTestCase extends TestCase
         ] + parent::defineDirectories($root);
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

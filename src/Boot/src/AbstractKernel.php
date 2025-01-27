@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
-use Closure;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Attribute\DispatcherScope;
 use Spiral\Boot\Bootloader\BootloaderRegistry;
@@ -59,16 +58,16 @@ abstract class AbstractKernel implements KernelInterface
      */
     protected array $dispatchers = [];
 
-    /** @var array<Closure> */
+    /** @var array<\Closure> */
     private array $runningCallbacks = [];
 
-    /** @var array<Closure> */
+    /** @var array<\Closure> */
     private array $bootingCallbacks = [];
 
-    /** @var array<Closure> */
+    /** @var array<\Closure> */
     private array $bootedCallbacks = [];
 
-    /** @var array<Closure>  */
+    /** @var array<\Closure>  */
     private array $bootstrappedCallbacks = [];
 
     /**
@@ -78,7 +77,7 @@ abstract class AbstractKernel implements KernelInterface
         protected readonly Container $container,
         protected readonly ExceptionHandlerInterface $exceptionHandler,
         protected readonly BootloadManagerInterface $bootloader,
-        array $directories
+        array $directories,
     ) {
         $container->bindSingleton(ExceptionHandlerInterface::class, $exceptionHandler);
         $container->bindSingleton(ExceptionRendererInterface::class, $exceptionHandler);
@@ -91,19 +90,11 @@ abstract class AbstractKernel implements KernelInterface
 
         $container->bindSingleton(
             DirectoriesInterface::class,
-            new Directories($this->mapDirectories($directories))
+            new Directories($this->mapDirectories($directories)),
         );
 
         $this->finalizer = new Finalizer();
         $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
-    }
-
-    /**
-     * Terminate the application.
-     */
-    public function __destruct()
-    {
-        $this->finalizer->finalize(true);
     }
 
     /**
@@ -118,7 +109,7 @@ abstract class AbstractKernel implements KernelInterface
         bool $handleErrors = true,
         ExceptionHandlerInterface|string|null $exceptionHandler = null,
         Container $container = new Container(),
-        BootloadManagerInterface|Autowire|null $bootloadManager = null
+        BootloadManagerInterface|Autowire|null $bootloadManager = null,
     ): static {
         $exceptionHandler ??= ExceptionHandler::class;
 
@@ -156,21 +147,20 @@ abstract class AbstractKernel implements KernelInterface
             $container,
             $exceptionHandler,
             $bootloadManager,
-            $directories
+            $directories,
         );
     }
 
     /**
      * Run the application with given Environment
      *
-     * $app = App::create([...]);
-     * $app->booting(...);
-     * $app->booted(...);
-     * $app->bootstrapped(...);
-     * $app->run(new Environment([
-     *     'APP_ENV' => 'production'
-     * ]));
-     *
+     *      $app = App::create([...]);
+     *      $app->booting(...);
+     *      $app->booted(...);
+     *      $app->bootstrapped(...);
+     *      $app->run(new Environment([
+     *          'APP_ENV' => 'production'
+     *      ]));
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
@@ -192,7 +182,7 @@ abstract class AbstractKernel implements KernelInterface
                     $this->bootstrap();
 
                     $this->fireCallbacks($this->bootstrappedCallbacks);
-                }
+                },
             );
         } catch (\Throwable $e) {
             $this->exceptionHandler->handleGlobalException($e);
@@ -213,7 +203,7 @@ abstract class AbstractKernel implements KernelInterface
      *     $kernel->getContainer()->...
      * });
      */
-    public function running(Closure ...$callbacks): void
+    public function running(\Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
             $this->runningCallbacks[] = $callback;
@@ -228,7 +218,7 @@ abstract class AbstractKernel implements KernelInterface
      *     $kernel->getContainer()->...
      * });
      */
-    public function booting(Closure ...$callbacks): void
+    public function booting(\Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
             $this->bootingCallbacks[] = $callback;
@@ -243,13 +233,12 @@ abstract class AbstractKernel implements KernelInterface
      *     $kernel->getContainer()->...
      * });
      */
-    public function booted(Closure ...$callbacks): void
+    public function booted(\Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
             $this->bootedCallbacks[] = $callback;
         }
     }
-
 
     /**
      * Register a new callback, that will be fired after framework bootstrapped.
@@ -259,7 +248,7 @@ abstract class AbstractKernel implements KernelInterface
      *     $kernel->getContainer()->...
      * });
      */
-    public function bootstrapped(Closure ...$callbacks): void
+    public function bootstrapped(\Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
             $this->bootstrappedCallbacks[] = $callback;
@@ -319,8 +308,16 @@ abstract class AbstractKernel implements KernelInterface
             static function (DispatcherInterface $dispatcher) use ($eventDispatcher): mixed {
                 $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
                 return $dispatcher->serve();
-            }
+            },
         );
+    }
+
+    /**
+     * Terminate the application.
+     */
+    public function __destruct()
+    {
+        $this->finalizer->finalize(true);
     }
 
     /**
@@ -381,7 +378,7 @@ abstract class AbstractKernel implements KernelInterface
                 static function () use ($self): void {
                     $self->fireCallbacks($self->bootingCallbacks);
                 },
-            ]
+            ],
         );
 
         $this->fireCallbacks($this->bootedCallbacks);

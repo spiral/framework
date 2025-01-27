@@ -8,7 +8,5 @@ use Spiral\Queue\JobHandler;
 
 final class SampleJob extends JobHandler
 {
-    public function invoke(TaskInterface $task): void
-    {
-    }
+    public function invoke(TaskInterface $task): void {}
 }

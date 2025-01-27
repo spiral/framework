@@ -147,7 +147,7 @@ class RendererTest extends TestCase
     public function makeException(): void
     {
         try {
-            $f = function (): void {
+            $f = static function (): void {
                 throw new \RuntimeException('error');
             };
 

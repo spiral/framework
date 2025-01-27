@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Exceptions;
 
-use Closure;
 use Spiral\Exceptions\Attribute\NonReportable;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 use Spiral\Filters\Exception\AuthorizationException;
@@ -28,8 +27,10 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /** @var array<int, ExceptionRendererInterface> */
     protected array $renderers = [];
-    /** @var array<int, ExceptionReporterInterface|Closure> */
+
+    /** @var array<int, ExceptionReporterInterface|\Closure> */
     protected array $reporters = [];
+
     protected mixed $output = null;
     protected array $nonReportableExceptions = [
         BadRequestException::class,
@@ -69,7 +70,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         ?Verbosity $verbosity = null,
         ?string $format = null,
     ): string {
-        return (string)$this->getRenderer($format)?->render($exception, $verbosity ?? $this->verbosity, $format);
+        return (string) $this->getRenderer($format)?->render($exception, $verbosity ?? $this->verbosity, $format);
     }
 
     public function canRender(string $format): bool
@@ -134,9 +135,9 @@ class ExceptionHandler implements ExceptionHandlerInterface
     }
 
     /**
-     * @param ExceptionReporterInterface|Closure(\Throwable):void $reporter
+     * @param ExceptionReporterInterface|\Closure(\Throwable):void $reporter
      */
-    public function addReporter(ExceptionReporterInterface|Closure $reporter): void
+    public function addReporter(ExceptionReporterInterface|\Closure $reporter): void
     {
         $this->reporters[] = $reporter;
     }

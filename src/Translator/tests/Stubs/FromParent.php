@@ -7,7 +7,7 @@ namespace Spiral\Tests\Translator\Stubs;
 class FromParent extends MessageStub
 {
     private $other = [
-        '[[new-mess]]'
+        '[[new-mess]]',
     ];
 
     protected function hi()

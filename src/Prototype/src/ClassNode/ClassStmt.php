@@ -12,18 +12,7 @@ final class ClassStmt implements \Stringable
     public string $shortName;
     public ?string $alias = null;
 
-    private function __construct()
-    {
-    }
-
-    public function __toString(): string
-    {
-        if ($this->alias) {
-            return \sprintf('%s as %s', $this->name, $this->alias);
-        }
-
-        return $this->name;
-    }
+    private function __construct() {}
 
     public static function create(string $name, ?string $alias): ClassStmt
     {
@@ -33,5 +22,14 @@ final class ClassStmt implements \Stringable
         $stmt->alias = $alias;
 
         return $stmt;
+    }
+
+    public function __toString(): string
+    {
+        if ($this->alias) {
+            return \sprintf('%s as %s', $this->name, $this->alias);
+        }
+
+        return $this->name;
     }
 }

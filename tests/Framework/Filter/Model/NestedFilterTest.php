@@ -21,6 +21,78 @@ use Spiral\Tests\Framework\Filter\FilterTestCase;
 #[TestScope(Spiral::HttpRequest)]
 final class NestedFilterTest extends FilterTestCase
 {
+    public static function provideInvalidData(): \Generator
+    {
+        yield 'empty' => [
+            [],
+            [
+                'address' => [
+                    'city' => 'This value is required.',
+                    'address' => 'This value is required.',
+                ],
+                'name' => 'This value is required.',
+            ],
+            ProfileFilter::class,
+        ];
+
+        yield 'only-address' => [
+            [
+                'address' => [
+                    'city' => 'New York',
+                    'address' => 'Wall Street',
+                ],
+            ],
+            [
+                'name' => 'This value is required.',
+            ],
+            ProfileFilter::class,
+        ];
+
+        yield 'only-name' => [
+            [
+                'name' => 'John Doe',
+            ],
+            [
+                'address' => [
+                    'city' => 'This value is required.',
+                    'address' => 'This value is required.',
+                ],
+            ],
+            ProfileFilter::class,
+        ];
+
+        yield 'name and city' => [
+            [
+                'name' => 'John Doe',
+                'address' => [
+                    'city' => 'New York',
+                ],
+            ],
+            [
+                'address' => [
+                    'address' => 'This value is required.',
+                ],
+            ],
+            ProfileFilter::class,
+        ];
+        yield 'nested filter with other nested filter' => [
+            [],
+            [
+                'name' => 'This value is required.',
+                'postFilter' => [
+                    'body' => 'This value is required.',
+                    'revision' => 'This value is required.',
+                    'active' => 'This value is required.',
+                    'post_rating' => 'This value is required.',
+                    'author' => [
+                        'id' => 'This value is required.',
+                    ],
+                ],
+            ],
+            UserFilter::class,
+        ];
+    }
+
     public function testGetsNestedFilter(): void
     {
         $filter = $this->getFilter(ProfileFilter::class, [
@@ -49,9 +121,9 @@ final class NestedFilterTest extends FilterTestCase
                 'active' => true,
                 'post_rating' => 1.1,
                 'author' => [
-                    'id' => 2
+                    'id' => 2,
                 ],
-            ]
+            ],
         ]);
 
         self::assertInstanceOf(UserFilter::class, $filter);
@@ -87,7 +159,7 @@ final class NestedFilterTest extends FilterTestCase
     public function testGetsNullableNestedFilterWithoutData(): void
     {
         $filter = $this->getFilter(WithNullableNestedFilter::class, [
-            'name' => 'John Doe'
+            'name' => 'John Doe',
         ]);
 
         self::assertSame('John Doe', $filter->name);
@@ -100,7 +172,7 @@ final class NestedFilterTest extends FilterTestCase
         $this->expectExceptionMessage('The given data was invalid.');
 
         $this->getFilter(WithNullableRequiredNestedFilter::class, [
-            'name' => 'John Doe'
+            'name' => 'John Doe',
         ]);
     }
 
@@ -116,77 +188,5 @@ final class NestedFilterTest extends FilterTestCase
             self::assertEquals($expectedErrors, $e->errors);
             throw $e;
         }
-    }
-
-    public static function provideInvalidData(): \Generator
-    {
-        yield 'empty' => [
-            [],
-            [
-                'address' => [
-                    'city' => 'This value is required.',
-                    'address' => 'This value is required.',
-                ],
-                'name' => 'This value is required.',
-            ],
-            ProfileFilter::class
-        ];
-
-        yield 'only-address' => [
-            [
-                'address' => [
-                    'city' => 'New York',
-                    'address' => 'Wall Street',
-                ],
-            ],
-            [
-                'name' => 'This value is required.',
-            ],
-            ProfileFilter::class
-        ];
-
-        yield 'only-name' => [
-            [
-                'name' => 'John Doe',
-            ],
-            [
-                'address' => [
-                    'city' => 'This value is required.',
-                    'address' => 'This value is required.',
-                ],
-            ],
-            ProfileFilter::class
-        ];
-
-        yield 'name and city' => [
-            [
-                'name' => 'John Doe',
-                'address' => [
-                    'city' => 'New York',
-                ],
-            ],
-            [
-                'address' => [
-                    'address' => 'This value is required.',
-                ],
-            ],
-            ProfileFilter::class
-        ];
-        yield 'nested filter with other nested filter' => [
-            [],
-            [
-                'name' => 'This value is required.',
-                'postFilter' => [
-                    'body' => 'This value is required.',
-                    'revision' => 'This value is required.',
-                    'active' => 'This value is required.',
-                    'post_rating' => 'This value is required.',
-                    'author' => [
-                        'id' => 'This value is required.',
-                    ],
-                ],
-            ],
-            UserFilter::class
-        ];
     }
 }

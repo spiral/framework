@@ -12,5 +12,5 @@ return [
         Command\JobHandlerCommand::class,
         Command\ControllerCommand::class,
         Command\MiddlewareCommand::class,
-    ]
+    ],
 ];

@@ -27,7 +27,7 @@ abstract class DomainBootloader extends Bootloader
     protected static function domainCore(
         Core $core,
         ContainerInterface $container,
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
     ): CoreInterface&HandlerInterface {
         $builder = new CompatiblePipelineBuilder($dispatcher);
 

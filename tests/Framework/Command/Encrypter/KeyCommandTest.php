@@ -19,7 +19,7 @@ final class KeyCommandTest extends ConsoleTestCase
     public function testMountFileNotFound(): void
     {
         $out = $this->runCommand('encrypt:key', [
-            '-m' => __DIR__ . '/.env'
+            '-m' => __DIR__ . '/.env',
         ]);
 
         self::assertStringContainsString('Unable to find', $out);
@@ -27,18 +27,18 @@ final class KeyCommandTest extends ConsoleTestCase
 
     public function testReplace(): void
     {
-        file_put_contents(__DIR__ . '/.env', '{encrypt-key}');
+        \file_put_contents(__DIR__ . '/.env', '{encrypt-key}');
 
         $out = $this->runCommand('encrypt:key', [
-            '-m' => __DIR__ . '/.env'
+            '-m' => __DIR__ . '/.env',
         ]);
 
         self::assertStringContainsString('key has been updated', $out);
 
-        $body = file_get_contents(__DIR__ . '/.env');
+        $body = \file_get_contents(__DIR__ . '/.env');
         self::assertStringContainsString($body, $out);
 
-        unlink(__DIR__ . '/.env');
+        \unlink(__DIR__ . '/.env');
     }
 
     public function testReplaceCurrent(): void
@@ -46,22 +46,22 @@ final class KeyCommandTest extends ConsoleTestCase
         $key = $this->getContainer()->get(EncrypterFactory::class)->generateKey();
 
         $app = $this->makeApp([
-            'ENCRYPTER_KEY' => $key
+            'ENCRYPTER_KEY' => $key,
         ]);
 
-        file_put_contents(__DIR__ . '/.env', $key);
+        \file_put_contents(__DIR__ . '/.env', $key);
 
         $out = $app->getContainer()->get(Console::class)->run('encrypt:key', [
-            '-m' => __DIR__ . '/.env'
+            '-m' => __DIR__ . '/.env',
         ]);
 
         $out = $out->getOutput()->fetch();
 
         self::assertStringContainsString('key has been updated', $out);
 
-        $body = file_get_contents(__DIR__ . '/.env');
+        $body = \file_get_contents(__DIR__ . '/.env');
         self::assertStringContainsString($body, $out);
 
-        unlink(__DIR__ . '/.env');
+        \unlink(__DIR__ . '/.env');
     }
 }

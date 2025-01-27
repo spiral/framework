@@ -28,12 +28,12 @@ final class AttributesConfig extends InjectableConfig
 
     public function isAnnotationsReaderEnabled(): bool
     {
-        return (bool)$this->config['annotations']['support'];
+        return (bool) $this->config['annotations']['support'];
     }
 
     public function isCacheEnabled(): bool
     {
-        return (bool)($this->config['cache']['enabled'] ?? false);
+        return (bool) ($this->config['cache']['enabled'] ?? false);
     }
 
     /**

@@ -20,7 +20,6 @@ final class FormatHTML implements VisitorInterface
 {
     // default indent
     private const INDENT = '  ';
-
     private const EXCLUDE = ['pre', 'textarea'];
 
     // indent exceptions
@@ -58,9 +57,9 @@ final class FormatHTML implements VisitorInterface
             }
 
             $child->content = $this->indentContent(
-                $this->normalizeEndings((string)$child->content, false),
+                $this->normalizeEndings((string) $child->content, false),
                 $level,
-                $position
+                $position,
             );
         }
 
@@ -111,7 +110,7 @@ final class FormatHTML implements VisitorInterface
             }
 
             if ($position === self::BEFORE_CLOSE) {
-                $result .= $line . "\n" . \str_repeat(self::INDENT, max($level - 1, 0));
+                $result .= $line . "\n" . \str_repeat(self::INDENT, \max($level - 1, 0));
                 break;
             }
 

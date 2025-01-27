@@ -23,10 +23,10 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $this->assertContainerBoundAsSingleton(Console::class, Console::class);
     }
 
-//    public function testLocatorInterfaceBinding(): void
-//    {
-//        $this->assertContainerBoundAsSingleton(LocatorInterface::class, CommandLocator::class);
-//    }
+    //    public function testLocatorInterfaceBinding(): void
+    //    {
+    //        $this->assertContainerBoundAsSingleton(LocatorInterface::class, CommandLocator::class);
+    //    }
 
     public function testConsoleDispatcher(): void
     {
@@ -43,7 +43,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $bootloader->addInterceptor('bar');
 
         self::assertSame([
-            'foo', 'bar'
+            'foo', 'bar',
         ], $configs->getConfig(ConsoleConfig::CONFIG)['interceptors']);
     }
 
@@ -59,7 +59,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $bootloader->addCommand('baf');
 
         self::assertSame([
-            'baz', 'foo', 'bar', 'baf'
+            'baz', 'foo', 'bar', 'baf',
         ], $configs->getConfig(ConsoleConfig::CONFIG)['commands']);
     }
 
@@ -125,8 +125,8 @@ final class ConsoleBootloaderTest extends BaseTestCase
         $bootloader->addUpdateSequence('cycle', 'test2');
         $bootloader->addUpdateSequence('other', 'test3');
 
-        $bootloader->addUpdateSequence(static fn (): string => 'test', 'test4');
-        $bootloader->addUpdateSequence(static fn (): string => 'other', 'test5');
+        $bootloader->addUpdateSequence(static fn(): string => 'test', 'test4');
+        $bootloader->addUpdateSequence(static fn(): string => 'other', 'test5');
 
         $config = $configs->getConfig(ConsoleConfig::CONFIG)['sequences']['update'];
 

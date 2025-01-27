@@ -22,7 +22,7 @@ class BootloaderS extends Bootloader
 
     #[BindMethod(
         alias: 'sample4',
-        aliasesFromReturnType: true
+        aliasesFromReturnType: true,
     )]
     #[BindAlias('sample5')]
     #[BindAlias('sample6', 'sample7')]

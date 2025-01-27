@@ -24,19 +24,19 @@ final class Action extends AbstractTarget
     public function __construct(
         private readonly string $controller,
         private readonly string|array $action,
-        int $options = 0
+        int $options = 0,
     ) {
         if (\is_string($action)) {
             parent::__construct(
                 ['action' => $action],
                 ['action' => new Autofill($action)],
-                $options
+                $options,
             );
         } else {
             parent::__construct(
                 ['action' => null],
                 ['action' => $action],
-                $options
+                $options,
             );
         }
     }

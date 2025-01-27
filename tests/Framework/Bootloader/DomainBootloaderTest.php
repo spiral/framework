@@ -10,7 +10,6 @@ use Spiral\App\Interceptor\Two;
 use Spiral\Bootloader\DomainBootloader;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Core;
-use Spiral\Core\InterceptableCore;
 use Spiral\Core\InterceptorPipeline;
 use Spiral\Tests\Framework\BaseTestCase;
 
@@ -33,7 +32,7 @@ final class DomainBootloaderTest extends BaseTestCase
                 return [
                     One::class,
                     new Autowire(Two::class),
-                    new Three()
+                    new Three(),
                 ];
             }
         };

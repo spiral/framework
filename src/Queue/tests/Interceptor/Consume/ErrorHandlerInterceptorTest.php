@@ -13,6 +13,15 @@ use Spiral\Tests\Queue\TestCase;
 
 final class ErrorHandlerInterceptorTest extends TestCase
 {
+    public static function payloadDataProvider(): \Traversable
+    {
+        yield [['baz' => 'baf']];
+        yield [new \stdClass()];
+        yield ['some string'];
+        yield [123];
+        yield [null];
+    }
+
     #[DataProvider('payloadDataProvider')]
     public function testProcessError(mixed $payload): void
     {
@@ -20,7 +29,7 @@ final class ErrorHandlerInterceptorTest extends TestCase
         $this->expectExceptionMessage('Something went wrong');
 
         $interceptor = new ErrorHandlerInterceptor(
-            $handler = m::mock(FailedJobHandlerInterface::class)
+            $handler = m::mock(FailedJobHandlerInterface::class),
         );
 
         if (!\is_array($payload)) {
@@ -46,7 +55,7 @@ final class ErrorHandlerInterceptorTest extends TestCase
     public function testHandlerShouldBeHandledWithoutError(): void
     {
         $interceptor = new ErrorHandlerInterceptor(
-            m::mock(FailedJobHandlerInterface::class)
+            m::mock(FailedJobHandlerInterface::class),
         );
 
         $parameters = ['driver' => 'sync', 'queue' => 'default', 'payload' => ['baz' => 'bar']];
@@ -57,14 +66,5 @@ final class ErrorHandlerInterceptorTest extends TestCase
             ->andReturnNull();
 
         $interceptor->process('foo', 'bar', $parameters, $core);
-    }
-
-    public static function payloadDataProvider(): \Traversable
-    {
-        yield [['baz' => 'baf']];
-        yield [new \stdClass()];
-        yield ['some string'];
-        yield [123];
-        yield [null];
     }
 }

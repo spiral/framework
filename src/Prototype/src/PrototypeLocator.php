@@ -10,9 +10,8 @@ use Spiral\Tokenizer\ScopedClassesInterface;
 final class PrototypeLocator
 {
     public function __construct(
-        private readonly ScopedClassesInterface $classes
-    ) {
-    }
+        private readonly ScopedClassesInterface $classes,
+    ) {}
 
     /**
      * Locate all classes requiring de-prototyping.

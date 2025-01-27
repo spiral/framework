@@ -15,9 +15,8 @@ class TokenStorageProvider implements TokenStorageProviderInterface
 
     public function __construct(
         private readonly AuthConfig $config,
-        private readonly FactoryInterface $factory
-    ) {
-    }
+        private readonly FactoryInterface $factory,
+    ) {}
 
     public function getStorage(?string $name = null): TokenStorageInterface
     {

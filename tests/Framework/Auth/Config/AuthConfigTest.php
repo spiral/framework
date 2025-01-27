@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Framework\Auth\Config;
 
 use Spiral\Auth\Config\AuthConfig;
@@ -14,8 +16,8 @@ class AuthConfigTest extends BaseTestCase
         $config = new AuthConfig([
             'storages' => [
                 'session' => $session = m::mock(SessionTokenStorageInterface::class),
-                'database' => 'test'
-            ]
+                'database' => 'test',
+            ],
         ]);
 
         self::assertSame($session, $config->getStorage('session'));
@@ -24,7 +26,7 @@ class AuthConfigTest extends BaseTestCase
     public function testGetDefaultStorage(): void
     {
         $config = new AuthConfig([
-            'defaultStorage' => 'test'
+            'defaultStorage' => 'test',
         ]);
 
         self::assertSame('test', $config->getDefaultStorage());
@@ -40,7 +42,7 @@ class AuthConfigTest extends BaseTestCase
     public function testGetDefaultTransport(): void
     {
         $config = new AuthConfig([
-            'defaultTransport' => 'header'
+            'defaultTransport' => 'header',
         ]);
 
         self::assertSame('header', $config->getDefaultTransport());
@@ -56,7 +58,7 @@ class AuthConfigTest extends BaseTestCase
     public function testGetTransports(): void
     {
         $config = new AuthConfig([
-            'transports' => []
+            'transports' => [],
         ]);
 
         self::assertSame([], $config->getTransports());

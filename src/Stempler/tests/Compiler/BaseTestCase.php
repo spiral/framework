@@ -15,7 +15,6 @@ abstract class BaseTestCase extends TestCase
     protected const GRAMMARS = [
         /* GRAMMAR => SYNTAX */
     ];
-
     protected const RENDERS = [
         /* RENDERER */
     ];

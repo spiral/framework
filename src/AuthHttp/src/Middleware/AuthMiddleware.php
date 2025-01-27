@@ -35,8 +35,7 @@ final class AuthMiddleware implements MiddlewareInterface
         private readonly TokenStorageInterface $tokenStorage,
         private readonly TransportRegistry $transportRegistry,
         private readonly ?EventDispatcherInterface $eventDispatcher = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Throwable

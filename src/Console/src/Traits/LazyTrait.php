@@ -16,8 +16,10 @@ use Symfony\Component\Console\Command\LazyCommand;
 trait LazyTrait
 {
     private ContainerInterface $container;
+
     /** @var array<class-string<CoreInterceptorInterface|InterceptorInterface>> */
     private array $interceptors = [];
+
     private ?EventDispatcherInterface $dispatcher = null;
 
     /**
@@ -57,7 +59,7 @@ trait LazyTrait
                 }
 
                 return $command;
-            }
+            },
         );
     }
 }

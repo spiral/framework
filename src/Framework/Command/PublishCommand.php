@@ -18,11 +18,11 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 #[Question(
     question: 'What type of operation would you like to perform? You can choose from `replace`, `follow`, or `ensure`.',
-    argument: 'type'
+    argument: 'type',
 )]
 #[Question(
     question: 'What is the path to the directory where you want to publish resources?',
-    argument: 'target'
+    argument: 'target',
 )]
 final class PublishCommand extends Command
 {
@@ -44,7 +44,7 @@ final class PublishCommand extends Command
     public function perform(
         Publisher $publisher,
         FilesInterface $files,
-        DirectoriesInterface $directories
+        DirectoriesInterface $directories,
     ): int {
         switch ($this->argument('type')) {
             case 'replace':
@@ -53,27 +53,27 @@ final class PublishCommand extends Command
                     $this->sprintf(
                         '<fg=cyan>•</fg=cyan> publish directory <comment>%s</comment> to <comment>%s</comment>',
                         $this->getSource($files),
-                        $this->getTarget($files, $directories)
+                        $this->getTarget($files, $directories),
                     );
 
                     $publisher->publishDirectory(
                         $this->getSource($files),
                         $this->getTarget($files, $directories),
                         $this->getMergeMode(),
-                        $this->getFileMode()
+                        $this->getFileMode(),
                     );
                 } else {
                     $this->sprintf(
                         '<fg=cyan>•</fg=cyan> publish file <comment>%s</comment> to <comment>%s</comment>',
                         $this->getSource($files),
-                        $this->getTarget($files, $directories)
+                        $this->getTarget($files, $directories),
                     );
 
                     $publisher->publish(
                         $this->getSource($files),
                         $this->getTarget($files, $directories),
                         $this->getMergeMode(),
-                        $this->getFileMode()
+                        $this->getFileMode(),
                     );
                 }
 
@@ -81,12 +81,12 @@ final class PublishCommand extends Command
             case 'ensure':
                 $this->sprintf(
                     '<fg=cyan>•</fg=cyan> ensure directory <comment>%s</comment>',
-                    $this->getTarget($files, $directories)
+                    $this->getTarget($files, $directories),
                 );
 
                 $publisher->ensureDirectory(
                     $this->getTarget($files, $directories),
-                    $this->getFileMode()
+                    $this->getFileMode(),
                 );
 
                 break;
@@ -121,7 +121,7 @@ final class PublishCommand extends Command
         return match (true) {
             $this->argument('type') === 'ensure' => true,
             \str_contains((string) $this->argument('source'), '*') => true,
-            default => \is_dir($this->argument('source'))
+            default => \is_dir($this->argument('source')),
         };
     }
 

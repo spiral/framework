@@ -18,8 +18,6 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 {
     use TestableKernel;
 
-    private array $disabledBootloaders = [];
-
     public const LOAD = [
         TokenizerListenerBootloader::class,
 
@@ -96,19 +94,12 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 
         \Spiral\Prototype\Bootloader\PrototypeBootloader::class,
     ];
-
     public const APP = [
         AppBootloader::class,
         RoutesBootloader::class,
     ];
 
-    protected function defineBootloaders(): array
-    {
-        $bootloaders = static::LOAD;
-
-        // filter out disabled bootloaders
-        return \array_filter($bootloaders, fn(string $bootloader): bool => !\in_array($bootloader, $this->disabledBootloaders, true));
-    }
+    private array $disabledBootloaders = [];
 
     /**
      * @param class-string<\Spiral\Boot\Bootloader\Bootloader> ...$bootloader
@@ -118,5 +109,13 @@ class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
         $this->disabledBootloaders = \array_merge($this->disabledBootloaders, $bootloader);
 
         return $this;
+    }
+
+    protected function defineBootloaders(): array
+    {
+        $bootloaders = static::LOAD;
+
+        // filter out disabled bootloaders
+        return \array_filter($bootloaders, fn(string $bootloader): bool => !\in_array($bootloader, $this->disabledBootloaders, true));
     }
 }

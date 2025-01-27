@@ -57,7 +57,7 @@ final class RoutingConfiguratorTest extends BaseTestCase
 
         self::assertNull($routes->getDefault());
 
-        $routes->default('/')->callable(static fn () => null);
+        $routes->default('/')->callable(static fn() => null);
 
         self::assertInstanceOf(RouteConfigurator::class, $routes->getDefault());
     }
@@ -67,7 +67,7 @@ final class RoutingConfiguratorTest extends BaseTestCase
         $routes = $this->getContainer()->get(RoutingConfigurator::class);
 
         self::assertCount(0, $routes->getCollection());
-        $route = $routes->add('test', '/')->callable(static fn () => null);
+        $route = $routes->add('test', '/')->callable(static fn() => null);
         self::assertInstanceOf(RouteConfigurator::class, $route);
 
         // important. For destruct

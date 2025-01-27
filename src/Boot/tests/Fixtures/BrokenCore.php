@@ -16,9 +16,6 @@ class BrokenCore extends AbstractKernel
 
     /**
      * Normalizes directory list and adds all required alises.
-     *
-     * @param array $directories
-     * @return array
      */
     protected function mapDirectories(array $directories): array
     {
@@ -30,7 +27,7 @@ class BrokenCore extends AbstractKernel
             $directories['app'] = $directories['root'] . '/app/';
         }
 
-        return array_merge([
+        return \array_merge([
             // public root
             'public' => $directories['root'] . '/public/',
 

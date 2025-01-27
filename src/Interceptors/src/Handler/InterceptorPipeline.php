@@ -26,9 +26,8 @@ final class InterceptorPipeline implements HandlerInterface
     private int $position = 0;
 
     public function __construct(
-        private readonly ?EventDispatcherInterface $dispatcher = null
-    ) {
-    }
+        private readonly ?EventDispatcherInterface $dispatcher = null,
+    ) {}
 
     /**
      * @psalm-immutable

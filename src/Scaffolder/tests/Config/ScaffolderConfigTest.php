@@ -12,6 +12,130 @@ use Spiral\Tests\Scaffolder\BaseTestCase;
 
 class ScaffolderConfigTest extends BaseTestCase
 {
+    public static function declarationDirectoryDataProvider(): \Traversable
+    {
+        yield [['directory' => 'foo'], 'foo'];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => []],
+                ],
+            ],
+            'foo',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => null]],
+                ],
+            ],
+            'foo',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => '']],
+                ],
+            ],
+            'foo',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => 'bar']],
+                ],
+            ],
+            'bar',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => []],
+            ],
+            'foo',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => null]],
+            ],
+            'foo',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => '']],
+            ],
+            'foo',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => 'bar']],
+            ],
+            'bar',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['some' => ['directory' => 'baz']],
+                'defaults' => [
+                    'declarations' => ['some' => ['directory' => 'bar']],
+                ],
+            ],
+            'baz',
+        ];
+    }
+
+    public static function classFilenameDataProvider(): \Traversable
+    {
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['foo' => ['class' => 'bar']],
+                ],
+            ],
+            'foo/App/Test/Test.php',
+            'App\\Test',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['foo' => ['postfix' => 'Controller']],
+                ],
+            ],
+            'foo/App/Test/TestController.php',
+            'App\\Test',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'defaults' => [
+                    'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'baz']],
+                ],
+            ],
+            'baz/App/Test/TestController.php',
+            'App\\Test',
+        ];
+        yield [
+            [
+                'directory' => 'foo',
+                'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'changed']],
+                'defaults' => [
+                    'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'baz']],
+                ],
+            ],
+            'changed/App/Test/TestController.php',
+            'App\\Test',
+        ];
+    }
+
     public function testDefaultBaseNamespace(): void
     {
         /** @var ScaffolderBootloader $scaffolder */
@@ -72,7 +196,7 @@ class ScaffolderConfigTest extends BaseTestCase
                         'class' => BootloaderDeclaration::class,
                     ],
                 ],
-            ]
+            ],
         ]));
 
         /** @var ScaffolderConfig $config */
@@ -100,7 +224,7 @@ class ScaffolderConfigTest extends BaseTestCase
                         'class' => BootloaderDeclaration::class,
                     ],
                 ],
-            ]
+            ],
         ]));
 
         /** @var ScaffolderConfig $config */
@@ -126,129 +250,5 @@ class ScaffolderConfigTest extends BaseTestCase
         $config = new ScaffolderConfig($config);
 
         self::assertSame($expected, $config->classFilename('foo', 'Test', $namespace));
-    }
-
-    public static function declarationDirectoryDataProvider(): \Traversable
-    {
-        yield [['directory' => 'foo'], 'foo'];
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['some' => []]
-                ]
-            ],
-            'foo'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['some' => ['directory' => null]]
-                ]
-            ],
-            'foo'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['some' => ['directory' => '']]
-                ]
-            ],
-            'foo'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['some' => ['directory' => 'bar']]
-                ]
-            ],
-            'bar'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'declarations' => ['some' => []]
-            ],
-            'foo'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'declarations' => ['some' => ['directory' => null]]
-            ],
-            'foo'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'declarations' => ['some' => ['directory' => '']]
-            ],
-            'foo'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'declarations' => ['some' => ['directory' => 'bar']]
-            ],
-            'bar'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'declarations' => ['some' => ['directory' => 'baz']],
-                'defaults' => [
-                    'declarations' => ['some' => ['directory' => 'bar']]
-                ]
-            ],
-            'baz'
-        ];
-    }
-
-    public static function classFilenameDataProvider(): \Traversable
-    {
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['foo' => ['class' => 'bar']]
-                ]
-            ],
-            'foo/App/Test/Test.php',
-            'App\\Test'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['foo' => ['postfix' => 'Controller']]
-                ]
-            ],
-            'foo/App/Test/TestController.php',
-            'App\\Test'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'defaults' => [
-                    'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'baz']]
-                ]
-            ],
-            'baz/App/Test/TestController.php',
-            'App\\Test'
-        ];
-        yield [
-            [
-                'directory' => 'foo',
-                'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'changed']],
-                'defaults' => [
-                    'declarations' => ['foo' => ['postfix' => 'Controller', 'directory' => 'baz']]
-                ]
-            ],
-            'changed/App/Test/TestController.php',
-            'App\\Test'
-        ];
     }
 }

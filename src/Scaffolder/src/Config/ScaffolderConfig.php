@@ -187,7 +187,7 @@ class ScaffolderConfig extends InjectableConfig
     {
         $name = \str_replace('/', '\\', $name);
 
-        if (str_contains($name, '\\')) {
+        if (\str_contains($name, '\\')) {
             $names = \explode('\\', $name);
             $class = \array_pop($names);
 
@@ -206,7 +206,7 @@ class ScaffolderConfig extends InjectableConfig
         $declaration = $this->getDeclaration($element);
 
         if (\array_key_exists('baseNamespace', $declaration)) {
-            return \trim((string)$this->getOption($element, 'baseNamespace', ''), '\\');
+            return \trim((string) $this->getOption($element, 'baseNamespace', ''), '\\');
         }
 
         return \trim((string) $this->config['namespace'], '\\');

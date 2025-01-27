@@ -1,0 +1,10 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Fix Code Style
+
+jobs:
+  cs-fix:
+    uses: spiral/gh-actions/.github/workflows/cs-fix.yml@master

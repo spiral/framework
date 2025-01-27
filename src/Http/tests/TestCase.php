@@ -13,7 +13,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected Container $container;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $options = new Options();
         $options->checkScope = false;

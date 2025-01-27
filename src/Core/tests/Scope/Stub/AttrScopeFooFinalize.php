@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope\Stub;
 
-use RuntimeException;
 use Spiral\Core\Attribute\Finalize;
 use Spiral\Core\Attribute\Scope;
 
@@ -21,7 +20,7 @@ final class AttrScopeFooFinalize
         $this->logger = $logger;
         $this->finalized = true;
         if ($this->throwException) {
-            throw new RuntimeException('Test exception from finalize method.');
+            throw new \RuntimeException('Test exception from finalize method.');
         }
     }
 }

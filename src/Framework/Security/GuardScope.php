@@ -21,9 +21,8 @@ final class GuardScope implements GuardInterface
     public function __construct(
         private readonly PermissionsInterface $permissions,
         #[Proxy] private readonly ContainerInterface $container,
-        private array $roles = []
-    ) {
-    }
+        private array $roles = [],
+    ) {}
 
     /**
      * @throws ScopeException

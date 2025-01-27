@@ -11,7 +11,7 @@ class OptionsTest extends BaseTestCase
     public function testOptions(): void
     {
         $core = $this->getCore($this->getStaticLocator([
-            OptionalCommand::class
+            OptionalCommand::class,
         ]));
 
         self::assertSame('no option', $core->run(command: 'optional')->getOutput()->fetch());

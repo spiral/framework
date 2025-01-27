@@ -18,8 +18,7 @@ final class Header extends AbstractInput
      */
     public function __construct(
         public readonly ?string $key = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @see \Spiral\Http\Request\InputManager::header() from {@link https://github.com/spiral/http}

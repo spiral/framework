@@ -13,6 +13,30 @@ use Spiral\Debug\StateInterface;
 
 final class DebugConfigTest extends TestCase
 {
+    public static function collectorsDataProvider(): \Traversable
+    {
+        yield [[]];
+        yield [['some']];
+        yield [[new Autowire('some')]];
+        yield [[ new class implements StateCollectorInterface {
+            public function populate(StateInterface $state): void {}
+        }]];
+    }
+
+    public static function tagsDataProvider(): \Traversable
+    {
+        yield [[]];
+        yield [['some' => 'value']];
+        yield [['some' => static fn(): string => 'value']];
+        yield [['some' => static fn(mixed $a): string => 'value']];
+        yield [['some' => new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'value';
+            }
+        }]];
+    }
+
     #[DataProvider('collectorsDataProvider')]
     public function testGetCollectors(array $collectors): void
     {
@@ -25,26 +49,5 @@ final class DebugConfigTest extends TestCase
     {
         $config = new DebugConfig(['tags' => $tags]);
         self::assertSame($tags, $config->getTags());
-    }
-
-    public static function collectorsDataProvider(): \Traversable
-    {
-        yield [[]];
-        yield [['some']];
-        yield [[new Autowire('some')]];
-        yield [[ new class implements StateCollectorInterface {
-            public function populate(StateInterface $state): void
-            {
-            }
-        }]];
-    }
-
-    public static function tagsDataProvider(): \Traversable
-    {
-        yield [[]];
-        yield [['some' => 'value']];
-        yield [['some' => static fn (): string => 'value']];
-        yield [['some' => static fn (mixed $a): string => 'value']];
-        yield [['some' => new class implements \Stringable {public function __toString(): string { return 'value';}}]];
     }
 }

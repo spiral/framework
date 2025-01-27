@@ -16,13 +16,6 @@ class InvokerTest extends TestCase
 {
     private Container $container;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container = new Container();
-    }
-
     public function testCallValidCallableArray(): void
     {
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
@@ -73,7 +66,7 @@ class InvokerTest extends TestCase
     {
         $this->container->bindSingleton(Bucket::class, $bucket = new Bucket('foo'));
 
-        $result = $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
+        $result = $this->container->invoke(Storage::class . '::createBucket', ['name' => 'bar']);
 
         self::assertSame($bucket, $result['bucket']);
         self::assertInstanceOf(SampleClass::class, $result['class']);
@@ -86,7 +79,7 @@ class InvokerTest extends TestCase
         $this->expectException(ArgumentResolvingException::class);
         $this->expectExceptionMessage('Unable to resolve required argument `name` when resolving');
 
-        $this->container->invoke(Storage::class.'::createBucket', ['name' => 'bar']);
+        $this->container->invoke(Storage::class . '::createBucket', ['name' => 'bar']);
     }
 
     public function testCallValidClosure(): void
@@ -95,7 +88,7 @@ class InvokerTest extends TestCase
 
         $result = $this->container->invoke(
             static fn(Bucket $bucket, SampleClass $class, string $name, string $path = 'baz'): array => \compact('bucket', 'class', 'name', 'path'),
-            ['name' => 'bar']
+            ['name' => 'bar'],
         );
 
         self::assertSame($bucket, $result['bucket']);
@@ -111,7 +104,7 @@ class InvokerTest extends TestCase
 
         $this->container->invoke(
             static fn(Bucket $bucket, SampleClass $class, string $name, string $path = 'baz'): array => \compact('bucket', 'class', 'name', 'path'),
-            ['name' => 'bar']
+            ['name' => 'bar'],
         );
     }
 
@@ -131,5 +124,12 @@ class InvokerTest extends TestCase
         $object = new Storage();
 
         $this->container->invoke([$object]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container = new Container();
     }
 }

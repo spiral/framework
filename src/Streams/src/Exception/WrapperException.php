@@ -7,6 +7,4 @@ namespace Spiral\Streams\Exception;
 /**
  * StreamWrapper specific exception.
  */
-class WrapperException extends \RuntimeException
-{
-}
+class WrapperException extends \RuntimeException {}

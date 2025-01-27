@@ -13,6 +13,16 @@ use Spiral\Tests\Queue\TestCase;
 
 final class QueueConfigTest extends TestCase
 {
+    public static function defaultSerializerDataProvider(): \Generator
+    {
+        yield [[], null];
+        yield [['defaultSerializer' => null], null];
+        yield [['defaultSerializer' => 'json'], 'json'];
+        yield [['defaultSerializer' => JsonSerializer::class], JsonSerializer::class];
+        yield [['defaultSerializer' => new JsonSerializer()], new JsonSerializer()];
+        yield [['defaultSerializer' => new Autowire(JsonSerializer::class)], new Autowire(JsonSerializer::class)];
+    }
+
     public function testGetsAliases(): void
     {
         $config = new QueueConfig([
@@ -205,7 +215,7 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig([
             'connections' => [
                 'foo' => [
-                    'driver' => []
+                    'driver' => [],
                 ],
             ],
         ]);
@@ -221,12 +231,12 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig([
             'connections' => [
                 'foo' => [
-                    'driver' => 'bar'
+                    'driver' => 'bar',
                 ],
             ],
             'driverAliases' => [
-                'bar' => []
-            ]
+                'bar' => [],
+            ],
         ]);
 
         $config->getConnection('foo');
@@ -237,7 +247,7 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig([
             'registry' => [
                 'handlers' => ['foo', 'bar'],
-            ]
+            ],
         ]);
 
         self::assertSame(['foo', 'bar'], $config->getRegistryHandlers());
@@ -255,7 +265,7 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig([
             'registry' => [
                 'serializers' => ['foo' => 'some', 'bar' => 'other'],
-            ]
+            ],
         ]);
 
         self::assertSame(['foo' => 'some', 'bar' => 'other'], $config->getRegistrySerializers());
@@ -274,15 +284,5 @@ final class QueueConfigTest extends TestCase
         $config = new QueueConfig($config);
 
         self::assertEquals($expected, $config->getDefaultSerializer());
-    }
-
-    public static function defaultSerializerDataProvider(): \Generator
-    {
-        yield [[], null];
-        yield [['defaultSerializer' => null], null];
-        yield [['defaultSerializer' => 'json'], 'json'];
-        yield [['defaultSerializer' => JsonSerializer::class], JsonSerializer::class];
-        yield [['defaultSerializer' => new JsonSerializer ()], new JsonSerializer()];
-        yield [['defaultSerializer' => new Autowire(JsonSerializer::class)], new Autowire(JsonSerializer::class)];
     }
 }

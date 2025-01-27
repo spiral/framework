@@ -10,6 +10,4 @@ namespace Spiral\Core\Container;
  * Attention, this abstraction is currently under re-thinking process in order to replace it with
  * bound context-specific factory (non breaking change).
  */
-interface InjectableInterface
-{
-}
+interface InjectableInterface {}

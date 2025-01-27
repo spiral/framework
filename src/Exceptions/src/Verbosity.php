@@ -20,7 +20,7 @@ enum Verbosity: int implements InjectableEnumInterface
         return match (\strtolower((string) $environment->get('VERBOSITY_LEVEL'))) {
             'basic', '0' => self::BASIC,
             'debug', '2' => self::DEBUG,
-            default => self::VERBOSE
+            default => self::VERBOSE,
         };
     }
 }

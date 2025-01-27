@@ -9,8 +9,6 @@ use Spiral\Boot\Attribute\BootloadConfig;
 #[BootloadConfig(allowEnv: [
     'APP_ENV' => 'prod',
     'APP_DEBUG' => false,
-    'RR_MODE' => ['http']
+    'RR_MODE' => ['http'],
 ])]
-class BootloaderH extends AbstractBootloader
-{
-}
+class BootloaderH extends AbstractBootloader {}

@@ -13,6 +13,5 @@ final class FilterBag
         public readonly AbstractEntity $entity,
         public readonly array $schema = [],
         public readonly array $errors = [],
-    ) {
-    }
+    ) {}
 }

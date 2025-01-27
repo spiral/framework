@@ -26,19 +26,10 @@ final class RetryPolicyInterceptorTest extends TestCase
     private CoreInterface $core;
     private RetryPolicyInterceptor $interceptor;
 
-    protected function setUp(): void
+    public static function jobNameDataProvider(): \Traversable
     {
-        $this->reader = $this->createMock(ReaderInterface::class);
-        $this->core = $this->createMock(CoreInterface::class);
-
-        $registry = new QueueRegistry(
-            $this->createMock(ContainerInterface::class),
-            $this->createMock(FactoryInterface::class),
-            $this->createMock(HandlerRegistryInterface::class),
-        );
-        $registry->setHandler('foo', $this->createMock(HandlerInterface::class));
-
-        $this->interceptor = new RetryPolicyInterceptor($this->reader, $registry);
+        yield [self::class];
+        yield ['foo'];
     }
 
     public function testWithoutException(): void
@@ -115,7 +106,7 @@ final class RetryPolicyInterceptorTest extends TestCase
             ->method('callAction')
             ->with($name, 'bar', [])
             ->willThrowException(new TestRetryException(
-                retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 2, delay: 4)
+                retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 2, delay: 4),
             ));
 
         try {
@@ -130,7 +121,7 @@ final class RetryPolicyInterceptorTest extends TestCase
     public function testWithRetryPolicyInAttribute(string $name): void
     {
         $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
-            new RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2)
+            new RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2),
         );
 
         $this->core
@@ -144,7 +135,7 @@ final class RetryPolicyInterceptorTest extends TestCase
                 $name,
                 'bar',
                 ['headers' => ['attempts' => ['1']]],
-                $this->core
+                $this->core,
             );
         } catch (RetryException $e) {
             self::assertSame(8, $e->getOptions()->getDelay());
@@ -156,7 +147,7 @@ final class RetryPolicyInterceptorTest extends TestCase
     public function testWithRetryPolicyInException(string $name): void
     {
         $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
-            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25)
+            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25),
         );
 
         $this->core
@@ -164,7 +155,7 @@ final class RetryPolicyInterceptorTest extends TestCase
             ->method('callAction')
             ->with($name, 'bar', ['headers' => ['attempts' => ['1']]])
             ->willThrowException(new TestRetryException(
-                retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2)
+                retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2),
             ));
 
         try {
@@ -172,7 +163,7 @@ final class RetryPolicyInterceptorTest extends TestCase
                 $name,
                 'bar',
                 ['headers' => ['attempts' => ['1']]],
-                $this->core
+                $this->core,
             );
         } catch (RetryException $e) {
             self::assertSame(8, $e->getOptions()->getDelay());
@@ -184,7 +175,7 @@ final class RetryPolicyInterceptorTest extends TestCase
     public function testWithCustomRetryPolicyInException(string $name): void
     {
         $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
-            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25)
+            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25),
         );
 
         $this->core
@@ -202,7 +193,7 @@ final class RetryPolicyInterceptorTest extends TestCase
                     {
                         return 5;
                     }
-                }
+                },
             ));
 
         try {
@@ -210,7 +201,7 @@ final class RetryPolicyInterceptorTest extends TestCase
                 $name,
                 'bar',
                 ['headers' => ['attempts' => ['1']]],
-                $this->core
+                $this->core,
             );
         } catch (RetryException $e) {
             self::assertSame(5, $e->getOptions()->getDelay());
@@ -222,7 +213,7 @@ final class RetryPolicyInterceptorTest extends TestCase
     public function testWithRetryPolicyInExceptionInsideJobException(string $name): void
     {
         $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
-            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25)
+            new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25),
         );
 
         $this->core
@@ -231,8 +222,8 @@ final class RetryPolicyInterceptorTest extends TestCase
             ->with($name, 'bar', ['headers' => ['attempts' => ['1']]])
             ->willThrowException(new JobException(
                 previous: new TestRetryException(
-                    retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2)
-                )
+                    retryPolicy: new \Spiral\Queue\RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2),
+                ),
             ));
 
         try {
@@ -240,7 +231,7 @@ final class RetryPolicyInterceptorTest extends TestCase
                 $name,
                 'bar',
                 ['headers' => ['attempts' => ['1']]],
-                $this->core
+                $this->core,
             );
         } catch (RetryException $e) {
             self::assertSame(8, $e->getOptions()->getDelay());
@@ -248,9 +239,18 @@ final class RetryPolicyInterceptorTest extends TestCase
         }
     }
 
-    public static function jobNameDataProvider(): \Traversable
+    protected function setUp(): void
     {
-        yield [self::class];
-        yield ['foo'];
+        $this->reader = $this->createMock(ReaderInterface::class);
+        $this->core = $this->createMock(CoreInterface::class);
+
+        $registry = new QueueRegistry(
+            $this->createMock(ContainerInterface::class),
+            $this->createMock(FactoryInterface::class),
+            $this->createMock(HandlerRegistryInterface::class),
+        );
+        $registry->setHandler('foo', $this->createMock(HandlerInterface::class));
+
+        $this->interceptor = new RetryPolicyInterceptor($this->reader, $registry);
     }
 }

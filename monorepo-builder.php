@@ -104,11 +104,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'require-dev'  => [
-            'phpunit/phpunit'           => '^10.1',
-            'mockery/mockery'           => '^1.5',
-            'spiral/code-style'         => '^1.1',
+            'phpunit/phpunit'           => '^10.5',
+            'mockery/mockery'           => '^1.6',
+            'spiral/code-style'         => '^2.2.2',
             'symplify/monorepo-builder' => '^10.2.7',
             'vimeo/psalm'               => '^5.9',
+        ],
+        'conflict' => [
+            "spiral/roadrunner-bridge" => "<3.7",
+            "spiral/sapi-bridge" => "<1.1"
         ],
     ]);
 

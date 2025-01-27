@@ -23,18 +23,6 @@ final class EnumCase implements NamedInterface, AggregableInterface
         $this->element = new NetteEnumCase($name);
     }
 
-    public function setValue(string|int|null $value): self
-    {
-        $this->element->setValue($value);
-
-        return $this;
-    }
-
-    public function getValue(): string|int|null|Literal
-    {
-        return $this->element->getValue();
-    }
-
     /**
      * @internal
      */
@@ -45,6 +33,18 @@ final class EnumCase implements NamedInterface, AggregableInterface
         $enumCase->element = $element;
 
         return $enumCase;
+    }
+
+    public function setValue(string|int|null $value): self
+    {
+        $this->element->setValue($value);
+
+        return $this;
+    }
+
+    public function getValue(): string|int|null|Literal
+    {
+        return $this->element->getValue();
     }
 
     /**

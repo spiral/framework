@@ -17,7 +17,7 @@ class CastingErrorMessage
      */
     public function __construct(
         protected ?string $message = null,
-        ?callable $callback = null
+        ?callable $callback = null,
     ) {
         if ($callback !== null) {
             $this->callback = $callback(...);

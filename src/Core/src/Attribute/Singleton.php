@@ -8,6 +8,4 @@ namespace Spiral\Core\Attribute;
  * Mark class as singleton.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final class Singleton implements Plugin
-{
-}
+final class Singleton implements Plugin {}

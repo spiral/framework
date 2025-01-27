@@ -21,11 +21,6 @@ final class RouteLocatorListenerTest extends TestCase
     private RouteLocatorListener $listener;
     private Container $container;
 
-    protected function setUp(): void
-    {
-        $this->configureRouter();
-    }
-
     public function testDefaultGroup(): void
     {
         $this->listener->listen(new \ReflectionClass(PageController::class));
@@ -49,6 +44,11 @@ final class RouteLocatorListenerTest extends TestCase
         self::assertSame(['other'], \array_keys(\iterator_to_array($groups)));
     }
 
+    protected function setUp(): void
+    {
+        $this->configureRouter();
+    }
+
     private function configureRouter(): void
     {
         $this->container = new Container();
@@ -66,7 +66,7 @@ final class RouteLocatorListenerTest extends TestCase
 
         $this->listener = new RouteLocatorListener(
             (new Factory())->create(),
-            $this->container->get(GroupRegistry::class)
+            $this->container->get(GroupRegistry::class),
         );
     }
 }

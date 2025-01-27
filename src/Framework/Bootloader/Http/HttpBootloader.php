@@ -37,8 +37,7 @@ final class HttpBootloader extends Bootloader
     public function __construct(
         private readonly ConfiguratorInterface $config,
         private readonly BinderInterface $binder,
-    ) {
-    }
+    ) {}
 
     public function defineDependencies(): array
     {
@@ -53,7 +52,7 @@ final class HttpBootloader extends Bootloader
             RequestInterface::class,
             new \Spiral\Core\Config\Proxy(
                 interface: RequestInterface::class,
-                fallbackFactory: static fn (ContainerInterface $c) => throw new ScopeException(
+                fallbackFactory: static fn(ContainerInterface $c) => throw new ScopeException(
                     'Unable to receive current Server Request. '
                     . 'Try to define the service in the `http` scope or use the Poxy attribute.',
                 ),
@@ -68,7 +67,7 @@ final class HttpBootloader extends Bootloader
             RequestInterface::class,
             new \Spiral\Core\Config\Proxy(
                 interface: RequestInterface::class,
-                fallbackFactory: static fn (ContainerInterface $c): RequestInterface => $c
+                fallbackFactory: static fn(ContainerInterface $c): RequestInterface => $c
                     ->get(CurrentRequest::class)
                     ->get() ?? throw new InvalidRequestScopeException(
                         RequestInterface::class,
@@ -82,15 +81,15 @@ final class HttpBootloader extends Bootloader
          */
         $this->binder->bindSingleton(
             Http::class,
-            function (InvokerInterface $invoker, #[Proxy] ContainerInterface $container): Http {
-                @trigger_error(\sprintf(
+            static function (InvokerInterface $invoker, #[Proxy] ContainerInterface $container): Http {
+                @\trigger_error(\sprintf(
                     'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version 4.0.',
                     Http::class,
-                    Spiral::Http->value
+                    Spiral::Http->value,
                 ), \E_USER_DEPRECATED);
 
                 return $invoker->invoke([self::class, 'httpCore'], ['container' => $container]);
-            }
+            },
         );
 
         return [];
@@ -108,7 +107,7 @@ final class HttpBootloader extends Bootloader
                 'middleware' => [],
                 'chunkSize' => null,
                 'inputBags' => [],
-            ]
+            ],
         );
     }
 
@@ -140,7 +139,7 @@ final class HttpBootloader extends Bootloader
         RequestHandlerInterface $handler,
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container,
-        TracerFactoryInterface $tracerFactory
+        TracerFactoryInterface $tracerFactory,
     ): Http {
         $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory);
         $core->setHandler($handler);

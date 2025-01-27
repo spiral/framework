@@ -27,7 +27,7 @@ trait InteractsWithTime
             $ttl instanceof \DateInterval => $this->now()->add($ttl)->getTimestamp(),
             $ttl instanceof \DateTimeInterface => $ttl->getTimestamp(),
             $ttl === null => $this->ttl + \time(),
-            default => $this->now()->getTimestamp() + $ttl
+            default => $this->now()->getTimestamp() + $ttl,
         };
     }
 }

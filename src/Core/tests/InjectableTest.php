@@ -7,8 +7,6 @@ namespace Spiral\Tests\Core;
 use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionMethod;
 use Spiral\Core\Config\Injectable;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
@@ -22,14 +20,21 @@ use Spiral\Tests\Core\Fixtures\InjectableClassImplementation;
 use Spiral\Tests\Core\Fixtures\InvalidInjector;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\TestConfig;
-use stdClass;
 
 class InjectableTest extends TestCase
 {
+    public static function inheritanceDataProvider(): iterable
+    {
+        yield 'parent' => [InjectableClassInterface::class];
+        yield 'child' => [InjectableClassChildInterface::class];
+        yield 'parent-impl' => [InjectableClassImplementation::class];
+        yield 'child-impl' => [InjectableClassChildImplementation::class];
+    }
+
     public function testMissingInjector(): void
     {
         $this->expectExceptionMessage(
-            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `Spiral\Core\ConfigsInterface`."
+            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `Spiral\Core\ConfigsInterface`.",
         );
         $this->expectException(AutowireException::class);
 
@@ -54,7 +59,7 @@ class InjectableTest extends TestCase
     {
         $this->expectException(AutowireException::class);
         $this->expectExceptionMessage(
-            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `invalid-injector`."
+            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `invalid-injector`.",
         );
 
         $container = new Container();
@@ -102,7 +107,7 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class), null)
+            ->with(m::on(static fn(\ReflectionClass $r): bool => $r->getName() === TestConfig::class), null)
             ->andReturn($expected);
 
         self::assertSame($expected, $container->get(TestConfig::class));
@@ -117,7 +122,7 @@ class InjectableTest extends TestCase
         $container->bind(ConfigsInterface::class, $configurator);
 
         $configurator->shouldReceive('createInjection')
-            ->with(m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class), 'context')
+            ->with(m::on(static fn(\ReflectionClass $r): bool => $r->getName() === TestConfig::class), 'context')
             ->andReturn($expected);
 
         self::assertSame($expected, $container->get(TestConfig::class, 'context'));
@@ -133,12 +138,12 @@ class InjectableTest extends TestCase
 
         $configurator->shouldReceive('createInjection')
             ->with(
-                m::on(static fn(ReflectionClass $r): bool => $r->getName() === TestConfig::class),
-                'contextArgument'
+                m::on(static fn(\ReflectionClass $r): bool => $r->getName() === TestConfig::class),
+                'contextArgument',
             )
             ->andReturn($expected);
 
-        $arguments = $container->resolveArguments(new ReflectionMethod(...[$this, 'methodInjection']));
+        $arguments = $container->resolveArguments(new \ReflectionMethod(...[$this, 'methodInjection']));
         self::assertCount(1, $arguments);
         self::assertSame($expected, $arguments[0]);
     }
@@ -158,14 +163,6 @@ class InjectableTest extends TestCase
         self::assertTrue($container->hasInjector(InjectableClassImplementation::class));
     }
 
-    public static function inheritanceDataProvider(): iterable
-    {
-        yield 'parent' => [InjectableClassInterface::class];
-        yield 'child' => [InjectableClassChildInterface::class];
-        yield 'parent-impl' => [InjectableClassImplementation::class];
-        yield 'child-impl' => [InjectableClassChildImplementation::class];
-    }
-
     #[DataProvider('inheritanceDataProvider')]
     public function testInjectableInheritance(string $class): void
     {
@@ -175,7 +172,7 @@ class InjectableTest extends TestCase
             ->with(
                 // Class
                 $this->callback(
-                    static fn(ReflectionClass $r): bool => $r->getName() === $class
+                    static fn(\ReflectionClass $r): bool => $r->getName() === $class,
                 ),
                 // Context
                 null,
@@ -192,48 +189,46 @@ class InjectableTest extends TestCase
     public function testExtendedInjector(): void
     {
         $container = new Container();
-        $container->bindInjector(stdClass::class, ExtendedContextInjector::class);
+        $container->bindInjector(\stdClass::class, ExtendedContextInjector::class);
 
-        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
+        $result = $container->invoke(static fn(\stdClass $dt): \stdClass => $dt);
 
-        self::assertInstanceOf(stdClass::class, $result);
+        self::assertInstanceOf(\stdClass::class, $result);
         self::assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
     public function testExtendedInjectorAnonClassObjectParam(): void
     {
         $container = new Container();
-        $container->bind(stdClass::class, new Injectable(new class implements Container\InjectorInterface {
+        $container->bind(\stdClass::class, new Injectable(new class implements Container\InjectorInterface {
             public function createInjection(\ReflectionClass $class, object|string|null $context = null): object
             {
-                return (object)['context' => $context];
+                return (object) ['context' => $context];
             }
         }));
 
-        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
+        $result = $container->invoke(static fn(\stdClass $dt): \stdClass => $dt);
 
-        self::assertInstanceOf(stdClass::class, $result);
+        self::assertInstanceOf(\stdClass::class, $result);
         self::assertInstanceOf(\ReflectionParameter::class, $result->context);
-        self::assertTrue($container->hasInjector(stdClass::class));
+        self::assertTrue($container->hasInjector(\stdClass::class));
     }
 
     public function testExtendedInjectorAnonClassMixedParam(): void
     {
         $container = new Container();
-        $container->bind(stdClass::class, new Injectable(new class implements Container\InjectorInterface {
+        $container->bind(\stdClass::class, new Injectable(new class implements Container\InjectorInterface {
             public function createInjection(\ReflectionClass $class, mixed $context = null): object
             {
-                return (object)['context' => $context];
+                return (object) ['context' => $context];
             }
         }));
 
-        $result = $container->invoke(static fn(stdClass $dt): \stdClass => $dt);
+        $result = $container->invoke(static fn(\stdClass $dt): \stdClass => $dt);
 
-        self::assertInstanceOf(stdClass::class, $result);
+        self::assertInstanceOf(\stdClass::class, $result);
         self::assertInstanceOf(\ReflectionParameter::class, $result->context);
     }
 
-    private function methodInjection(TestConfig $contextArgument): void
-    {
-    }
+    private function methodInjection(TestConfig $contextArgument): void {}
 }

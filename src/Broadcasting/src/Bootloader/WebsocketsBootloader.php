@@ -24,7 +24,7 @@ final class WebsocketsBootloader extends Bootloader
 
     public function boot(BinderInterface $binder): void
     {
-        $binder->bindSingleton(AuthorizationMiddleware::class, static fn (
+        $binder->bindSingleton(AuthorizationMiddleware::class, static fn(
             BroadcastInterface $broadcast,
             ResponseFactoryInterface $responseFactory,
             BroadcastConfig $config,
@@ -33,7 +33,7 @@ final class WebsocketsBootloader extends Bootloader
             $broadcast,
             $responseFactory,
             $config->getAuthorizationPath(),
-            $dispatcher
+            $dispatcher,
         ));
     }
 }

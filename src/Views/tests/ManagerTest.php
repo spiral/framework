@@ -20,12 +20,6 @@ class ManagerTest extends TestCase
 {
     protected $container;
 
-    public function setUp(): void
-    {
-        $this->container = new Container();
-        $this->container->bindSingleton(LoaderInterface::class, ViewLoader::class);
-    }
-
     public function testMultipleEngines(): void
     {
         $manager = $this->makeManager();
@@ -111,6 +105,12 @@ class ManagerTest extends TestCase
         $manager->render('hell-world');
     }
 
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->container->bindSingleton(LoaderInterface::class, ViewLoader::class);
+    }
+
     protected function makeManager(array $config = []): ViewManager
     {
         return new ViewManager(
@@ -122,8 +122,8 @@ class ManagerTest extends TestCase
                         'directory' => '/tmp',
                     ],
                     'namespaces' => [
-                        'default' => __DIR__.'/fixtures/default',
-                        'other' => __DIR__.'/fixtures/other',
+                        'default' => __DIR__ . '/fixtures/default',
+                        'other' => __DIR__ . '/fixtures/other',
                     ],
                     'dependencies' => [
 
@@ -131,10 +131,10 @@ class ManagerTest extends TestCase
                     'engines' => [
                         NativeEngine::class,
                     ],
-                ] + $config
+                ] + $config,
             ),
             new GlobalVariables(),
-            $this->container
+            $this->container,
         );
     }
 }

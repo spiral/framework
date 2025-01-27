@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Http;
 
-use Closure;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -23,7 +22,7 @@ final class CallableHandler implements RequestHandlerInterface
 
     public function __construct(
         callable $callable,
-        private readonly ResponseFactoryInterface $responseFactory
+        private readonly ResponseFactoryInterface $responseFactory,
     ) {
         $this->callable = $callable;
     }
@@ -53,7 +52,7 @@ final class CallableHandler implements RequestHandlerInterface
         return $this->wrapResponse(
             $response,
             $result,
-            \ob_get_clean() . $output
+            \ob_get_clean() . $output,
         );
     }
 
@@ -77,7 +76,7 @@ final class CallableHandler implements RequestHandlerInterface
         if (\is_array($result) || $result instanceof \JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
-            $response->getBody()->write((string)$result);
+            $response->getBody()->write((string) $result);
         }
 
         //Always glue buffered output

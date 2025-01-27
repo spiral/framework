@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Router;
 
 use PHPUnit\Framework\TestCase;
@@ -22,7 +24,7 @@ final class DefaultPatternRegistryTest extends TestCase
 
         self::assertSame(self::DEFAULT_PATTERNS + [
             'foo' => '\d+',
-            'bar' => '\d+'
+            'bar' => '\d+',
         ], $registry->all());
     }
 }

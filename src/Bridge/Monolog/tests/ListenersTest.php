@@ -19,7 +19,7 @@ class ListenersTest extends TestCase
     public function testListenDebug(): void
     {
         $factory = new LogFactory(new MonologConfig([
-            'globalLevel' => Logger::DEBUG
+            'globalLevel' => Logger::DEBUG,
         ]), $l = new ListenerRegistry(), new Container());
 
         $logger = $factory->getLogger();
@@ -27,7 +27,7 @@ class ListenersTest extends TestCase
 
         /** @var LogEvent[]|array $records */
         $records = [];
-        $l->addListener(function (LogEvent $e) use (&$records): void {
+        $l->addListener(static function (LogEvent $e) use (&$records): void {
             $records[] = $e;
         });
 
@@ -50,7 +50,7 @@ class ListenersTest extends TestCase
     public function testListenError(): void
     {
         $factory = new LogFactory(new MonologConfig([
-            'globalLevel' => Logger::ERROR
+            'globalLevel' => Logger::ERROR,
         ]), $ll = new ListenerRegistry(), new Container());
 
         $logger = $factory->getLogger();
@@ -58,7 +58,7 @@ class ListenersTest extends TestCase
 
         /** @var LogEvent[]|array $records */
         $records = [];
-        $ll->addListener($l = function (LogEvent $e) use (&$records): void {
+        $ll->addListener($l = static function (LogEvent $e) use (&$records): void {
             $records[] = $e;
         });
 
@@ -85,6 +85,6 @@ class ListenersTest extends TestCase
     {
         $registry = new ListenerRegistry();
 
-        $registry->removeListener(static fn (LogEvent $e) => null);
+        $registry->removeListener(static fn(LogEvent $e) => null);
     }
 }

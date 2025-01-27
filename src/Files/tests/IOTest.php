@@ -11,18 +11,6 @@ use Spiral\Files\FilesInterface;
 
 class IOTest extends TestCase
 {
-    public function setUp(): void
-    {
-        $files = new Files();
-        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
-    }
-
-    public function tearDown(): void
-    {
-        $files = new Files();
-        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
-    }
-
     public function testWrite(): void
     {
         $files = new Files();
@@ -33,7 +21,7 @@ class IOTest extends TestCase
         $files->write($filename, 'some-data');
         self::assertTrue($files->exists($filename));
 
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
     }
 
     public function testWriteAndEnsureDirectory(): void
@@ -52,7 +40,7 @@ class IOTest extends TestCase
 
         self::assertTrue($files->isDirectory($directory));
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
     }
 
     public function testRead(): void
@@ -107,10 +95,10 @@ class IOTest extends TestCase
         $files->append($filename, 'some-data');
         self::assertTrue($files->exists($filename));
 
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         $files->append($filename, ';other-data');
-        self::assertSame('some-data;other-data', file_get_contents($filename));
+        self::assertSame('some-data;other-data', \file_get_contents($filename));
     }
 
     public function testAppendEnsureDirectory(): void
@@ -129,10 +117,10 @@ class IOTest extends TestCase
 
         self::assertTrue($files->isDirectory($directory));
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         $files->append($filename, ';other-data', null, true);
-        self::assertSame('some-data;other-data', file_get_contents($filename));
+        self::assertSame('some-data;other-data', \file_get_contents($filename));
     }
 
     public function testTouch(): void
@@ -179,7 +167,7 @@ class IOTest extends TestCase
         $files->write($filename, 'some-data');
 
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         self::assertFalse($files->exists($destination));
 
@@ -187,7 +175,7 @@ class IOTest extends TestCase
         self::assertTrue($files->exists($destination));
         self::assertTrue($files->exists($filename));
 
-        self::assertSame(file_get_contents($filename), file_get_contents($destination));
+        self::assertSame(\file_get_contents($filename), \file_get_contents($destination));
     }
 
     public function testCopyMissingFile(): void
@@ -213,7 +201,7 @@ class IOTest extends TestCase
         $files->write($filename, 'some-data');
 
         self::assertTrue($files->exists($filename));
-        self::assertSame('some-data', file_get_contents($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
 
         self::assertFalse($files->exists($destination));
 
@@ -221,7 +209,7 @@ class IOTest extends TestCase
         self::assertTrue($files->exists($destination));
         self::assertFalse($files->exists($filename));
 
-        self::assertSame('some-data', file_get_contents($destination));
+        self::assertSame('some-data', \file_get_contents($destination));
     }
 
     public function testMoveMissingFile(): void
@@ -235,5 +223,17 @@ class IOTest extends TestCase
 
         self::assertFalse($files->exists($filename));
         $files->move($filename, $destination);
+    }
+
+    protected function setUp(): void
+    {
+        $files = new Files();
+        $files->ensureDirectory(self::FIXTURE_DIRECTORY, FilesInterface::RUNTIME);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new Files();
+        $files->deleteDirectory(self::FIXTURE_DIRECTORY, true);
     }
 }

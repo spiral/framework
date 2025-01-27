@@ -13,17 +13,17 @@ class LazyTest extends BaseTestCase
     public function testLazyCommandCreationInCommandLocator(): void
     {
         $locator = $this->getCommandLocator(
-            new class() implements ScopedClassesInterface {
+            new class implements ScopedClassesInterface {
                 public function getScopedClasses(string $scope, $target = null): array
                 {
                     return [
                         new \ReflectionClass(LazyLoadedCommand::class),
                     ];
                 }
-            }
+            },
         );
         $commands = $locator->locateCommands();
-        $command = reset($commands);
+        $command = \reset($commands);
 
         self::assertInstanceOf(LazyCommand::class, $command);
         self::assertSame('lazy', $command->getName());
@@ -34,7 +34,7 @@ class LazyTest extends BaseTestCase
     {
         $locator = $this->getStaticLocator([LazyLoadedCommand::class]);
         $commands = $locator->locateCommands();
-        $command = reset($commands);
+        $command = \reset($commands);
 
         self::assertInstanceOf(LazyCommand::class, $command);
         self::assertSame('lazy', $command->getName());

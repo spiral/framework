@@ -14,8 +14,7 @@ final class MultipleCallNextInterceptor implements InterceptorInterface
 
     public function __construct(
         private readonly int $counter,
-    ) {
-    }
+    ) {}
 
     public function intercept(CallContextInterface $context, HandlerInterface $handler): mixed
     {

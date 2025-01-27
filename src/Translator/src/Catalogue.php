@@ -18,9 +18,8 @@ final class Catalogue implements CatalogueInterface
      */
     public function __construct(
         private readonly string $locale,
-        private array $data = []
-    ) {
-    }
+        private array $data = [],
+    ) {}
 
     public function getLocale(): string
     {

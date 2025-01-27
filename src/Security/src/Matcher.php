@@ -26,7 +26,7 @@ final class Matcher
         return match (true) {
             $string === $pattern => true,
             !$this->isPattern($pattern) => false,
-            default => (bool) \preg_match($this->getRegex($pattern), $string)
+            default => (bool) \preg_match($this->getRegex($pattern), $string),
         };
     }
 

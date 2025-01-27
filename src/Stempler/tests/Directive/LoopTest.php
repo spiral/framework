@@ -9,7 +9,7 @@ use Spiral\Stempler\Directive\LoopDirective;
 class LoopTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
-        LoopDirective::class
+        LoopDirective::class,
     ];
 
     public function testForeachEndForeach(): void

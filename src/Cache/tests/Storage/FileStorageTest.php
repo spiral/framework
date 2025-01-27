@@ -22,21 +22,9 @@ final class FileStorageTest extends TestCase
 
     private FileStorage $storage;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->files = \Mockery::mock(FilesInterface::class);
-        $this->storage = new FileStorage(
-            $this->files,
-            'path/to/cache',
-            self::DEFAULT_TTL
-        );
-    }
-
     public function testGetsWithExistsValueAndCacheFile(): void
     {
-        $ttl = time() + self::DEFAULT_TTL;
+        $ttl = \time() + self::DEFAULT_TTL;
         $value = $ttl . 's:3:"bar";';
         $path = self::DEFAULT_PATH;
 
@@ -60,7 +48,7 @@ final class FileStorageTest extends TestCase
     {
         $path = self::DEFAULT_PATH;
 
-        $this->files->shouldReceive('read')->with($path)->andReturn(time() . 's:3:"bar";');
+        $this->files->shouldReceive('read')->with($path)->andReturn(\time() . 's:3:"bar";');
         $this->files->shouldReceive('exists')->with($path)->andReturn(true);
         $this->files->shouldReceive('delete')->with($path)->andReturnTrue();
 
@@ -69,7 +57,7 @@ final class FileStorageTest extends TestCase
 
     public function testGetsWithExistsValueWithDeadValue(): void
     {
-        $ttl = time() + self::DEFAULT_TTL;
+        $ttl = \time() + self::DEFAULT_TTL;
         $value = $ttl . 's:3:"barbar";';
         $path = self::DEFAULT_PATH;
 
@@ -82,7 +70,7 @@ final class FileStorageTest extends TestCase
 
     public function testSetsWithDefaultTTL(): void
     {
-        $ttl = time() + self::DEFAULT_TTL;
+        $ttl = \time() + self::DEFAULT_TTL;
         $value = $ttl . 's:3:"bar";';
 
         $this->files->shouldReceive('write')->with(self::DEFAULT_PATH, $value, null, true)->andReturnTrue();
@@ -92,7 +80,7 @@ final class FileStorageTest extends TestCase
 
     public function testSetsWithTTLInSeconds(): void
     {
-        $ttl = time() + 30;
+        $ttl = \time() + 30;
         $value = $ttl . 's:3:"bar";';
 
         $this->files->shouldReceive('write')->with(self::DEFAULT_PATH, $value, null, true)->andReturnTrue();
@@ -102,7 +90,7 @@ final class FileStorageTest extends TestCase
 
     public function testSetsWithTTLInDateInterval(): void
     {
-        $ttl = time() + 30;
+        $ttl = \time() + 30;
         $value = $ttl . 's:3:"bar";';
 
         $this->files->shouldReceive('write')->with(self::DEFAULT_PATH, $value, null, true)->andReturnTrue();
@@ -112,7 +100,7 @@ final class FileStorageTest extends TestCase
 
     public function testSetsWithTTLInDateTime(): void
     {
-        $ttl = time() + 30;
+        $ttl = \time() + 30;
         $value = $ttl . 's:3:"bar";';
 
         $this->files->shouldReceive('write')->with(self::DEFAULT_PATH, $value, null, true)->andReturnTrue();
@@ -159,18 +147,18 @@ final class FileStorageTest extends TestCase
     public function testGetsMultipleKeys(): void
     {
         $this->files->shouldReceive('read')->with(
-            'path/to/cache/0b/ee/0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33'
-        )->andReturn((time() + self::DEFAULT_TTL) . 's:3:"abc";');
+            'path/to/cache/0b/ee/0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33',
+        )->andReturn((\time() + self::DEFAULT_TTL) . 's:3:"abc";');
 
         $this->files->shouldReceive('read')->with(
-            'path/to/cache/62/cd/62cdb7020ff920e5aa642c3d4066950dd1f01f4d'
-        )->andReturn((time() + self::DEFAULT_TTL) . 's:3:"cde";');
+            'path/to/cache/62/cd/62cdb7020ff920e5aa642c3d4066950dd1f01f4d',
+        )->andReturn((\time() + self::DEFAULT_TTL) . 's:3:"cde";');
 
         $this->files->shouldReceive('read')->with(
-            'path/to/cache/bb/e9/bbe960a25ea311d21d40669e93df2003ba9b90a2'
-        )->andReturn((time() + -1) . 's:3:"efg";');
+            'path/to/cache/bb/e9/bbe960a25ea311d21d40669e93df2003ba9b90a2',
+        )->andReturn((\time() + -1) . 's:3:"efg";');
         $this->files->shouldReceive('exists')->with(
-            'path/to/cache/bb/e9/bbe960a25ea311d21d40669e93df2003ba9b90a2'
+            'path/to/cache/bb/e9/bbe960a25ea311d21d40669e93df2003ba9b90a2',
         )->andReturnFalse();
 
         self::assertSame([
@@ -182,7 +170,7 @@ final class FileStorageTest extends TestCase
 
     public function testSetsMultipleWithDefaultTTL(): void
     {
-        $ttl = time() + self::DEFAULT_TTL;
+        $ttl = \time() + self::DEFAULT_TTL;
 
         $this->files->shouldReceive('write')
             ->with('path/to/cache/0b/ee/0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33', $ttl . 's:3:"baz";', null, true)
@@ -205,7 +193,7 @@ final class FileStorageTest extends TestCase
 
     public function testSetsMultipleWithCustomTTL(): void
     {
-        $ttl = time() + 30;
+        $ttl = \time() + 30;
 
         $this->files->shouldReceive('write')
             ->with('path/to/cache/0b/ee/0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33', $ttl . 's:3:"baz";', null, true)
@@ -265,5 +253,17 @@ final class FileStorageTest extends TestCase
     {
         $this->files->shouldReceive('exists')->once()->andReturnFalse();
         self::assertFalse($this->storage->has('foo'));
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->files = \Mockery::mock(FilesInterface::class);
+        $this->storage = new FileStorage(
+            $this->files,
+            'path/to/cache',
+            self::DEFAULT_TTL,
+        );
     }
 }

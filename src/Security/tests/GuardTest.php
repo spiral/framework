@@ -18,21 +18,13 @@ class GuardTest extends TestCase
     public const CONTEXT = [];
 
     private MockObject&PermissionsInterface $permission;
-
     private MockObject&ActorInterface $actor;
-
     private array $roles = ['user', 'admin'];
-
-    public function setUp(): void
-    {
-        $this->permission = $this->createMock(PermissionsInterface::class);
-        $this->actor = $this->createMock(ActorInterface::class);
-    }
 
     public function testAllows(): void
     {
         $this->permission->method('hasRole')
-            ->willReturnCallback(function (...$args) {
+            ->willReturnCallback(static function (...$args) {
                 static $series = [
                     [['user'], false],
                     [['admin'], true],
@@ -88,5 +80,11 @@ class GuardTest extends TestCase
 
         self::assertEquals($this->roles, $guardWithRoles->getRoles());
         self::assertNotEquals($guard, $guardWithRoles);
+    }
+
+    protected function setUp(): void
+    {
+        $this->permission = $this->createMock(PermissionsInterface::class);
+        $this->actor = $this->createMock(ActorInterface::class);
     }
 }

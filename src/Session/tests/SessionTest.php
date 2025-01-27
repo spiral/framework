@@ -19,31 +19,6 @@ final class SessionTest extends TestCase
 {
     private SessionFactory $factory;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container->bind(FilesInterface::class, Files::class);
-        $this->container->bind(SessionInterface::class, Session::class);
-        $this->container->bind(SessionSectionInterface::class, SessionSection::class);
-
-        $this->factory = new SessionFactory(new SessionConfig([
-            'lifetime' => 86400,
-            'cookie'   => 'SID',
-            'secure'   => false,
-            'handler'  => new Container\Autowire(FileHandler::class, [
-                'directory' => sys_get_temp_dir()
-            ]),
-        ]), $this->container);
-    }
-
-    public function tearDown(): void
-    {
-        if ((int)session_status() === PHP_SESSION_ACTIVE) {
-            session_abort();
-        }
-    }
-
     public function testValueDestroy(): void
     {
         $session = $this->factory->initSession('sig');
@@ -56,7 +31,6 @@ final class SessionTest extends TestCase
 
         self::assertNull($session->getSection()->get('key'));
     }
-
 
     public function testValueAbort(): void
     {
@@ -227,5 +201,30 @@ final class SessionTest extends TestCase
         self::assertNull($session->getSection()->get('key'));
         self::assertNotSame($id, $session->getID());
         $session->commit();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->container->bind(FilesInterface::class, Files::class);
+        $this->container->bind(SessionInterface::class, Session::class);
+        $this->container->bind(SessionSectionInterface::class, SessionSection::class);
+
+        $this->factory = new SessionFactory(new SessionConfig([
+            'lifetime' => 86400,
+            'cookie'   => 'SID',
+            'secure'   => false,
+            'handler'  => new Container\Autowire(FileHandler::class, [
+                'directory' => \sys_get_temp_dir(),
+            ]),
+        ]), $this->container);
+    }
+
+    protected function tearDown(): void
+    {
+        if ((int) \session_status() === PHP_SESSION_ACTIVE) {
+            \session_abort();
+        }
     }
 }

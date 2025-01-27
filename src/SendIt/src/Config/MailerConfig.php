@@ -16,7 +16,7 @@ final class MailerConfig extends InjectableConfig
             'from' => '',
             'queue' => null,
             'queueConnection' => null,
-        ]
+        ],
     ) {
         parent::__construct($config);
     }

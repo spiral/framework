@@ -9,6 +9,4 @@ namespace Spiral\Core;
  *
  * @deprecated use {@see \Spiral\Interceptors\Handler\AutowireHandler} instead
  */
-final class Core extends AbstractCore
-{
-}
+final class Core extends AbstractCore {}

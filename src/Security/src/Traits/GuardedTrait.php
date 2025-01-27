@@ -22,7 +22,7 @@ trait GuardedTrait
         $container = ContainerScope::getContainer();
         if (empty($container) || !$container->has(GuardInterface::class)) {
             throw new ScopeException(
-                'Unable to get `GuardInterface`, binding is missing or container scope is not set'
+                'Unable to get `GuardInterface`, binding is missing or container scope is not set',
             );
         }
 

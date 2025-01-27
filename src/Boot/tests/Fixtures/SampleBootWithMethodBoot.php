@@ -15,7 +15,6 @@ use Spiral\Tests\Boot\Fixtures\Attribute\SampleMethod;
 class SampleBootWithMethodBoot extends Bootloader
 {
     public const BOOT = true;
-
     public const BINDINGS = ['abc' => self::class];
     public const SINGLETONS = ['single' => self::class];
 
@@ -30,16 +29,27 @@ class SampleBootWithMethodBoot extends Bootloader
         $binder->bind('ghi', 'foo');
     }
 
-    #[BindMethod(alias: 'hij')]
-    private function bindMethodA(): SampleClass
-    {
-        return new SampleClass();
-    }
-
     #[BindMethod(alias: 'ijk')]
     protected function bindMethodB(): string
     {
         return 'foo';
+    }
+
+    #[InjectorMethod(alias: SampleInjectableClass::class)]
+    protected function sampleInjector(): InjectorInterface
+    {
+        return new class implements InjectorInterface {
+            public function createInjection(\ReflectionClass $class, ?string $context = null): object
+            {
+                return new SampleInjectableClass('foo');
+            }
+        };
+    }
+
+    #[BindMethod(alias: 'hij')]
+    private function bindMethodA(): SampleClass
+    {
+        return new SampleClass();
     }
 
     #[BindMethod]
@@ -70,16 +80,5 @@ class SampleBootWithMethodBoot extends Bootloader
     private function sampleMethod(): SampleClass|string|int
     {
         return new SampleClass();
-    }
-
-    #[InjectorMethod(alias: SampleInjectableClass::class)]
-    protected function sampleInjector(): InjectorInterface
-    {
-        return new class implements InjectorInterface {
-            public function createInjection(\ReflectionClass $class, ?string $context = null): object
-            {
-                return new SampleInjectableClass('foo');
-            }
-        };
     }
 }

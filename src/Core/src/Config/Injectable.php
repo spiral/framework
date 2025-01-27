@@ -18,8 +18,7 @@ final class Injectable extends Binding
      */
     public function __construct(
         public readonly string|InjectorInterface $injector,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

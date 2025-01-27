@@ -18,12 +18,12 @@ class ConfigTest extends TestCase
         $config = new ConsoleConfig([
             'sequences' => [
                 'update' => [
-                    []
+                    [],
                 ],
             ],
         ]);
 
-        iterator_to_array($config->updateSequence());
+        \iterator_to_array($config->updateSequence());
     }
 
     public function testForcedSequence(): void
@@ -36,6 +36,6 @@ class ConfigTest extends TestCase
             ],
         ]);
 
-        self::assertCount(1, iterator_to_array($config->updateSequence()));
+        self::assertCount(1, \iterator_to_array($config->updateSequence()));
     }
 }

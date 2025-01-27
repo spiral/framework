@@ -12,7 +12,7 @@ final class PositionalArgumentException extends ValidationException
 
     public function __construct(
         \ReflectionFunctionAbstract $reflection,
-        private readonly int $position
+        private readonly int $position,
     ) {
         $pattern = 'Cannot use positional argument after named argument `%s` %s.';
         parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));

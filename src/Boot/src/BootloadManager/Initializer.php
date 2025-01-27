@@ -99,22 +99,6 @@ class Initializer implements InitializerInterface
         return $this->bootloaders;
     }
 
-    /**
-     * Resolve all bootloader dependencies and init bindings
-     */
-    private function initBootloader(BootloaderInterface $bootloader): void
-    {
-        foreach ($bootloader->defineBindings() as $alias => $resolver) {
-            $this->binder->bind($alias, $resolver);
-        }
-
-        foreach ($bootloader->defineSingletons() as $alias => $resolver) {
-            $this->binder->bindSingleton($alias, $resolver);
-        }
-
-        $this->resolveAttributeBindings($bootloader);
-    }
-
     protected function shouldBeBooted(\ReflectionNamedType $type): bool
     {
         /** @var TClass $class */
@@ -141,6 +125,22 @@ class Initializer implements InitializerInterface
         $registry->register(new CanBootedChecker($this->bootloaders));
 
         return new BootloaderChecker($registry);
+    }
+
+    /**
+     * Resolve all bootloader dependencies and init bindings
+     */
+    private function initBootloader(BootloaderInterface $bootloader): void
+    {
+        foreach ($bootloader->defineBindings() as $alias => $resolver) {
+            $this->binder->bind($alias, $resolver);
+        }
+
+        foreach ($bootloader->defineSingletons() as $alias => $resolver) {
+            $this->binder->bindSingleton($alias, $resolver);
+        }
+
+        $this->resolveAttributeBindings($bootloader);
     }
 
     /**

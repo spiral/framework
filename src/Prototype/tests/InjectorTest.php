@@ -17,7 +17,7 @@ use Spiral\Tests\Prototype\Fixtures\TestClass;
 
 class InjectorTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         if ((string)ini_get('zend.assertions') === 1) {
             ini_set('zend.assertions', 0);

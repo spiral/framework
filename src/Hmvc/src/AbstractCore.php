@@ -28,7 +28,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
 
     public function __construct(
         /** @internal */
-        #[Proxy] protected ContainerInterface $container
+        #[Proxy] protected ContainerInterface $container,
     ) {
         // TODO: can we simplify this?
         // resolver is usually the container itself
@@ -37,7 +37,7 @@ abstract class AbstractCore implements CoreInterface, HandlerInterface
             ? $container
             : $container
                 ->get(InvokerInterface::class)
-                ->invoke(static fn (#[Proxy] ResolverInterface $resolver): ResolverInterface => $resolver);
+                ->invoke(static fn(#[Proxy] ResolverInterface $resolver): ResolverInterface => $resolver);
     }
 
     /**

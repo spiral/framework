@@ -24,34 +24,11 @@ final class CsrfTest extends TestCase
 {
     private Container $container;
 
-    public function setUp(): void
-    {
-        $options = new Options();
-        $options->checkScope = false;
-        $this->container = new Container(options: $options);
-        $this->container->bind(
-            CsrfConfig::class,
-            new CsrfConfig(
-                [
-                    'cookie'   => 'csrf-token',
-                    'length'   => 16,
-                    'lifetime' => 86400
-                ]
-            )
-        );
-
-        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
-        $this->container->bind(
-            ResponseFactoryInterface::class,
-            new TestResponseFactory(new HttpConfig(['headers' => []]))
-        );
-    }
-
     public function testGet(): void
     {
         $core = $this->httpCore([CsrfMiddleware::class]);
         $core->setHandler(
-            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE)
+            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE),
         );
 
         $response = $this->get($core, '/');
@@ -60,7 +37,7 @@ final class CsrfTest extends TestCase
         $cookies = $this->fetchCookies($response);
 
         self::assertArrayHasKey('csrf-token', $cookies);
-        self::assertSame($cookies['csrf-token'], (string)$response->getBody());
+        self::assertSame($cookies['csrf-token'], (string) $response->getBody());
     }
 
     public function testLengthException(): void
@@ -72,14 +49,14 @@ final class CsrfTest extends TestCase
                 [
                     'cookie'   => 'csrf-token',
                     'length'   => 0,
-                    'lifetime' => 86400
-                ]
-            )
+                    'lifetime' => 86400,
+                ],
+            ),
         );
 
         $core = $this->httpCore([CsrfMiddleware::class]);
         $core->setHandler(
-            static fn(): string => 'all good'
+            static fn(): string => 'all good',
         );
 
         $this->get($core, '/');
@@ -89,7 +66,7 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static fn(): string => 'all good'
+            static fn(): string => 'all good',
         );
 
         $response = $this->post($core, '/');
@@ -101,7 +78,7 @@ final class CsrfTest extends TestCase
         $this->expectException(\LogicException::class);
         $core = $this->httpCore([CsrfFirewall::class]);
         $core->setHandler(
-            static fn(): string => 'all good'
+            static fn(): string => 'all good',
         );
 
         $this->post($core, '/');
@@ -111,12 +88,12 @@ final class CsrfTest extends TestCase
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static fn(): string => 'all good'
+            static fn(): string => 'all good',
         );
 
         $response = $this->get($core, '/');
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        self::assertSame('all good', (string) $response->getBody());
 
         $cookies = $this->fetchCookies($response);
 
@@ -128,26 +105,26 @@ final class CsrfTest extends TestCase
             $core,
             '/',
             [
-                'csrf-token' => $cookies['csrf-token']
+                'csrf-token' => $cookies['csrf-token'],
             ],
             [],
-            ['csrf-token' => $cookies['csrf-token']]
+            ['csrf-token' => $cookies['csrf-token']],
         );
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        self::assertSame('all good', (string) $response->getBody());
     }
 
     public function testHeaderOK(): void
     {
         $core = $this->httpCore([CsrfMiddleware::class, CsrfFirewall::class]);
         $core->setHandler(
-            static fn(): string => 'all good'
+            static fn(): string => 'all good',
         );
 
         $response = $this->get($core, '/');
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        self::assertSame('all good', (string) $response->getBody());
 
         $cookies = $this->fetchCookies($response);
 
@@ -160,20 +137,20 @@ final class CsrfTest extends TestCase
             '/',
             [],
             [
-                'X-CSRF-Token' => $cookies['csrf-token']
+                'X-CSRF-Token' => $cookies['csrf-token'],
             ],
-            ['csrf-token' => $cookies['csrf-token']]
+            ['csrf-token' => $cookies['csrf-token']],
         );
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        self::assertSame('all good', (string) $response->getBody());
     }
 
     public function testHeaderOKStrict(): void
     {
         $core = $this->httpCore([CsrfMiddleware::class, StrictCsrfFirewall::class]);
         $core->setHandler(
-            static fn(): string => 'all good'
+            static fn(): string => 'all good',
         );
 
         $response = $this->get($core, '/');
@@ -190,13 +167,36 @@ final class CsrfTest extends TestCase
             '/',
             [],
             [
-                'X-CSRF-Token' => $cookies['csrf-token']
+                'X-CSRF-Token' => $cookies['csrf-token'],
             ],
-            ['csrf-token' => $cookies['csrf-token']]
+            ['csrf-token' => $cookies['csrf-token']],
         );
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame('all good', (string)$response->getBody());
+        self::assertSame('all good', (string) $response->getBody());
+    }
+
+    protected function setUp(): void
+    {
+        $options = new Options();
+        $options->checkScope = false;
+        $this->container = new Container(options: $options);
+        $this->container->bind(
+            CsrfConfig::class,
+            new CsrfConfig(
+                [
+                    'cookie'   => 'csrf-token',
+                    'length'   => 16,
+                    'lifetime' => 86400,
+                ],
+            ),
+        );
+
+        $this->container->bind(TracerInterface::class, new NullTracer($this->container));
+        $this->container->bind(
+            ResponseFactoryInterface::class,
+            new TestResponseFactory(new HttpConfig(['headers' => []])),
+        );
     }
 
     private function httpCore(array $middleware = []): Http
@@ -205,17 +205,17 @@ final class CsrfTest extends TestCase
             [
                 'basePath'   => '/',
                 'headers'    => [
-                    'Content-Type' => 'text/html; charset=UTF-8'
+                    'Content-Type' => 'text/html; charset=UTF-8',
                 ],
-                'middleware' => $middleware
-            ]
+                'middleware' => $middleware,
+            ],
         );
 
         return new Http(
             $config,
             new Pipeline($this->container),
             new TestResponseFactory($config),
-            $this->container
+            $this->container,
         );
     }
 
@@ -224,7 +224,7 @@ final class CsrfTest extends TestCase
         string $uri,
         array $query = [],
         array $headers = [],
-        array $cookies = []
+        array $cookies = [],
     ): ResponseInterface {
         return $core->handle($this->request($uri, 'GET', $query, $headers, $cookies));
     }
@@ -234,7 +234,7 @@ final class CsrfTest extends TestCase
         string $uri,
         array $data = [],
         array $headers = [],
-        array $cookies = []
+        array $cookies = [],
     ): ResponseInterface {
         return $core->handle($this->request($uri, 'POST', [], $headers, $cookies)->withParsedBody($data));
     }
@@ -244,7 +244,7 @@ final class CsrfTest extends TestCase
         string $method,
         array $query = [],
         array $headers = [],
-        array $cookies = []
+        array $cookies = [],
     ): ServerRequest {
         $request = new ServerRequest($method, $uri, $headers, 'php://input');
 
@@ -259,13 +259,13 @@ final class CsrfTest extends TestCase
 
         foreach ($response->getHeaders() as $header) {
             foreach ($header as $headerLine) {
-                $chunk = explode(';', $headerLine);
-                if (mb_strpos($chunk[0], '=') === false) {
+                $chunk = \explode(';', $headerLine);
+                if (\mb_strpos($chunk[0], '=') === false) {
                     continue;
                 }
 
-                $cookie = explode('=', $chunk[0]);
-                $result[$cookie[0]] = rawurldecode($cookie[1]);
+                $cookie = \explode('=', $chunk[0]);
+                $result[$cookie[0]] = \rawurldecode($cookie[1]);
             }
         }
 

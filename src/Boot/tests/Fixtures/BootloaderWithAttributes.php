@@ -23,19 +23,7 @@ final class BootloaderWithAttributes extends Bootloader
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[InitMethod(priority: 50)]
-    private function initMethodE(BinderInterface $binder): void
-    {
-        $binder->bind(__FUNCTION__, SampleClass::class);
-    }
-
     public function initMethodA(BinderInterface $binder): void
-    {
-        $binder->bind(__FUNCTION__, SampleClass::class);
-    }
-
-    #[InitMethod]
-    protected function initMethodB(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
@@ -64,19 +52,7 @@ final class BootloaderWithAttributes extends Bootloader
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[BootMethod(priority: 50)]
-    private function bootMethodE(BinderInterface $binder): void
-    {
-        $binder->bind(__FUNCTION__, SampleClass::class);
-    }
-
     public function bootMethodA(BinderInterface $binder): void
-    {
-        $binder->bind(__FUNCTION__, SampleClass::class);
-    }
-
-    #[BootMethod]
-    protected function bootMethodB(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
@@ -89,6 +65,30 @@ final class BootloaderWithAttributes extends Bootloader
 
     #[BootMethod(priority: 50)]
     public function bootMethodD(BinderInterface $binder): void
+    {
+        $binder->bind(__FUNCTION__, SampleClass::class);
+    }
+
+    #[InitMethod]
+    protected function initMethodB(BinderInterface $binder): void
+    {
+        $binder->bind(__FUNCTION__, SampleClass::class);
+    }
+
+    #[BootMethod]
+    protected function bootMethodB(BinderInterface $binder): void
+    {
+        $binder->bind(__FUNCTION__, SampleClass::class);
+    }
+
+    #[InitMethod(priority: 50)]
+    private function initMethodE(BinderInterface $binder): void
+    {
+        $binder->bind(__FUNCTION__, SampleClass::class);
+    }
+
+    #[BootMethod(priority: 50)]
+    private function bootMethodE(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }

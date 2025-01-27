@@ -11,9 +11,8 @@ final class LogBroadcast extends AbstractBroadcast
 {
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly string $level = LogLevel::INFO
-    ) {
-    }
+        private readonly string $level = LogLevel::INFO,
+    ) {}
 
     public function publish(iterable|string|\Stringable $topics, iterable|string $messages): void
     {

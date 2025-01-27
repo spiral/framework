@@ -14,9 +14,12 @@ final class ProtoSerializerTest extends TestCase
 {
     private ProtoSerializer $serializer;
 
-    protected function setUp(): void
+    public static function invalidTypeDataProvider(): iterable
     {
-        $this->serializer = new ProtoSerializer();
+        yield [null];
+        yield ['foo'];
+        yield [new \stdClass()];
+        yield [\stdClass::class];
     }
 
     public function testSerializeMessage(): void
@@ -48,11 +51,8 @@ final class ProtoSerializerTest extends TestCase
         $this->serializer->unserialize('serialized', $type);
     }
 
-    public static function invalidTypeDataProvider(): iterable
+    protected function setUp(): void
     {
-        yield [null];
-        yield ['foo'];
-        yield [new \stdClass()];
-        yield [\stdClass::class];
+        $this->serializer = new ProtoSerializer();
     }
 }

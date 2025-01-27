@@ -12,7 +12,5 @@ final class ClassMethodDoubleAttribute
 {
     #[Listener(event: FooEvent::class)]
     #[Listener(event: BarEvent::class)]
-    public function __invoke(object $event): void
-    {
-    }
+    public function __invoke(object $event): void {}
 }

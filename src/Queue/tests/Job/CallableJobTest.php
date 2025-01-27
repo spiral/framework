@@ -32,7 +32,7 @@ final class CallableJobTest extends TestCase
 
     public function testHandle(): void
     {
-        $callback = function (string $name, string $id, ContainerInterface $container): void {
+        $callback = static function (string $name, string $id, ContainerInterface $container): void {
             self::assertSame('foo', $name);
             self::assertSame('foo-id', $id);
             self::assertInstanceOf(Container::class, $container);

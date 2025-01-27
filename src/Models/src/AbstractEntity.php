@@ -16,37 +16,8 @@ use Spiral\Models\Exception\EntityException;
 abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
 {
     public function __construct(
-        private array $fields = []
-    ) {
-    }
-
-    /**
-     * Destruct data entity.
-     */
-    public function __destruct()
-    {
-        $this->flushFields();
-    }
-
-    public function __isset(string $offset): bool
-    {
-        return $this->hasField($offset);
-    }
-
-    public function __get(string $offset): mixed
-    {
-        return $this->getField($offset);
-    }
-
-    public function __set(string $offset, mixed $value): void
-    {
-        $this->setField($offset, $value);
-    }
-
-    public function __unset(string $offset): void
-    {
-        unset($this->fields[$offset]);
-    }
+        private array $fields = [],
+    ) {}
 
     public function hasField(string $name): bool
     {
@@ -224,6 +195,34 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         return $this->getValue();
     }
 
+    public function __isset(string $offset): bool
+    {
+        return $this->hasField($offset);
+    }
+
+    public function __get(string $offset): mixed
+    {
+        return $this->getField($offset);
+    }
+
+    public function __set(string $offset, mixed $value): void
+    {
+        $this->setField($offset, $value);
+    }
+
+    public function __unset(string $offset): void
+    {
+        unset($this->fields[$offset]);
+    }
+
+    /**
+     * Destruct data entity.
+     */
+    public function __destruct()
+    {
+        $this->flushFields();
+    }
+
     /**
      * @return int[]|string[]
      *
@@ -275,11 +274,11 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         $type,
         string $name,
         mixed $value,
-        array $context = []
+        array $context = [],
     ): ValueInterface {
         if (!\is_string($type) || !\class_exists($type)) {
             throw new EntityException(
-                \sprintf('Unable to create accessor for field `%s` in ', $name) . static::class
+                \sprintf('Unable to create accessor for field `%s` in ', $name) . static::class,
             );
         }
 

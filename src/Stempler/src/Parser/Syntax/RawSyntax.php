@@ -19,7 +19,7 @@ final class RawSyntax implements SyntaxInterface
     {
         $asm->push(new Raw(
             $token->content,
-            new Parser\Context($token, $parser->getPath())
+            new Parser\Context($token, $parser->getPath()),
         ));
     }
 }

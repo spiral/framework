@@ -16,7 +16,7 @@ use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 class OnlyKnownTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
-        LoopDirective::class
+        LoopDirective::class,
     ];
 
     public function testForeachEndForeach(): void

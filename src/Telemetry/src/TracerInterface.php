@@ -42,6 +42,6 @@ interface TracerInterface
         array $attributes = [],
         bool $scoped = false,
         ?TraceKind $traceKind = null,
-        ?int $startTime = null
+        ?int $startTime = null,
     ): mixed;
 }

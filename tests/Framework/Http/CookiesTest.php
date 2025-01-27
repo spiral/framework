@@ -21,13 +21,6 @@ final class CookiesTest extends HttpTestCase
         'ENCRYPTER_KEY' => self::ENCRYPTER_KEY,
     ];
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->enableMiddlewares();
-    }
-
     public function testOutsideOfScopeOK(): void
     {
         self::assertInstanceOf(CookieManager::class, $this->cookies());
@@ -46,21 +39,21 @@ final class CookiesTest extends HttpTestCase
         $this->setHttpHandler(static function (ServerRequestInterface $request): void {
             self::assertInstanceOf(
                 CookieQueue::class,
-                ContainerScope::getContainer()->get(ServerRequestInterface::class)->getAttribute(CookieQueue::ATTRIBUTE)
+                ContainerScope::getContainer()->get(ServerRequestInterface::class)->getAttribute(CookieQueue::ATTRIBUTE),
             );
 
             self::assertSame(
                 ContainerScope::getContainer()
                     ->get(ServerRequestInterface::class)
                     ->getAttribute(CookieQueue::ATTRIBUTE),
-                $request->getAttribute(CookieQueue::ATTRIBUTE)
+                $request->getAttribute(CookieQueue::ATTRIBUTE),
             );
 
             self::assertSame(
                 ContainerScope::getContainer()
                     ->get(ServerRequestInterface::class)
                     ->getAttribute(CookieQueue::ATTRIBUTE),
-                ContainerScope::getContainer()->get(CookieQueue::class)
+                ContainerScope::getContainer()->get(CookieQueue::class),
             );
         });
 
@@ -70,7 +63,7 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testHasCookie(): void
     {
-        $this->setHttpHandler(fn(ServerRequestInterface $request): int => (int)$this->cookies()->has('a'));
+        $this->setHttpHandler(fn(ServerRequestInterface $request): int => (int) $this->cookies()->has('a'));
 
         $this->fakeHttp()->get('/')->assertOk()->assertBodySame('0');
     }
@@ -78,13 +71,13 @@ final class CookiesTest extends HttpTestCase
     #[TestScope([Spiral::Http, Spiral::HttpRequest])]
     public function testHasCookie2(): void
     {
-        $this->setHttpHandler(fn(ServerRequestInterface $request): int => (int)$this->cookies()->has('a'));
+        $this->setHttpHandler(fn(ServerRequestInterface $request): int => (int) $this->cookies()->has('a'));
 
         $this
             ->fakeHttp()
             ->get(
                 uri: '/',
-                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')]
+                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')],
             )
             ->assertOk()
             ->assertBodySame('1');
@@ -99,7 +92,7 @@ final class CookiesTest extends HttpTestCase
             ->fakeHttp()
             ->get(
                 uri: '/',
-                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')]
+                cookies: ['a' => $this->getContainer()->get(EncrypterInterface::class)->encrypt('hello')],
             )
             ->assertOk()
             ->assertBodySame('hello');
@@ -147,6 +140,13 @@ final class CookiesTest extends HttpTestCase
         });
 
         $this->fakeHttp()->get('/')->assertOk()->assertBodySame('ok')->assertCookieSame('cookie', '');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->enableMiddlewares();
     }
 
     private function cookies(): CookieManager

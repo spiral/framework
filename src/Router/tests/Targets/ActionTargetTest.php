@@ -52,7 +52,7 @@ class ActionTargetTest extends TestCase
     {
         $route = new Route(
             '/test[/<action>]',
-            new Action(TestController::class, ['test', 'other'])
+            new Action(TestController::class, ['test', 'other']),
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 

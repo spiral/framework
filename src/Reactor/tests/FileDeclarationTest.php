@@ -19,7 +19,8 @@ final class FileDeclarationTest extends BaseWithElementsTestCase
 {
     public function testFromCode(): void
     {
-        $file = FileDeclaration::fromCode('<?php
+        $file = FileDeclaration::fromCode(
+            '<?php
              namespace Foo\Bar;
 
              use Baz\Bar\ClassA;
@@ -30,7 +31,7 @@ final class FileDeclarationTest extends BaseWithElementsTestCase
                  public const TEST = [
                      ClassA::class => ClassB::class,
                  ];
-             }'
+             }',
         );
 
         $class = $file->getClass('MyClass');

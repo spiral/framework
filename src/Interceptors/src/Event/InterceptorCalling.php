@@ -12,6 +12,5 @@ final class InterceptorCalling
     public function __construct(
         public readonly CallContextInterface $context,
         public readonly InterceptorInterface $interceptor,
-    ) {
-    }
+    ) {}
 }

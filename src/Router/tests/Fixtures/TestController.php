@@ -39,7 +39,7 @@ class TestController
 
     public function echo(): void
     {
-        ob_start();
+        \ob_start();
         echo 'echoed';
     }
 
@@ -62,7 +62,7 @@ class TestController
     {
         return [
             'status' => 301,
-            'msg'    => 'redirect'
+            'msg'    => 'redirect',
         ];
     }
 

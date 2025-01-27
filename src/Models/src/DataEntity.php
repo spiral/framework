@@ -66,7 +66,7 @@ class DataEntity extends AbstractEntity
             static::FILLABLE === '*' => true,
             !empty(static::FILLABLE) => \in_array($field, static::FILLABLE, true),
             static::SECURED === '*' => false,
-            default => !\in_array($field, static::SECURED, true)
+            default => !\in_array($field, static::SECURED, true),
         };
     }
 
@@ -82,7 +82,7 @@ class DataEntity extends AbstractEntity
         $target = match ($type) {
             ModelSchema::MUTATOR_ACCESSOR => static::ACCESSORS,
             ModelSchema::MUTATOR_GETTER => static::GETTERS,
-            ModelSchema::MUTATOR_SETTER => static::SETTERS
+            ModelSchema::MUTATOR_SETTER => static::SETTERS,
         };
 
         if (isset($target[$field])) {

@@ -12,7 +12,7 @@ final class MissingRequiredArgumentException extends ValidationException
 
     public function __construct(
         \ReflectionFunctionAbstract $reflection,
-        private readonly string $parameter
+        private readonly string $parameter,
     ) {
         $pattern = "Missing required argument for the `{$parameter}` parameter for `%s` %s.";
         parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));

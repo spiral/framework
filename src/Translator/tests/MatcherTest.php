@@ -10,6 +10,18 @@ use Spiral\Translator\Matcher;
 
 class MatcherTest extends TestCase
 {
+    public static function patternProvider(): \Traversable
+    {
+        yield ['string', 'string', true];
+        yield ['string', 'st*', true];
+        yield ['abc', 'dce', false];
+        yield ['abc', 'a(bc|de)', true];
+        yield ['ade', 'a(bc|de)', true];
+        yield ['string', '*ring', true];
+        yield ['ring', '*ring', false];
+        yield ['strings', '*ri(ng|ngs)', true];
+    }
+
     public function testIsPattern(): void
     {
         $patternizer = new Matcher();
@@ -23,17 +35,5 @@ class MatcherTest extends TestCase
     {
         $matcher = new Matcher();
         self::assertSame($result, $matcher->matches($string, $pattern));
-    }
-
-    public static function patternProvider(): \Traversable
-    {
-        yield ['string', 'string', true];
-        yield ['string', 'st*', true];
-        yield ['abc', 'dce', false];
-        yield ['abc', 'a(bc|de)', true];
-        yield ['ade', 'a(bc|de)', true];
-        yield ['string', '*ring', true];
-        yield ['ring', '*ring', false];
-        yield ['strings', '*ri(ng|ngs)', true];
     }
 }

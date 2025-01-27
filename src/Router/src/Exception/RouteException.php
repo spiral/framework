@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Exception;
 
-class RouteException extends RouterException
-{
-}
+class RouteException extends RouterException {}

@@ -18,7 +18,7 @@ class SubdomainTest extends TestCase
         $route = new Route(
             '//[<sub>.]site.com/foo',
             'test',
-            ['sub' => 'subdomain']
+            ['sub' => 'subdomain'],
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
@@ -35,7 +35,7 @@ class SubdomainTest extends TestCase
         $route = new Route(
             '//[<sub>.]site.com/foo[/<action>]',
             'test',
-            ['sub' => 'subdomain']
+            ['sub' => 'subdomain'],
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));

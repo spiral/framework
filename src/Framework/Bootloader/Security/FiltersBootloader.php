@@ -43,9 +43,8 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly BinderInterface $binder,
-        private readonly ConfiguratorInterface $config
-    ) {
-    }
+        private readonly ConfiguratorInterface $config,
+    ) {}
 
     public function defineSingletons(): array
     {
@@ -55,7 +54,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
                 InputInterface::class,
                 static function (ContainerInterface $container, HttpConfig $config): InputScope {
                     return new InputScope(new InputManager($container, $config));
-                }
+                },
             );
 
         $this->binder->bind(InputInterface::class, new Proxy(InputInterface::class, true));
@@ -80,7 +79,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
                     PopulateDataFromEntityInterceptor::class,
                     ValidateFilterInterceptor::class,
                 ],
-            ]
+            ],
         );
     }
 
@@ -91,7 +90,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
     {
         $this->config->modify(
             FiltersConfig::CONFIG,
-            new Append('interceptors', null, $interceptor)
+            new Append('interceptors', null, $interceptor),
         );
     }
 
@@ -103,7 +102,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
         /** @var FilterBag $filter */
         return $this->container->get(FilterProviderInterface::class)->createFilter(
             $class->getName(),
-            $this->container->get(InputInterface::class)
+            $this->container->get(InputInterface::class),
         );
     }
 

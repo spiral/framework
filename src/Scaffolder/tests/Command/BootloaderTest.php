@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use ReflectionClass;
-use ReflectionException;
-use Spiral\Core\CoreInterface;
 use Spiral\Interceptors\HandlerInterface;
-use Throwable;
 
 final class BootloaderTest extends AbstractCommandTestCase
 {
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffold(): void
     {
@@ -22,13 +18,13 @@ final class BootloaderTest extends AbstractCommandTestCase
 
         $this->console()->run('create:bootloader', [
             'name' => 'sample',
-            '--comment' => 'Sample Bootloader'
+            '--comment' => 'Sample Bootloader',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('strict_types=1', $content);
@@ -48,8 +44,8 @@ final class BootloaderTest extends AbstractCommandTestCase
     }
 
     /**
-     * @throws ReflectionException
-     * @throws Throwable
+     * @throws \ReflectionException
+     * @throws \Throwable
      */
     public function testScaffoldWithCustomNamespace(): void
     {
@@ -57,13 +53,13 @@ final class BootloaderTest extends AbstractCommandTestCase
 
         $this->console()->run('create:bootloader', [
             'name' => 'sample',
-            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader'
+            '--namespace' => 'Spiral\\Tests\\Scaffolder\\App\\Custom\\Bootloader',
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('App/Custom/Bootloader/SampleBootloader.php', \str_replace('\\', '/', $reflection->getFileName()));
@@ -77,13 +73,13 @@ final class BootloaderTest extends AbstractCommandTestCase
 
         $this->console()->run('create:bootloader', [
             'name' => 'SampleDomain',
-            '--domain' => true
+            '--domain' => true,
         ]);
 
-        clearstatcache();
+        \clearstatcache();
         self::assertTrue(\class_exists($class));
 
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString(\Spiral\Bootloader\DomainBootloader::class, $content);
@@ -102,7 +98,7 @@ final class BootloaderTest extends AbstractCommandTestCase
 
         $result = $this->console()->run('create:bootloader', [
             'name' => 'sample',
-            '--comment' => 'Sample Bootloader'
+            '--comment' => 'Sample Bootloader',
         ]);
 
         $output = $result->getOutput()->fetch();

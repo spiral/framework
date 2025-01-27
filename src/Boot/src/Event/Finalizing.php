@@ -12,7 +12,6 @@ use Spiral\Boot\FinalizerInterface;
 final class Finalizing
 {
     public function __construct(
-        public readonly FinalizerInterface $finalizer
-    ) {
-    }
+        public readonly FinalizerInterface $finalizer,
+    ) {}
 }

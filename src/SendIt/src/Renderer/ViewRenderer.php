@@ -14,8 +14,29 @@ use Symfony\Component\Mime\Email;
 final class ViewRenderer implements RendererInterface
 {
     public function __construct(
-        private readonly ViewsInterface $views
-    ) {
+        private readonly ViewsInterface $views,
+    ) {}
+
+    /**
+     * Copy-pasted form https://stackoverflow.com/a/20806227
+     * Make sure the subject is ASCII-clean
+     *
+     * @param string $subject Subject to encode
+     * @return string Encoded subject
+     */
+    public static function escapeSubject(string $subject): string
+    {
+        if (!\preg_match('/[^\x20-\x7e]/', $subject)) {
+            // ascii-only subject, return as-is
+            return $subject;
+        }
+
+        // Subject is non-ascii, needs encoding
+        $encoded = \base64_encode($subject);
+        $prefix = '=?UTF-8?B?';
+        $suffix = '?=';
+
+        return $prefix . \str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
     }
 
     public function render(MessageInterface $message): Email
@@ -26,7 +47,7 @@ final class ViewRenderer implements RendererInterface
             throw new MailerException(
                 \sprintf('Invalid email template `%s`: %s', $message->getSubject(), $e->getMessage()),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 
@@ -47,32 +68,10 @@ final class ViewRenderer implements RendererInterface
             throw new MailerException(
                 \sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 
         return $msg;
-    }
-
-    /**
-     * Copy-pasted form https://stackoverflow.com/a/20806227
-     * Make sure the subject is ASCII-clean
-     *
-     * @param string $subject Subject to encode
-     * @return string Encoded subject
-     */
-    public static function escapeSubject(string $subject): string
-    {
-        if (!preg_match('/[^\x20-\x7e]/', $subject)) {
-            // ascii-only subject, return as-is
-            return $subject;
-        }
-
-        // Subject is non-ascii, needs encoding
-        $encoded = \base64_encode($subject);
-        $prefix = '=?UTF-8?B?';
-        $suffix = '?=';
-
-        return $prefix . \str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
     }
 }

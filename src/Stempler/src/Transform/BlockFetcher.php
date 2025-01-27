@@ -42,7 +42,7 @@ final class BlockFetcher
                 $blocks[$node->name] = $node->nodes;
             } else {
                 \assert(
-                    \is_array($blocks[self::CONTEXT_KEY]) || $blocks[self::CONTEXT_KEY] instanceof \ArrayAccess
+                    \is_array($blocks[self::CONTEXT_KEY]) || $blocks[self::CONTEXT_KEY] instanceof \ArrayAccess,
                 );
 
                 $blocks[self::CONTEXT_KEY][] = $node;

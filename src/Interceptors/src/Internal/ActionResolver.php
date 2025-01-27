@@ -26,7 +26,7 @@ final class ActionResolver
             throw new TargetCallException(
                 \sprintf('Invalid action `%s`->`%s`', $controller, $action),
                 TargetCallException::BAD_ACTION,
-                $e
+                $e,
             );
         }
 
@@ -46,7 +46,7 @@ final class ActionResolver
                     $method->getDeclaringClass()->getName(),
                     $method->getName(),
                 ),
-                TargetCallException::BAD_ACTION
+                TargetCallException::BAD_ACTION,
             );
         }
 

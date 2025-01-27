@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Module;
 
-use Spiral\Boot\DirectoriesInterface;
 use Spiral\Module\Exception\PublishException;
 use Spiral\Tests\Framework\ConsoleTestCase;
 
@@ -13,65 +12,54 @@ final class PublishTest extends ConsoleTestCase
     protected const TEST_FILE   = __DIR__ . '/test.txt';
     protected const TEST_FILE_2 = __DIR__ . '/PublishTest.php';
 
-    public function tearDown(): void
-    {
-        if (file_exists(self::TEST_FILE)) {
-            unlink(self::TEST_FILE);
-        }
-
-        $this->runCommand('cache:clean');
-
-        parent::tearDown();
-    }
-
     public function testPublish(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents(self::TEST_FILE, 'test');
 
-        self::assertFalse(is_file($file));
+        self::assertFalse(\is_file($file));
 
         $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
         self::assertFileExists($file);
-        self::assertSame('test', file_get_contents($file));
+        self::assertSame('test', \file_get_contents($file));
     }
 
     public function testReplace(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
-        self::assertSame('test', file_get_contents($file));
+        self::assertSame('test', \file_get_contents($file));
     }
 
     public function testFollow(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
-        self::assertSame('original', file_get_contents($file));
+        self::assertSame('original', \file_get_contents($file));
     }
 
     public function testInvalid(): void
@@ -79,31 +67,31 @@ final class PublishTest extends ConsoleTestCase
         $this->expectException(PublishException::class);
 
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'invalid',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
     }
 
     public function testReadonly(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE,
-            'mode'   => 'readonly'
+            'mode'   => 'readonly',
         ]);
 
-        self::assertSame('test', file_get_contents($file));
+        self::assertSame('test', \file_get_contents($file));
     }
 
     public function testEnsure(): void
@@ -118,75 +106,75 @@ final class PublishTest extends ConsoleTestCase
 
         self::assertDirectoryExists($dir);
 
-        rmdir($dir);
+        \rmdir($dir);
     }
 
     public function testPublishDirectoryReplace(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime',
             'source' => __DIR__,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
-        self::assertSame('test', file_get_contents($file));
-        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('test', \file_get_contents($file));
+        self::assertSame(\file_get_contents(__FILE__), \file_get_contents(self::TEST_FILE_2));
     }
 
     public function testPublishDirectoryFollow(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime',
             'source' => __DIR__,
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
-        self::assertSame('original', file_get_contents($file));
-        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('original', \file_get_contents($file));
+        self::assertSame(\file_get_contents(__FILE__), \file_get_contents(self::TEST_FILE_2));
     }
 
     public function testPublishDirectoryReplaceStar(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'replace',
             'target' => '@runtime',
             'source' => __DIR__ . '/*',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
-        self::assertSame('test', file_get_contents($file));
-        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('test', \file_get_contents($file));
+        self::assertSame(\file_get_contents(__FILE__), \file_get_contents(self::TEST_FILE_2));
     }
 
     public function testPublishDirectoryFollowStar(): void
     {
         $file = $this->getDirectoryByAlias('runtime', 'test.txt');
-        file_put_contents($file, 'original');
-        file_put_contents(self::TEST_FILE, 'test');
+        \file_put_contents($file, 'original');
+        \file_put_contents(self::TEST_FILE, 'test');
 
         $this->runCommand('publish', [
             'type'   => 'follow',
             'target' => '@runtime',
             'source' => __DIR__ . '/*',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
 
-        self::assertSame('original', file_get_contents($file));
-        self::assertSame(file_get_contents(__FILE__), file_get_contents(self::TEST_FILE_2));
+        self::assertSame('original', \file_get_contents($file));
+        self::assertSame(\file_get_contents(__FILE__), \file_get_contents(self::TEST_FILE_2));
     }
 
     public function testInvalidFile(): void
@@ -197,7 +185,7 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE . 'invalid',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
     }
 
@@ -209,7 +197,18 @@ final class PublishTest extends ConsoleTestCase
             'type'   => 'follow',
             'target' => '@runtime/test.txt',
             'source' => self::TEST_FILE . 'invalid/*',
-            'mode'   => 'runtime'
+            'mode'   => 'runtime',
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        if (\file_exists(self::TEST_FILE)) {
+            \unlink(self::TEST_FILE);
+        }
+
+        $this->runCommand('cache:clean');
+
+        parent::tearDown();
     }
 }

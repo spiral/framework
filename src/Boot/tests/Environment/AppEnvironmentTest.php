@@ -12,6 +12,19 @@ use Spiral\Boot\EnvironmentInterface;
 
 final class AppEnvironmentTest extends TestCase
 {
+    public static function envVariablesDataProvider(): \Traversable
+    {
+        yield ['wrong', AppEnvironment::Local];
+        yield ['prod', AppEnvironment::Production];
+        yield ['production', AppEnvironment::Production];
+        yield ['stage', AppEnvironment::Stage];
+        yield ['local', AppEnvironment::Local];
+        yield ['dev', AppEnvironment::Local];
+        yield ['development', AppEnvironment::Local];
+        yield ['testing', AppEnvironment::Testing];
+        yield ['test', AppEnvironment::Testing];
+    }
+
     public function testDetectWithoutEnvironmentVariable(): void
     {
         $env = m::mock(EnvironmentInterface::class);
@@ -33,19 +46,6 @@ final class AppEnvironmentTest extends TestCase
         $enum = AppEnvironment::detect($env);
 
         self::assertSame($expected, $enum);
-    }
-
-    public static function envVariablesDataProvider(): \Traversable
-    {
-        yield ['wrong', AppEnvironment::Local];
-        yield ['prod', AppEnvironment::Production];
-        yield ['production', AppEnvironment::Production];
-        yield ['stage', AppEnvironment::Stage];
-        yield ['local', AppEnvironment::Local];
-        yield ['dev', AppEnvironment::Local];
-        yield ['development', AppEnvironment::Local];
-        yield ['testing', AppEnvironment::Testing];
-        yield ['test', AppEnvironment::Testing];
     }
 
     public function testClassMethods(): void
