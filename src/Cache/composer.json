@@ -49,7 +49,7 @@
         "spiral/boot": "^3.16",
         "mockery/mockery": "^1.6",
         "phpunit/phpunit": "^10.5",
-        "vimeo/psalm": "^5.9"
+        "vimeo/psalm": "^6.0"
     },
     "autoload-dev": {
         "psr-4": {

@@ -108,7 +108,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'mockery/mockery'           => '^1.6',
             'spiral/code-style'         => '^2.2.2',
             'symplify/monorepo-builder' => '^10.2.7',
-            'vimeo/psalm'               => '^5.9',
+            'vimeo/psalm'               => '^6.0',
         ],
         'conflict' => [
             "spiral/roadrunner-bridge" => "<3.7",

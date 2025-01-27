@@ -16,7 +16,7 @@ class Extractor
 
     public function __construct(?Parser $parser = null)
     {
-        $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
+        $this->parser = $parser ?? (new ParserFactory())->createForHostVersion();
     }
 
     public function extractFromFilename(string $filename): array

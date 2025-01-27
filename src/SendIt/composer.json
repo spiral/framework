@@ -49,7 +49,7 @@
         "spiral/boot": "^3.16",
         "spiral/stempler-bridge": "^3.16",
         "spiral/testing": "^2.8",
-        "vimeo/psalm": "^5.9"
+        "vimeo/psalm": "^6.0"
     },
     "autoload": {
         "psr-4": {

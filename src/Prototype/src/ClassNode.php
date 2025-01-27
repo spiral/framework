@@ -12,6 +12,7 @@ use Spiral\Prototype\ClassNode\ConstructorParam;
 final class ClassNode
 {
     public string $namespace;
+    /** @var non-empty-string */
     public string $class;
     public bool $hasConstructor = false;
 
