@@ -205,6 +205,7 @@ final class InputManager
         if ($position !== false) {
             $header = \substr($header, $position + 7);
 
+            /** @psalm-suppress FalsableReturnStatement */
             return \str_contains($header, ',')
                 ? \strstr($header, ',', true)
                 : $header;

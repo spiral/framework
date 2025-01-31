@@ -26,10 +26,12 @@ final class NodeExtractor
         private readonly ConflictResolver\Namespaces $namespacesResolver,
         ?Parser $parser = null,
     ) {
-        $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
+        $this->parser = $parser ?? (new ParserFactory())->createForHostVersion();
     }
 
     /**
+     * @param non-empty-string $filename
+     *
      * @throws ClassNotDeclaredException
      * @throws \ReflectionException
      */

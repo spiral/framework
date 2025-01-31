@@ -78,7 +78,10 @@ final class Files implements FilesInterface
             throw new FileNotFoundException($filename);
         }
 
-        return \file_get_contents($filename);
+        $result = \file_get_contents($filename);
+        return $result === false
+            ? throw new FilesException(\sprintf('Unable to read file `%s`.', $filename))
+            : $result;
     }
 
     /**
@@ -208,11 +211,9 @@ final class Files implements FilesInterface
 
     public function size(string $filename): int
     {
-        if (!$this->exists($filename)) {
-            throw new FileNotFoundException($filename);
-        }
+        $this->exists($filename) or throw new FileNotFoundException($filename);
 
-        return \filesize($filename);
+        return (int) \filesize($filename);
     }
 
     public function extension(string $filename): string
@@ -226,7 +227,12 @@ final class Files implements FilesInterface
             throw new FileNotFoundException($filename);
         }
 
-        return \md5_file($filename);
+        $result = \md5_file($filename);
+        $result === false and throw new FilesException(
+            \sprintf('Unable to read md5 hash for `%s`.', $filename),
+        );
+
+        return $result;
     }
 
     public function time(string $filename): int
@@ -235,7 +241,9 @@ final class Files implements FilesInterface
             throw new FileNotFoundException($filename);
         }
 
-        return \filemtime($filename);
+        return \filemtime($filename) ?: throw new FilesException(
+            \sprintf('Unable to read modification time for `%s`.', $filename),
+        );
     }
 
     public function isDirectory(string $filename): bool
@@ -250,11 +258,12 @@ final class Files implements FilesInterface
 
     public function getPermissions(string $filename): int
     {
-        if (!$this->exists($filename)) {
-            throw new FileNotFoundException($filename);
-        }
-
-        return \fileperms($filename) & 0777;
+        $this->exists($filename) or throw new FileNotFoundException($filename);
+        $permission = \fileperms($filename);
+        $permission === false and throw new FilesException(
+            \sprintf('Unable to read permissions for `%s`.', $filename),
+        );
+        return $permission & 0777;
     }
 
     public function setPermissions(string $filename, int $mode): bool
@@ -290,6 +299,7 @@ final class Files implements FilesInterface
         }
 
         $filename = \tempnam($location, 'spiral');
+        $filename === false and throw new FilesException('Unable to create temporary file.');
 
         if (!empty($extension)) {
             $old = $filename;

@@ -2,6 +2,7 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
+         cacheDirectory="runtime/phpunit"
          backupGlobals="false"
          colors="true"
          processIsolation="false"
@@ -9,8 +10,12 @@
          stopOnFailure="false"
          stopOnError="false"
          stderr="true"
-         cacheDirectory=".phpunit.cache"
-         backupStaticProperties="false">
+         backupStaticProperties="false"
+         failOnDeprecation="false"
+         failOnPhpunitDeprecation="false"
+         displayDetailsOnPhpunitDeprecations="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+>
     <coverage>
         <report>
             <html outputDirectory="build/coverage"/>
@@ -33,7 +38,7 @@
         </testsuite>
     </testsuites>
     <php>
-        <ini name="error_reporting" value="-1"/>
+        <ini name="error_reporting" value="8191"/>
         <ini name="memory_limit" value="-1"/>
     </php>
     <source>

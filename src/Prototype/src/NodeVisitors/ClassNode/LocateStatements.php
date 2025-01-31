@@ -19,7 +19,7 @@ final class LocateStatements extends NodeVisitorAbstract
         if ($node instanceof Node\Stmt\Use_) {
             foreach ($node->uses as $use) {
                 $this->imports[] = [
-                    'name'  => \implode('\\', $use->name->parts),
+                    'name'  => \implode('\\', $use->name->getParts()),
                     'alias' => $use->alias->name ?? null,
                 ];
             }

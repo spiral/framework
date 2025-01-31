@@ -22,12 +22,12 @@ class ConstructorParamsVisitor extends NodeVisitorAbstract
                     if ($param->type->type instanceof Node\Identifier) {
                         $type = $param->type->type->name;
                     } else {
-                        $type = implode('\\', $param->type->type->parts);
+                        $type = implode('\\', $param->type->type->getParts());
                     }
 
                     $type = "?$type";
                 } elseif ($param->type instanceof Node\Name) {
-                    $type = implode('\\', $param->type->parts);
+                    $type = implode('\\', $param->type->getParts());
                 } else {
                     $type = $param->type->name ?? null;
                 }
