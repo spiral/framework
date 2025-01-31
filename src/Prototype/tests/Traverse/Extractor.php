@@ -11,17 +11,16 @@ use PhpParser\ParserFactory;
 
 class Extractor
 {
-    /** @var Parser */
-    private $parser;
+    private readonly Parser $parser;
 
     public function __construct(?Parser $parser = null)
     {
-        $this->parser = $parser ?? (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
+        $this->parser = $parser ?? (new ParserFactory())->createForHostVersion();
     }
 
     public function extractFromFilename(string $filename): array
     {
-        return $this->extractFromString(file_get_contents($filename));
+        return $this->extractFromString(\file_get_contents($filename));
     }
 
     public function extractFromString(string $code): array

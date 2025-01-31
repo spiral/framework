@@ -36,12 +36,12 @@
         "php": ">=8.1",
         "spiral/exceptions": "^3.16",
         "spiral/files": "^3.16",
-        "symfony/finder": "^5.3.7 || ^6.0 || ^7.0"
+        "symfony/finder": "^5.4.45 || ^6.4.17 || ^7.2"
     },
     "require-dev": {
         "spiral/storage": "^3.16",
-        "phpunit/phpunit": "^10.5",
-        "vimeo/psalm": "^5.9"
+        "phpunit/phpunit": "^10.5.41",
+        "vimeo/psalm": "^6.0"
     },
     "autoload": {
         "psr-4": {

@@ -46,7 +46,11 @@ final class ViewSource
      */
     public function getCode(): string
     {
-        return $this->code ?? \file_get_contents($this->getFilename());
+        $result = $this->code ?? \file_get_contents($this->getFilename());
+        $result === false and throw new \RuntimeException(
+            \sprintf('Unable to read file `%s`.', $this->getFilename()),
+        );
+        return $result;
     }
 
     /**

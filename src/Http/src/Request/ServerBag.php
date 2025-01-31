@@ -29,6 +29,8 @@ final class ServerBag extends InputBag
 
     /**
      * Normalizing name to simplify selection.
+     *
+     * @psalm-suppress NullableReturnStatement,InvalidNullableReturnType
      */
     protected function normalize(string $name): string
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Files;
 
 use Spiral\Files\Exception\FileNotFoundException;
+use Spiral\Files\Exception\FilesException;
 use Spiral\Files\Exception\WriteErrorException;
 
 /**
@@ -41,7 +42,10 @@ interface FilesInterface
     /**
      * Read file content into string.
      *
+     * @param non-empty-string $filename
+     *
      * @throws FileNotFoundException
+     * @throws FilesException When unable to read file.
      */
     public function read(string $filename): string;
 
@@ -128,33 +132,52 @@ interface FilesInterface
     /**
      * Get file MD5 hash.
      *
+     * @param non-empty-string $filename
+     *
      * @throws FileNotFoundException
+     * @throws FilesException When unable to get file hash.
      */
     public function md5(string $filename): string;
 
     /**
      * Timestamp when file being updated/created.
      *
+     * @param non-empty-string $filename
+     *
      * @throws FileNotFoundException
+     * @throws FilesException When unable to get file time.
      */
     public function time(string $filename): int;
 
+    /**
+     * @param non-empty-string $filename
+     */
     public function isDirectory(string $filename): bool;
 
+    /**
+     * @param non-empty-string $filename
+     */
     public function isFile(string $filename): bool;
 
     /**
      * Current file permissions (if exists).
      *
-     * @return positive-int
+     * @param non-empty-string $filename
+     * @return int<0, 511>
+     *
      * @throws FileNotFoundException
+     * @throws FilesException When unable to get file permissions.
      */
     public function getPermissions(string $filename): int;
 
     /**
      * Update file permissions.
      *
+     * @param non-empty-string $filename
+     * @param int<0, 511> $mode
+     *
      * @throws FileNotFoundException
+     * @throws FilesException When unable to set file permissions.
      */
     public function setPermissions(string $filename, int $mode): bool;
 
@@ -163,8 +186,11 @@ interface FilesInterface
      *
      * Note: not a generator yet, waiting for PHP7.
      *
-     * @param string $location Location for search.
-     * @param string $pattern  Extension pattern.
+     * @param non-empty-string $location Location for search.
+     * @param non-empty-string|null $pattern Extension pattern.
+     *
+     * @return list<non-empty-string>
+     * /
      */
     public function getFiles(string $location, ?string $pattern = null): array;
 
@@ -173,6 +199,8 @@ interface FilesInterface
      * file in desired location.
      *
      * @param string $extension Desired file extension.
+     *
+     * @throws FilesException When unable to create a temporary file.
      */
     public function tempFilename(string $extension = '', ?string $location = null): string;
 

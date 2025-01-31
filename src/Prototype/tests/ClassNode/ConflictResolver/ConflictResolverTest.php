@@ -49,7 +49,7 @@ class ConflictResolverTest extends TestCase
 
         $filename = __DIR__ . '/Fixtures/TestClassWithImports.php';
         $r = $i->injectDependencies(
-            file_get_contents($filename),
+            \file_get_contents($filename),
             $this->getDefinition(
                 $filename,
                 [
@@ -101,7 +101,7 @@ class ConflictResolverTest extends TestCase
 
         $filename = __DIR__ . '/Fixtures/DuplicatePropertyClass.php';
         $r = $i->injectDependencies(
-            file_get_contents($filename),
+            \file_get_contents($filename),
             $this->getDefinition(
                 $filename,
                 [

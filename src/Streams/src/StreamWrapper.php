@@ -84,7 +84,10 @@ final class StreamWrapper
             throw new WrapperException('Stream is not available in read or write modes');
         }
 
-        return \fopen(self::getFilename($stream), $mode);
+        $result = \fopen(self::getFilename($stream), $mode);
+        return $result === false
+            ? throw new WrapperException(\sprintf('Unable to open stream `%s`.', $stream->getMetadata('uri')))
+            : $result;
     }
 
     /**
