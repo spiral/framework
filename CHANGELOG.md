@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.15.1 - 2025-01-31
+
+- Maintenance:
+  - Bumped up dependencies versions
+  - [spiral/prototype] component now uses `nikic/php-parser` v5
+
 ## 3.15.0 - 2025-01-24
 
 - Core
