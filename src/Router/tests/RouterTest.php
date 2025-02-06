@@ -92,6 +92,6 @@ class RouterTest extends BaseTestCase
 
         $uri = (string) $router->uri('foo', ['host' => 'some']);
         self::assertSame('some/register', $uri);
-        self::assertFalse(\str_contains('https://host.com', $uri));
+        self::assertStringNotContainsString($uri, 'https://host.com');
     }
 }
