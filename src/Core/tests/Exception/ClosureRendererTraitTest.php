@@ -100,10 +100,9 @@ class ClosureRendererTraitTest extends TestCase
     }
 
     /**
-     * @requires PHP >= 8.2
-     *
      * @link https://wiki.php.net/rfc/null-false-standalone-types
      */
+    #[\PHPUnit\Framework\Attributes\RequiresPhp('>= 8.2')]
     public function testNullAndFalseTypes(): void
     {
         eval('$fn = fn (null $a, false $b) => null;');
