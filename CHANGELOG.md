@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## Unreleased
+## 3.15.2 - 2025-02-10
 
 - **Bug Fixes**
-    - [spiral/telemetry] Telemetry info was not propagated into log records
+  - [spiral/telemetry] Telemetry info was not propagated into log records
 
 ## 3.15.1 - 2025-01-31
 
