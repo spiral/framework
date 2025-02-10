@@ -51,7 +51,7 @@ abstract class AbstractTracer implements TracerInterface
             $prevSpan = null;
         }
 
-        $binder->bindSingleton(SpanInterface::class, $span);
+        $binder->bindSingleton(SpanInterface::class, $span, true);
 
         try {
             return $prevSpan === null
