@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry\Bootloader;
 
+use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -36,7 +37,13 @@ final class TelemetryBootloader extends Bootloader
 
     public function init(BinderInterface $binder, EnvironmentInterface $env): void
     {
-        $binder->bind(TracerInterface::class, new Proxy(TracerInterface::class, false, $this->getTracer(...)));
+        $binder->bind(TracerInterface::class, new Proxy(
+            TracerInterface::class,
+            false,
+            static fn(ContainerInterface $container): TracerInterface => $container
+                ->get(TracerFactoryInterface::class)
+                ->make(),
+        ));
         $this->initConfig($env);
     }
 
@@ -58,15 +65,6 @@ final class TelemetryBootloader extends Bootloader
         TracerFactoryProviderInterface $tracerProvider,
     ): TracerFactoryInterface {
         return $tracerProvider->getTracerFactory();
-    }
-
-    /**
-     * @throws TracerException
-     */
-    public function getTracer(
-        TracerFactoryInterface $tracerFactory,
-    ): TracerInterface {
-        return $tracerFactory->make();
     }
 
     private function initConfig(EnvironmentInterface $env): void
