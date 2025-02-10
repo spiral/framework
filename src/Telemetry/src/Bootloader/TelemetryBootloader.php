@@ -8,6 +8,8 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Append;
+use Spiral\Core\BinderInterface;
+use Spiral\Core\Config\Proxy;
 use Spiral\Core\Container\Autowire;
 use Spiral\Telemetry\Clock\SystemClock;
 use Spiral\Telemetry\ClockInterface;
@@ -27,16 +29,14 @@ final class TelemetryBootloader extends Bootloader
         TracerFactoryProviderInterface::class => ConfigTracerFactoryProvider::class,
         ClockInterface::class => SystemClock::class,
     ];
-    protected const BINDINGS = [
-        TracerInterface::class => [self::class, 'getTracer'],
-    ];
 
     public function __construct(
         private readonly ConfiguratorInterface $config,
     ) {}
 
-    public function init(EnvironmentInterface $env): void
+    public function init(BinderInterface $binder, EnvironmentInterface $env): void
     {
+        $binder->bind(TracerInterface::class, new Proxy(TracerInterface::class, false, $this->getTracer(...)));
         $this->initConfig($env);
     }
 

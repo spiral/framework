@@ -13,7 +13,7 @@ use Spiral\Telemetry\TracerInterface;
 final class TelemetryProcessor implements ProcessorInterface
 {
     public function __construct(
-        #[Proxy] private readonly ContainerInterface $container,
+        private readonly ContainerInterface $container,
     ) {}
 
     /**
