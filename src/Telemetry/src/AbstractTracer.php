@@ -8,6 +8,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\InvokerInterface;
+use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
 
 /**
@@ -51,8 +52,18 @@ abstract class AbstractTracer implements TracerInterface
         }
 
         $binder->bindSingleton(SpanInterface::class, $span);
+
         try {
-            return $invoker->invoke($callback);
+            return $prevSpan === null
+                ? $this->scope->runScope(
+                    new Scope(
+                        bindings: [
+                            TracerInterface::class => $this,
+                        ],
+                    ),
+                    static fn(): mixed => $invoker->invoke($callback),
+                )
+                : $invoker->invoke($callback);
         } finally {
             $prevSpan === null
                 ? $binder->removeBinding(SpanInterface::class)

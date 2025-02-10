@@ -66,15 +66,13 @@ final class NullTracerTest extends TestCase
 
         $callable = static fn(): string => 'hello';
 
-        $invoker->shouldReceive('invoke')
-            ->once()
-            ->with($callable)
-            ->andReturn('hello');
+        $invoker->shouldNotReceive('invoke');
         $binder->shouldReceive('bindSingleton')
             ->once();
         $binder->shouldReceive('removeBinding')
             ->with(SpanInterface::class);
-        $scope->shouldNotReceive('runScope');
+        $scope->shouldReceive('runScope')
+            ->andReturn('hello');
 
         ContainerScope::runScope($container, static function () use ($tracer, $callable): void {
             self::assertSame('hello', $tracer->trace('foo', $callable, ['foo' => 'bar']));
