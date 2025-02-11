@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.15.3 - 2025-02-11
+
+- **Bug Fixes**
+  - [spiral/telemetry] Fixed scoped `TracerInterface` in the `AbstractTracer::runScope` method
+- `\Spiral\Core\Scope` is public now
+
 ## 3.15.2 - 2025-02-10
 
 - **Bug Fixes**

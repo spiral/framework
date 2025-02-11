@@ -6,6 +6,7 @@ namespace Spiral\Core\Internal;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\Attribute;
 use Spiral\Core\BinderInterface;
@@ -334,8 +335,8 @@ final class Factory implements FactoryInterface
                 }
             } catch (ContainerExceptionInterface $e) {
                 $className = match (true) {
-                    $e instanceof NotFoundException => NotFoundException::class,
                     $e instanceof RecursiveProxyException => throw $e,
+                    $e instanceof NotFoundExceptionInterface => NotFoundException::class,
                     default => ContainerException::class,
                 };
                 throw new $className($this->tracer->combineTraceMessage(\sprintf(

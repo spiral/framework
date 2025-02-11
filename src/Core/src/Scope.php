@@ -8,8 +8,6 @@ namespace Spiral\Core;
  * DTO to define Container Scope.
  *
  * @psalm-import-type TResolver from BinderInterface
- *
- * @internal We are testing this feature, it may be changed in the future.
  */
 final class Scope
 {
