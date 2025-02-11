@@ -38,7 +38,10 @@ abstract class AbstractTracer implements TracerInterface
         if ($container instanceof Container) {
             $invoker = $container;
             $binder = $container;
+            $scope = $container;
         } else {
+            /** @var ScopeInterface $scope */
+            $scope = $container->get(ScopeInterface::class);
             /** @var InvokerInterface $invoker */
             $invoker = $container->get(InvokerInterface::class);
             /** @var BinderInterface $binder */
@@ -55,13 +58,13 @@ abstract class AbstractTracer implements TracerInterface
 
         try {
             return $prevSpan === null
-                ? $this->scope->runScope(
+                ? $scope->runScope(
                     new Scope(
                         bindings: [
                             TracerInterface::class => $this,
                         ],
                     ),
-                    static fn(): mixed => $invoker->invoke($callback),
+                    static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback),
                 )
                 : $invoker->invoke($callback);
         } finally {

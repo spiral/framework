@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Telemetry;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Internal\Introspector;
 use Spiral\Core\Internal\Proxy;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\NullTracer;
@@ -13,6 +15,7 @@ use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Testing\TestCase;
 
+#[CoversFunction('\Spiral\Telemetry\AbstractTracer::runScope')]
 final class ScopedTracerTest extends TestCase
 {
     public function defineBootloaders(): array
@@ -22,7 +25,7 @@ final class ScopedTracerTest extends TestCase
         ];
     }
 
-    public function testTracerIsProxy(): void
+    public function testFirstTracerIsProxy(): void
     {
         $tracer = $this->getContainer()->get(TracerInterface::class);
 
@@ -33,7 +36,7 @@ final class ScopedTracerTest extends TestCase
         );
 
         self::assertTrue(Proxy::isProxy($tracer));
-        self::assertTrue(Proxy::isProxy($result));
+        self::assertFalse(Proxy::isProxy($result));
     }
 
     public function testTracerScopedBinding(): void
@@ -42,7 +45,7 @@ final class ScopedTracerTest extends TestCase
             TracerFactoryInterface::class,
             $factory = $this->createMock(TracerFactoryInterface::class),
         );
-        $factory->expects(self::exactly(2))
+        $factory->expects(self::exactly(1))
             ->method('make')
             ->willReturn(new NullTracer($this->getContainer()));
 
