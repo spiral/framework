@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Telemetry;
 
-use PHPUnit\Framework\Attributes\CoversFunction;
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Internal\Introspector;
 use Spiral\Core\Internal\Proxy;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
 use Spiral\Telemetry\NullTracer;
@@ -15,7 +13,6 @@ use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Testing\TestCase;
 
-#[CoversFunction('\Spiral\Telemetry\AbstractTracer::runScope')]
 final class ScopedTracerTest extends TestCase
 {
     public function defineBootloaders(): array
@@ -53,7 +50,7 @@ final class ScopedTracerTest extends TestCase
 
         $result = $tracer->trace(
             'foo',
-            static function (ContainerInterface $container) {
+            static function (ContainerInterface $container): array {
                 /** @var TracerInterface $tracer */
                 $tracer = $container->get(TracerInterface::class);
 

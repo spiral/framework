@@ -54,9 +54,11 @@ abstract class AbstractTracer implements TracerInterface
             $prevSpan = null;
         }
 
+        /** @psalm-suppress TooManyArguments */
         $binder->bindSingleton(SpanInterface::class, $span, true);
 
         try {
+            /** @psalm-suppress InvalidArgument */
             return $prevSpan === null
                 ? $scope->runScope(
                     new Scope(
