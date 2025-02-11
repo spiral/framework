@@ -13,10 +13,8 @@ use Spiral\Telemetry\ClockInterface;
 use Spiral\Telemetry\Config\TelemetryConfig;
 use Spiral\Telemetry\ConfigTracerFactoryProvider;
 use Spiral\Telemetry\LogTracerFactory;
-use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\TracerFactoryInterface;
-use Spiral\Telemetry\TracerInterface;
 use Spiral\Telemetry\TracerFactoryProviderInterface;
 use Spiral\Tests\Framework\BaseTestCase;
 
@@ -43,14 +41,6 @@ final class TelemetryBootloaderTest extends BaseTestCase
         $this->assertContainerBoundAsSingleton(
             ClockInterface::class,
             SystemClock::class,
-        );
-    }
-
-    public function testTracerInterfaceBinding(): void
-    {
-        $this->assertContainerBound(
-            TracerInterface::class,
-            NullTracer::class,
         );
     }
 

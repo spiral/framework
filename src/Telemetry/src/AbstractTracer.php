@@ -8,6 +8,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\InvokerInterface;
+use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
 
 /**
@@ -37,7 +38,10 @@ abstract class AbstractTracer implements TracerInterface
         if ($container instanceof Container) {
             $invoker = $container;
             $binder = $container;
+            $scope = $container;
         } else {
+            /** @var ScopeInterface $scope */
+            $scope = $container->get(ScopeInterface::class);
             /** @var InvokerInterface $invoker */
             $invoker = $container->get(InvokerInterface::class);
             /** @var BinderInterface $binder */
@@ -50,9 +54,21 @@ abstract class AbstractTracer implements TracerInterface
             $prevSpan = null;
         }
 
-        $binder->bindSingleton(SpanInterface::class, $span);
+        /** @psalm-suppress TooManyArguments */
+        $binder->bindSingleton(SpanInterface::class, $span, true);
+
         try {
-            return $invoker->invoke($callback);
+            /** @psalm-suppress InvalidArgument */
+            return $prevSpan === null
+                ? $scope->runScope(
+                    new Scope(
+                        bindings: [
+                            TracerInterface::class => $this,
+                        ],
+                    ),
+                    static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback),
+                )
+                : $invoker->invoke($callback);
         } finally {
             $prevSpan === null
                 ? $binder->removeBinding(SpanInterface::class)
