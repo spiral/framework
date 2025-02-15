@@ -49,14 +49,15 @@ final class Handler
         ];
 
         return $tracer->trace(
-            name: \sprintf('Job handling [%s:%s]', $name, $id),
+            name: \sprintf('Job handling [%s]', $name),
             callback: $this->isLegacy
                 ? fn(): mixed => $this->core->callAction($name, 'handle', $arguments)
                 : fn(): mixed => $this->core->handle(new CallContext(Target::fromPair($name, 'handle'), $arguments)),
             attributes: [
                 'queue.driver' => $driver,
                 'queue.name' => $queue,
-                'queue.id' => $id,
+                'queue.job.name' => $name,
+                'queue.job.id' => $id,
                 'queue.headers' => $headers,
             ],
             scoped: true,
