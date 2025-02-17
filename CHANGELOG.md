@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.15.4 - 2025-02-17
+
+- **Bug Fixes**
+  - [spiral/telemetry] Removed ID from a Queue consumed job span
+    It allows proper grouping of traces by job name
+
 ## 3.15.3 - 2025-02-11
 
 - **Bug Fixes**
