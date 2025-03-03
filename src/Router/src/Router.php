@@ -162,7 +162,9 @@ final class Router implements RouterInterface
 
             if (!isset($this->routes[$name]) && $name !== RoutingConfigurator::DEFAULT_ROUTE_NAME) {
                 $group = $groups->getGroup($configurator->group ?? $groups->getDefaultGroup());
-                $group->setPrefix($configurator->prefix);
+                if ($configurator->prefix !== '') {
+                    $group->setPrefix($configurator->prefix);
+                }
                 $group->addRoute($name, $route);
             }
 

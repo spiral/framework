@@ -149,7 +149,10 @@ final class RouteConfiguratorTest extends BaseTestCase
 
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $testMiddleware = new class implements MiddlewareInterface {
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {}
+            public function process(
+                ServerRequestInterface $request,
+                RequestHandlerInterface $handler,
+            ): ResponseInterface {}
         };
         $configurator->controller('Controller')->middleware($testMiddleware);
         self::assertSame([$testMiddleware], $configurator->middleware);
