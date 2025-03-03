@@ -8,6 +8,7 @@ use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\ConfigurationBootloader;
 use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\DirectoriesInterface;
 use Spiral\Core\Container;
 
 class ConfigBootloader extends Bootloader
@@ -41,8 +42,12 @@ class ConfigBootloader extends Bootloader
         $container->bind('efg', 'foo');
     }
 
-    public function boot(ConfigurationBootloader $configuration, AbstractKernel $kernel, Container $container): void
-    {
+    public function boot(
+        ConfigurationBootloader $configuration,
+        DirectoriesInterface $directories,
+        AbstractKernel $kernel,
+        Container $container,
+    ): void {
         // won't be executed
         $kernel->booting(static function (AbstractKernel $kernel) use ($container): void {
             $container->bind('ghi', 'foo');
@@ -53,5 +58,9 @@ class ConfigBootloader extends Bootloader
         });
 
         $configuration->addLoader('yaml', $container->get(TestLoader::class));
+        $configuration->setDirectories([
+            $directories->get('config') . '/prod',
+            $directories->get('config'),
+        ]);
     }
 }
