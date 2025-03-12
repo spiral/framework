@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.15.5 - 2025-03-12
+
+- **Bug Fixes**
+    - [spiral/router] Fix issue when group prefix is not applied to routes
+
 ## 3.15.4 - 2025-02-17
 
 - **Bug Fixes**
