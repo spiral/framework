@@ -190,9 +190,7 @@ class ExceptionsTest extends TestCase
     {
         $container = new Container();
 
-        $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage(
-            <<<'MARKDOWN'
+        $expectedMessage = <<<'MARKDOWN'
             Can't resolve `Spiral\Tests\Core\Fixtures\InvalidWithContainerInside`: undefined class or binding `Spiral\Tests\Core\Fixtures\InvalidClass`.
             Container trace list:
             - action: 'autowire'
@@ -203,10 +201,14 @@ class ExceptionsTest extends TestCase
               - action: 'autowire'
                 alias: 'Spiral\Tests\Core\Fixtures\InvalidClass'
                 context: Parameter #1 [ <required> Spiral\Tests\Core\Fixtures\InvalidClass $class ]
-            MARKDOWN,
-        );
+            MARKDOWN;
 
-        $container->get(InvalidWithContainerInside::class);
+        try {
+            $container->get(InvalidWithContainerInside::class);
+            self::fail('Exception `ContainerException` expected');
+        } catch (ContainerException $e) {
+            self::assertSame($expectedMessage, $e->getMessage());
+        }
     }
 
     /**

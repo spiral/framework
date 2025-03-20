@@ -15,7 +15,7 @@ final class Scope
     private ?\Spiral\Core\Container $parent = null;
     private ?self $parentScope = null;
     private ?FactoryInterface $parentFactory = null;
-    private ?Hub $parentHub = null;
+    private ?Actor $parentActor = null;
 
     public function __construct(
         private readonly ?string $scopeName = null,
@@ -35,12 +35,12 @@ final class Scope
         \Spiral\Core\Container $parent,
         self $parentScope,
         FactoryInterface $factory,
-        Hub $hub,
+        Actor $actor,
     ): void {
         $this->parent = $parent;
         $this->parentScope = $parentScope;
         $this->parentFactory = $factory;
-        $this->parentHub = $hub;
+        $this->parentActor = $actor;
 
         // Check a scope with the same name is not already registered
         if ($this->scopeName !== null) {
@@ -86,9 +86,9 @@ final class Scope
         return $this->parentScope;
     }
 
-    public function getParentHub(): ?Hub
+    public function getParentActor(): ?Actor
     {
-        return $this->parentHub;
+        return $this->parentActor;
     }
 
     public function destruct(): void

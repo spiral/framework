@@ -25,7 +25,7 @@ final class Invoker implements InvokerInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
     private Options $options;
-    private Hub $hub;
+    private Actor $actor;
 
     public function __construct(Registry $constructor)
     {
@@ -33,7 +33,7 @@ final class Invoker implements InvokerInterface
 
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
-        $this->hub = $constructor->get('hub', Hub::class);
+        $this->actor = $constructor->get('actor', Actor::class);
         $this->options = $constructor->getOptions();
     }
 
@@ -49,7 +49,7 @@ final class Invoker implements InvokerInterface
             // Resolver instance or class name if the method is static (i.e. [ClassName::class, 'method'])
             if (\is_string($resolver)) {
                 // Detect return type
-                $type = $this->hub->resolveType($resolver, $binding, $singleton, $injector);
+                $type = $this->actor->resolveType($resolver, $binding, $singleton, $injector);
 
                 if ($singleton === null) {
                     $type ??= $injector === null && $binding === null ? $resolver : null;

@@ -54,7 +54,7 @@ final class Container implements
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
     private Internal\Scope $scope;
-    private Internal\Hub $hub;
+    private Internal\Actor $actor;
 
     /**
      * Container constructor.
@@ -393,7 +393,7 @@ final class Container implements
         $container = new self($this->config, $config->name, $this->options);
 
         // Configure scope
-        $container->scope->setParent($this, $this->scope, $this->factory, $this->hub);
+        $container->scope->setParent($this, $this->scope, $this->factory, $this->actor);
 
         // Add specific bindings
         foreach ($config->bindings as $alias => $resolver) {

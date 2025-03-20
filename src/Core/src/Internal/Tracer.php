@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Spiral\Core\Internal\Common\Registry;
 use Spiral\Core\Internal\Tracer\Trace;
 
 /**
@@ -17,6 +18,10 @@ final class Tracer implements \Stringable
      * @var Trace[][]
      */
     private array $traces = [];
+
+    public function __construct(Registry $constructor) {
+        $constructor->set('tracer', $this);
+    }
 
     /**
      * @param string $header Message before stack list

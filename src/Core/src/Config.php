@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Internal\Binder;
 use Spiral\Core\Internal\Container;
 use Spiral\Core\Internal\Factory;
-use Spiral\Core\Internal\Hub;
+use Spiral\Core\Internal\Actor;
 use Spiral\Core\Internal\Invoker;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\Scope;
@@ -33,7 +33,7 @@ class Config implements \IteratorAggregate
 
     public readonly Internal\Config\StateStorage $scopedBindings;
     private bool $rootLocked = true;
-    public readonly string $hub;
+    public readonly string $actor;
 
     /**
      * @param class-string<State> $state
@@ -55,7 +55,7 @@ class Config implements \IteratorAggregate
     ) {
         $this->scope = Scope::class;
         $this->scopedBindings = new Internal\Config\StateStorage();
-        $this->hub = Hub::class;
+        $this->actor = Actor::class;
     }
 
     public function getIterator(): \Traversable
@@ -68,7 +68,7 @@ class Config implements \IteratorAggregate
         yield 'invoker' => $this->invoker;
         yield 'tracer' => $this->tracer;
         yield 'scope' => $this->scope;
-        yield 'hub' => $this->hub;
+        yield 'actor' => $this->actor;
     }
 
     /**
