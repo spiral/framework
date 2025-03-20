@@ -207,7 +207,7 @@ final class Factory implements FactoryInterface
                 : ($binding->fallbackFactory)($this->container, $context->context);
         }
 
-        $result = Proxy::create(new \ReflectionClass($binding->getInterface()), $context, new Attribute\Proxy());
+        $result = Proxy::create(new \ReflectionClass($binding->getReturnClass()), $context, new Attribute\Proxy());
 
         if ($binding->singleton) {
             $this->state->singletons[$alias] = $result;

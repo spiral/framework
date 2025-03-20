@@ -25,6 +25,7 @@ final class Invoker implements InvokerInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
     private Options $options;
+    private Hub $hub;
 
     public function __construct(Registry $constructor)
     {
@@ -32,6 +33,7 @@ final class Invoker implements InvokerInterface
 
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
+        $this->hub = $constructor->get('hub', Hub::class);
         $this->options = $constructor->getOptions();
     }
 
@@ -44,9 +46,17 @@ final class Invoker implements InvokerInterface
             // In a form of resolver and method
             [$resolver, $method] = $target;
 
-            // Resolver instance (i.e. [ClassName::class, 'method'])
+            // Resolver instance or class name if the method is static (i.e. [ClassName::class, 'method'])
             if (\is_string($resolver)) {
-                $resolver = $this->container->get($resolver);
+                // Detect return type
+                $type = $this->hub->resolveType($resolver, $binding, $singleton, $injector);
+
+                if ($singleton === null) {
+                    $type ??= $injector === null && $binding === null ? $resolver : null;
+                    $resolver = \is_callable([$type, $method]) ? $type : $this->container->get($resolver);
+                } else {
+                    $resolver = $singleton;
+                }
             }
 
             try {
@@ -57,7 +67,7 @@ final class Invoker implements InvokerInterface
 
             // Invoking factory method with resolved arguments
             return $method->invokeArgs(
-                $resolver,
+                $method->isStatic() ? null : $resolver,
                 $this->resolver->resolveArguments($method, $parameters),
             );
         }

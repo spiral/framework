@@ -29,8 +29,9 @@ class Proxy extends Binding
 
     /**
      * @return class-string
+     * @internal
      */
-    public function getInterface(): string
+    public function getReturnClass(): string
     {
         return $this->interface;
     }

@@ -22,6 +22,7 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <MissingOverrideAttribute errorLevel="suppress" />
         <UnusedClosureParam errorLevel="suppress" />
         <UnusedPsalmSuppress errorLevel="suppress" />
         <UnsupportedPropertyReferenceUsage errorLevel="suppress" />

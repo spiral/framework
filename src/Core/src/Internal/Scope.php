@@ -15,6 +15,7 @@ final class Scope
     private ?\Spiral\Core\Container $parent = null;
     private ?self $parentScope = null;
     private ?FactoryInterface $parentFactory = null;
+    private ?Hub $parentHub = null;
 
     public function __construct(
         private readonly ?string $scopeName = null,
@@ -30,11 +31,16 @@ final class Scope
      *
      * @throws NamedScopeDuplicationException
      */
-    public function setParent(\Spiral\Core\Container $parent, self $parentScope, FactoryInterface $factory): void
-    {
+    public function setParent(
+        \Spiral\Core\Container $parent,
+        self $parentScope,
+        FactoryInterface $factory,
+        Hub $hub,
+    ): void {
         $this->parent = $parent;
         $this->parentScope = $parentScope;
         $this->parentFactory = $factory;
+        $this->parentHub = $hub;
 
         // Check a scope with the same name is not already registered
         if ($this->scopeName !== null) {
@@ -78,6 +84,11 @@ final class Scope
     public function getParentScope(): ?self
     {
         return $this->parentScope;
+    }
+
+    public function getParentHub(): ?Hub
+    {
+        return $this->parentHub;
     }
 
     public function destruct(): void
