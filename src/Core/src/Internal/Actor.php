@@ -70,7 +70,7 @@ final class Actor
      *
      * @param non-empty-string $alias
      *
-     * @param self|null $static Will be set to the hub where the result was found.
+     * @param self|null $actor Will be set to the hub where the result was found.
      *
      * @return class-string|null Returns {@see null} if exactly one returning class cannot be resolved.
      * @psalm-suppress all
@@ -78,18 +78,18 @@ final class Actor
     public function resolveType(
         string $alias,
         ?Binding &$binding = null,
-        ?object $singleton = null,
-        ?object $injector = null,
-        ?self $static = null,
+        ?object &$singleton = null,
+        ?object &$injector = null,
+        ?self &$actor = null,
+        bool $followAlias = true,
     ): ?string {
         // Aliases to prevent circular dependencies
         $as = [];
-        $static = $this;
+        $actor = $this;
         do {
-            $bindings = &$static->state->bindings;
-            $singletons = &$static->state->singletons;
-            $injectors = &$static->state->injectors;
-            // $scope = $static->scope;
+            $bindings = &$actor->state->bindings;
+            $singletons = &$actor->state->singletons;
+            $injectors = &$actor->state->injectors;
             if (\array_key_exists($alias, $singletons)) {
                 $singleton = $singletons[$alias];
                 $binding = $bindings[$alias] ?? null;
@@ -98,19 +98,20 @@ final class Actor
             }
 
             if (\array_key_exists($alias, $bindings)) {
-                $b = $bindings[$alias];
-                if ($b::class === Alias::class) {
-                    $alias = $b->alias;
-                    if (\array_key_exists($alias, $as)) {
-                        // A cycle detected
-                        // todo Exception?
-                        return null;
+                $binding = $bindings[$alias];
+                if ($followAlias && $binding::class === Alias::class) {
+                    if ($binding->alias === $alias) {
+                        break;
                     }
+
+                    $alias = $binding->alias;
+                    \array_key_exists($alias, $as) and throw new ContainerException(
+                        \sprintf('Circular dependency detected for alias `%s`.', $alias),
+                    );
                     $as[$alias] = true;
                     continue;
                 }
 
-                $binding = $b;
                 return $binding->getReturnClass();
             }
 
@@ -121,8 +122,13 @@ final class Actor
             }
 
             // Go to parent scope
-            $static = $static->scope->getParentActor();
-        } while ($static !== null);
+            $parent = $actor->scope->getParentActor();
+            if ($parent === null) {
+                break;
+            }
+
+            $actor = $parent;
+        } while (true);
 
         return \class_exists($alias) ? $alias : null;
     }
@@ -162,15 +168,13 @@ final class Actor
      * @throws AutowireException
      * @throws \Throwable
      */
-    public function autowire(Ctx $ctx, array $arguments): object
+    public function autowire(Ctx $ctx, array $arguments, ?Actor $fallbackActor = null): object
     {
-        // $this;
         if (!(\class_exists($ctx->class) || (
-                \interface_exists($ctx->class)
-                &&
-                (isset($this->state->injectors[$ctx->class]) || $this->binder->hasInjector($ctx->class))
-            ))
-        ) {
+            \interface_exists($ctx->class)
+            &&
+            (isset($this->state->injectors[$ctx->class]) || $this->binder->hasInjector($ctx->class))
+        ))) {
             throw new NotFoundException($this->tracer->combineTraceMessage(\sprintf(
                 'Can\'t resolve `%s`: undefined class or binding `%s`.',
                 $this->tracer->getRootAlias(),
@@ -179,12 +183,7 @@ final class Actor
         }
 
         // automatically create instance
-        $instance = $this->createInstance($ctx, $arguments);
-
-        // apply registration functions to created instance
-        return $arguments === []
-            ? $this->registerInstance($ctx, $instance)
-            : $instance;
+        return $this->createInstance($ctx, $arguments, $fallbackActor);
     }
 
     /**
@@ -253,19 +252,20 @@ final class Actor
         \Stringable|string|null $context,
         array $arguments,
     ): mixed {
-        $result = $binding->alias === $alias
-            ? $this->autowire(
-                new Ctx(alias: $alias, class: $binding->alias, context: $context, singleton: $binding->singleton),
+        if ($binding->alias === $alias) {
+            $instance = $this->autowire(
+                new Ctx(alias: $alias, class: $binding->alias, context: $context, singleton: $binding->singleton && $arguments === []),
                 $arguments,
-            )
+            );
+        } else {
             //Binding is pointing to something else
-            : $this->factory->make($binding->alias, $arguments, $context);
+            $instance = $this->factory->make($binding->alias, $arguments, $context);
 
-        if ($binding->singleton && $arguments === []) {
-            $this->state->singletons[$alias] = $result;
+            $binding->singleton and $arguments === [] and $this->state->singletons[$alias] = $instance;
         }
 
-        return $result;
+
+        return $instance;
     }
 
     private function resolveProxy(Config\Proxy $binding, string $alias, \Stringable|string|null $context): mixed
@@ -294,11 +294,10 @@ final class Actor
         \Stringable|string|null $context,
         array $arguments,
     ): object {
-        $avoidCache = $arguments !== [];
-
-        if ($avoidCache) {
+        if ($arguments !== []) {
+            // Avoid singleton cache
             return $this->createInstance(
-                new Ctx(alias: $alias, class: $binding->value::class, context: $context),
+                new Ctx(alias: $alias, class: $binding->value::class, context: $context, singleton: false),
                 $arguments,
             );
         }
@@ -317,13 +316,16 @@ final class Actor
         array $arguments,
     ): mixed {
         $target = $binding->autowire->alias;
-        $ctx = new Ctx(alias: $alias, class: $target, context: $context, singleton: $binding->singleton);
+        $ctx = new Ctx(alias: $alias, class: $target, context: $context, singleton: $binding->singleton && $arguments === [] ?: null);
 
-        $instance = $alias === $target
-            ? $this->autowire($ctx, \array_merge($binding->autowire->parameters, $arguments))
-            : $binding->autowire->resolve($this->factory, $arguments);
+        if ($alias === $target) {
+            $instance = $this->autowire($ctx, \array_merge($binding->autowire->parameters, $arguments));
+        } else {
+            $instance = $binding->autowire->resolve($this->factory, $arguments);
+            $this->validateConstraint($instance, $ctx);
+        }
 
-        return $this->validateNewInstance($instance, $ctx, $arguments);
+        return $this->registerInstance($ctx, $instance);
     }
 
     private function resolveFactory(
@@ -332,7 +334,7 @@ final class Actor
         \Stringable|string|null $context,
         array $arguments,
     ): mixed {
-        $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton);
+        $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton && $arguments === [] ?: null);
         try {
             $instance = $binding::class === Config\Factory::class && $binding->getParametersCount() === 0
                 ? ($binding->factory)()
@@ -345,7 +347,12 @@ final class Actor
             );
         }
 
-        return \is_object($instance) ? $this->validateNewInstance($instance, $ctx, $arguments) : $instance;
+        if (\is_object($instance)) {
+            $this->validateConstraint($instance, $ctx);
+            return $this->registerInstance($ctx, $instance);
+        }
+
+        return $instance;
     }
 
     private function resolveWeakReference(
@@ -361,7 +368,7 @@ final class Actor
                 $this->tracer->push(false, alias: $alias, source: \WeakReference::class, context: $context);
 
                 $object = $this->createInstance(
-                    new Ctx(alias: $alias, class: $alias, context: $context),
+                    new Ctx(alias: $alias, class: $alias, context: $context, singleton: false),
                     $arguments,
                 );
                 if ($avoidCache) {
@@ -390,14 +397,13 @@ final class Actor
      * @throws BadScopeException
      * @throws \Throwable
      */
-    private function validateNewInstance(
+    private function validateConstraint(
         object $instance,
         Ctx $ctx,
-        array $arguments,
-    ): object {
+    ): void {
         if ($this->options->checkScope) {
             // Check scope name
-            $ctx->reflection = new \ReflectionClass($instance);
+            $ctx->reflection ??= new \ReflectionClass($instance);
             $scopeName = ($ctx->reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
             if ($scopeName !== null) {
                 $scope = $this->scope;
@@ -406,10 +412,6 @@ final class Actor
                 }
             }
         }
-
-        return $arguments === []
-            ? $this->registerInstance($ctx, $instance)
-            : $instance;
     }
 
     /**
@@ -428,6 +430,7 @@ final class Actor
     private function createInstance(
         Ctx $ctx,
         array $arguments,
+        ?Actor $fallbackActor = null,
     ): object {
         $class = $ctx->class;
         try {
@@ -436,17 +439,34 @@ final class Actor
             throw new ContainerException($e->getMessage(), $e->getCode(), $e);
         }
 
-        // Check scope name
-        if ($this->options->checkScope) {
-            $scope = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null)?->newInstance()->name;
-            if ($scope !== null && $scope !== $this->scope->getScopeName()) {
-                throw new BadScopeException($scope, $class);
+        // Check Scope attribute
+        $actor = $fallbackActor ?? $this;
+        if ($this->options->checkScope) { # todo
+            $ar = ($reflection->getAttributes(Attribute\Scope::class)[0] ?? null);
+            if ($ar !== null) {
+                /** @var Attribute\Scope $attr */
+                $attr = $ar->newInstance();
+                $scope = $this->scope;
+                $actor = $this;
+                // Go through all parent scopes
+                $needed = $actor;
+                while ($attr->name !== $scope->getScopeName()) {
+                    $needed = $scope->getParentActor();
+                    if ($needed === null) {
+                        throw new BadScopeException($attr->name, $class);
+                    }
+
+                    $scope = $scope->getParentScope();
+                }
+
+                // Scope found
+                $actor = $needed;
             }
-        }
+        } # todo
 
         // We have to construct class using external injector when we know the exact context
         if ($arguments === [] && $this->binder->hasInjector($class)) {
-            return $this->resolveInjector($this->state->bindings[$ctx->class], $ctx, $arguments);
+            return $actor->resolveInjector($actor->state->bindings[$ctx->class], $ctx, $arguments);
         }
 
         if (!$reflection->isInstantiable()) {
@@ -456,7 +476,7 @@ final class Actor
                 default => 'Class',
             };
             throw new ContainerException(
-                $this->tracer->combineTraceMessage(\sprintf('%s `%s` can not be constructed.', $itIs, $class)),
+                $actor->tracer->combineTraceMessage(\sprintf('%s `%s` can not be constructed.', $itIs, $class)),
             );
         }
 
@@ -464,41 +484,40 @@ final class Actor
 
         if ($constructor !== null) {
             try {
-                $this->tracer->push(false, action: 'resolve arguments', signature: $constructor);
-                $this->tracer->push(true);
-                $x = $this->options->validateArguments;
-                $args = $this->resolver->resolveArguments($constructor, $arguments, $this->options->validateArguments);
+                $actor->tracer->push(false, alias: $ctx->class, action: 'resolve arguments', signature: $constructor);
+                $actor->tracer->push(true);
+                $args = $actor->resolver->resolveArguments($constructor, $arguments, $actor->options->validateArguments);
             } catch (ValidationException $e) {
                 throw new ContainerException(
-                    $this->tracer->combineTraceMessage(
+                    $actor->tracer->combineTraceMessage(
                         \sprintf(
                             'Can\'t resolve `%s`. %s',
-                            $this->tracer->getRootAlias(),
+                            $actor->tracer->getRootAlias(),
                             $e->getMessage(),
                         ),
                     ),
                 );
             } finally {
-                $this->tracer->pop(true);
-                $this->tracer->pop(false);
+                $actor->tracer->pop(true);
+                $actor->tracer->pop(false);
             }
             try {
                 // Using constructor with resolved arguments
-                $this->tracer->push(false, call: "$class::__construct", arguments: $args);
-                $this->tracer->push(true);
+                $actor->tracer->push(false, call: "$class::__construct", arguments: $args);
+                $actor->tracer->push(true);
                 $instance = new $class(...$args);
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
             } finally {
-                $this->tracer->pop(true);
-                $this->tracer->pop(false);
+                $actor->tracer->pop(true);
+                $actor->tracer->pop(false);
             }
         } else {
             // No constructor specified
             $instance = $reflection->newInstance();
         }
 
-        return $instance;
+        return $actor->registerInstance($ctx, $instance);
     }
 
     /**
@@ -510,16 +529,12 @@ final class Actor
 
         $instance = $this->runInflector($instance);
 
-        //Declarative singletons
-        if ($this->isSingleton($ctx)) {
-            $this->state->singletons[$ctx->alias] = $instance;
-        }
+        // Declarative singletons
+        $this->isSingleton($ctx) and $this->state->singletons[$ctx->alias] = $instance;
 
         // Register finalizer
         $finalizer = $this->getFinalizer($ctx, $instance);
-        if ($finalizer !== null) {
-            $this->state->finalizers[] = $finalizer;
-        }
+        $finalizer === null or $this->state->finalizers[] = $finalizer;
 
         return $instance;
     }
@@ -529,8 +544,8 @@ final class Actor
      */
     private function isSingleton(Ctx $ctx): bool
     {
-        if ($ctx->singleton === true) {
-            return true;
+        if (is_bool($ctx->singleton)) {
+            return $ctx->singleton;
         }
 
         /** @psalm-suppress RedundantCondition https://github.com/vimeo/psalm/issues/9489 */

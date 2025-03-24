@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core;
 
-use Buggregator\Trap\Client\TrapHandle;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotCallableException;

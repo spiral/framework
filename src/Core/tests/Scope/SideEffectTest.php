@@ -17,7 +17,7 @@ use Spiral\Tests\Core\Scope\Stub\ScopeIndicatorLogger;
 final class SideEffectTest extends BaseTestCase
 {
     /**
-     * When a dependency is resolving from parent then all its dependencies are resolved from parent too.
+     * When a dependency is resolving from a parent scope, then all its dependencies are resolved from parent too.
      * But the next child dependency will be resolved from the child container.
      */
     public function testResolveSameDependencyFromDifferentScopes(): void

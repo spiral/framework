@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Spiral\Core\Exception\Container\ContainerException;
-use Spiral\Core\Exception\Container\NotFoundException;
-use Spiral\Core\Exception\Container\RecursiveProxyException;
-use Spiral\Core\Exception\Scope\BadScopeException;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\Internal\Common\DestructorTrait;
 use Spiral\Core\Internal\Common\Registry;
@@ -48,10 +42,25 @@ final class Factory implements FactoryInterface
             return $this->state->singletons[$alias];
         }
 
-        $binding = $this->state->bindings[$alias] ?? null;
 
+        $this->actor->resolveType($alias, $binding, $singleton, $injector, $actor, false);
+        if ($parameters === [] && $singleton !== null) {
+            return $singleton;
+        }
+
+        // Resolve without binding
         if ($binding === null) {
-            return $this->resolveWithoutBinding($alias, $parameters, $context);
+            $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
+            try {
+                // No direct instructions how to construct class, make is automatically
+                return $this->actor->autowire(
+                    new Ctx(alias: $alias, class: $alias, context: $context, singleton: $parameters === [] ? null : false),
+                    $parameters,
+                    $actor,
+                );
+            } finally {
+                $this->tracer->pop(false);
+            }
         }
 
         try {
@@ -65,57 +74,11 @@ final class Factory implements FactoryInterface
             );
             $this->tracer->push(true);
 
-            unset($this->state->bindings[$alias]);
-            return $this->actor->resolveBinding($binding, $alias, $context, $parameters);
+            // unset($this->state->bindings[$alias]);
+            return $actor->resolveBinding($binding, $alias, $context, $parameters);
         } finally {
-            $this->state->bindings[$alias] ??= $binding;
+            // $this->state->bindings[$alias] ??= $binding;
             $this->tracer->pop(true);
-            $this->tracer->pop(false);
-        }
-    }
-
-    private function resolveWithoutBinding(
-        string $alias,
-        array $parameters = [],
-        \Stringable|string|null $context = null,
-    ): mixed {
-        $parent = $this->scope->getParentFactory();
-
-        if ($parent !== null) {
-            try {
-                $this->tracer->push(false, ...[
-                    'current scope' => $this->scope->getScopeName(),
-                    'jump to parent scope' => $this->scope->getParentScope()->getScopeName(),
-                ]);
-                /** @psalm-suppress TooManyArguments */
-                return $parent->make($alias, $parameters, $context);
-            } catch (BadScopeException $e) {
-                if ($this->scope->getScopeName() !== $e->getScope()) {
-                    throw $e;
-                }
-            } catch (ContainerExceptionInterface $e) {
-                $className = match (true) {
-                    $e instanceof RecursiveProxyException => throw $e,
-                    $e instanceof NotFoundExceptionInterface => NotFoundException::class,
-                    default => ContainerException::class,
-                };
-                throw new $className($this->tracer->combineTraceMessage(\sprintf(
-                    'Can\'t resolve `%s`.',
-                    $alias,
-                )), previous: $e);
-            } finally {
-                $this->tracer->pop(false);
-            }
-        }
-
-        $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
-        try {
-            //No direct instructions how to construct class, make is automatically
-            return $this->actor->autowire(
-                new Ctx(alias: $alias, class: $alias, context: $context),
-                $parameters,
-            );
-        } finally {
             $this->tracer->pop(false);
         }
     }
