@@ -393,7 +393,7 @@ final class Container implements
         $container = new self($this->config, $config->name, $this->options);
 
         // Configure scope
-        $container->scope->setParent($this, $this->scope, $this->factory, $this->actor);
+        $container->scope->setParent($this, $this->scope, $this->actor);
 
         // Add specific bindings
         foreach ($config->bindings as $alias => $resolver) {

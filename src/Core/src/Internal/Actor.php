@@ -18,6 +18,7 @@ use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Container\RecursiveProxyException;
+use Spiral\Core\Exception\Container\TracedContainerException;
 use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\Exception\Scope\BadScopeException;
@@ -44,7 +45,6 @@ final class Actor
     private ContainerInterface $container;
     private ResolverInterface $resolver;
     private FactoryInterface $factory;
-    private Tracer $tracer;
     private Scope $scope;
     private Options $options;
 
@@ -58,7 +58,6 @@ final class Actor
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
         $this->factory = $constructor->get('factory', FactoryInterface::class);
-        $this->tracer = $constructor->get('tracer', Tracer::class);
         $this->scope = $constructor->get('scope', Scope::class);
         $this->options = $constructor->getOptions();
     }
@@ -138,23 +137,25 @@ final class Actor
         string $alias,
         \Stringable|string|null $context,
         array $arguments,
+        Tracer $tracer,
     ): mixed {
         return match ($binding::class) {
-            Config\Alias::class => $this->resolveAlias($binding, $alias, $context, $arguments),
+            Config\Alias::class => $this->resolveAlias($binding, $alias, $context, $arguments, $tracer),
             Config\Proxy::class,
             Config\DeprecationProxy::class => $this->resolveProxy($binding, $alias, $context),
-            Config\Autowire::class => $this->resolveAutowire($binding, $alias, $context, $arguments),
+            Config\Autowire::class => $this->resolveAutowire($binding, $alias, $context, $arguments, $tracer),
             Config\DeferredFactory::class,
-            Config\Factory::class => $this->resolveFactory($binding, $alias, $context, $arguments),
-            Config\Shared::class => $this->resolveShared($binding, $alias, $context, $arguments),
+            Config\Factory::class => $this->resolveFactory($binding, $alias, $context, $arguments, $tracer),
+            Config\Shared::class => $this->resolveShared($binding, $alias, $context, $arguments, $tracer),
             Config\Injectable::class => $this->resolveInjector(
                 $binding,
                 new Ctx(alias: $alias, class: $alias, context: $context),
                 $arguments,
+                $tracer,
             ),
             Config\Scalar::class => $binding->value,
             Config\WeakReference::class => $this
-                ->resolveWeakReference($binding, $alias, $context, $arguments),
+                ->resolveWeakReference($binding, $alias, $context, $arguments, $tracer),
             default => $binding,
         };
     }
@@ -168,29 +169,27 @@ final class Actor
      * @throws AutowireException
      * @throws \Throwable
      */
-    public function autowire(Ctx $ctx, array $arguments, ?Actor $fallbackActor = null): object
+    public function autowire(Ctx $ctx, array $arguments, ?Actor $fallbackActor, Tracer $tracer): object
     {
-        if (!(\class_exists($ctx->class) || (
-            \interface_exists($ctx->class)
-            &&
-            (isset($this->state->injectors[$ctx->class]) || $this->binder->hasInjector($ctx->class))
-        ))) {
-            throw new NotFoundException($this->tracer->combineTraceMessage(\sprintf(
-                'Can\'t resolve `%s`: undefined class or binding `%s`.',
-                $this->tracer->getRootAlias(),
-                $ctx->class,
-            )));
-        }
+        \class_exists($ctx->class)
+        or (\interface_exists($ctx->class)
+            && (isset($this->state->injectors[$ctx->class]) || $this->binder->hasInjector($ctx->class)))
+        or throw NotFoundException::createWithTrace(
+            $ctx->alias === $ctx->class
+                ? "Can't autowire `$ctx->class`: class or injector not found."
+                : "Can't resolve `$ctx->alias`: class or injector `$ctx->class` not found.",
+            $tracer->getTraces(),
+        );
 
         // automatically create instance
-        return $this->createInstance($ctx, $arguments, $fallbackActor);
+        return $this->createInstance($ctx, $arguments, $fallbackActor, $tracer);
     }
 
     /**
      * @psalm-suppress UnusedParam
      * todo wat should we do with $arguments?
      */
-    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, array $arguments)
+    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, array $arguments, Tracer $tracer)
     {
         $context = $ctx->context;
         try {
@@ -241,6 +240,11 @@ final class Actor
             }
 
             return $instance;
+        } catch (TracedContainerException $e) {
+            throw isset($injectorInstance) ? $e : $e::extendTracedException(\sprintf(
+                'Can\'t resolve `%s`.',
+                $tracer->getRootAlias(),
+            ), $tracer->getTraces(), $e);
         } finally {
             $this->state->bindings[$ctx->class] ??= $binding;
         }
@@ -251,15 +255,28 @@ final class Actor
         string $alias,
         \Stringable|string|null $context,
         array $arguments,
+        Tracer $tracer,
     ): mixed {
         if ($binding->alias === $alias) {
             $instance = $this->autowire(
                 new Ctx(alias: $alias, class: $binding->alias, context: $context, singleton: $binding->singleton && $arguments === []),
                 $arguments,
+                $this,
+                $tracer,
             );
         } else {
-            //Binding is pointing to something else
-            $instance = $this->factory->make($binding->alias, $arguments, $context);
+            try {
+                //Binding is pointing to something else
+                $instance = $this->factory->make($binding->alias, $arguments, $context);
+            } catch (TracedContainerException $e) {
+                throw $e::extendTracedException(
+                    $alias === $tracer->getRootAlias()
+                        ? "Can't resolve `{$alias}`."
+                        : "Can't resolve `$alias` with alias `{$binding->alias}`.",
+                    $tracer->getTraces(),
+                    $e,
+                );
+            }
 
             $binding->singleton and $arguments === [] and $this->state->singletons[$alias] = $instance;
         }
@@ -293,12 +310,15 @@ final class Actor
         string $alias,
         \Stringable|string|null $context,
         array $arguments,
+        Tracer $tracer,
     ): object {
         if ($arguments !== []) {
             // Avoid singleton cache
             return $this->createInstance(
                 new Ctx(alias: $alias, class: $binding->value::class, context: $context, singleton: false),
                 $arguments,
+                $this,
+                $tracer,
             );
         }
 
@@ -314,12 +334,13 @@ final class Actor
         string $alias,
         \Stringable|string|null $context,
         array $arguments,
+        Tracer $tracer,
     ): mixed {
         $target = $binding->autowire->alias;
         $ctx = new Ctx(alias: $alias, class: $target, context: $context, singleton: $binding->singleton && $arguments === [] ?: null);
 
         if ($alias === $target) {
-            $instance = $this->autowire($ctx, \array_merge($binding->autowire->parameters, $arguments));
+            $instance = $this->autowire($ctx, \array_merge($binding->autowire->parameters, $arguments), $this, $tracer);
         } else {
             $instance = $binding->autowire->resolve($this->factory, $arguments);
             $this->validateConstraint($instance, $ctx);
@@ -333,6 +354,7 @@ final class Actor
         string $alias,
         \Stringable|string|null $context,
         array $arguments,
+        Tracer $tracer,
     ): mixed {
         $ctx = new Ctx(alias: $alias, class: $alias, context: $context, singleton: $binding->singleton && $arguments === [] ?: null);
         try {
@@ -340,9 +362,15 @@ final class Actor
                 ? ($binding->factory)()
                 : $this->invoker->invoke($binding->factory, $arguments);
         } catch (NotCallableException $e) {
-            throw new ContainerException(
-                $this->tracer->combineTraceMessage(\sprintf('Invalid binding for `%s`.', $ctx->alias)),
-                $e->getCode(),
+            throw TracedContainerException::createWithTrace(
+                \sprintf('Invalid callable binding for `%s`.', $ctx->alias),
+                $tracer->getTraces(),
+                $e,
+            );
+        } catch (TracedContainerException $e) {
+            throw $e::extendTracedException(
+                \sprintf("Can't resolve `%s`: factory invocation failed.", $tracer->getRootAlias()),
+                $tracer->getTraces(),
                 $e,
             );
         }
@@ -360,33 +388,32 @@ final class Actor
         string $alias,
         \Stringable|string|null $context,
         array $arguments,
+        Tracer $tracer,
     ): ?object {
         $avoidCache = $arguments !== [];
 
         if (($avoidCache || $binding->reference->get() === null) && \class_exists($alias)) {
             try {
-                $this->tracer->push(false, alias: $alias, source: \WeakReference::class, context: $context);
+                $tracer->push(false, alias: $alias, source: \WeakReference::class, context: $context);
 
                 $object = $this->createInstance(
                     new Ctx(alias: $alias, class: $alias, context: $context, singleton: false),
                     $arguments,
+                    $this,
+                    $tracer,
                 );
                 if ($avoidCache) {
                     return $object;
                 }
                 $binding->reference = \WeakReference::create($object);
             } catch (\Throwable) {
-                throw new ContainerException(
-                    $this->tracer->combineTraceMessage(
-                        \sprintf(
-                            'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
-                            $this->tracer->getRootAlias(),
-                            $alias,
-                        ),
-                    ),
-                );
+                throw ContainerException::createWithTrace(\sprintf(
+                    'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
+                    $tracer->getRootAlias(),
+                    $alias,
+                ), $tracer->getTraces());
             } finally {
-                $this->tracer->pop();
+                $tracer->pop();
             }
         }
 
@@ -430,7 +457,8 @@ final class Actor
     private function createInstance(
         Ctx $ctx,
         array $arguments,
-        ?Actor $fallbackActor = null,
+        ?Actor $fallbackActor,
+        Tracer $tracer,
     ): object {
         $class = $ctx->class;
         try {
@@ -466,7 +494,7 @@ final class Actor
 
         // We have to construct class using external injector when we know the exact context
         if ($arguments === [] && $this->binder->hasInjector($class)) {
-            return $actor->resolveInjector($actor->state->bindings[$ctx->class], $ctx, $arguments);
+            return $actor->resolveInjector($actor->state->bindings[$ctx->class], $ctx, $arguments, $tracer);
         }
 
         if (!$reflection->isInstantiable()) {
@@ -475,8 +503,9 @@ final class Actor
                 $reflection->isAbstract() => 'Abstract class',
                 default => 'Class',
             };
-            throw new ContainerException(
-                $actor->tracer->combineTraceMessage(\sprintf('%s `%s` can not be constructed.', $itIs, $class)),
+            throw TracedContainerException::createWithTrace(
+                \sprintf('%s `%s` can not be constructed.', $itIs, $class),
+                $tracer->getTraces(),
             );
         }
 
@@ -484,33 +513,50 @@ final class Actor
 
         if ($constructor !== null) {
             try {
-                $actor->tracer->push(false, alias: $ctx->class, action: 'resolve arguments', signature: $constructor);
-                $actor->tracer->push(true);
+                $newScope = $this !== $actor;
+                $debug = [
+                    'action' => 'resolve arguments',
+                    'alias' => $ctx->class,
+                    'signature' => $constructor,
+                ];
+                $newScope and $debug += [
+                    'jump to scope' => $actor->scope->getScopeName(),
+                    'from scope' => $this->scope->getScopeName(),
+                ];
+                $tracer->push($newScope, ...$debug);
+                $tracer->push(true);
                 $args = $actor->resolver->resolveArguments($constructor, $arguments, $actor->options->validateArguments);
             } catch (ValidationException $e) {
-                throw new ContainerException(
-                    $actor->tracer->combineTraceMessage(
-                        \sprintf(
-                            'Can\'t resolve `%s`. %s',
-                            $actor->tracer->getRootAlias(),
-                            $e->getMessage(),
-                        ),
-                    ),
-                );
+                throw TracedContainerException::createWithTrace(\sprintf(
+                    'Can\'t resolve `%s`. %s',
+                    $tracer->getRootAlias(),
+                    $e->getMessage(),
+                ), $tracer->getTraces());
+            } catch (TracedContainerException $e) {
+                throw $e::extendTracedException(\sprintf(
+                    'Can\'t resolve `%s`.',
+                    $tracer->getRootAlias(),
+                ), $tracer->getTraces(), $e);
             } finally {
-                $actor->tracer->pop(true);
-                $actor->tracer->pop(false);
+                $tracer->pop($newScope);
+                $tracer->pop(false);
             }
             try {
                 // Using constructor with resolved arguments
-                $actor->tracer->push(false, call: "$class::__construct", arguments: $args);
-                $actor->tracer->push(true);
+                $tracer->push(false, call: "$class::__construct", arguments: $args);
+                $tracer->push(true);
                 $instance = new $class(...$args);
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
+            } catch (TracedContainerException $e) {
+                throw $e::extendTracedException(\sprintf(
+                    'Can\'t resolve `%s`: failed constructing `%s`.',
+                    $tracer->getRootAlias(),
+                    $class,
+                ), $tracer->getTraces(), $e);
             } finally {
-                $actor->tracer->pop(true);
-                $actor->tracer->pop(false);
+                $tracer->pop(true);
+                $tracer->pop(false);
             }
         } else {
             // No constructor specified

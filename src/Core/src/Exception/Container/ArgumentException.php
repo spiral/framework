@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Core\Exception\Container;
 
 /**
- * Unable to resolve argument value.
+ * @deprecated
  */
 class ArgumentException extends AutowireException
 {

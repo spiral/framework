@@ -17,7 +17,6 @@ final class Factory implements FactoryInterface
     use DestructorTrait;
 
     private State $state;
-    private Tracer $tracer;
     private Scope $scope;
     private Actor $actor;
 
@@ -26,7 +25,6 @@ final class Factory implements FactoryInterface
         $constructor->set('factory', $this);
 
         $this->state = $constructor->get('state', State::class);
-        $this->tracer = $constructor->get('tracer', Tracer::class);
         $this->scope = $constructor->get('scope', Scope::class);
         $this->actor = $constructor->get('actor', Actor::class);
     }
@@ -36,8 +34,12 @@ final class Factory implements FactoryInterface
      *
      * @throws \Throwable
      */
-    public function make(string $alias, array $parameters = [], \Stringable|string|null $context = null): mixed
-    {
+    public function make(
+        string $alias,
+        array $parameters = [],
+        \Stringable|string|null $context = null,
+        ?Tracer $tracer = null,
+    ): mixed {
         if ($parameters === [] && \array_key_exists($alias, $this->state->singletons)) {
             return $this->state->singletons[$alias];
         }
@@ -48,23 +50,32 @@ final class Factory implements FactoryInterface
             return $singleton;
         }
 
+        $tracer ??= new Tracer();
+
         // Resolve without binding
         if ($binding === null) {
-            $this->tracer->push(false, action: 'autowire', alias: $alias, context: $context);
+            $tracer->push(
+                false,
+                action: 'autowire',
+                alias: $alias,
+                scope: $this->scope->getScopeName(),
+                context: $context,
+            );
             try {
                 // No direct instructions how to construct class, make is automatically
                 return $this->actor->autowire(
                     new Ctx(alias: $alias, class: $alias, context: $context, singleton: $parameters === [] ? null : false),
                     $parameters,
                     $actor,
+                    $tracer,
                 );
             } finally {
-                $this->tracer->pop(false);
+                $tracer->pop(false);
             }
         }
 
         try {
-            $this->tracer->push(
+            $tracer->push(
                 false,
                 action: 'resolve from binding',
                 alias: $alias,
@@ -72,14 +83,14 @@ final class Factory implements FactoryInterface
                 context: $context,
                 binding: $binding,
             );
-            $this->tracer->push(true);
+            $tracer->push(true);
 
             // unset($this->state->bindings[$alias]);
-            return $actor->resolveBinding($binding, $alias, $context, $parameters);
+            return $actor->resolveBinding($binding, $alias, $context, $parameters, $tracer);
         } finally {
             // $this->state->bindings[$alias] ??= $binding;
-            $this->tracer->pop(true);
-            $this->tracer->pop(false);
+            $tracer->pop(true);
+            $tracer->pop(false);
         }
     }
 }

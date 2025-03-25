@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Spiral\Core\Internal;
 
 use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
-use Spiral\Core\FactoryInterface;
 
 /**
  * @internal
@@ -14,7 +13,6 @@ final class Scope
 {
     private ?\Spiral\Core\Container $parent = null;
     private ?self $parentScope = null;
-    private ?FactoryInterface $parentFactory = null;
     private ?Actor $parentActor = null;
 
     public function __construct(
@@ -34,12 +32,10 @@ final class Scope
     public function setParent(
         \Spiral\Core\Container $parent,
         self $parentScope,
-        FactoryInterface $factory,
         Actor $actor,
     ): void {
         $this->parent = $parent;
         $this->parentScope = $parentScope;
-        $this->parentFactory = $factory;
         $this->parentActor = $actor;
 
         // Check a scope with the same name is not already registered
@@ -55,11 +51,6 @@ final class Scope
     public function getParent(): ?\Spiral\Core\Container
     {
         return $this->parent;
-    }
-
-    public function getParentFactory(): ?FactoryInterface
-    {
-        return $this->parentFactory;
     }
 
     /**
