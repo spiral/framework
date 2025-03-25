@@ -82,7 +82,7 @@ final class AuthSessionTest extends HttpTestCase
         try {
             $this->fakeHttp()->get('/');
         } catch (\Psr\Container\NotFoundExceptionInterface $e) {
-            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e->getPrevious());
+            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e);
         }
     }
 

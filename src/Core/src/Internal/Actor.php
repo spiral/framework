@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Core\Internal;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
 use Spiral\Core\BinderInterface;
@@ -382,9 +383,11 @@ final class Actor
                 $tracer->getTraces(),
                 $e,
             );
+        } catch (ContainerExceptionInterface $e) {
+            throw $e;
         } catch (\Throwable $e) {
             throw NotFoundException::createWithTrace(
-                \sprintf("Can't resolve `%s`: factory invocation failed.", $tracer->getRootAlias()),
+                \sprintf("Can't resolve `%s` due to factory invocation error: %s", $tracer->getRootAlias(), $e->getMessage()),
                 $tracer->getTraces(),
                 $e,
             );
