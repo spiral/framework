@@ -85,10 +85,10 @@ final class Factory implements FactoryInterface
             );
             $tracer->push(true);
 
-            // unset($this->state->bindings[$alias]);
+            $actor->disableBinding($alias);
             return $actor->resolveBinding($binding, $alias, $context, $parameters, $tracer);
         } finally {
-            // $this->state->bindings[$alias] ??= $binding;
+            $actor->enableBinding($alias, $binding);
             $tracer->pop(true);
             $tracer->pop(false);
         }

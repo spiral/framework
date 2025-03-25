@@ -7,6 +7,7 @@ namespace Spiral\Tests\Core;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotCallableException;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\Scope;
@@ -140,8 +141,15 @@ class InvokerTest extends TestCase
     {
         // Note: do not add a return type to the closure
         $this->container->bind('foo', fn() => throw new \Exception('Factory called'));
-        $this->expectExceptionMessage('Factory called');
-        $this->container->invoke(['foo', 'publicMethod'], [42]);
+
+        try {
+            $this->container->invoke(['foo', 'publicMethod'], [42]);
+            self::fail('Exception should be thrown');
+        } catch (\Throwable $e) {
+            self::assertInstanceOf(NotFoundException::class, $e);
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('Factory called', $e->getPrevious()->getMessage());
+        }
     }
 
     /**
@@ -150,8 +158,15 @@ class InvokerTest extends TestCase
     public function testCallStaticMethodWithoutInstantiationWithOvertypedFactory(): void
     {
         $this->container->bind('foo', fn(): PrivateConstructor|SampleClass => throw new \Exception('Factory called'));
-        $this->expectExceptionMessage('Factory called');
-        $this->container->invoke(['foo', 'publicMethod'], [42]);
+
+        try {
+            $this->container->invoke(['foo', 'publicMethod'], [42]);
+            self::fail('Exception should be thrown');
+        } catch (\Throwable $e) {
+            self::assertInstanceOf(NotFoundException::class, $e);
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('Factory called', $e->getPrevious()->getMessage());
+        }
     }
 
     /**
@@ -160,8 +175,14 @@ class InvokerTest extends TestCase
     public function testCallStaticMethodWithoutInstantiationWithNullableTypedFactory(): void
     {
         $this->container->bind('foo', fn(): ?PrivateConstructor => throw new \Exception('Factory called'));
-        $this->expectExceptionMessage('Factory called');
-        $this->container->invoke(['foo', 'publicMethod'], [42]);
+        try {
+            $this->container->invoke(['foo', 'publicMethod'], [42]);
+            self::fail('Exception should be thrown');
+        } catch (\Throwable $e) {
+            self::assertInstanceOf(NotFoundException::class, $e);
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('Factory called', $e->getPrevious()->getMessage());
+        }
     }
 
     public function testCallValidCallableStringWithNotResolvableDependencies(): void

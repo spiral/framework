@@ -62,6 +62,16 @@ final class Actor
         $this->options = $constructor->getOptions();
     }
 
+    public function disableBinding(string $alias): void
+    {
+        unset($this->state->bindings[$alias]);
+    }
+
+    public function enableBinding(string $alias, Binding $binding): void
+    {
+        $this->state->bindings[$alias] ??= $binding;
+    }
+
     /**
      * Get class name of the resolving object.
      * With it, you can quickly get cached singleton or detect that there are injector or binding.
@@ -89,15 +99,14 @@ final class Actor
             $bindings = &$actor->state->bindings;
             $singletons = &$actor->state->singletons;
             $injectors = &$actor->state->injectors;
+            $binding = $bindings[$alias] ?? null;
             if (\array_key_exists($alias, $singletons)) {
                 $singleton = $singletons[$alias];
-                $binding = $bindings[$alias] ?? null;
                 $injector = $injectors[$alias] ?? null;
                 return \is_object($singleton::class) ? $singleton::class : null;
             }
 
-            if (\array_key_exists($alias, $bindings)) {
-                $binding = $bindings[$alias];
+            if ($binding !== null) {
                 if ($followAlias && $binding::class === Alias::class) {
                     if ($binding->alias === $alias) {
                         break;
@@ -373,6 +382,12 @@ final class Actor
                 $tracer->getTraces(),
                 $e,
             );
+        } catch (\Throwable $e) {
+            throw NotFoundException::createWithTrace(
+                \sprintf("Can't resolve `%s`: factory invocation failed.", $tracer->getRootAlias()),
+                $tracer->getTraces(),
+                $e,
+            );
         }
 
         if (\is_object($instance)) {
@@ -493,7 +508,7 @@ final class Actor
         } # todo
 
         // We have to construct class using external injector when we know the exact context
-        if ($arguments === [] && $this->binder->hasInjector($class)) {
+        if ($arguments === [] && $actor->binder->hasInjector($class)) {
             return $actor->resolveInjector($actor->state->bindings[$ctx->class], $ctx, $arguments, $tracer);
         }
 

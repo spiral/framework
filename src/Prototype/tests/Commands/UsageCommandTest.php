@@ -60,7 +60,7 @@ class UsageCommandTest extends AbstractCommandsTestCase
         $result = $out->fetch();
 
         self::assertStringContainsString('testClass', $result);
-        self::assertStringContainsString('Can\'t resolve', $result);
+        self::assertStringContainsString('Can\'t autowire', $result);
         self::assertStringContainsString(TestApp::class, $result);
     }
 }
