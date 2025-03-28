@@ -29,6 +29,15 @@ class Proxy extends Binding
 
     /**
      * @return class-string
+     * @deprecated Use {@see getReturnClass()} instead.
+     */
+    public function getInterface(): string
+    {
+        return $this->interface;
+    }
+
+    /**
+     * @return class-string
      * @internal
      */
     public function getReturnClass(): string

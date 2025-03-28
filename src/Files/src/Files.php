@@ -281,7 +281,7 @@ final class Files implements FilesInterface
         $result = [];
         foreach ($this->filesIterator($location, $pattern) as $filename) {
             if ($this->isDirectory($filename->getPathname())) {
-                $result = \array_merge($result, $this->getFiles($filename . DIRECTORY_SEPARATOR));
+                $result = \array_merge($result, $this->getFiles(((string) $filename) . DIRECTORY_SEPARATOR));
 
                 continue;
             }

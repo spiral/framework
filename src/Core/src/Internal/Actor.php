@@ -425,7 +425,7 @@ final class Actor
                 }
                 $binding->reference = \WeakReference::create($object);
             } catch (\Throwable) {
-                throw ContainerException::createWithTrace(\sprintf(
+                throw TracedContainerException::createWithTrace(\sprintf(
                     'Can\'t resolve `%s`: can\'t instantiate `%s` from WeakReference binding.',
                     $tracer->getRootAlias(),
                     $alias,

@@ -28,9 +28,9 @@ final class DeprecationProxy extends Proxy
 
     /**
      * @return class-string
-     * @internal
+     * @deprecated
      */
-    public function getReturnClass(): string
+    public function getInterface(): string
     {
         $message = $this->message ?? \sprintf(
             'Using `%s` outside of the `%s` scope is deprecated and will be impossible in version %s.',
@@ -41,6 +41,6 @@ final class DeprecationProxy extends Proxy
 
         @\trigger_error($message, \E_USER_DEPRECATED);
 
-        return parent::getReturnClass();
+        return parent::getInterface();
     }
 }
