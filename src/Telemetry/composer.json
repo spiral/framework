@@ -34,8 +34,8 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/boot": "^3.15.5",
-        "spiral/core": "^3.15.5"
+        "spiral/boot": "^3.15.6",
+        "spiral/core": "^3.15.6"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",

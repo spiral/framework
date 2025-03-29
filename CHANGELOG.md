@@ -1,9 +1,15 @@
 # CHANGELOG
 
+## 3.15.6 - 2025-03-29
+
+- **Bug Fixes**
+  - [spiral/core] Invoker::invoke() does not try to instantiate class to call a static function.
+  - [spiral/core] Reworked resolving traces in container exceptions
+
 ## 3.15.5 - 2025-03-12
 
 - **Bug Fixes**
-    - [spiral/router] Fix issue when group prefix is not applied to routes
+  - [spiral/router] Fix issue when group prefix is not applied to routes
 
 ## 3.15.4 - 2025-02-17
 
