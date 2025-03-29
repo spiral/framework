@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Internal\Resolver;
 
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Stub\EngineInterface;
 use Spiral\Tests\Core\Stub\EngineMarkTwo;
 
@@ -102,11 +103,14 @@ final class NullableParameterTest extends BaseTestCase
     {
         $this->bind(\DateTimeInterface::class, static fn() => throw new \RuntimeException('fail!'));
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('fail!');
-
-        $this->resolveClosure(
-            static fn(\DateTimeInterface $param) => $param,
-        );
+        try {
+            $this->resolveClosure(
+                static fn(\DateTimeInterface $param) => $param,
+            );
+            self::fail('Exception should be thrown');
+        } catch (NotFoundException $e) {
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('fail!', $e->getPrevious()->getMessage());
+        }
     }
 }

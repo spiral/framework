@@ -89,16 +89,17 @@ final class ScopeAttributeTest extends BaseTestCase
     }
 
     /**
-     * Request a dependency from a correct scope using alias but there is no any binding for this alias in the scope.
-     * The binding can be in the parent scope, but it doesn't matter.
+     * The dependency has a constraint on the `foo` scope, but there is a binding in a bad `root` scope that has
+     * high priority.
+     * Requesting a dependency from a correct scope will be resolved from the `root` scope that leads to an exception.
      */
     #[Group('scrutinizer-ignore')]
     public function testRequestObjectFromValidScopeUsingFactoryFromWrongScope(): void
     {
-        self::expectException(NotFoundException::class);
+        self::expectException(BadScopeException::class);
         self::expectExceptionMessage('`foo`');
 
-        $root = self::makeContainer();
+        $root = self::makeContainer(checkScope: true);
         $root->bind('foo', self::makeFooScopeObject(...));
 
         $root->runScoped(static function (Container $c1): void {
@@ -186,8 +187,6 @@ final class ScopeAttributeTest extends BaseTestCase
     #[Group('scrutinizer-ignore')]
     public function testBadScopeException(): void
     {
-        self::expectException(BadScopeException::class);
-
         try {
             $root = self::makeContainer();
             $root->runScoped(static function (Container $c1): void {
@@ -195,9 +194,10 @@ final class ScopeAttributeTest extends BaseTestCase
                     $c2->get(AttrScopeFoo::class);
                 });
             }, name: 'bar');
+
+            self::fail(BadScopeException::class . ' should be thrown');
         } catch (BadScopeException $e) {
             self::assertSame('foo', $e->getScope());
-            throw $e;
         }
     }
 

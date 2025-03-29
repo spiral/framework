@@ -26,6 +26,11 @@ final class Tracer implements \Stringable
         return "$header\n$this";
     }
 
+    public function getTraces(): array
+    {
+        return $this->traces;
+    }
+
     public function push(bool $nextLevel, mixed ...$details): void
     {
         $trace = $details === [] ? null : new Trace($details);
@@ -57,18 +62,18 @@ final class Tracer implements \Stringable
 
     public function __toString(): string
     {
-        return $this->traces === [] ? '' : "Container trace list:\n" . $this->renderTraceList($this->traces);
+        return $this->traces === [] ? '' : "Resolving trace:\n" . self::renderTraceList($this->traces);
     }
 
     /**
      * @param Trace[][] $blocks
      */
-    private function renderTraceList(array $blocks): string
+    public static function renderTraceList(array $blocks): string
     {
         $result = [];
         $i = 0;
         foreach ($blocks as $block) {
-            \array_push($result, ...$this->blockToStringList($block, $i++));
+            \array_push($result, ...self::blockToStringList($block, $i++));
         }
         return \implode("\n", $result);
     }
@@ -79,7 +84,7 @@ final class Tracer implements \Stringable
      *
      * @return string[]
      */
-    private function blockToStringList(array $items, int $level = 0): array
+    private static function blockToStringList(array $items, int $level = 0): array
     {
         $result = [];
         $padding = \str_repeat('  ', $level);

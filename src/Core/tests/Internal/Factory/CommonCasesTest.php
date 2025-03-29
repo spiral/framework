@@ -44,9 +44,7 @@ final class CommonCasesTest extends BaseTestCase
     public function testNotExistingClass(): void
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage(
-            'Can\'t resolve `\Foo\Bar\Class\Not\Exists`: undefined class or binding `\Foo\Bar\Class\Not\Exists`.',
-        );
+        $this->expectExceptionMessage("Can't autowire `\Foo\Bar\Class\Not\Exists`: class or injector not found.");
 
         $this->make('\\Foo\\Bar\\Class\\Not\\Exists');
     }

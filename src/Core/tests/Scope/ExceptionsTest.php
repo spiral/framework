@@ -52,7 +52,7 @@ final class ExceptionsTest extends BaseTestCase
     public function testParentScopeResolvingNotFound(): void
     {
         self::expectException(NotFoundException::class);
-        self::expectExceptionMessage('jump to parent scope');
+        self::expectExceptionMessage("jump to scope: 'root'");
 
         $container = new Container();
 
@@ -64,7 +64,7 @@ final class ExceptionsTest extends BaseTestCase
                 self::assertInstanceOf(NotFoundException::class, $e);
                 self::assertInstanceOf(NotFoundException::class, $e->getPrevious());
                 self::assertStringContainsString(
-                    "Can't resolve `Spiral\\Tests\\Core\\Scope\\Stub\\DatetimeCarrier`",
+                    "Can't autowire `DateTimeInterface`: class or injector not found",
                     $e->getPrevious()->getMessage(),
                 );
 
