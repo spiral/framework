@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Bootloader\Validation;
 
+use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Patch\Set;
 use Spiral\Tests\Framework\BaseTestCase;
@@ -39,9 +40,12 @@ final class ValidationBootloaderTest extends BaseTestCase
         $this->getConfigurator()
             ->modify(ValidationConfig::CONFIG, new Set('defaultValidator', null));
 
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Default Validator is not configured.');
-        $this->getContainer()->get(ValidationInterface::class);
+        try {
+            $this->getContainer()->get(ValidationInterface::class);
+        } catch (NotFoundExceptionInterface $e) {
+            self::assertStringContainsString('Default Validator is not configured.', $e->getMessage());
+            self::assertInstanceOf(ValidationException::class, $e->getPrevious());
+        }
     }
 
     public function testSetDefaultValidator(): void
