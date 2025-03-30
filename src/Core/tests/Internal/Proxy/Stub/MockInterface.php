@@ -30,4 +30,8 @@ interface MockInterface
     public function concatMultiple(string $prefix, string &...$byLink): array;
 
     public function &same(string &$byLink): string;
+
+    public function staticType(): static;
+
+    public function selfType(): self;
 }
