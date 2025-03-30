@@ -14,36 +14,44 @@ class TracedContainerException extends ContainerException
     protected array $containerTrace = [];
     protected string $originalMessage = '';
 
-    public function __construct(string $message = "", int $code = 0, ?\Throwable $previous = null)
+    public function __construct(string $message = '', int $code = 0, ?\Throwable $previous = null)
     {
         $this->originalMessage = $message;
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * @internal
+     */
     public static function createWithTrace(
         string $message,
-        array $traces,
+        array $trace = [],
         ?\Throwable $previous = null,
     ): static {
+        // Merge traces
+        if ($previous instanceof self) {
+            $merge = $previous->containerTrace;
+            if ($trace !== [] && $merge !== []) {
+                // merge lat element of $traces with first element of $merge
+                \array_push($trace[\count($trace) - 1], ...$merge[0]);
+                unset($merge[0]);
+            }
+
+            $trace = \array_merge($trace, $merge);
+            $message = "$message\n{$previous->originalMessage}";
+        }
+
+        return static::createStatic($message, $trace, $previous);
+    }
+
+    protected static function createStatic(string $message, array $trace, ?\Throwable $previous): static
+    {
         $result = new static(
-            $message . ($traces === [] ? '' : "\nResolving trace:\n" . Tracer::renderTraceList($traces)),
+            $message . ($trace === [] ? '' : "\nResolving trace:\n" . Tracer::renderTraceList($trace)),
             previous: $previous,
         );
         $result->originalMessage = $message;
-        $result->containerTrace = $traces;
+        $result->containerTrace = $trace;
         return $result;
-    }
-
-    public static function extendTracedException(string $message, array $traces, self $exception): static
-    {
-        $merge = $exception->containerTrace;
-        if ($traces !== [] && $merge !== []) {
-            // merge lat element of $traces with first element of $merge
-            \array_push($traces[\count($traces) - 1], ...$merge[0]);
-            unset($merge[0]);
-        }
-
-        $traces = \array_merge($traces, $merge);
-        return static::createWithTrace("$message\n{$exception->originalMessage}", $traces, previous: $exception);
     }
 }
