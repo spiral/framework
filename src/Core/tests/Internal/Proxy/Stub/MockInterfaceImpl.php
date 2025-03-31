@@ -55,4 +55,14 @@ final class MockInterfaceImpl implements MockInterface, EmptyInterface
 
         return $byLink;
     }
+
+    public function staticType(): static
+    {
+        return $this;
+    }
+
+    public function selfType(): MockInterface
+    {
+        return $this;
+    }
 }
