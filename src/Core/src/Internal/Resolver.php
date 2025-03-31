@@ -51,7 +51,7 @@ final class Resolver implements ResolverInterface
         foreach ($reflection->getParameters() as $parameter) {
             $this->resolveParameter($parameter, $state, $validate)
             or
-            throw new ArgumentResolvingException($reflection, $parameter->getName());
+            throw ArgumentResolvingException::createWithParam($reflection, $parameter->getName());
         }
 
         return $state->getResolvedValues();
@@ -74,7 +74,7 @@ final class Resolver implements ResolverInterface
             // For a variadic parameter it's no sense - named or positional argument will be sent
             // But you can't send positional argument after named in any case
             if (\is_int($key) && !$positional) {
-                throw new PositionalArgumentException($reflection, $key);
+                throw PositionalArgumentException::createWithParam($reflection, (string) $key);
             }
 
             $positional = $positional && \is_int($key);
@@ -85,7 +85,7 @@ final class Resolver implements ResolverInterface
             }
 
             if ($parameter === null) {
-                throw new UnknownParameterException($reflection, $key);
+                throw UnknownParameterException::createWithParam($reflection, (string) $key);
             }
             $name = $parameter->getName();
 
@@ -96,14 +96,14 @@ final class Resolver implements ResolverInterface
                 if ($parameter->isOptional()) {
                     continue;
                 }
-                throw new MissingRequiredArgumentException($reflection, $name);
+                throw MissingRequiredArgumentException::createWithParam($reflection, $name);
             } else {
                 $value = &$arguments[$name];
                 unset($arguments[$name]);
             }
 
             if (!$this->validateValueToParameter($parameter, $value)) {
-                throw new InvalidArgumentException($reflection, $name);
+                throw InvalidArgumentException::createWithParam($reflection, $name);
             }
         }
     }
@@ -299,7 +299,7 @@ final class Resolver implements ResolverInterface
 
         // Validation
         if ($validateWith !== null && !$this->validateValueToParameter($validateWith, $value)) {
-            throw new InvalidArgumentException(
+            throw InvalidArgumentException::createWithParam(
                 $validateWith->getDeclaringFunction(),
                 $validateWith->getName(),
             );

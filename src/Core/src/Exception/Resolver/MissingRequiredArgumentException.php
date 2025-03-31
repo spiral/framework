@@ -10,16 +10,11 @@ final class MissingRequiredArgumentException extends ValidationException
 {
     use ClosureRendererTrait;
 
-    public function __construct(
+    protected function getValidationMessage(
         \ReflectionFunctionAbstract $reflection,
-        private readonly string $parameter,
-    ) {
+        string $parameter,
+    ): string {
         $pattern = "Missing required argument for the `{$parameter}` parameter for `%s` %s.";
-        parent::__construct($this->renderFunctionAndParameter($reflection, $pattern));
-    }
-
-    public function getParameter(): string
-    {
-        return $this->parameter;
+        return $this->renderFunctionAndParameter($reflection, $pattern);
     }
 }

@@ -251,7 +251,7 @@ final class Actor
 
             return $instance;
         } catch (TracedContainerException $e) {
-            throw isset($injectorInstance) ? $e : $e::extendTracedException(\sprintf(
+            throw isset($injectorInstance) ? $e : $e::createWithTrace(\sprintf(
                 'Can\'t resolve `%s`.',
                 $tracer->getRootAlias(),
             ), $tracer->getTraces(), $e);
@@ -279,7 +279,7 @@ final class Actor
                 //Binding is pointing to something else
                 $instance = $this->factory->make($binding->alias, $arguments, $context);
             } catch (TracedContainerException $e) {
-                throw $e::extendTracedException(
+                throw $e::createWithTrace(
                     $alias === $tracer->getRootAlias()
                         ? "Can't resolve `{$alias}`."
                         : "Can't resolve `$alias` with alias `{$binding->alias}`.",
@@ -378,7 +378,7 @@ final class Actor
                 $e,
             );
         } catch (TracedContainerException $e) {
-            throw $e::extendTracedException(
+            throw $e::createWithTrace(
                 \sprintf("Can't resolve `%s`: factory invocation failed.", $tracer->getRootAlias()),
                 $tracer->getTraces(),
                 $e,
@@ -544,17 +544,13 @@ final class Actor
                 $tracer->push($newScope, ...$debug);
                 $tracer->push(true);
                 $args = $actor->resolver->resolveArguments($constructor, $arguments, $actor->options->validateArguments);
-            } catch (ValidationException $e) {
-                throw TracedContainerException::createWithTrace(\sprintf(
-                    'Can\'t resolve `%s`. %s',
-                    $tracer->getRootAlias(),
-                    $e->getMessage(),
-                ), $tracer->getTraces());
-            } catch (TracedContainerException $e) {
-                throw $e::extendTracedException(\sprintf(
-                    'Can\'t resolve `%s`.',
-                    $tracer->getRootAlias(),
-                ), $tracer->getTraces(), $e);
+            } catch (\Throwable $e) {
+                throw TracedContainerException::createWithTrace(
+                    \sprintf(
+                        "Can't resolve `%s`.",
+                        $tracer->getRootAlias(),
+                    ), $tracer->getTraces(), $e
+                );
             } finally {
                 $tracer->pop($newScope);
                 $tracer->pop(false);
@@ -567,7 +563,7 @@ final class Actor
             } catch (\TypeError $e) {
                 throw new WrongTypeException($constructor, $e);
             } catch (TracedContainerException $e) {
-                throw $e::extendTracedException(\sprintf(
+                throw $e::createWithTrace(\sprintf(
                     'Can\'t resolve `%s`: failed constructing `%s`.',
                     $tracer->getRootAlias(),
                     $class,

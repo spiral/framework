@@ -108,7 +108,8 @@ class ExceptionsTest extends TestCase
         yield 'withClosure' => [
             $withClosure,
             <<<'MARKDOWN'
-            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`. Invalid argument value type for the `class` parameter when validating arguments for `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency::__construct`.
+            Can't resolve `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency`.
+            Invalid argument value type for the `class` parameter when validating arguments for `Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency::__construct`.
             Resolving trace:
             - action: 'autowire'
               alias: 'Spiral\Tests\Core\Fixtures\ClassWithUndefinedDependency'
