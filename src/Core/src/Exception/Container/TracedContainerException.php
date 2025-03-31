@@ -28,6 +28,7 @@ class TracedContainerException extends ContainerException
         array $trace = [],
         ?\Throwable $previous = null,
     ): static {
+        $class = static::class;
         // Merge traces
         if ($previous instanceof self) {
             $merge = $previous->containerTrace;
@@ -39,19 +40,20 @@ class TracedContainerException extends ContainerException
 
             $trace = \array_merge($trace, $merge);
             $message = "$message\n{$previous->originalMessage}";
+            $class = $previous::class;
         }
 
-        return static::createStatic($message, $trace, $previous);
-    }
-
-    protected static function createStatic(string $message, array $trace, ?\Throwable $previous): static
-    {
-        $result = new static(
+        $result = $class::createStatic(
             $message . ($trace === [] ? '' : "\nResolving trace:\n" . Tracer::renderTraceList($trace)),
-            previous: $previous,
+            $previous,
         );
         $result->originalMessage = $message;
         $result->containerTrace = $trace;
         return $result;
+    }
+
+    protected static function createStatic(string $message, ?\Throwable $previous): static
+    {
+        return new static($message, previous: $previous);
     }
 }
