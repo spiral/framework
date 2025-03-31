@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.15.7 - 2025-03-31
+
+- **Bug Fixes**
+  - [spiral/core] Fixed proxy class generator failure when the proxied interface contains static return type
+  - [spiral/core] Added resolving trace to Resolver exceptions
+
 ## 3.15.6 - 2025-03-29
 
 - **Bug Fixes**
