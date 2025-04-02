@@ -25,8 +25,19 @@ final class UpdateConstructor extends NodeVisitorAbstract
             return null;
         }
 
-        $constructor = $this->getConstructorAttribute($node);
+        $constructor = $this->getConstructor($node);
+        if ($constructor === null) {
+            if ($this->definition->dependencies === []) {
+                return $node;
+            }
+
+            // Add constructor
+            $constructor = new Node\Stmt\ClassMethod('__construct');
+            \array_unshift($node->stmts, $constructor);
+        }
+
         $this->addDependencies($constructor);
+
         if (!$this->definition->hasConstructor && $this->definition->constructorParams) {
             $this->addParentConstructorCall($constructor);
         }
@@ -97,9 +108,9 @@ final class UpdateConstructor extends NodeVisitorAbstract
         }
     }
 
-    private function getConstructorAttribute(Node\Stmt\Class_ $node): Node\Stmt\ClassMethod
+    private function getConstructor(Node\Stmt\Class_ $node): ?Node\Stmt\ClassMethod
     {
-        return $node->getAttribute('constructor');
+        return $node->getMethod('__construct');
     }
 
     private function getPropertyType(Dependency $dependency): string

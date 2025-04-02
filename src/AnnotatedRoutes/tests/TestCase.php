@@ -8,9 +8,7 @@ use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Router\Bootloader\AnnotatedRoutesBootloader;
 use Spiral\Testing\TestCase as BaseTestCase;
 
-/**
- * @requires function \Spiral\Framework\Kernel::init
- */
+#[\PHPUnit\Framework\Attributes\RequiresMethod(\Spiral\Framework\Kernel::class, 'init')]
 abstract class TestCase extends BaseTestCase
 {
     public function defineBootloaders(): array

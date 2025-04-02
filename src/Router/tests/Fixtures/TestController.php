@@ -94,6 +94,6 @@ class TestController
     public function scopes(): string
     {
         $scopes = Introspector::scopeNames();
-        return \implode(', ', $scopes);
+        return \implode(', ', \array_filter($scopes));
     }
 }

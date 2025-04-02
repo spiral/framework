@@ -92,7 +92,7 @@ final class AddUse extends NodeVisitorAbstract
             }
 
             foreach ($node->uses as $use) {
-                if (\in_array($use->name->parts, $uses, true)) {
+                if (\in_array($use->name->getParts(), $uses, true)) {
                     unset($nodes[$i]);
                 }
             }
@@ -117,7 +117,7 @@ final class AddUse extends NodeVisitorAbstract
             }
 
             foreach ($stmt->uses as $use) {
-                $uses[] = $use->name->parts;
+                $uses[] = $use->name->getParts();
             }
         }
 

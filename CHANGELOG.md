@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 3.15.3 - 2025-02-11
+
+- **Bug Fixes**
+  - [spiral/telemetry] Fixed scoped `TracerInterface` in the `AbstractTracer::runScope` method
+- `\Spiral\Core\Scope` is public now
+
+## 3.15.2 - 2025-02-10
+
+- **Bug Fixes**
+  - [spiral/telemetry] Telemetry info was not propagated into log records
+
+## 3.15.1 - 2025-01-31
+
+- Maintenance:
+  - Bumped up dependencies versions
+  - [spiral/prototype] component now uses `nikic/php-parser` v5
+
 ## 3.15.0 - 2025-01-24
 
 - Core

@@ -13,6 +13,7 @@
     addParamDefaultToDocblockType="true"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
+    errorBaseline="psalm-baseline.xml"
 >
     <projectFiles>
         <directory name="src/*/src" />
@@ -22,15 +23,10 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
+        <MissingOverrideAttribute errorLevel="suppress" />
         <UnusedClosureParam errorLevel="suppress" />
         <UnusedPsalmSuppress errorLevel="suppress" />
         <UnsupportedPropertyReferenceUsage errorLevel="suppress" />
-        <InvalidThrow>
-            <errorLevel type="suppress">
-                <referencedClass name="Psr\Container\NotFoundExceptionInterface"/>
-                <referencedClass name="Psr\Container\ContainerExceptionInterface"/>
-            </errorLevel>
-        </InvalidThrow>
         <RedundantCast>
             <errorLevel type="suppress">
                 <file name="src/Core/src/Internal/Proxy/ProxyClassRenderer.php"/>

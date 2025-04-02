@@ -20,16 +20,6 @@ interface TracerInterface
     /**
      * Trace a given callback
      *
-     * The method should always run callback inside container scope.
-     * @see ScopeInterface
-     *
-     * ```php
-     * ScopeInterface::runScope([
-     *      SpanInterface::class => new Span($name),
-     *      TracerInterface::class => $this,
-     * ], static fn (\Spiral\Core\InvokerInterface $invoker): mixed => $invoker->invoke($callback));
-     * ```
-     *
      * @param non-empty-string $name
      * @param array<non-empty-string, mixed> $attributes
      * @param int|null $startTime Start time in nanoseconds.

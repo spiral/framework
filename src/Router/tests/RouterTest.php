@@ -82,16 +82,42 @@ class RouterTest extends BaseTestCase
 
     public function testImportWithHost(): void
     {
+        $groupRegistry = $this->getContainer()->get(GroupRegistry::class);
         $router = $this->makeRouter('https://host.com', $this->createMock(EventDispatcherInterface::class));
 
         $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
         $configurator->add('foo', '//<host>/register')->callable(static fn() => null);
 
         $router->import($configurator);
-        $this->getContainer()->get(GroupRegistry::class)->registerRoutes($router);
+        $groupRegistry->registerRoutes($router);
 
-        $uri = (string) $router->uri('foo', ['host' => 'some']);
-        self::assertSame('some/register', $uri);
-        self::assertFalse(\str_contains('https://host.com', $uri));
+        $uriFoo = (string) $router->uri('foo', ['host' => 'some']);
+        self::assertSame('some/register', $uriFoo);
+        self::assertStringNotContainsString($uriFoo, 'https://host.com');
+    }
+
+    public function testImportWithGroupPrefixes(): void
+    {
+        $groupRegistry = $this->getContainer()->get(GroupRegistry::class);
+
+        $groupRegistry
+            ->getGroup('console:user')
+            ->setNamePrefix('console.')
+            ->setPrefix('/console');
+
+        $router = $this->makeRouter(dispatcher: $this->createMock(EventDispatcherInterface::class));
+
+        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
+        $configurator
+            ->add('some-path', 'some/path')
+            ->group('console:user')
+            ->methods('POST')
+            ->callable(static fn() => null);
+
+        $router->import($configurator);
+        $groupRegistry->registerRoutes($router);
+
+        $uriSome = (string) $router->uri('console.some-path');
+        self::assertSame('/console/some/path', $uriSome);
     }
 }

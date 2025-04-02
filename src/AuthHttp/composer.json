@@ -40,12 +40,12 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^10.5.41",
         "spiral/cookies": "^3.16",
         "spiral/http": "^3.16",
         "spiral/debug": "^3.16",
         "nyholm/psr7": "^1.8",
-        "vimeo/psalm": "^5.9"
+        "vimeo/psalm": "^6.0"
     },
     "autoload": {
         "psr-4": {

@@ -46,7 +46,7 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
     /**
      * Add middleware to the pipeline.
      *
-     * @param MiddlewareInterface ...$middleware List of middleware or its definition.
+     * @param MiddlewareInterface|Autowire|non-empty-string ...$middleware List of middleware or its definition.
      */
     public function withAddedMiddleware(MiddlewareInterface|Autowire|string ...$middleware): self
     {

@@ -34,7 +34,7 @@ class InjectorTest extends TestCase
 
         $filename = __DIR__ . '/Fixtures/TestClass.php';
         $printed = $i->injectDependencies(
-            file_get_contents($filename),
+            \file_get_contents($filename),
             $this->getDefinition($filename, ['testClass' => TestClass::class])
         );
 
@@ -47,7 +47,7 @@ class InjectorTest extends TestCase
 
         $filename = __DIR__ . '/Fixtures/WithPromotedProperty.php';
         $printed = $i->injectDependencies(
-            file_get_contents($filename),
+            \file_get_contents($filename),
             $this->getDefinition($filename, ['two' => InjectionTwo::class])
         );
 

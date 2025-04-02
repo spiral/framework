@@ -16,8 +16,8 @@ final class JsonRenderer extends AbstractRenderer
         ?string $format = null,
     ): string {
         $verbosity ??= $this->defaultVerbosity;
-        return \json_encode([
-            'error'      => \sprintf(
+        $result = \json_encode([
+            'error' => \sprintf(
                 '[%s] %s as %s:%s',
                 $exception::class,
                 $exception->getMessage(),
@@ -26,6 +26,8 @@ final class JsonRenderer extends AbstractRenderer
             ),
             'stacktrace' => \iterator_to_array($this->renderTrace($exception->getTrace(), $verbosity)),
         ]);
+
+        return $result === false ? 'false' : $result;
     }
 
     private function renderTrace(array $trace, Verbosity $verbosity): \Generator

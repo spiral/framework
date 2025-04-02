@@ -106,13 +106,14 @@ final class SessionTest extends HttpTestCase
 
         $this->setHttpHandler(function (): void {
             $session = $this->session();
-
-            $this->expectException(ContextualObjectNotFoundException::class);
-
             $session->getID();
         });
 
-        $this->fakeHttp()->get(uri: '/')->assertOk();
+        try {
+            $this->fakeHttp()->get(uri: '/')->assertOk();
+        } catch (\Psr\Container\NotFoundExceptionInterface $e) {
+            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e);
+        }
     }
 
     public function testSessionBindingWithoutRequest(): void

@@ -41,6 +41,7 @@ final class NativeView implements ViewInterface
             }
         }
 
-        return \ob_get_clean();
+        $result = \ob_get_clean();
+        return $result === false ? '' : $result;
     }
 }

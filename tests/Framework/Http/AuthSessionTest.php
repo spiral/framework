@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
 use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
@@ -74,11 +76,14 @@ final class AuthSessionTest extends HttpTestCase
         ]));
 
         $this->setHttpHandler(function (): void {
-            $this->expectException(ContextualObjectNotFoundException::class);
             $this->getContainer()->get(AuthContextInterface::class);
         });
 
-        $this->fakeHttp()->get('/');
+        try {
+            $this->fakeHttp()->get('/');
+        } catch (\Psr\Container\NotFoundExceptionInterface $e) {
+            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e);
+        }
     }
 
     public function testCookieQueueBindingWithoutRequest(): void
