@@ -70,27 +70,39 @@ abstract class AbstractResolver implements AttributeResolverInterface
         return \array_unique(\array_filter($aliases));
     }
 
-    protected function getScope(\ReflectionMethod $method): ?string
+    protected function getScopes(\ReflectionMethod $method): array
     {
         $attrs = $method->getAttributes(name: BindScope::class);
 
         if ($attrs === []) {
-            return null;
+            return [];
         }
 
-        return $attrs[0]->newInstance()->scope;
+        return \array_map(
+            static fn(\ReflectionAttribute $attr): string => $attrs[0]->newInstance()->scope,
+            $attrs,
+        );
     }
 
-    protected function bind(array $aliases, Binding $binding, ?string $scope = null): void
+    protected function bind(array $aliases, Binding $binding, array $scopes): void
     {
-        $binder = $this->binder->getBinder($scope);
-
-        $alias = \array_shift($aliases);
-        foreach ($aliases as $a) {
-            $binder->bind($alias, $a);
-            $alias = \array_shift($aliases);
+        $binders = [];
+        foreach ($scopes as $scope) {
+            $binders[] = $this->binder->getBinder($scope);
         }
 
-        $binder->bind($alias, $binding);
+        if ($binders === []) {
+            $binders[] = $this->binder;
+        }
+
+        foreach ($binders as $binder) {
+            $alias = \array_shift($aliases);
+            foreach ($aliases as $a) {
+                $binder->bind($alias, $a);
+                $alias = \array_shift($aliases);
+            }
+
+            $binder->bind($alias, $binding);
+        }
     }
 }

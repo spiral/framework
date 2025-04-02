@@ -22,6 +22,6 @@ final class BindMethodResolver extends AbstractResolver
             singleton: false,
         );
 
-        $this->bind($aliases, $closure, $this->getScope($method));
+        $this->bind($aliases, $closure, $this->getScopes($method));
     }
 }
