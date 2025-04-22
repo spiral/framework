@@ -72,7 +72,7 @@ abstract class AbstractTracer implements TracerInterface
         } finally {
             $prevSpan === null
                 ? $binder->removeBinding(SpanInterface::class)
-                : $binder->bindSingleton(SpanInterface::class, $prevSpan);
+                : $binder->bindSingleton(SpanInterface::class, $prevSpan, true);
         }
     }
 }
