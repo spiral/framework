@@ -70,6 +70,7 @@ abstract class AbstractTracer implements TracerInterface
                 )
                 : $invoker->invoke($callback);
         } finally {
+            /** @psalm-suppress TooManyArguments */
             $prevSpan === null
                 ? $binder->removeBinding(SpanInterface::class)
                 : $binder->bindSingleton(SpanInterface::class, $prevSpan, true);
