@@ -14,6 +14,10 @@ final class Dependency
 
     private function __construct() {}
 
+    /**
+     * @param non-empty-string $name
+     * @param non-empty-string $type
+     */
     public static function create(string $name, string $type): Dependency
     {
         $dependency = new self();

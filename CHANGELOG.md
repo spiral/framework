@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- **Bug Fixes**
+- [spiral/telemetry] Fixed `SpanInterface` singleton rebinding
+- [spiral/prototype] Fixed working of Prototype in container scopes
+
 ## 3.15.7 - 2025-03-31
 
 - **Bug Fixes**
