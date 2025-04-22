@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## 3.15.8 - 2025-04-22
+
+- **Bug Fixes**
+  - [spiral/telemetry] Fixed `SpanInterface` singleton rebinding
+  - [spiral/prototype] Fixed working of Prototype in container scopes
+
+## 3.15.7 - 2025-03-31
+
+- **Bug Fixes**
+  - [spiral/core] Fixed proxy class generator failure when the proxied interface contains static return type
+  - [spiral/core] Added resolving trace to Resolver exceptions
+
+## 3.15.6 - 2025-03-29
+
+- **Bug Fixes**
+  - [spiral/core] Invoker::invoke() does not try to instantiate class to call a static function.
+  - [spiral/core] Reworked resolving traces in container exceptions
+
+## 3.15.5 - 2025-03-12
+
+- **Bug Fixes**
+  - [spiral/router] Fix issue when group prefix is not applied to routes
+
+## 3.15.4 - 2025-02-17
+
+- **Bug Fixes**
+  - [spiral/telemetry] Removed ID from a Queue consumed job span
+    It allows proper grouping of traces by job name
+
 ## 3.15.3 - 2025-02-11
 
 - **Bug Fixes**

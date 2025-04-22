@@ -6,6 +6,7 @@ namespace Spiral\Prototype;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Attribute\Singleton;
 
 /**
@@ -14,15 +15,19 @@ use Spiral\Core\Attribute\Singleton;
 #[Singleton]
 final class PrototypeRegistry
 {
-    /** @var Dependency[] */
+    /** @var array<non-empty-string, Dependency> */
     private array $dependencies = [];
 
     public function __construct(
+        #[Proxy]
         private readonly ContainerInterface $container,
     ) {}
 
     /**
      * Assign class to prototype property.
+     *
+     * @param non-empty-string $property
+     * @param non-empty-string $type
      */
     public function bindProperty(string $property, string $type): void
     {
@@ -30,7 +35,7 @@ final class PrototypeRegistry
     }
 
     /**
-     * @return Dependency[]
+     * @return array<non-empty-string, Dependency>
      */
     public function getPropertyBindings(): array
     {
@@ -39,6 +44,8 @@ final class PrototypeRegistry
 
     /**
      * Resolves the name of prototype dependency into target class name.
+     *
+     * @param non-empty-string $name
      */
     public function resolveProperty(string $name): Dependency|ContainerExceptionInterface|null
     {
