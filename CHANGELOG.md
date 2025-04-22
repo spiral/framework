@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 3.15.8 - 2025-04-22
 
 - **Bug Fixes**
 - [spiral/telemetry] Fixed `SpanInterface` singleton rebinding

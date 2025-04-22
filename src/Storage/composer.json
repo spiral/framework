@@ -26,7 +26,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/distribution": "^3.15.7",
+        "spiral/distribution": "^3.15.8",
         "league/flysystem": "^2.3.1 || ^3.0"
     },
     "autoload": {
@@ -35,7 +35,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.15.7",
+        "spiral/boot": "^3.15.8",
         "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0",
         "jetbrains/phpstorm-attributes": "^1.2",

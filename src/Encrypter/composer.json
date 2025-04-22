@@ -35,7 +35,7 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "spiral/core": "^3.15.7",
+        "spiral/core": "^3.15.8",
         "defuse/php-encryption": "^2.2"
     },
     "require-dev": {
