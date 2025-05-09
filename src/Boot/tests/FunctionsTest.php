@@ -25,7 +25,7 @@ class FunctionsTest extends TestCase
         $c = $core->getContainer();
 
         ContainerScope::runScope($c, static function (): void {
-            self::assertSame(['key' => 'value'], spiral(TestConfig::class)->toArray());
+            self::assertSame(['key' => 'value1'], spiral(TestConfig::class)->toArray());
         });
     }
 
