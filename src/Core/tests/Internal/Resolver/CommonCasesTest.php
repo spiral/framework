@@ -68,10 +68,8 @@ final class CommonCasesTest extends BaseTestCase
 
     public function testNotInstantiableTrait(): void
     {
-        $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage(
-            'Can\'t resolve `Spiral\Tests\Core\Stub\TestTrait`: undefined class or binding `Spiral\Tests\Core\Stub\TestTrait`.',
-        );
+        self::expectException(ContainerException::class);
+        self::expectExceptionMessage("Can't autowire `Spiral\Tests\Core\Stub\TestTrait`: class or injector not found.");
 
         $this->resolveClosure(
             static function (TestTrait $enum): void {},

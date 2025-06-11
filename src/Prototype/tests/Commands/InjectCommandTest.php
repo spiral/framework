@@ -82,7 +82,7 @@ class InjectCommandTest extends AbstractCommandsTestCase
 
         $result = $out->fetch();
 
-        self::assertStringContainsString('Can\'t resolve', $result);
+        self::assertStringContainsString('Can\'t autowire', $result);
         self::assertStringContainsString('Invalid', $result);
     }
 
