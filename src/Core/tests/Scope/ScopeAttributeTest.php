@@ -7,7 +7,6 @@ namespace Spiral\Tests\Core\Scope;
 use PHPUnit\Framework\Attributes\Group;
 use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Container;
-use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Scope\BadScopeException;
 use Spiral\Core\Exception\Scope\NamedScopeDuplicationException;
 use Spiral\Tests\Core\Scope\Stub\AttrScopeFoo;

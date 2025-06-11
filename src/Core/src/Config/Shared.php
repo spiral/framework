@@ -14,11 +14,6 @@ final class Shared extends Binding
         public readonly bool $singleton = false,
     ) {}
 
-    public function __toString(): string
-    {
-        return 'Shared object of class ' . $this->value::class;
-    }
-
     /**
      * @return class-string
      * @internal
@@ -26,5 +21,10 @@ final class Shared extends Binding
     public function getReturnClass(): string
     {
         return $this->value::class;
+    }
+
+    public function __toString(): string
+    {
+        return 'Shared object of class ' . $this->value::class;
     }
 }

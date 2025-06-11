@@ -6,7 +6,7 @@ namespace Spiral\Boot\Attribute;
 
 /**
  * Abstract base class for method attributes used in bootloaders.
- * 
+ *
  * This abstract class serves as a base for all method-level attributes in the bootloader system,
  * providing common functionality for managing binding aliases.
  *

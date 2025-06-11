@@ -6,12 +6,12 @@ namespace Spiral\Boot\Attribute;
 
 /**
  * Attribute for marking methods that provide container bindings.
- * 
+ *
  * Methods marked with this attribute will be invoked each time the container
  * needs to resolve the dependency, creating a new instance each time.
  * The return value of the method will be bound to the specified alias
  * or to all interfaces/classes in the return type.
- * 
+ *
  * Example usage:
  * ```php
  * class MyBootloader extends Bootloader
@@ -22,7 +22,7 @@ namespace Spiral\Boot\Attribute;
  *     {
  *         return new HttpClient();
  *     }
- *     
+ *
  *     // Method will be called each time the container resolves DbFactory
  *     // instead of its return type (DatabaseFactory)
  *     #[BindMethod(alias: DbFactory::class)]
@@ -30,7 +30,7 @@ namespace Spiral\Boot\Attribute;
  *     {
  *         return new DatabaseFactory();
  *     }
- *     
+ *
  *     // Method will be called each time the container resolves either
  *     // LogManagerInterface or its return type (LogManager)
  *     #[BindMethod(alias: LogManagerInterface::class, aliasesFromReturnType: true)]
@@ -40,10 +40,10 @@ namespace Spiral\Boot\Attribute;
  *     }
  * }
  * ```
- * 
+ *
  * This attribute is similar to defining bindings via the `defineBindings()` method,
  * but with a more expressive and type-safe approach.
- * 
+ *
  * @see SingletonMethod For binding singleton instances
  * @see InjectorMethod For binding injector methods
  */

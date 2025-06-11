@@ -20,7 +20,6 @@ use Spiral\Core\Exception\Container\NotCallableException;
 use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Container\RecursiveProxyException;
 use Spiral\Core\Exception\Container\TracedContainerException;
-use Spiral\Core\Exception\Resolver\ValidationException;
 use Spiral\Core\Exception\Resolver\WrongTypeException;
 use Spiral\Core\Exception\Scope\BadScopeException;
 use Spiral\Core\FactoryInterface;
@@ -226,7 +225,7 @@ final class Actor
             /** @var array<class-string<InjectorInterface>, \ReflectionMethod|false> $cache reflection for extended injectors */
             static $cache = [];
             $extended = $cache[$injectorInstance::class] ??= (
-            static fn(\ReflectionType $type): bool =>
+                static fn(\ReflectionType $type): bool =>
                 $type::class === \ReflectionUnionType::class || (string) $type === 'mixed'
             )(
                 ($refMethod = new \ReflectionMethod($injectorInstance, 'createInjection'))
@@ -549,7 +548,9 @@ final class Actor
                     \sprintf(
                         "Can't resolve `%s`.",
                         $tracer->getRootAlias(),
-                    ), $tracer->getTraces(), $e
+                    ),
+                    $tracer->getTraces(),
+                    $e,
                 );
             } finally {
                 $tracer->pop($newScope);
@@ -604,7 +605,7 @@ final class Actor
      */
     private function isSingleton(Ctx $ctx): bool
     {
-        if (is_bool($ctx->singleton)) {
+        if (\is_bool($ctx->singleton)) {
             return $ctx->singleton;
         }
 

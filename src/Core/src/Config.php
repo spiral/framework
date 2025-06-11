@@ -14,7 +14,6 @@ use Spiral\Core\Internal\Invoker;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
-use Spiral\Core\Internal\Tracer;
 
 /**
  * Container configuration that will be used not only in the root container but also in all child containers.
@@ -32,8 +31,8 @@ class Config implements \IteratorAggregate
     public readonly string $scope;
 
     public readonly Internal\Config\StateStorage $scopedBindings;
-    private bool $rootLocked = true;
     public readonly string $actor;
+    private bool $rootLocked = true;
 
     /**
      * @param class-string<State> $state

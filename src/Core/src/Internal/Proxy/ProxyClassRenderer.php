@@ -195,7 +195,7 @@ final class ProxyClassRenderer
 
     public static function normalizeClassType(\ReflectionNamedType $type, \ReflectionClass $class): string
     {
-        return match($type->getName()) {
+        return match ($type->getName()) {
             'static' => 'static',
             'self' => '\\' . $class->getName(),
             default => '\\' . $type->getName(),
