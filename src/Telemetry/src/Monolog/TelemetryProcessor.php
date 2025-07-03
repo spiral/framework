@@ -7,7 +7,6 @@ namespace Spiral\Telemetry\Monolog;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 use Psr\Container\ContainerInterface;
-use Spiral\Core\Attribute\Proxy;
 use Spiral\Telemetry\TracerInterface;
 
 final class TelemetryProcessor implements ProcessorInterface

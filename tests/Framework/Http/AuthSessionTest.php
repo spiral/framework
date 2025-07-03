@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
 use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;

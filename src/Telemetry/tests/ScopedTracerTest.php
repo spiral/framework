@@ -29,7 +29,7 @@ final class ScopedTracerTest extends TestCase
         $result = $tracer->trace(
             'foo',
             static fn(ContainerInterface $container): TracerInterface => $container
-                ->get(TracerInterface::class)
+                ->get(TracerInterface::class),
         );
 
         self::assertTrue(Proxy::isProxy($tracer));
@@ -62,7 +62,7 @@ final class ScopedTracerTest extends TestCase
                             ->get(SpanInterface::class),
                         ['baz' => 42],
                     ),
-                    $container->get(SpanInterface::class)
+                    $container->get(SpanInterface::class),
                 ];
             },
             ['foo' => 'bar'],
