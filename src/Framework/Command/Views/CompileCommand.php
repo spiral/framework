@@ -133,7 +133,7 @@ final class CompileCommand extends Command
         $this->sprintf(
             " %s[%s ms]%s\n",
             Color::GRAY,
-            \number_format((\microtime(true) - $start) * 1000),
+            \number_format((\microtime(true) - $start) * 1000.0),
             Color::RESET,
         );
     }

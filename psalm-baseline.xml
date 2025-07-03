@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.10.1@f9fd6bc117e9ce1e854c2ed6777e7135aaa4966b">
+  <file src="src/Core/src/Internal/Actor.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$actor->registerInstance($ctx, $instance)]]></code>
+    </InvalidReturnStatement>
+    <NoValue>
+      <code><![CDATA[$injector]]></code>
+      <code><![CDATA[$singleton]]></code>
+    </NoValue>
+    <TooManyArguments>
+      <code><![CDATA[make]]></code>
+    </TooManyArguments>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[Attribute\Scope]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Filters/src/Attribute/Input/AbstractInput.php">
+    <UndefinedThisPropertyFetch>
+      <code><![CDATA[$this->key]]></code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Queue/src/RetryPolicy.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->delay * $this->multiplier ** $attempts]]></code>
+      <code><![CDATA[$this->multiplier ** $attempts]]></code>
+    </InvalidOperand>
+  </file>
+</files>

@@ -195,7 +195,11 @@ final class ProxyClassRenderer
 
     public static function normalizeClassType(\ReflectionNamedType $type, \ReflectionClass $class): string
     {
-        return '\\' . ($type->getName() === 'self' ? $class->getName() : $type->getName());
+        return match($type->getName()) {
+            'static' => 'static',
+            'self' => '\\' . $class->getName(),
+            default => '\\' . $type->getName(),
+        };
     }
 
     private static function cutDefaultValue(\ReflectionParameter $param): string

@@ -28,6 +28,7 @@ final class DeprecationProxy extends Proxy
 
     /**
      * @return class-string
+     * @deprecated
      */
     public function getInterface(): string
     {

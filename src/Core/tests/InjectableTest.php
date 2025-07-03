@@ -12,6 +12,7 @@ use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\AutowireException;
 use Spiral\Core\Exception\Container\InjectionException;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Tests\Core\Fixtures\ExtendedContextInjector;
 use Spiral\Tests\Core\Fixtures\InjectableClassChildImplementation;
 use Spiral\Tests\Core\Fixtures\InjectableClassChildInterface;
@@ -34,7 +35,10 @@ class InjectableTest extends TestCase
     public function testMissingInjector(): void
     {
         $this->expectExceptionMessage(
-            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `Spiral\Core\ConfigsInterface`.",
+            "Spiral\Core\Exception\Container\NotFoundException: Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`.",
+        );
+        $this->expectExceptionMessage(
+            "Can't autowire `Spiral\Core\ConfigsInterface`: class or injector not found.",
         );
         $this->expectException(AutowireException::class);
 
@@ -57,10 +61,9 @@ class InjectableTest extends TestCase
 
     public function testInvalidInjectorBinding(): void
     {
-        $this->expectException(AutowireException::class);
-        $this->expectExceptionMessage(
-            "Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`: undefined class or binding `invalid-injector`.",
-        );
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage("Can't resolve `Spiral\Tests\Core\Fixtures\TestConfig`.");
+        $this->expectExceptionMessage("Can't autowire `invalid-injector`: class or injector not found.");
 
         $container = new Container();
 

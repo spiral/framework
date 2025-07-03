@@ -177,6 +177,16 @@ class SingletonsTest extends TestCase
         self::assertSame($first, $second);
     }
 
+    public function testAutowireWithAttribute(): void
+    {
+        $container = new Container();
+        $container->bind(DeclarativeSingleton::class, new Container\Autowire(DeclarativeSingleton::class));
+        $first = $container->get(DeclarativeSingleton::class);
+        $second = $container->get(DeclarativeSingleton::class);
+
+        self::assertSame($first, $second);
+    }
+
     public function testHasShouldReturnTrueWhenSingletonIsAlreadyConstructed(): void
     {
         $container = new Container();

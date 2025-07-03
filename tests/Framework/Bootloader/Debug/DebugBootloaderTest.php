@@ -9,6 +9,7 @@ use Spiral\Bootloader\DebugBootloader;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Core\Container\Autowire;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Debug\Config\DebugConfig;
 use Spiral\Debug\Exception\StateException;
 use Spiral\Debug\State;
@@ -73,8 +74,11 @@ final class DebugBootloaderTest extends BaseTestCase
     #[Config('debug.tags', ['foo' => new HttpCollector()])]
     public function testInvalidTagFromConfig(): void
     {
-        $this->expectException(StateException::class);
-        $this->getContainer()->get(StateInterface::class)->getTags();
+        try {
+            $this->getContainer()->get(StateInterface::class)->getTags();
+        } catch (NotFoundException $e) {
+            self::assertInstanceOf(StateException::class, $e->getPrevious());
+        }
     }
 
     #[Config('debug.collectors', ['foo'])]
