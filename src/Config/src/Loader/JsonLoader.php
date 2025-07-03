@@ -6,6 +6,9 @@ namespace Spiral\Config\Loader;
 
 use Spiral\Config\Exception\LoaderException;
 
+/**
+ * @internal
+ */
 final class JsonLoader implements FileLoaderInterface
 {
     public function loadFile(string $section, string $filename): array
