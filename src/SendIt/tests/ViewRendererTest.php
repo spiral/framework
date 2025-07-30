@@ -22,6 +22,8 @@ use Symfony\Component\Stopwatch\Stopwatch;
 final class ViewRendererTest extends TestCase
 {
     /**
+     * Checking for event hits and processing by listeners without changing the original $message
+     *
      * @covers ::render
      */
     public function testRender(): void
@@ -59,8 +61,9 @@ final class ViewRendererTest extends TestCase
         self::assertSame('subject has not been changed', $message->getSubject());
     }
 
-
     /**
+     * Health check when EventDispatcher = null.
+     *
      * @covers ::render
      */
     public function testRenderWithoutDispatcher(): void
