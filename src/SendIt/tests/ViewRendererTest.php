@@ -23,7 +23,7 @@ final class ViewRendererTest extends TestCase
     /**
      * @covers ::render
      */
-    public function testRenderCheckCustomHeaders(): void
+    public function testRender(): void
     {
         $view = $this->createMock(ViewInterface::class);
         $view->expects(self::once())->method('render');
