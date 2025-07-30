@@ -7,6 +7,10 @@ namespace Spiral\Config\Loader;
 use Spiral\Config\Exception\LoaderException;
 use Spiral\Config\LoaderInterface;
 
+/**
+ * @internal
+ * @deprecated Use {@see SingleFileStrategyLoader} instead. Will be removed in 4.0.
+ */
 final class DirectoryLoader implements LoaderInterface
 {
     private readonly string $directory;
