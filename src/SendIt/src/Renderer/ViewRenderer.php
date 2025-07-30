@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt\Renderer;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Mailer\Exception\MailerException;
 use Spiral\Mailer\MessageInterface;
+use Spiral\SendIt\Event\PostRender;
+use Spiral\SendIt\Event\PreRender;
 use Spiral\SendIt\RendererInterface;
 use Spiral\Views\Exception\ViewException;
 use Spiral\Views\ViewsInterface;
@@ -15,6 +18,7 @@ final class ViewRenderer implements RendererInterface
 {
     public function __construct(
         private readonly ViewsInterface $views,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null,
     ) {}
 
     /**
@@ -51,23 +55,26 @@ final class ViewRenderer implements RendererInterface
             );
         }
 
-        $msg = new Email();
+        $email = new Email();
 
         if ($message->getFrom() !== null) {
-            $msg->from($message->getFrom());
+            $email->from($message->getFrom());
         }
 
         if ($message->getReplyTo() !== null) {
-            $msg->replyTo($message->getReplyTo());
+            $email->replyTo($message->getReplyTo());
         }
 
-        $msg->to(...$message->getTo());
-        $msg->cc(...$message->getCC());
-        $msg->bcc(...$message->getBCC());
+        $email->to(...$message->getTo());
+        $email->cc(...$message->getCC());
+        $email->bcc(...$message->getBCC());
 
         try {
+            $cloneMessage = clone $message;
+            $this->eventDispatcher?->dispatch(new PreRender(message: $cloneMessage, email: $email));
             // render message partials
-            $view->render(\array_merge(['_msg_' => $msg], $message->getData()));
+            $view->render(\array_merge(['_msg_' => $email], $cloneMessage->getData()));
+            $this->eventDispatcher?->dispatch(new PostRender(message: $cloneMessage, email: $email));
         } catch (ViewException $e) {
             throw new MailerException(
                 \sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),
@@ -76,6 +83,6 @@ final class ViewRenderer implements RendererInterface
             );
         }
 
-        return $msg;
+        return $email;
     }
 }
