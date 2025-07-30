@@ -61,6 +61,10 @@ final class ViewRenderer implements RendererInterface
             $email->from($message->getFrom());
         }
 
+        if ($message->getReplyTo() !== null) {
+            $email->replyTo($message->getReplyTo());
+        }
+
         $email->to(...$message->getTo());
         $email->cc(...$message->getCC());
         $email->bcc(...$message->getBCC());
