@@ -18,7 +18,7 @@ final class ViewRenderer implements RendererInterface
 {
     public function __construct(
         private readonly ViewsInterface $views,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null,
     ) {}
 
     /**
@@ -67,10 +67,10 @@ final class ViewRenderer implements RendererInterface
 
         try {
             $cloneMessage = clone $message;
-            $this->eventDispatcher->dispatch(new PreRender(message: $cloneMessage, email: $email));
+            $this->eventDispatcher?->dispatch(new PreRender(message: $cloneMessage, email: $email));
             // render message partials
             $view->render(\array_merge(['_msg_' => $email], $cloneMessage->getData()));
-            $this->eventDispatcher->dispatch(new PostRender(message: $cloneMessage, email: $email));
+            $this->eventDispatcher?->dispatch(new PostRender(message: $cloneMessage, email: $email));
         } catch (ViewException $e) {
             throw new MailerException(
                 \sprintf('Unable to render email `%s`: %s', $message->getSubject(), $e->getMessage()),

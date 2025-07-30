@@ -57,4 +57,22 @@ final class ViewRendererTest extends TestCase
         self::assertCount(2, $eventDispatcher->getCalledListeners());
         self::assertSame('subject has not been changed', $message->getSubject());
     }
+
+
+    /**
+     * @covers ::render
+     */
+    public function testRenderWithoutDispatcher(): void
+    {
+        $view = $this->createMock(ViewInterface::class);
+        $view->expects(self::once())->method('render');
+
+        $views = $this->createMock(ViewsInterface::class);
+        $views->expects(self::once())->method('get')->willReturn($view);
+
+        $message = new Message('subject has not been changed', 'to@mail.test');
+
+        $target = new ViewRenderer($views);
+        $target->render($message);
+    }
 }
