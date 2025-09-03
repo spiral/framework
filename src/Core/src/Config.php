@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use IteratorAggregate;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Internal\Binder;
 use Spiral\Core\Internal\Container;
@@ -20,7 +19,7 @@ use Spiral\Core\Internal\State;
  * The {@see self::$scopedBindings} property is internal and common for all containers.
  * By the reason you can access to bindings for any scope from any container.
  *
- * @implements IteratorAggregate<
+ * @implements \IteratorAggregate<
  *     non-empty-string,
  *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>|class-string<Actor>|class-string<Scope>
  * >

@@ -64,7 +64,7 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
 
     protected function setUp(): void
     {
-        $this->beforeBooting(function (TokenizerListenerBootloader $bootloader): void {
+        $this->beforeBooting(static function (TokenizerListenerBootloader $bootloader): void {
             $bootloader->addListener(
                 new class($this->classes, $this->finalized) implements TokenizationListenerInterface {
                     public function __construct(
