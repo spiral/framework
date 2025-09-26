@@ -44,6 +44,7 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
+        "symfony/stopwatch": "^6",
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
         "spiral/boot": "^3.16",
