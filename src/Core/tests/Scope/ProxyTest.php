@@ -376,6 +376,74 @@ final class ProxyTest extends BaseTestCase
         self::assertSame('Foo', $name);
     }
 
+    public function testHasAliasOutOfScopeWithoutFallback(): void
+    {
+        $root = new Container();
+        $root->bind('foo', new ProxyConfig(
+            interface: UserInterface::class,
+        ));
+
+        $result = $root->runScope(
+            new Scope(),
+            static fn(ContainerInterface $c): bool => $c->has('foo'),
+        );
+
+
+        self::assertFalse($result);
+    }
+
+    public function testHasOutOfScopeWithoutFallback(): void
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new ProxyConfig(
+            interface: UserInterface::class,
+        ));
+
+        $result = $root->runScope(
+            new Scope(),
+            static fn(ContainerInterface $c): bool => $c->has(UserInterface::class),
+        );
+
+
+        self::assertFalse($result);
+    }
+
+    public function testHasOutOfScopeWithFallback(): void
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new ProxyConfig(
+            interface: UserInterface::class,
+            fallbackFactory: static fn(): UserInterface => new User('Foo'),
+        ));
+
+        $result = $root->runScope(
+            new Scope(),
+            static fn(ContainerInterface $c): bool => $c->has(UserInterface::class),
+        );
+
+
+        self::assertTrue($result);
+    }
+
+    public function testHasOutOfScopeWithFallbackException(): void
+    {
+        $root = new Container();
+        $root->bind(UserInterface::class, new ProxyConfig(
+            interface: UserInterface::class,
+            fallbackFactory: static function (): never {
+                throw new \RuntimeException('Nope');
+            },
+        ));
+
+        $result = $root->runScope(
+            new Scope(),
+            static fn(ContainerInterface $c): bool => $c->has(UserInterface::class),
+        );
+
+
+        self::assertFalse($result);
+    }
+
     /*
     // Proxy::$attachContainer=true tests
 
