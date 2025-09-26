@@ -408,4 +408,15 @@ final class UseCaseTest extends BaseTestCase
             });
         });
     }
+
+    public function testHasBindingInParent(): void
+    {
+        $root = new Container();
+        $root->bind('abc', static fn(): string => 'hello');
+
+        $result = $root->runScope(new Scope('foo'), static fn(Container $c): bool => $c->hasBinding('abc'));
+
+        self::assertTrue($root->hasBinding('abc'));
+        self::assertTrue($result);
+    }
 }
