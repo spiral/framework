@@ -142,6 +142,11 @@ class StateBinder implements BinderInterface
         return false;
     }
 
+    public function hasBinding(string $alias): bool
+    {
+        return \array_key_exists($alias, $this->state->bindings);
+    }
+
     private function makeConfig(mixed $resolver, bool $singleton): Binding
     {
         return match (true) {

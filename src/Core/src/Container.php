@@ -269,6 +269,14 @@ final class Container implements
         return $this->binder->hasInstance($alias);
     }
 
+    /**
+     * Check if the alias has is bound.
+     */
+    public function hasBinding(string $alias): bool
+    {
+        return $this->binder->hasBinding($alias);
+    }
+
     public function removeBinding(string $alias): void
     {
         $this->binder->removeBinding($alias);
