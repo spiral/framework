@@ -43,6 +43,11 @@ final class Binder extends StateBinder
         return parent::hasInstance($alias);
     }
 
+    public function hasBinding(string $alias): bool
+    {
+        return parent::hasBinding($alias) || ($this->scope->getParent()?->hasBinding($alias) ?? false);
+    }
+
     public function destruct(): void
     {
         unset($this->container);

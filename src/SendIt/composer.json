@@ -44,11 +44,12 @@
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
+        "symfony/stopwatch": "^6",
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
         "spiral/boot": "^3.16",
         "spiral/stempler-bridge": "^3.16",
-        "spiral/testing": "^2.8.3",
+        "spiral/testing": "^2.12",
         "vimeo/psalm": "^6.0"
     },
     "autoload": {

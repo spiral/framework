@@ -52,10 +52,12 @@ final class HttpBootloader extends Bootloader
             RequestInterface::class,
             new \Spiral\Core\Config\Proxy(
                 interface: RequestInterface::class,
-                fallbackFactory: static fn(ContainerInterface $c) => throw new ScopeException(
-                    'Unable to receive current Server Request. '
-                    . 'Try to define the service in the `http` scope or use the Poxy attribute.',
-                ),
+                fallbackFactory: static function (): never {
+                    throw new ScopeException(
+                        'Unable to receive current Server Request. '
+                        . 'Try to define the service in the `http` scope or use the Poxy attribute.',
+                    );
+                },
             ),
         );
 

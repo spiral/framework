@@ -12,7 +12,8 @@ use Spiral\Interceptors\PipelineBuilderInterface;
 /**
  * Accepts {@see InterceptorInterface} and {@see CoreInterface} instances to build a pipeline.
  *
- * @deprecated Use {@see PipelineBuilder} instead.
+ * @note The Pipeline Builder is used for compatible use of old and new interceptors.
+ *       If you don't use deprecated interceptors, consider using {@see PipelineBuilder} instead.
  */
 final class CompatiblePipelineBuilder implements PipelineBuilderInterface
 {
