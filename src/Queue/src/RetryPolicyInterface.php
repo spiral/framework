@@ -14,7 +14,7 @@ interface RetryPolicyInterface
     /**
      * @param int<0, max> $attempts
      *
-     * @return positive-int
+     * @return int<0, max> Delay in seconds
      */
     public function getDelay(int $attempts = 0): int;
 }
