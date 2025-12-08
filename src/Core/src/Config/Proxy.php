@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 class Proxy extends Binding
 {
     private readonly bool $hasFactory;
+
     /**
      * @template T
      * @param class-string<T> $interface
@@ -27,7 +28,7 @@ class Proxy extends Binding
             'Singleton proxies must not have a fallback factory.',
         );
         $this->hasFactory = $fallbackFactory !== null && (new \ReflectionFunction($fallbackFactory))
-                ->getReturnType()->__toString() !== 'never';
+            ->getReturnType()->__toString() !== 'never';
     }
 
     /**
