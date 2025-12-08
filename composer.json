@@ -148,7 +148,7 @@
         "spiral/testing": "^2.12",
         "spiral/validator": "^1.5.4",
         "symplify/monorepo-builder": "^10.3.3",
-        "symfony/stopwatch": "^6 || ^7",
+        "symfony/stopwatch": "^6.4.30 || ^7.4 || ^8.0",
         "vimeo/psalm": "^6.0"
     },
     "autoload-dev": {

@@ -36,7 +36,7 @@
         "php": ">=8.1",
         "spiral/exceptions": "^3.16",
         "spiral/files": "^3.16",
-        "symfony/finder": "^5.4.45 || ^6.4.17 || ^7.2"
+        "symfony/finder": "^6.4.30 || ^7.4 || ^8.0"
     },
     "require-dev": {
         "spiral/storage": "^3.16",

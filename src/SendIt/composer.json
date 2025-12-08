@@ -40,11 +40,11 @@
         "spiral/logger": "^3.16",
         "spiral/mailer": "^3.16",
         "spiral/views": "^3.16",
-        "symfony/mailer": "^5.4.45 || ^6.4.17 || ^7.2",
+        "symfony/mailer": "^6.4.30 || ^7.4 || ^8.0",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
-        "symfony/stopwatch": "^6",
+        "symfony/stopwatch": "^6.4.30 || ^7.4 || ^8.0",
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
         "spiral/boot": "^3.16",
