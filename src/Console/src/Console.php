@@ -137,7 +137,7 @@ final class Console
                 $command->setEventDispatcher($this->dispatcher);
             }
 
-            $this->application->add($command);
+            $this->application->addCommand($command);
         }
     }
 
