@@ -52,7 +52,7 @@ final class RetryPolicy implements RetryPolicyInterface
     /**
      * @param int<0, max> $attempts
      *
-     * @return positive-int
+     * @return int<0, max>
      */
     public function getDelay(int $attempts = 0): int
     {
