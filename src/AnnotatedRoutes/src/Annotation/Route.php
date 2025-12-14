@@ -32,11 +32,11 @@ final class Route
     public const DEFAULT_GROUP = 'web';
 
     /**
+     * @param array $middleware Route specific middleware set, if any
      * @psalm-param non-empty-string $route
      * @psalm-param non-empty-string|null $name
      * @psalm-param non-empty-string|array<string> $methods
      * @psalm-param non-empty-string $group Route group, groups can be configured using MiddlewareRegistry
-     * @param array $middleware Route specific middleware set, if any
      */
     public function __construct(
         public readonly string $route,

@@ -19,6 +19,19 @@ final class Tracer implements \Stringable
     private array $traces = [];
 
     /**
+     * @param Trace[][] $blocks
+     */
+    public static function renderTraceList(array $blocks): string
+    {
+        $result = [];
+        $i = 0;
+        foreach ($blocks as $block) {
+            \array_push($result, ...self::blockToStringList($block, $i++));
+        }
+        return \implode("\n", $result);
+    }
+
+    /**
      * @param string $header Message before stack list
      */
     public function combineTraceMessage(string $header): string
@@ -63,19 +76,6 @@ final class Tracer implements \Stringable
     public function __toString(): string
     {
         return $this->traces === [] ? '' : "Resolving trace:\n" . self::renderTraceList($this->traces);
-    }
-
-    /**
-     * @param Trace[][] $blocks
-     */
-    public static function renderTraceList(array $blocks): string
-    {
-        $result = [];
-        $i = 0;
-        foreach ($blocks as $block) {
-            \array_push($result, ...self::blockToStringList($block, $i++));
-        }
-        return \implode("\n", $result);
     }
 
     /**

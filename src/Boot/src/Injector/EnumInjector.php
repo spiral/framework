@@ -12,7 +12,7 @@ use Spiral\Core\InvokerInterface;
 use UnitEnum;
 
 /**
- * @implements InjectorInterface<UnitEnum>
+ * @implements InjectorInterface<\UnitEnum>
  *
  * @internal
  */

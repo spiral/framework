@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Prototype\ClassNode;
 
-use phpDocumentor\Reflection\Types\ClassString;
 use Spiral\Prototype\Utils;
 
 final class Type

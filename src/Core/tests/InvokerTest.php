@@ -17,8 +17,6 @@ use Spiral\Tests\Core\Fixtures\PrivateConstructor;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\Storage;
 
-use function PHPUnit\Framework\assertTrue;
-
 class InvokerTest extends TestCase
 {
     private Container $container;
@@ -113,9 +111,9 @@ class InvokerTest extends TestCase
 
         $result = $this->container->runScope(
             new Scope('foo'),
-            fn(ScopeInterface $c): mixed => $c->runScope(
+            static fn(ScopeInterface $c): mixed => $c->runScope(
                 new Scope('bar'),
-                fn(InvokerInterface $i): mixed => $i->invoke(['alias', 'publicMethod'], [42]),
+                static fn(InvokerInterface $i): mixed => $i->invoke(['alias', 'publicMethod'], [42]),
             ),
         );
 
@@ -128,7 +126,7 @@ class InvokerTest extends TestCase
      */
     public function testCallStaticMethodWithoutInstantiationWithFactory(): void
     {
-        $this->container->bind('foo', fn(): PrivateConstructor => throw new \Exception('Should not be called'));
+        $this->container->bind('foo', static fn(): PrivateConstructor => throw new \Exception('Should not be called'));
         $result = $this->container->invoke(['foo', 'publicMethod'], [42]);
 
         self::assertSame(42, $result);
@@ -140,7 +138,7 @@ class InvokerTest extends TestCase
     public function testCallStaticMethodWithoutInstantiationWithUntypedFactory(): void
     {
         // Note: do not add a return type to the closure
-        $this->container->bind('foo', fn() => throw new \Exception('Factory called'));
+        $this->container->bind('foo', static fn() => throw new \Exception('Factory called'));
 
         try {
             $this->container->invoke(['foo', 'publicMethod'], [42]);
@@ -157,7 +155,7 @@ class InvokerTest extends TestCase
      */
     public function testCallStaticMethodWithoutInstantiationWithOvertypedFactory(): void
     {
-        $this->container->bind('foo', fn(): PrivateConstructor|SampleClass => throw new \Exception('Factory called'));
+        $this->container->bind('foo', static fn(): PrivateConstructor|SampleClass => throw new \Exception('Factory called'));
 
         try {
             $this->container->invoke(['foo', 'publicMethod'], [42]);
@@ -174,7 +172,7 @@ class InvokerTest extends TestCase
      */
     public function testCallStaticMethodWithoutInstantiationWithNullableTypedFactory(): void
     {
-        $this->container->bind('foo', fn(): ?PrivateConstructor => throw new \Exception('Factory called'));
+        $this->container->bind('foo', static fn(): ?PrivateConstructor => throw new \Exception('Factory called'));
         try {
             $this->container->invoke(['foo', 'publicMethod'], [42]);
             self::fail('Exception should be thrown');
