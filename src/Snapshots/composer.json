@@ -34,12 +34,12 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/exceptions": "^3.16",
-        "spiral/files": "^3.16",
+        "spiral/exceptions": "^3.17",
+        "spiral/files": "^3.17",
         "symfony/finder": "^6.4.30 || ^7.4 || ^8.0"
     },
     "require-dev": {
-        "spiral/storage": "^3.16",
+        "spiral/storage": "^3.17",
         "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0"
     },
@@ -55,7 +55,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.16.x-dev"
+            "dev-master": "3.17.x-dev"
         }
     },
     "suggest": {

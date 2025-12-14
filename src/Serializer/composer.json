@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.16"
+        "spiral/core": "^3.17"
     },
     "autoload": {
         "psr-4": {
@@ -24,7 +24,7 @@
         }
     },
     "require-dev": {
-        "spiral/boot": "^3.16",
+        "spiral/boot": "^3.17",
         "google/protobuf": "^3.25|^4.29",
         "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0"
@@ -36,7 +36,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.16.x-dev"
+            "dev-master": "3.17.x-dev"
         }
     },
     "config": {
