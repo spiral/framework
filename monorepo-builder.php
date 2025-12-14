@@ -48,11 +48,11 @@ use Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateBranchAliasReleaseWorke
             ],
             [
                 'name'  => 'Pavel Butchnev (butschster)',
-                'email' => 'pavel.buchnev@spiralscout.com',
+                'homepage' => 'https://github.com/butschster',
             ],
             [
                 'name'  => 'Aleksei Gagarin (roxblnfk)',
-                'email' => 'alexey.gagarin@spiralscout.com',
+                'homepage' => 'https://github.com/roxblnfk',
             ],
             [
                 'name'  => 'Maksim Smakouz (msmakouz)',

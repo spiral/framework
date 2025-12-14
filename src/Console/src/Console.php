@@ -126,7 +126,7 @@ final class Console
     private function addCommands(iterable $commands): void
     {
         $interceptors = $this->config->getInterceptors();
-        $add = \method_exists($this, 'addCommand')
+        $add = \method_exists($this->application, 'addCommand')
             ? $this->application->addCommand(...)
             : $this->application->add(...);
 
