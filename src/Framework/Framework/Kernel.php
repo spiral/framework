@@ -67,7 +67,7 @@ abstract class Kernel extends AbstractKernel
     /**
      * Get list of defined application bootloaders
      *
-     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>|\Spiral\Boot\Attribute\BootloadConfig>
      *
      * @deprecated since v3.10 Use {@see defineBootloaders()} instead. Will be removed in v4.0
      */
