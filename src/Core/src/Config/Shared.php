@@ -18,4 +18,13 @@ final class Shared extends Binding
     {
         return 'Shared object of class ' . $this->value::class;
     }
+
+    /**
+     * @return class-string
+     * @internal
+     */
+    public function getReturnClass(): string
+    {
+        return $this->value::class;
+    }
 }

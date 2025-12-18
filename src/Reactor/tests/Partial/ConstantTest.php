@@ -47,12 +47,18 @@ final class ConstantTest extends TestCase
         self::assertNull($constant->getComment());
 
         $constant->setComment(['/** Line one */', '/** Line two */']);
-        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $constant->getComment()));
+        self::assertSame(
+            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
+            \preg_replace('/\s+/', '', $constant->getComment()),
+        );
 
         $constant->setComment(null);
         $constant->addComment('/** Line one */');
         $constant->addComment('/** Line two */');
-        self::assertSame(\preg_replace('/\s+/', '', '/** Line one *//** Line two */'), \preg_replace('/\s+/', '', $constant->getComment()));
+        self::assertSame(
+            \preg_replace('/\s+/', '', '/** Line one *//** Line two */'),
+            \preg_replace('/\s+/', '', $constant->getComment()),
+        );
     }
 
     public function testValue(): void
@@ -79,6 +85,16 @@ final class ConstantTest extends TestCase
 
         $constant->setFinal(true);
         self::assertTrue($constant->isFinal());
+    }
+
+    public function testType(): void
+    {
+        $constant = new Constant('TEST');
+
+        self::assertNull($constant->getType());
+
+        $constant->setType('null');
+        self::assertSame('null', $constant->getType());
     }
 
     public function testFromElement(): void

@@ -54,6 +54,7 @@ final class Container implements
     private BinderInterface|Internal\Binder $binder;
     private InvokerInterface|Internal\Invoker $invoker;
     private Internal\Scope $scope;
+    private Internal\Actor $actor;
 
     /**
      * Container constructor.
@@ -268,6 +269,14 @@ final class Container implements
         return $this->binder->hasInstance($alias);
     }
 
+    /**
+     * Check if the alias has is bound.
+     */
+    public function hasBinding(string $alias): bool
+    {
+        return $this->binder->hasBinding($alias);
+    }
+
     public function removeBinding(string $alias): void
     {
         $this->binder->removeBinding($alias);
@@ -392,7 +401,7 @@ final class Container implements
         $container = new self($this->config, $config->name, $this->options);
 
         // Configure scope
-        $container->scope->setParent($this, $this->scope, $this->factory);
+        $container->scope->setParent($this, $this->scope, $this->actor);
 
         // Add specific bindings
         foreach ($config->bindings as $alias => $resolver) {

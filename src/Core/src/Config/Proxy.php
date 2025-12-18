@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 
 class Proxy extends Binding
 {
+    private readonly bool $hasFactory;
     /**
      * @template T
      * @param class-string<T> $interface
@@ -25,14 +26,34 @@ class Proxy extends Binding
         $this->singleton and $this->fallbackFactory !== null and throw new \InvalidArgumentException(
             'Singleton proxies must not have a fallback factory.',
         );
+        $this->hasFactory = $fallbackFactory !== null && (new \ReflectionFunction($fallbackFactory))
+                ->getReturnType()->__toString() !== 'never';
     }
 
     /**
      * @return class-string
+     * @deprecated Use {@see getReturnClass()} instead.
      */
     public function getInterface(): string
     {
         return $this->interface;
+    }
+
+    /**
+     * @return class-string
+     * @internal
+     */
+    public function getReturnClass(): string
+    {
+        return $this->interface;
+    }
+
+    /**
+     * @return bool Returns {@see true} if the factory is presented, and it doesn't have the {@see never} type.
+     */
+    public function hasFactory(): bool
+    {
+        return $this->hasFactory;
     }
 
     public function __toString(): string

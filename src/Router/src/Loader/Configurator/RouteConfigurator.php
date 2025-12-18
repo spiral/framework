@@ -16,6 +16,16 @@ use Spiral\Router\Target\Group;
 use Spiral\Router\Target\Namespaced;
 use Spiral\Router\TargetInterface;
 
+/**
+ * @property-read HandlerInterface|CoreInterface|null $core
+ * @property-read null|string|callable|RequestHandlerInterface|TargetInterface $target
+ * @property-read array $defaults
+ * @property-read null|string $group
+ * @property-read array<MiddlewareInterface|non-empty-string> $middleware
+ * @property-read list<non-empty-string>|null $methods
+ * @property-read non-empty-string $pattern
+ * @property-read string $prefix
+ */
 final class RouteConfigurator
 {
     private array $defaults = [];
@@ -119,6 +129,9 @@ final class RouteConfigurator
         return $this;
     }
 
+    /**
+     * @param non-empty-string|list<non-empty-string> $methods
+     */
     public function methods(string|array $methods): self
     {
         $this->methods = (array) $methods;

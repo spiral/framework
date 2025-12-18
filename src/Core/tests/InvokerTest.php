@@ -7,10 +7,17 @@ namespace Spiral\Tests\Core;
 use PHPUnit\Framework\TestCase;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Container\NotCallableException;
+use Spiral\Core\Exception\Container\NotFoundException;
 use Spiral\Core\Exception\Resolver\ArgumentResolvingException;
+use Spiral\Core\InvokerInterface;
+use Spiral\Core\Scope;
+use Spiral\Core\ScopeInterface;
 use Spiral\Tests\Core\Fixtures\Bucket;
+use Spiral\Tests\Core\Fixtures\PrivateConstructor;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\Storage;
+
+use function PHPUnit\Framework\assertTrue;
 
 class InvokerTest extends TestCase
 {
@@ -72,6 +79,110 @@ class InvokerTest extends TestCase
         self::assertInstanceOf(SampleClass::class, $result['class']);
         self::assertSame('bar', $result['name']);
         self::assertSame('baz', $result['path']);
+    }
+
+    /**
+     * The Invoker must not instantiate the class when calling a static method.
+     * In this case, we don't make any bindings for the class.
+     */
+    public function testCallStaticMethodWithoutInstantiation(): void
+    {
+        $result = $this->container->invoke([PrivateConstructor::class, 'publicMethod'], [42]);
+
+        self::assertSame(42, $result);
+    }
+
+    /**
+     * The Invoker must not instantiate the class when calling a static method.
+     * In this case, we make alias bindings for the class.
+     */
+    public function testCallStaticMethodWithoutInstantiationAliased(): void
+    {
+        $this->container->bind('foo', PrivateConstructor::class);
+        $result = $this->container->invoke(['foo', 'publicMethod'], [42]);
+
+        self::assertSame(42, $result);
+    }
+
+    /**
+     * The Invoker must not instantiate the class when calling a static method and find the binding in all the scopes
+     */
+    public function testCallStaticMethodWithoutInstantiationAliasedScoped(): void
+    {
+        $this->container->bind('alias', PrivateConstructor::class);
+
+        $result = $this->container->runScope(
+            new Scope('foo'),
+            fn(ScopeInterface $c): mixed => $c->runScope(
+                new Scope('bar'),
+                fn(InvokerInterface $i): mixed => $i->invoke(['alias', 'publicMethod'], [42]),
+            ),
+        );
+
+        self::assertSame(42, $result);
+    }
+
+    /**
+     * The Invoker must not instantiate the class when calling a static method.
+     * In this case, we make a typed factory binding for the class.
+     */
+    public function testCallStaticMethodWithoutInstantiationWithFactory(): void
+    {
+        $this->container->bind('foo', fn(): PrivateConstructor => throw new \Exception('Should not be called'));
+        $result = $this->container->invoke(['foo', 'publicMethod'], [42]);
+
+        self::assertSame(42, $result);
+    }
+
+    /**
+     * The Invoker must instantiate the dependency if it cannot detect the return type.
+     */
+    public function testCallStaticMethodWithoutInstantiationWithUntypedFactory(): void
+    {
+        // Note: do not add a return type to the closure
+        $this->container->bind('foo', fn() => throw new \Exception('Factory called'));
+
+        try {
+            $this->container->invoke(['foo', 'publicMethod'], [42]);
+            self::fail('Exception should be thrown');
+        } catch (\Throwable $e) {
+            self::assertInstanceOf(NotFoundException::class, $e);
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('Factory called', $e->getPrevious()->getMessage());
+        }
+    }
+
+    /**
+     * The Invoker must instantiate the dependency if it cannot detect the return type.
+     */
+    public function testCallStaticMethodWithoutInstantiationWithOvertypedFactory(): void
+    {
+        $this->container->bind('foo', fn(): PrivateConstructor|SampleClass => throw new \Exception('Factory called'));
+
+        try {
+            $this->container->invoke(['foo', 'publicMethod'], [42]);
+            self::fail('Exception should be thrown');
+        } catch (\Throwable $e) {
+            self::assertInstanceOf(NotFoundException::class, $e);
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('Factory called', $e->getPrevious()->getMessage());
+        }
+    }
+
+    /**
+     * The Invoker must instantiate the dependency if it cannot detect the return type.
+     */
+    public function testCallStaticMethodWithoutInstantiationWithNullableTypedFactory(): void
+    {
+        $this->container->bind('foo', fn(): ?PrivateConstructor => throw new \Exception('Factory called'));
+        try {
+            $this->container->invoke(['foo', 'publicMethod'], [42]);
+            self::fail('Exception should be thrown');
+        } catch (\Throwable $e) {
+            self::assertInstanceOf(NotFoundException::class, $e);
+            self::assertNotNull($e->getPrevious());
+            self::assertStringContainsString('Factory called', $e->getPrevious()->getMessage());
+        }
     }
 
     public function testCallValidCallableStringWithNotResolvableDependencies(): void

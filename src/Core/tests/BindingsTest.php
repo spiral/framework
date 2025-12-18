@@ -15,6 +15,16 @@ use Spiral\Tests\Core\Fixtures\SampleClass;
 
 class BindingsTest extends TestCase
 {
+    public function testHasBinding(): void
+    {
+        $container = new Container();
+        self::assertFalse($container->hasBinding('abc'));
+
+        $container->bind('abc', static fn(): string => 'hello');
+
+        self::assertTrue($container->hasBinding('abc'));
+    }
+
     public function testStringBinding(): void
     {
         $container = new Container();

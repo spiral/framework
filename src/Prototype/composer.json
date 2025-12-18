@@ -21,11 +21,11 @@
         },
         {
             "name": "Pavel Butchnev (butschster)",
-            "email": "pavel.buchnev@spiralscout.com"
+            "homepage": "https://github.com/butschster"
         },
         {
             "name": "Aleksei Gagarin (roxblnfk)",
-            "email": "alexey.gagarin@spiralscout.com"
+            "homepage": "https://github.com/roxblnfk"
         },
         {
             "name": "Maksim Smakouz (msmakouz)",
@@ -38,8 +38,8 @@
         "nikic/php-parser": "^5.4",
         "doctrine/inflector": "^1.4|^2.0",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/config": "^3.16",
-        "spiral/reactor": "^3.16"
+        "spiral/config": "^3.17",
+        "spiral/reactor": "^3.17"
     },
     "autoload": {
         "psr-4": {
@@ -60,7 +60,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.16.x-dev"
+            "dev-master": "3.17.x-dev"
         }
     },
     "config": {

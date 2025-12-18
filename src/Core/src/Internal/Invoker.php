@@ -25,6 +25,7 @@ final class Invoker implements InvokerInterface
     private ContainerInterface $container;
     private ResolverInterface $resolver;
     private Options $options;
+    private Actor $actor;
 
     public function __construct(Registry $constructor)
     {
@@ -32,6 +33,7 @@ final class Invoker implements InvokerInterface
 
         $this->container = $constructor->get('container', ContainerInterface::class);
         $this->resolver = $constructor->get('resolver', ResolverInterface::class);
+        $this->actor = $constructor->get('actor', Actor::class);
         $this->options = $constructor->getOptions();
     }
 
@@ -41,23 +43,31 @@ final class Invoker implements InvokerInterface
     public function invoke(mixed $target, array $parameters = []): mixed
     {
         if (\is_array($target) && isset($target[1])) {
-            // In a form of resolver and method
-            [$resolver, $method] = $target;
+            // In a form of alias and method
+            [$alias, $method] = $target;
 
-            // Resolver instance (i.e. [ClassName::class, 'method'])
-            if (\is_string($resolver)) {
-                $resolver = $this->container->get($resolver);
+            // Resolver instance or class name if the method is static (i.e. [ClassName::class, 'method'])
+            if (\is_string($alias)) {
+                // Detect return type
+                $type = $this->actor->resolveType($alias, $binding, $singleton, $injector);
+
+                if ($singleton === null) {
+                    $type ??= $injector === null && $binding === null ? $alias : null;
+                    $alias = \is_callable([$type, $method]) ? $type : $this->container->get($alias);
+                } else {
+                    $alias = $singleton;
+                }
             }
 
             try {
-                $method = new \ReflectionMethod($resolver, $method);
+                $method = new \ReflectionMethod($alias, $method);
             } catch (\ReflectionException $e) {
                 throw new ContainerException($e->getMessage(), $e->getCode(), $e);
             }
 
             // Invoking factory method with resolved arguments
             return $method->invokeArgs(
-                $resolver,
+                $method->isStatic() ? null : $alias,
                 $this->resolver->resolveArguments($method, $parameters),
             );
         }

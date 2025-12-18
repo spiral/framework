@@ -24,11 +24,11 @@
         },
         {
             "name": "Pavel Butchnev (butschster)",
-            "email": "pavel.buchnev@spiralscout.com"
+            "homepage": "https://github.com/butschster"
         },
         {
             "name": "Aleksei Gagarin (roxblnfk)",
-            "email": "alexey.gagarin@spiralscout.com"
+            "homepage": "https://github.com/roxblnfk"
         },
         {
             "name": "Maksim Smakouz (msmakouz)",
@@ -37,13 +37,13 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/core": "^3.16",
+        "spiral/core": "^3.17",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5.41",
         "vimeo/psalm": "^6.0",
-        "spiral/testing": "^2.8.3"
+        "spiral/testing": "^2.12"
     },
     "autoload": {
         "psr-4": {
@@ -57,7 +57,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.16.x-dev"
+            "dev-master": "3.17.x-dev"
         }
     },
     "config": {

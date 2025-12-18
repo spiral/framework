@@ -21,11 +21,11 @@
         },
         {
             "name": "Pavel Butchnev (butschster)",
-            "email": "pavel.buchnev@spiralscout.com"
+            "homepage": "https://github.com/butschster"
         },
         {
             "name": "Aleksei Gagarin (roxblnfk)",
-            "email": "alexey.gagarin@spiralscout.com"
+            "homepage": "https://github.com/roxblnfk"
         },
         {
             "name": "Maksim Smakouz (msmakouz)",
@@ -37,7 +37,7 @@
         "monolog/monolog": "^2.9.2 || ^3.5"
     },
     "require-dev": {
-        "spiral/boot": "^3.16",
+        "spiral/boot": "^3.17",
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
         "vimeo/psalm": "^6.0"
@@ -54,7 +54,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.16.x-dev"
+            "dev-master": "3.17.x-dev"
         }
     },
     "config": {

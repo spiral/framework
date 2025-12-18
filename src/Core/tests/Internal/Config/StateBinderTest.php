@@ -76,4 +76,20 @@ final class StateBinderTest extends BaseTestCase
 
         $this->assertTrue($binder->hasInstance('bar'));
     }
+
+    public function testHasBindingWithoutBinding(): void
+    {
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+
+        $this->assertFalse($binder->hasBinding('bar'));
+    }
+
+    public function testHasBindingWithBinding(): void
+    {
+        $binder = $this->constructor->get('binder', BinderInterface::class);
+
+        $this->bindSingleton('bar', 'foo');
+
+        $this->assertTrue($binder->hasBinding('bar'));
+    }
 }

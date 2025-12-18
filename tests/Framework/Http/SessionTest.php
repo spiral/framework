@@ -112,7 +112,7 @@ final class SessionTest extends HttpTestCase
         try {
             $this->fakeHttp()->get(uri: '/')->assertOk();
         } catch (\Psr\Container\NotFoundExceptionInterface $e) {
-            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e->getPrevious());
+            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e);
         }
     }
 

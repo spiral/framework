@@ -17,7 +17,7 @@ use Spiral\Core\Container\InjectorInterface;
 final class State
 {
     /**
-     * @var array<string, Binding>
+     * @var array<non-empty-string, Binding>
      */
     public array $bindings = [];
 

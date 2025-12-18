@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Http;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Auth\AuthContextInterface;
 use Spiral\Bootloader\Http\Exception\ContextualObjectNotFoundException;
 use Spiral\Bootloader\Http\Exception\InvalidRequestScopeException;
@@ -82,7 +80,7 @@ final class AuthSessionTest extends HttpTestCase
         try {
             $this->fakeHttp()->get('/');
         } catch (\Psr\Container\NotFoundExceptionInterface $e) {
-            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e->getPrevious());
+            self::assertInstanceOf(ContextualObjectNotFoundException::class, $e);
         }
     }
 

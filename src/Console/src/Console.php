@@ -126,6 +126,9 @@ final class Console
     private function addCommands(iterable $commands): void
     {
         $interceptors = $this->config->getInterceptors();
+        $add = \method_exists($this->application, 'addCommand')
+            ? $this->application->addCommand(...)
+            : $this->application->add(...);
 
         foreach ($commands as $command) {
             if ($command instanceof Command) {
@@ -137,7 +140,7 @@ final class Console
                 $command->setEventDispatcher($this->dispatcher);
             }
 
-            $this->application->add($command);
+            $add($command);
         }
     }
 
@@ -163,7 +166,7 @@ final class Console
                 $inputStream = $input->getStream();
             }
 
-            if ($inputStream !== null && !@posix_isatty($inputStream) && \getenv('SHELL_INTERACTIVE') === false) {
+            if ($inputStream !== null && !@\posix_isatty($inputStream) && \getenv('SHELL_INTERACTIVE') === false) {
                 $input->setInteractive(false);
             }
         }
