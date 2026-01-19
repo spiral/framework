@@ -26,7 +26,7 @@ abstract class TestCase extends BaseTestCase
 
     public function defineDirectories(string $root): array
     {
-        return \array_merge(['app' => $root . '/App'], parent::defineDirectories($root));
+        return \array_merge(parent::defineDirectories($root), ['app' => $root . '/App']);
     }
 
     protected function tearDown(): void

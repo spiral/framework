@@ -12,8 +12,7 @@ final class QueueableDetector
     public function __construct(private readonly ReaderInterface $reader) {}
 
     /**
-     * @param mixed $object
-     * @psalm-param class-string|object $object
+     * @param class-string|object $object
      */
     public function isQueueable($object): bool
     {
@@ -28,8 +27,7 @@ final class QueueableDetector
     }
 
     /**
-     * @param mixed $object
-     * @psalm-param class-string|object $object
+     * @param class-string|object $object
      */
     public function getQueue($object): ?string
     {
