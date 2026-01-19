@@ -17,8 +17,6 @@ use Spiral\Tests\Core\Fixtures\PrivateConstructor;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\Storage;
 
-use function PHPUnit\Framework\assertTrue;
-
 class InvokerTest extends TestCase
 {
     private Container $container;

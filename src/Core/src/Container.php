@@ -246,10 +246,10 @@ final class Container implements
      * Bind value resolver to container alias to be executed as cached. Resolver can be class name
      * (will be constructed only once), function array or Closure (executed only once call).
      *
-     * @psalm-param TResolver $resolver
      * @param bool|null $force If the value is false, an exception will be thrown when attempting
      *        to bind an already constructed singleton.
      *        If the value is null, option {@see Options::$allowSingletonsRebinding} will be used.
+     * @psalm-param TResolver $resolver
      * @throws SingletonOverloadException
      */
     public function bindSingleton(string $alias, string|array|callable|object $resolver, ?bool $force = null): void

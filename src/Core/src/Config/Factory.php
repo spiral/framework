@@ -13,9 +13,11 @@ final class Factory extends Binding
 {
     use ClosureRendererTrait;
 
+    public readonly \Closure $factory;
+
     /** @var class-string|null */
     private readonly ?string $returnClass;
-    public readonly \Closure $factory;
+
     private readonly int $parametersCount;
     private ?string $definition;
 
@@ -49,6 +51,15 @@ final class Factory extends Binding
         return $this->parametersCount;
     }
 
+    /**
+     * @return class-string|null
+     * @internal
+     */
+    public function getReturnClass(): ?string
+    {
+        return $this->returnClass;
+    }
+
     public function __toString(): string
     {
         $this->definition ??= $this->renderClosureSignature(new \ReflectionFunction($this->factory));
@@ -57,14 +68,5 @@ final class Factory extends Binding
             'Factory from %s',
             $this->definition,
         );
-    }
-
-    /**
-     * @return class-string|null
-     * @internal
-     */
-    public function getReturnClass(): ?string
-    {
-        return $this->returnClass;
     }
 }

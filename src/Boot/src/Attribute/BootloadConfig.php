@@ -6,11 +6,11 @@ namespace Spiral\Boot\Attribute;
 
 /**
  * Attribute to configure bootloader behavior.
- * 
+ *
  * This attribute allows defining configuration for bootloaders, including
  * constructor arguments, enabling/disabling based on environment variables,
  * and controlling how configuration overrides work.
- * 
+ *
  * Example usage:
  * ```php
  * // Basic configuration with constructor arguments
@@ -20,10 +20,10 @@ namespace Spiral\Boot\Attribute;
  *     public function __construct(
  *         private readonly string $defaultConnection
  *     ) {}
- *     
+ *
  *     // ...
  * }
- * 
+ *
  * // Conditionally enable based on environment
  * #[BootloadConfig(
  *     allowEnv: ['APP_ENV' => ['local', 'development']],
@@ -34,7 +34,7 @@ namespace Spiral\Boot\Attribute;
  *     // Only loaded in local or development environments
  *     // And not when TESTING is true
  * }
- * 
+ *
  * // Prevent runtime configuration from overriding attribute configuration
  * #[BootloadConfig(args: ['debug' => true], override: false)]
  * class DebugBootloader extends Bootloader
@@ -43,7 +43,7 @@ namespace Spiral\Boot\Attribute;
  *     // configuration is provided at runtime
  * }
  * ```
- * 
+ *
  * When a bootloader has both runtime configuration and a BootloadConfig attribute,
  * the override parameter controls which configuration takes precedence.
  */

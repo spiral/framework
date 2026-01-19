@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Core;
 
-use IteratorAggregate;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Internal\Binder;
 use Spiral\Core\Internal\Container;
@@ -14,14 +13,13 @@ use Spiral\Core\Internal\Invoker;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\Scope;
 use Spiral\Core\Internal\State;
-use Spiral\Core\Internal\Tracer;
 
 /**
  * Container configuration that will be used not only in the root container but also in all child containers.
  * The {@see self::$scopedBindings} property is internal and common for all containers.
  * By the reason you can access to bindings for any scope from any container.
  *
- * @implements IteratorAggregate<
+ * @implements \IteratorAggregate<
  *     non-empty-string,
  *     class-string<State>|class-string<ResolverInterface>|class-string<FactoryInterface>|class-string<ContainerInterface>|class-string<BinderInterface>|class-string<InvokerInterface>|class-string<Actor>|class-string<Scope>
  * >
@@ -32,8 +30,8 @@ class Config implements \IteratorAggregate
     public readonly string $scope;
 
     public readonly Internal\Config\StateStorage $scopedBindings;
-    private bool $rootLocked = true;
     public readonly string $actor;
+    private bool $rootLocked = true;
 
     /**
      * @param class-string<State> $state
