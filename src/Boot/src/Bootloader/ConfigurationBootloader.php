@@ -6,63 +6,82 @@ namespace Spiral\Boot\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Config\Loader\DirectoryLoader;
+use Spiral\Config\Loader\ConfigsMergerInterface;
+use Spiral\Config\Loader\DirectoriesRepository;
+use Spiral\Config\Loader\DirectoriesRepositoryInterface;
 use Spiral\Config\Loader\FileLoaderInterface;
+use Spiral\Config\Loader\FileLoaderRegistry;
 use Spiral\Config\Loader\JsonLoader;
+use Spiral\Config\Loader\MergeFileStrategyLoader;
 use Spiral\Config\Loader\PhpLoader;
-use Spiral\Core\BinderInterface;
+use Spiral\Config\Loader\RecursiveConfigMerger;
+use Spiral\Config\Loader\SingleFileStrategyLoader;
+use Spiral\Config\LoaderInterface;
 use Spiral\Core\ConfigsInterface;
 
 /**
- * Bootloads core services.
+ * Boot core service responsible for configuration loading and management.
  */
 final class ConfigurationBootloader extends Bootloader
 {
-    protected const SINGLETONS = [
-        // configuration
-        ConfigsInterface::class      => ConfiguratorInterface::class,
-        ConfiguratorInterface::class => ConfigManager::class,
-        ConfigManager::class         => [self::class, 'configManager'],
-    ];
-
-    private readonly ConfiguratorInterface $configurator;
-
-    /** @var FileLoaderInterface[] */
-    private array $loaders;
-
     public function __construct(
-        ContainerInterface $container,
-        private readonly DirectoriesInterface $directories,
-        private readonly BinderInterface $binder,
-    ) {
-        $this->loaders = [
-            'php' => $container->get(PhpLoader::class),
-            'json' => $container->get(JsonLoader::class),
-        ];
+        private readonly ContainerInterface $container,
+    ) {}
 
-        $this->configurator = $this->createConfigManager();
+    public function defineSingletons(): array
+    {
+        return [
+            ConfigsInterface::class => ConfiguratorInterface::class,
+            ConfiguratorInterface::class => ConfigManager::class,
+            FileLoaderRegistry::class => $this->createFileLoader(...),
+            ConfigManager::class => $this->createConfigManager(...),
+            ConfigsMergerInterface::class => RecursiveConfigMerger::class,
+            LoaderInterface::class => $this->createConfigLoader(...),
+            DirectoriesRepositoryInterface::class => $this->createDirectories(...),
+        ];
+    }
+
+    private function createConfigLoader(EnvironmentInterface $env): LoaderInterface
+    {
+        return match ($env->get('CONFIG_STRATEGY', 'single')) {
+            'merge' => $this->container->get(MergeFileStrategyLoader::class),
+            default => $this->container->get(SingleFileStrategyLoader::class),
+        };
+    }
+
+    private function createDirectories(DirectoriesInterface $directories): DirectoriesRepositoryInterface
+    {
+        return new DirectoriesRepository([
+            $directories->get('config'),
+        ]);
+    }
+
+    private function createFileLoader(PhpLoader $phpLoader, JsonLoader $jsonLoader): FileLoaderRegistry
+    {
+        return new FileLoaderRegistry([
+            'php' => $phpLoader,
+            'json' => $jsonLoader,
+        ]);
+    }
+
+    public function setDirectories(array $directories): void
+    {
+        $this->container->get(DirectoriesRepositoryInterface::class)->setDirectories($directories);
     }
 
     public function addLoader(string $ext, FileLoaderInterface $loader): void
     {
-        if (!isset($this->loaders[$ext]) || $loader::class !== $this->loaders[$ext]::class) {
-            $this->loaders[$ext] = $loader;
-            $this->binder->bindSingleton(ConfigManager::class, $this->createConfigManager());
-        }
+        $this->container->get(FileLoaderRegistry::class)->register($ext, $loader);
     }
 
-    private function createConfigManager(): ConfigManager
+    private function createConfigManager(LoaderInterface $loader): ConfigManager
     {
         return new ConfigManager(
-            new DirectoryLoader($this->directories->get('config'), $this->loaders),
-            true,
+            loader: $loader,
+            strict: true,
         );
-    }
-
-    private function configManager(): ConfiguratorInterface
-    {
-        return $this->configurator;
     }
 }
