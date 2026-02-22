@@ -28,7 +28,7 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Configure environment
         run: |
@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.4'] # Note: This workflow requires only the LATEST version of PHP
+        php: ['8.5'] # Note: This workflow requires only the LATEST version of PHP
         os: [ubuntu-latest]
 
     steps:
@@ -80,36 +80,26 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Configure environment
         run: |
           export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
           echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
-      # Install PHP Dependencies
+      # Install PHP and Dependencies
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+
       - name: Validate Composer
         run: composer validate
-      - name: Get Composer Cache Directory
-        # Docs: <https://github.com/actions/cache/blob/master/examples.md#php---composer>
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Restore Composer Cache
-        uses: actions/cache@v4
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
-      - name: Install Dependencies
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --prefer-dist --no-interaction --no-progress
+          composer-options: "--prefer-dist --no-audit"
 
       # Execution
       - name: Static Analysis
@@ -127,12 +117,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
         os: [ubuntu-latest]
-        stability: [prefer-lowest, prefer-stable]
+        stability: [lowest, highest]
         exclude:
-          - php: 8.4
-            stability: prefer-lowest
+          - php: 8.5
+            stability: lowest
 
     steps:
       # General Steps
@@ -141,7 +131,7 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Configure environment
         run: |
@@ -158,24 +148,24 @@ jobs:
           coverage: pcov
           tools: pecl
           ini-values: "memory_limit=-1"
+
       - name: Validate Composer
         run: composer validate
-      - name: Get Composer Cache Directory
-        # Docs: <https://github.com/actions/cache/blob/master/examples.md#php---composer>
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Restore Composer Cache
-        uses: actions/cache@v4
+
+      # Install PHP and Dependencies
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php }}-composer-
-      - name: Install Dependencies
-        uses: nick-invision/retry@v2
+          php-version: ${{ matrix.php }}
+
+      - name: Validate Composer
+        run: composer validate
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
         with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+          dependency-versions: ${{ matrix.stability }}
+          composer-options: "--prefer-dist --no-audit"
 
       # Execution
       - name: Execute Tests
