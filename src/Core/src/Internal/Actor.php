@@ -50,7 +50,7 @@ final class Actor
 
     public function __construct(Registry $constructor)
     {
-        $constructor->set('hub', $this);
+        $constructor->set('actor', $this);
 
         $this->state = $constructor->get('state', State::class);
         $this->binder = $constructor->get('binder', BinderInterface::class);
