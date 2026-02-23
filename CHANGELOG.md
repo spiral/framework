@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.16.1 - 2026-02-23
+
+- **Bug Fixes**
+  - [spiral/core] Fixed some exceptions constructor signatures
+
 ## 3.15.8 - 2025-04-22
 
 - **Bug Fixes**
