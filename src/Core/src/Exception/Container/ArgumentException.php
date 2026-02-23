@@ -16,13 +16,17 @@ class ArgumentException extends AutowireException
     public function __construct(
         protected \ReflectionParameter $parameter,
         protected \ReflectionFunctionAbstract $context,
+        ?\Throwable $previous = null,
     ) {
         $name = $context->getName();
         if ($context instanceof \ReflectionMethod) {
             $name = $context->class . '::' . $name;
         }
 
-        parent::__construct(\sprintf("Unable to resolve '%s' argument in '%s'", $parameter->name, $name));
+        parent::__construct(
+            \sprintf("Unable to resolve '%s' argument in '%s'", $parameter->name, $name),
+            previous: $previous,
+        );
     }
 
     public function getParameter(): \ReflectionParameter
