@@ -281,6 +281,11 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "spiral/composer-publish-plugin": true
+        },
+        "audit": {
+            "ignore": {
+                "GHSA-vvj3-c3rp-c85p": "PHPUnit is a dev dependency and does not affect production code."
+            }
         }
     },
     "minimum-stability": "dev",
