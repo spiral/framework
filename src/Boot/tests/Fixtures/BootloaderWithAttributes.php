@@ -17,24 +17,25 @@ final class BootloaderWithAttributes extends Bootloader
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[InitMethod(priority: -1)]
+    #[InitMethod(priority: -1024)]
     public function initMethodF(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
+    #[InitMethod(priority: 1024)]
     public function initMethodA(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[InitMethod(priority: 100)]
+    #[InitMethod(priority: 256)]
     public function initMethodC(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[InitMethod(priority: 50)]
+    #[InitMethod(priority: -256)]
     public function initMethodD(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
@@ -46,48 +47,49 @@ final class BootloaderWithAttributes extends Bootloader
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[BootMethod(priority: -1)]
+    #[BootMethod(priority: -3)]
     public function bootMethodF(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
+    #[BootMethod(priority: 3)]
     public function bootMethodA(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[BootMethod(priority: 100)]
+    #[BootMethod(priority: 1)]
     public function bootMethodC(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[BootMethod(priority: 50)]
+    #[BootMethod(priority: -1)]
     public function bootMethodD(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[InitMethod]
+    #[InitMethod(priority: 512)]
     protected function initMethodB(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[BootMethod]
+    #[BootMethod(priority: 2)]
     protected function bootMethodB(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[InitMethod(priority: 50)]
+    #[InitMethod(priority: -512)]
     private function initMethodE(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
     }
 
-    #[BootMethod(priority: 50)]
+    #[BootMethod(priority: -2)]
     private function bootMethodE(BinderInterface $binder): void
     {
         $binder->bind(__FUNCTION__, SampleClass::class);
