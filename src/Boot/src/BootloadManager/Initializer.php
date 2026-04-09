@@ -230,7 +230,7 @@ class Initializer implements InitializerInterface
             $methods[$attr->priority][] = $method->getName();
         }
 
-        \ksort($methods);
+        \krsort($methods);
 
         return \array_merge(...$methods);
     }
