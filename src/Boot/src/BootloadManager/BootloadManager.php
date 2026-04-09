@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\ResolverInterface;
 use Spiral\Core\ScopeInterface;
@@ -32,7 +33,7 @@ final class BootloadManager extends AbstractBootloadManager
     /**
      * Bootload all given bootloaders.
      *
-     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
+     * @param array<class-string>|array<class-string, array<string,mixed>|BootloadConfig> $classes
      *
      * @throws \Throwable
      */

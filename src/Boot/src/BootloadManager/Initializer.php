@@ -43,7 +43,7 @@ class Initializer implements InitializerInterface
     /**
      * Instantiate bootloader objects and resolve dependencies
      *
-     * @param TClass[]|array<class-string<BootloaderInterface>, array<string,mixed>> $classes
+     * @param TClass[]|array<class-string<BootloaderInterface>, array<string,mixed>|BootloadConfig> $classes
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException

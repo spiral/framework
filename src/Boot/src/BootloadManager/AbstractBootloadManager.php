@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\ScopeInterface;
@@ -42,7 +43,7 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface
     /**
      * Bootload all given bootloaders.
      *
-     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
+     * @param array<class-string>|array<class-string, array<string,mixed>|BootloadConfig> $classes
      */
     abstract protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void;
 }
