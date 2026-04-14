@@ -126,6 +126,26 @@ final class CommandTest extends AbstractCommandTestCase
         self::assertStringContainsString('App\Custom\Command', $content);
     }
 
+    public function testScaffoldWithAliases(): void
+    {
+        $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\AliasedCommand';
+
+        $this->console()->run('create:command', [
+            'name' => 'Aliased',
+            '--aliases' => ['al', 'aliased-cmd'],
+        ]);
+
+        \clearstatcache();
+        self::assertTrue(\class_exists($className));
+
+        $reflection = new \ReflectionClass($className);
+
+        /** @var \Spiral\Console\Attribute\AsCommand $definition */
+        $definition = $reflection->getAttributes()[0]->newInstance();
+
+        self::assertSame(['al', 'aliased-cmd'], $definition->aliases);
+    }
+
     public function testShowInstructionAfterInstallation(): void
     {
         $this->className = $className = '\\Spiral\\Tests\\Scaffolder\\App\\Command\\ArgumentCommand';

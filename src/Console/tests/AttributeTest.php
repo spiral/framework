@@ -6,6 +6,7 @@ namespace Spiral\Tests\Console;
 
 use Spiral\Attributes\AttributeReader;
 use Spiral\Attributes\ReaderInterface;
+use Spiral\Tests\Console\Fixtures\Attribute\WithAliasesCommand;
 use Spiral\Tests\Console\Fixtures\Attribute\WithDescriptionCommand;
 use Spiral\Tests\Console\Fixtures\Attribute\WithHelpCommand;
 use Spiral\Tests\Console\Fixtures\Attribute\WithNameCommand;
@@ -38,6 +39,17 @@ final class AttributeTest extends BaseTestCase
         ]));
 
         self::assertSame('Some help message', $core->run(command: 'attribute-with-help')->getOutput()->fetch());
+    }
+
+    public function testCommandWithAliases(): void
+    {
+        $core = $this->getCore($this->getStaticLocator([
+            WithAliasesCommand::class,
+        ]));
+
+        self::assertSame('awa,alias-for-with-aliases', $core->run(command: 'attribute-with-aliases')->getOutput()->fetch());
+        self::assertSame('awa,alias-for-with-aliases', $core->run(command: 'awa')->getOutput()->fetch());
+        self::assertSame('awa,alias-for-with-aliases', $core->run(command: 'alias-for-with-aliases')->getOutput()->fetch());
     }
 
     public function testCommandWithSymfonyAttribute(): void

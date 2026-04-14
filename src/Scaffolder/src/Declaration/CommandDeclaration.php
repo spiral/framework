@@ -22,6 +22,7 @@ final class CommandDeclaration extends AbstractDeclaration implements HasInstruc
         ?string $namespace = null,
         private readonly ?string $alias = null,
         private readonly ?string $description = null,
+        private readonly array $aliases = [],
     ) {
         parent::__construct($config, $name, $comment, $namespace);
     }
@@ -71,6 +72,10 @@ final class CommandDeclaration extends AbstractDeclaration implements HasInstruc
 
         if ($this->description) {
             $commandDefinition['description'] = $this->description;
+        }
+
+        if ($this->aliases !== []) {
+            $commandDefinition['aliases'] = $this->aliases;
         }
 
         $this->class->addAttribute(AsCommand::class, $commandDefinition);
