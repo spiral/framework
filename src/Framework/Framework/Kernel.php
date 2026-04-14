@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Framework;
 
 use Spiral\Boot\AbstractKernel;
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Tokenizer\Bootloader\TokenizerBootloader;
@@ -67,7 +68,7 @@ abstract class Kernel extends AbstractKernel
     /**
      * Get list of defined application bootloaders
      *
-     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>>
+     * @return array<int, class-string>|array<class-string, array<non-empty-string, mixed>|BootloadConfig>
      *
      * @deprecated since v3.10 Use {@see defineBootloaders()} instead. Will be removed in v4.0
      */

@@ -43,7 +43,7 @@ class Initializer implements InitializerInterface
     /**
      * Instantiate bootloader objects and resolve dependencies
      *
-     * @param TClass[]|array<class-string<BootloaderInterface>, array<string,mixed>> $classes
+     * @param TClass[]|array<class-string<BootloaderInterface>, array<string,mixed>|BootloadConfig> $classes
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \ReflectionException
@@ -230,7 +230,7 @@ class Initializer implements InitializerInterface
             $methods[$attr->priority][] = $method->getName();
         }
 
-        \ksort($methods);
+        \krsort($methods);
 
         return \array_merge(...$methods);
     }

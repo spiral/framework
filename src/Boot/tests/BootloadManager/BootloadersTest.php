@@ -132,20 +132,22 @@ final class BootloadersTest extends TestCase
         ]);
 
         self::assertTrue($this->container->has('init'));
-        self::assertTrue($this->container->has('initMethodF'));
-        self::assertTrue($this->container->has('initMethodE'));
+        self::assertTrue($this->container->has('initMethodA'));
         self::assertTrue($this->container->has('initMethodB'));
         self::assertTrue($this->container->has('initMethodC'));
         self::assertTrue($this->container->has('initMethodD'));
-        self::assertFalse($this->container->has('initMethodA'));
+        self::assertTrue($this->container->has('initMethodE'));
+        self::assertTrue($this->container->has('initMethodF'));
+        self::assertFalse($this->container->has('initMethodG'));
 
         self::assertTrue($this->container->has('boot'));
-        self::assertTrue($this->container->has('bootMethodF'));
-        self::assertTrue($this->container->has('bootMethodE'));
+        self::assertTrue($this->container->has('bootMethodA'));
         self::assertTrue($this->container->has('bootMethodB'));
         self::assertTrue($this->container->has('bootMethodC'));
         self::assertTrue($this->container->has('bootMethodD'));
-        self::assertFalse($this->container->has('bootMethodA'));
+        self::assertTrue($this->container->has('bootMethodE'));
+        self::assertTrue($this->container->has('bootMethodF'));
+        self::assertFalse($this->container->has('bootMethodG'));
     }
 
     public function testException(): void

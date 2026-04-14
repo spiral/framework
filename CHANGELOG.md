@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.16.2 - 2026-04-09
+
+- **Bug Fixes**
+  - [spiral/boot] Fix `Bootloader::init` methods sorting
+  - [spiral/boot] Update return type hint for `Kernel::defineAppBootloaders` method
+
 ## 3.16.1 - 2026-02-23
 
 - **Bug Fixes**
