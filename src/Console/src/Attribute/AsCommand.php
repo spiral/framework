@@ -13,5 +13,6 @@ final class AsCommand
         public readonly string $name,
         public readonly ?string $description = null,
         public readonly ?string $help = null,
+        public readonly array $aliases = [],
     ) {}
 }
