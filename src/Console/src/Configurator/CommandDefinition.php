@@ -23,7 +23,7 @@ final class CommandDefinition
         public readonly ?string $description = null,
         /** @var ?non-empty-string */
         public readonly ?string $help = null,
-        /** @var string[] */
+        /** @var non-empty-string[] */
         public readonly array $aliases = [],
     ) {}
 }
