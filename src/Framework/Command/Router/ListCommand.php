@@ -78,6 +78,9 @@ final class ListCommand extends Command
                 'patch' => '<fg=cyan>PATCH</>',
                 'put' => '<fg=yellow>PUT</>',
                 'delete' => '<fg=red>DELETE</>',
+
+                'link' => '<fg=bright-cyan>LINK</>',
+                'unlink' => '<fg=bright-magenta>UNLINK</>',
             };
         }
 
