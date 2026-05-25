@@ -6,16 +6,35 @@ namespace Spiral\Pagination;
 
 /**
  * Simple predictable paginator.
+ *
+ * Example usage:
+ *
+ *     $perPage = 100;
+ *     $paginator = (new Paginator($perPage))
+ *         ->paginate($select);
+ *     for ($page = 1; $page <= $paginator->countPages(); $page++) {
+ *         $paginator
+ *             ->withPage($page)
+ *             ->paginate($select);
+ *         yield $this->toCSVLine($this->toRows($select->fetchData()));
+ *     }
  */
 final class Paginator implements PaginatorInterface, \Countable
 {
+    /** Current page number (1-based, clamped to valid range on read). */
     private int $pageNumber = 1;
+
+    /** Total number of pages, derived from $count and $limit. */
     private int $countPages = 1;
+
+    /** Total number of items across all pages. */
     private int $count;
 
     public function __construct(
+        /** Maximum items per page. */
         private int $limit = 25,
         int $count = 0,
+        /** Query parameter name used to read the current page from the environment (e.g. "page"). */
         private readonly ?string $parameter = null,
     ) {
         $this->setCount($count);
