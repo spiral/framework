@@ -45,6 +45,8 @@ final class CsrfConfig extends InjectableConfig
 
     public function getCookiePath(): string
     {
-        return $this->config['path'] ?? '/';
+        // Normalize null/empty to "/": an empty path makes Cookie::createHeader() omit the
+        // Path= attribute, which reintroduces the fragmented-cookie bug this option prevents.
+        return ($this->config['path'] ?? '') ?: '/';
     }
 }

@@ -37,4 +37,16 @@ class ConfigTest extends TestCase
         self::assertNull($c->getSameSite());
         self::assertSame('/', $c->getCookiePath());
     }
+
+    public function testEmptyCookiePathFallsBackToRoot(): void
+    {
+        $c = new CsrfConfig([
+            'cookie' => 'csrf-token',
+            'length' => 16,
+            'path'   => '',
+        ]);
+
+        // An empty path would make Cookie::createHeader() drop the Path= attribute.
+        self::assertSame('/', $c->getCookiePath());
+    }
 }

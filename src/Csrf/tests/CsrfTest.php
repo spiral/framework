@@ -78,6 +78,31 @@ final class CsrfTest extends TestCase
         self::assertStringContainsString('Path=/admin', $this->fetchSetCookie($response, 'csrf-token'));
     }
 
+    public function testEmptyConfiguredPathStillEmitsPathAttribute(): void
+    {
+        $this->container->bind(
+            CsrfConfig::class,
+            new CsrfConfig(
+                [
+                    'cookie'   => 'csrf-token',
+                    'length'   => 16,
+                    'lifetime' => 86400,
+                    'path'     => '',
+                ],
+            ),
+        );
+
+        $core = $this->httpCore([CsrfMiddleware::class]);
+        $core->setHandler(
+            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE),
+        );
+
+        $response = $this->get($core, '/feature/123');
+        self::assertSame(200, $response->getStatusCode());
+
+        self::assertStringContainsString('Path=/', $this->fetchSetCookie($response, 'csrf-token'));
+    }
+
     public function testLengthException(): void
     {
         $this->expectException(\RuntimeException::class);
