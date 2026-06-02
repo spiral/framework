@@ -10,6 +10,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Cookies\Cookie;
 use Spiral\Csrf\Config\CsrfConfig;
+use Spiral\Http\Config\HttpConfig;
 
 /**
  * Provides generic CSRF protection using cookie as token storage. Set "csrfToken" attribute to
@@ -25,6 +26,7 @@ final class CsrfMiddleware implements MiddlewareInterface
 
     public function __construct(
         private readonly CsrfConfig $config,
+        private readonly ?HttpConfig $httpConfig = null,
     ) {}
 
     public function process(Request $request, RequestHandlerInterface $handler): Response
@@ -59,12 +61,23 @@ final class CsrfMiddleware implements MiddlewareInterface
             $this->config->getCookie(),
             $token,
             $this->config->getCookieLifetime(),
-            null,
+            $this->cookiePath(),
             null,
             $this->config->isCookieSecure(),
             true,
             $this->config->getSameSite(),
         )->createHeader();
+    }
+
+    /**
+     * Resolve the cookie path. An explicit csrf config value wins; otherwise fall back to the
+     * application base path (same scope as the session cookie), defaulting to "/".
+     */
+    private function cookiePath(): string
+    {
+        return $this->config->getCookiePath()
+            ?? $this->httpConfig?->getBasePath()
+            ?? '/';
     }
 
     /**

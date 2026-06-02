@@ -40,6 +40,60 @@ final class CsrfTest extends TestCase
         self::assertSame($cookies['csrf-token'], (string) $response->getBody());
     }
 
+    public function testCookieHasDefaultPath(): void
+    {
+        $core = $this->httpCore([CsrfMiddleware::class]);
+        $core->setHandler(
+            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE),
+        );
+
+        $response = $this->get($core, '/feature/123');
+        self::assertSame(200, $response->getStatusCode());
+
+        self::assertStringContainsString('Path=/', $this->fetchSetCookie($response, 'csrf-token'));
+    }
+
+    public function testCookiePathFollowsBasePath(): void
+    {
+        $this->container->bind(HttpConfig::class, new HttpConfig(['basePath' => '/myapp']));
+
+        $core = $this->httpCore([CsrfMiddleware::class]);
+        $core->setHandler(
+            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE),
+        );
+
+        $response = $this->get($core, '/myapp/feature/123');
+        self::assertSame(200, $response->getStatusCode());
+
+        self::assertStringContainsString('Path=/myapp', $this->fetchSetCookie($response, 'csrf-token'));
+    }
+
+    public function testCookiePathConfigOverridesBasePath(): void
+    {
+        $this->container->bind(
+            CsrfConfig::class,
+            new CsrfConfig(
+                [
+                    'cookie'   => 'csrf-token',
+                    'length'   => 16,
+                    'lifetime' => 86400,
+                    'path'     => '/admin',
+                ],
+            ),
+        );
+        $this->container->bind(HttpConfig::class, new HttpConfig(['basePath' => '/myapp']));
+
+        $core = $this->httpCore([CsrfMiddleware::class]);
+        $core->setHandler(
+            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE),
+        );
+
+        $response = $this->get($core, '/admin/dashboard');
+        self::assertSame(200, $response->getStatusCode());
+
+        self::assertStringContainsString('Path=/admin', $this->fetchSetCookie($response, 'csrf-token'));
+    }
+
     public function testLengthException(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -192,6 +246,7 @@ final class CsrfTest extends TestCase
             ),
         );
 
+        $this->container->bind(HttpConfig::class, new HttpConfig(['basePath' => '/']));
         $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(
             ResponseFactoryInterface::class,
@@ -251,6 +306,17 @@ final class CsrfTest extends TestCase
         return $request
             ->withQueryParams($query)
             ->withCookieParams($cookies);
+    }
+
+    private function fetchSetCookie(ResponseInterface $response, string $name): string
+    {
+        foreach ($response->getHeader('Set-Cookie') as $headerLine) {
+            if (\str_starts_with($headerLine, $name . '=')) {
+                return $headerLine;
+            }
+        }
+
+        return '';
     }
 
     private function fetchCookies(ResponseInterface $response): array
