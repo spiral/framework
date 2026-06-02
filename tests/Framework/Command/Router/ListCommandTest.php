@@ -10,97 +10,124 @@ final class ListCommandTest extends ConsoleTestCase
 {
     public function testRouteNamesAppearInOutput(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'auth',
-            'scope',
-            'intercepted:without',
-        ]);
+        $output = $this->runCommand('route:list');
+
+        // Anchor each name to the Name column (preceded by a column border, followed by padding + border)
+        // so that e.g. `intercepted:without` is not matched inside `intercepted:withoutAttribute`.
+        $this->assertMatchesRegularExpression('/\|\s+auth\s+\|/', $output);
+        $this->assertMatchesRegularExpression('/\|\s+scope\s+\|/', $output);
+        $this->assertMatchesRegularExpression('/\|\s+intercepted:without\s+\|/', $output);
     }
 
     public function testAllVerbsShownAsWildcard(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['*']);
+        // A route accepting all verbs renders `*` as its own Verbs cell (between two borders),
+        // distinct from target wildcards such as `AuthController->*`.
+        $this->assertMatchesRegularExpression('/\|\s+\*\s+\|/', $this->runCommand('route:list'));
     }
 
     public function testControllerTargetFormat(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'Controller\AuthController->*',
-        ]);
+        // `auth` route -> Controller target rendered as `Controller\AuthController->*` in the Target cell.
+        $this->assertMatchesRegularExpression(
+            '/\\\\AuthController->\*\s+\|/',
+            $this->runCommand('route:list'),
+        );
     }
 
     public function testActionTargetFormat(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'Controller\InterceptedController->without',
-        ]);
+        // `intercepted:without` -> Action target. Anchor to the cell border so it is not matched
+        // inside `InterceptedController->withoutAttribute`.
+        $this->assertMatchesRegularExpression(
+            '/\\\\InterceptedController->without\s+\|/',
+            $this->runCommand('route:list'),
+        );
     }
 
     public function testClosureTargetFormat(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'Closure(api.php:',
-        ]);
+        $this->assertMatchesRegularExpression(
+            '/Closure\(api\.php:\d+\)/',
+            $this->runCommand('route:list'),
+        );
     }
 
     public function testRouteGroupAppearsInOutput(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'api',
-            'other',
-        ]);
+        $output = $this->runCommand('route:list');
+
+        // Tie the group value to a concrete route row (name ... | group |) so an empty/wrong
+        // Group column cannot pass just because `api`/`other` appear in patterns or targets.
+        $this->assertMatchesRegularExpression('/\|\s+api\.test-import-index\s+\|.*\|\s*api\s+\|/', $output);
+        $this->assertMatchesRegularExpression('/\|\s+test-import-index\s+\|.*\|\s*other\s+\|/', $output);
     }
 
     public function testPatternWithPrefixAppearsInOutput(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: [
-            'api/test-import',
-            'other/test-import',
-        ]);
+        $output = $this->runCommand('route:list');
+
+        // Anchor to the Pattern cell so the prefixed index pattern is not matched inside the longer
+        // `api/test-import/posts` pattern.
+        $this->assertMatchesRegularExpression('/\|\s+api\/test-import\s+\|/', $output);
+        $this->assertMatchesRegularExpression('/\|\s+other\/test-import\s+\|/', $output);
     }
 
     public function testGetVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['GET']);
+        $this->assertVerbForRoute('verb-get', 'GET');
     }
 
     public function testHeadVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['HEAD']);
+        $this->assertVerbForRoute('verb-head', 'HEAD');
     }
 
     public function testOptionsVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['OPTIONS']);
+        $this->assertVerbForRoute('verb-options', 'OPTIONS');
     }
 
     public function testPostVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['POST']);
+        $this->assertVerbForRoute('verb-post', 'POST');
     }
 
     public function testPatchVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['PATCH']);
+        $this->assertVerbForRoute('verb-patch', 'PATCH');
     }
 
     public function testPutVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['PUT']);
+        $this->assertVerbForRoute('verb-put', 'PUT');
     }
 
     public function testDeleteVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['DELETE']);
+        $this->assertVerbForRoute('verb-delete', 'DELETE');
     }
 
     public function testLinkVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['LINK']);
+        $this->assertVerbForRoute('verb-link', 'LINK');
     }
 
     public function testUnlinkVerbDisplay(): void
     {
-        $this->assertConsoleCommandOutputContainsStrings('route:list', strings: ['UNLINK']);
+        $this->assertVerbForRoute('verb-unlink', 'UNLINK');
+    }
+
+    /**
+     * Assert that the dedicated `$name` route renders `$verb` in its Verbs column (the cell directly
+     * after the Name cell), so the verb rendering is actually exercised for that route rather than
+     * matching the same verb emitted by some unrelated route elsewhere in the table.
+     */
+    private function assertVerbForRoute(string $name, string $verb): void
+    {
+        $this->assertMatchesRegularExpression(
+            \sprintf('/\|\s+%s\s+\|\s+%s\b/', \preg_quote($name, '/'), \preg_quote($verb, '/')),
+            $this->runCommand('route:list'),
+        );
     }
 }
