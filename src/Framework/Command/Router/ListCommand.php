@@ -81,6 +81,8 @@ final class ListCommand extends Command
 
                 'link' => '<fg=bright-cyan>LINK</>',
                 'unlink' => '<fg=bright-magenta>UNLINK</>',
+
+                default => '<fg=gray>' . \strtoupper($verb) . '</>',
             };
         }
 
