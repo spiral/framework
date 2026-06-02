@@ -20,6 +20,7 @@ final class CsrfBootloader extends Bootloader
                 'lifetime' => 86400,
                 'secure'   => true,
                 'sameSite' => null,
+                'path'     => '/',
             ],
         );
     }

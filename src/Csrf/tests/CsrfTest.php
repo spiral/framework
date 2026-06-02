@@ -53,22 +53,7 @@ final class CsrfTest extends TestCase
         self::assertStringContainsString('Path=/', $this->fetchSetCookie($response, 'csrf-token'));
     }
 
-    public function testCookiePathFollowsBasePath(): void
-    {
-        $this->container->bind(HttpConfig::class, new HttpConfig(['basePath' => '/myapp']));
-
-        $core = $this->httpCore([CsrfMiddleware::class]);
-        $core->setHandler(
-            static fn($r) => $r->getAttribute(CsrfMiddleware::ATTRIBUTE),
-        );
-
-        $response = $this->get($core, '/myapp/feature/123');
-        self::assertSame(200, $response->getStatusCode());
-
-        self::assertStringContainsString('Path=/myapp', $this->fetchSetCookie($response, 'csrf-token'));
-    }
-
-    public function testCookiePathConfigOverridesBasePath(): void
+    public function testCookiePathIsConfigurable(): void
     {
         $this->container->bind(
             CsrfConfig::class,
@@ -81,7 +66,6 @@ final class CsrfTest extends TestCase
                 ],
             ),
         );
-        $this->container->bind(HttpConfig::class, new HttpConfig(['basePath' => '/myapp']));
 
         $core = $this->httpCore([CsrfMiddleware::class]);
         $core->setHandler(
@@ -246,7 +230,6 @@ final class CsrfTest extends TestCase
             ),
         );
 
-        $this->container->bind(HttpConfig::class, new HttpConfig(['basePath' => '/']));
         $this->container->bind(TracerInterface::class, new NullTracer($this->container));
         $this->container->bind(
             ResponseFactoryInterface::class,

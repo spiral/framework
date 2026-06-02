@@ -35,6 +35,6 @@ class ConfigTest extends TestCase
         self::assertNull($c->getCookieLifetime());
         self::assertTrue($c->isCookieSecure());
         self::assertNull($c->getSameSite());
-        self::assertNull($c->getCookiePath());
+        self::assertSame('/', $c->getCookiePath());
     }
 }

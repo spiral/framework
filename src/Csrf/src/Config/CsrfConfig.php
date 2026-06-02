@@ -15,7 +15,7 @@ final class CsrfConfig extends InjectableConfig
         'length' => 16,
         'lifetime' => null,
         'sameSite' => null,
-        'path' => null,
+        'path' => '/',
     ];
 
     public function getTokenLength(): int
@@ -43,12 +43,8 @@ final class CsrfConfig extends InjectableConfig
         return $this->config['sameSite'];
     }
 
-    /**
-     * Explicit cookie path override. When null the {@see CsrfMiddleware} falls back to
-     * {@see \Spiral\Http\Config\HttpConfig::getBasePath()}, matching the session cookie scope.
-     */
-    public function getCookiePath(): ?string
+    public function getCookiePath(): string
     {
-        return $this->config['path'] ?? null;
+        return $this->config['path'] ?? '/';
     }
 }
