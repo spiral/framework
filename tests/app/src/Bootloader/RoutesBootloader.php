@@ -177,6 +177,17 @@ final class RoutesBootloader extends BaseRoutesBootloader
             ->controller(TestController::class)
             ->defaults(['name' => 'Dave'])
             ->middleware($this->middlewareGroups()['web']);
+
+        // routes for verb display testing in route:list command
+        $routes->add('verb-get', '/verb/get')->callable(static fn() => null)->methods('GET');
+        $routes->add('verb-head', '/verb/head')->callable(static fn() => null)->methods('HEAD');
+        $routes->add('verb-options', '/verb/options')->callable(static fn() => null)->methods('OPTIONS');
+        $routes->add('verb-post', '/verb/post')->callable(static fn() => null)->methods('POST');
+        $routes->add('verb-patch', '/verb/patch')->callable(static fn() => null)->methods('PATCH');
+        $routes->add('verb-put', '/verb/put')->callable(static fn() => null)->methods('PUT');
+        $routes->add('verb-delete', '/verb/delete')->callable(static fn() => null)->methods('DELETE');
+        $routes->add('verb-link', '/verb/link')->callable(static fn() => null)->methods('LINK');
+        $routes->add('verb-unlink', '/verb/unlink')->callable(static fn() => null)->methods('UNLINK');
     }
 
     private function getInterceptedCore(array $interceptors): InterceptorPipeline

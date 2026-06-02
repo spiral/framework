@@ -46,6 +46,7 @@ final class Parser
             options: $this->parseOptions($reflection),
             description: $attribute->description,
             help: $attribute instanceof AsCommand ? $attribute->help : null,
+            aliases: $attribute instanceof AsCommand ? $attribute->aliases : [],
         );
     }
 
