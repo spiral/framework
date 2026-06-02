@@ -51,6 +51,7 @@ final class Paginator implements PaginatorInterface, \Countable
         int $count = 0,
         private readonly ?string $parameter = null,
     ) {
+        $this->limit = \max($this->limit, 1);
         $this->setCount($count);
     }
 
@@ -68,7 +69,9 @@ final class Paginator implements PaginatorInterface, \Countable
     public function withLimit(int $limit): self
     {
         $paginator = clone $this;
-        $paginator->limit = $limit;
+        $paginator->limit = \max($limit, 1);
+        // $countPages is derived from $count and $limit, so it must be recomputed.
+        $paginator->setCount($paginator->count);
 
         return $paginator;
     }

@@ -41,6 +41,33 @@ class PaginatorTest extends TestCase
         self::assertSame(4, $paginator->countPages());
     }
 
+    public function testWithLimitRecomputesCountPages(): void
+    {
+        $paginator = new Paginator(limit: 25, count: 100);
+        self::assertSame(4, $paginator->countPages());
+
+        $paginator = $paginator->withLimit(10);
+
+        self::assertSame(10, $paginator->getLimit());
+        self::assertSame(10, $paginator->countPages());
+    }
+
+    public function testWithLimitClampsToPositive(): void
+    {
+        $paginator = (new Paginator(limit: 25, count: 100))->withLimit(0);
+
+        self::assertSame(1, $paginator->getLimit());
+        self::assertSame(100, $paginator->countPages());
+    }
+
+    public function testZeroLimitInConstructorDoesNotDivideByZero(): void
+    {
+        $paginator = new Paginator(limit: 0, count: 5);
+
+        self::assertSame(1, $paginator->getLimit());
+        self::assertSame(5, $paginator->countPages());
+    }
+
     public function testCountsAndPages(): void
     {
         $paginator = new Paginator(limit: 25);
