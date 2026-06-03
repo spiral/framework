@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.10.1@f9fd6bc117e9ce1e854c2ed6777e7135aaa4966b">
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
   <file src="src/Core/src/Internal/Actor.php">
     <InvalidReturnStatement>
       <code><![CDATA[$actor->registerInstance($ctx, $instance)]]></code>
@@ -19,6 +19,21 @@
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->key]]></code>
     </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Framework/Domain/GuardPermissionsProvider.php">
+    <UndefinedClass>
+      <code><![CDATA[InterceptorException]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Hmvc/src/InterceptorPipeline.php">
+    <UndefinedClass>
+      <code><![CDATA[InterceptorException]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Interceptors/src/Exception/InterceptorException.php">
+    <UndefinedClass>
+      <code><![CDATA[\Spiral\Core\Exception\InterceptorException]]></code>
+    </UndefinedClass>
   </file>
   <file src="src/Queue/src/RetryPolicy.php">
     <InvalidOperand>
