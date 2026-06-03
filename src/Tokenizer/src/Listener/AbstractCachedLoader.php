@@ -57,7 +57,6 @@ abstract class AbstractCachedLoader
     {
         $listener = new \ReflectionClass($listener);
 
-        /** @psalm-suppress InvalidArgument */
         yield from $this->reader->getClassMetadata($listener, AbstractTarget::class);
     }
 }

@@ -45,7 +45,6 @@ final class PromptArguments
     {
         $reflection = new \ReflectionClass($command);
 
-        /** @psalm-suppress InvalidArgument */
         foreach ($this->reader->getClassMetadata($reflection, Question::class) as $question) {
             if ($question->argument === null) {
                 throw new ConsoleException(

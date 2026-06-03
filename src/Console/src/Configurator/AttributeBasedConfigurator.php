@@ -18,13 +18,11 @@ final class AttributeBasedConfigurator implements ConfiguratorInterface
 
     public function canConfigure(Command $command, \ReflectionClass $reflection): bool
     {
-        /** @psalm-suppress InvalidArgument */
         return $this->parser->hasCommandAttribute($reflection);
     }
 
     public function configure(Command $command, \ReflectionClass $reflection): void
     {
-        /** @psalm-suppress InvalidArgument */
         $result = $this->parser->parse($reflection);
 
         $command->setName($result->name);

@@ -139,7 +139,6 @@ abstract class AbstractKernel implements KernelInterface
         $container->bind(BootloadManagerInterface::class, $bootloadManager);
 
         if (!$container->has(BootloaderRegistryInterface::class)) {
-            /** @psalm-suppress InvalidArgument */
             $container->bindSingleton(BootloaderRegistryInterface::class, [self::class, 'initBootloaderRegistry']);
         }
 
@@ -292,7 +291,6 @@ abstract class AbstractKernel implements KernelInterface
             $scope = ($reflection->getAttributes(DispatcherScope::class)[0] ?? null)?->newInstance()->scope;
             $this->container->getBinder($scope)->bind($dispatcher, $dispatcher);
 
-            /** @psalm-suppress InvalidArgument */
             if ($serving === null && $this->canServe($reflection)) {
                 $serving = $dispatcher;
                 $servingScope = $scope;
