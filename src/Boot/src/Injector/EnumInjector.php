@@ -26,6 +26,7 @@ final class EnumInjector implements InjectorInterface
 
     public function createInjection(\ReflectionClass $class, ?string $context = null): \UnitEnum
     {
+        /** @psalm-suppress InvalidArgument */
         $attribute = $this->reader->firstClassMetadata($class, ProvideFrom::class);
         if ($attribute === null) {
             throw new InjectionException(
@@ -37,6 +38,7 @@ final class EnumInjector implements InjectorInterface
             );
         }
 
+        /** @psalm-suppress InvalidArgument */
         $this->validateClass($class, $attribute);
         /** @var ?\Closure $closure */
         $closure = $class->getMethod($attribute->method)->getClosure();

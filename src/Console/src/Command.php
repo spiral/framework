@@ -162,6 +162,7 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
             new SignatureBasedConfigurator(new SignatureParser()),
             new AttributeBasedConfigurator(new AttributeParser((new Factory())->create())),
         ]);
+        /** @psalm-suppress InvalidArgument */
         $configurator->configure($this, new \ReflectionClass($this));
     }
 

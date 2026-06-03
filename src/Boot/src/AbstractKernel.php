@@ -292,6 +292,7 @@ abstract class AbstractKernel implements KernelInterface
             $scope = ($reflection->getAttributes(DispatcherScope::class)[0] ?? null)?->newInstance()->scope;
             $this->container->getBinder($scope)->bind($dispatcher, $dispatcher);
 
+            /** @psalm-suppress InvalidArgument */
             if ($serving === null && $this->canServe($reflection)) {
                 $serving = $dispatcher;
                 $servingScope = $scope;

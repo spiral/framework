@@ -35,6 +35,7 @@ final class CacheInjector implements InjectorInterface
                 }
             }
 
+            /** @psalm-suppress InvalidArgument */
             $this->matchType($class, $context, $connection);
         } catch (\Throwable $e) {
             throw new ContainerException(\sprintf("Can't inject the required cache. %s", $e->getMessage()), 0, $e);

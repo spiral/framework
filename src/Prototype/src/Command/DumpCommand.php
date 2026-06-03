@@ -32,6 +32,7 @@ final class DumpCommand extends AbstractCommand
         $this->write('Updating <fg=yellow>PrototypeTrait</fg=yellow> DOCComment... ');
 
         $ref = new \ReflectionClass(PrototypeTrait::class);
+        /** @psalm-suppress InvalidArgument */
         $file = FileDeclaration::fromReflection($ref);
         $trait = $file->getTrait(PrototypeTrait::class);
 
