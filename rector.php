@@ -116,6 +116,7 @@ return RectorConfig::configure()
 
         ArrayToFirstClassCallableRector::class => [
             __DIR__ . '/src/Core/tests/Scope/UseCaseTest.php',
+            __DIR__ . '/src/Core/tests/InjectableTest.php',
         ],
 
         PreferPHPUnitThisCallRector::class,
@@ -127,7 +128,6 @@ return RectorConfig::configure()
         // to be enabled later for easier to review
         \Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector::class,
         \Rector\PHPUnit\PHPUnit120\Rector\CallLike\CreateStubOverCreateMockArgRector::class,
-
         \Rector\Php55\Rector\ClassConstFetch\StaticToSelfOnFinalClassRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\StringCastAssertStringContainsStringRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector::class,
@@ -142,6 +142,7 @@ return RectorConfig::configure()
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
         \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,
+        \Rector\PHPUnit\AnnotationsToAttributes\Rector\Class_\CoversAnnotationWithValueToAttributeRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)

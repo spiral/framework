@@ -16,7 +16,9 @@ use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\SendIt\Renderer\ViewRenderer::class)]
+/**
+ * @coversDefaultClass \Spiral\SendIt\Renderer\ViewRenderer
+ */
 final class ViewRendererTest extends TestCase
 {
     /**

@@ -146,7 +146,7 @@ class InjectableTest extends TestCase
             )
             ->andReturn($expected);
 
-        $arguments = $container->resolveArguments(new \ReflectionMethod(...$this->methodInjection(...)));
+        $arguments = $container->resolveArguments(new \ReflectionMethod(...[$this, 'methodInjection']));
         self::assertCount(1, $arguments);
         self::assertSame($expected, $arguments[0]);
     }
