@@ -59,7 +59,7 @@ final class CsrfMiddleware implements MiddlewareInterface
             $this->config->getCookie(),
             $token,
             $this->config->getCookieLifetime(),
-            null,
+            $this->config->getCookiePath(),
             null,
             $this->config->isCookieSecure(),
             true,
