@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 3.17.0 - 2026-06-03
+
+- **New Features**
+  - [spiral/console] Added command aliases support to the `#[AsCommand]` attribute and the scaffolder (#1252)
+- **Bug Fixes**
+  - [spiral/csrf] Fixed `CsrfMiddleware` cookie missing the `Path` attribute (#1257)
+  - [spiral/framework] Fixed `route:list` command crash on `LINK`/`UNLINK` verbs (#1254)
+  - [spiral/pagination] Hardened `Paginator` limit handling and documented the component (#1255)
+
 ## 3.16.2 - 2026-04-09
 
 - **Bug Fixes**
