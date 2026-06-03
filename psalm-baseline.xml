@@ -15,6 +15,11 @@
       <code><![CDATA[Attribute\Scope]]></code>
     </UnnecessaryVarAnnotation>
   </file>
+  <file src="src/Files/src/Files.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$filename]]></code>
+    </ImplicitToStringCast>
+  </file>
   <file src="src/Filters/src/Attribute/Input/AbstractInput.php">
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->key]]></code>
