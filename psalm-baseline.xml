@@ -20,21 +20,6 @@
       <code><![CDATA[$this->key]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/Framework/Domain/GuardPermissionsProvider.php">
-    <UndefinedClass>
-      <code><![CDATA[InterceptorException]]></code>
-    </UndefinedClass>
-  </file>
-  <file src="src/Hmvc/src/InterceptorPipeline.php">
-    <UndefinedClass>
-      <code><![CDATA[InterceptorException]]></code>
-    </UndefinedClass>
-  </file>
-  <file src="src/Interceptors/src/Exception/InterceptorException.php">
-    <UndefinedClass>
-      <code><![CDATA[\Spiral\Core\Exception\InterceptorException]]></code>
-    </UndefinedClass>
-  </file>
   <file src="src/Queue/src/RetryPolicy.php">
     <InvalidOperand>
       <code><![CDATA[$this->delay * $this->multiplier ** $attempts]]></code>
