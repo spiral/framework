@@ -141,6 +141,7 @@ return RectorConfig::configure()
         \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
+        \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
