@@ -16,6 +16,11 @@ final class ContainerRegistryT extends TestCase
     private ContainerInterface|m\MockInterface $container;
     private ContainerRegistry $registry;
 
+    public function __construct()
+    {
+        parent::__construct(self::class);
+    }
+
     public function testGetsHandlerByJobType(): void
     {
         $this->container->shouldReceive('get')

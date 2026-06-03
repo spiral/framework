@@ -37,7 +37,6 @@ class Initializer implements InitializerInterface
         protected readonly ContainerInterface $container,
         protected readonly BinderInterface $binder,
         protected readonly ClassesRegistry $bootloaders = new ClassesRegistry(),
-        ?BootloaderCheckerInterface $checker = null,
     ) {}
 
     /**

@@ -159,7 +159,6 @@ final class Actor
             Config\Injectable::class => $this->resolveInjector(
                 $binding,
                 new Ctx(alias: $alias, class: $alias, context: $context),
-                $arguments,
                 $tracer,
             ),
             Config\Scalar::class => $binding->value,
@@ -198,7 +197,7 @@ final class Actor
      * @psalm-suppress UnusedParam
      * todo wat should we do with $arguments?
      */
-    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, array $arguments, Tracer $tracer)
+    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, Tracer $tracer)
     {
         $context = $ctx->context;
         try {
@@ -511,7 +510,7 @@ final class Actor
 
         // We have to construct class using external injector when we know the exact context
         if ($arguments === [] && $actor->binder->hasInjector($class)) {
-            return $actor->resolveInjector($actor->state->bindings[$ctx->class], $ctx, $arguments, $tracer);
+            return $actor->resolveInjector($actor->state->bindings[$ctx->class], $ctx, $tracer);
         }
 
         if (!$reflection->isInstantiable()) {

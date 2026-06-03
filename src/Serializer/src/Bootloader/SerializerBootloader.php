@@ -48,7 +48,7 @@ final class SerializerBootloader extends Bootloader
 
     private function initSerializerRegistry(SerializerConfig $config): SerializerRegistryInterface
     {
-        return new SerializerRegistry(\array_map([$this, 'wire'], $config->getSerializers()));
+        return new SerializerRegistry(\array_map($this->wire(...), $config->getSerializers()));
     }
 
     private function initConfig(EnvironmentInterface $env): void

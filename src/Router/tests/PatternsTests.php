@@ -17,6 +17,11 @@ use Mockery as m;
 
 class PatternsTests extends TestCase
 {
+    public function __construct()
+    {
+        parent::__construct(static::class);
+    }
+
     public function testDigitWithZeroValue(): void
     {
         $route = new Route(

@@ -108,6 +108,6 @@ final class DynamicSyntax implements SyntaxInterface
             }
         }
 
-        return \array_map('trim', $values);
+        return \array_map(trim(...), $values);
     }
 }

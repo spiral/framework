@@ -18,12 +18,10 @@ use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Php81\Rector\Array_\FirstClassCallableRector;
-use Rector\Php81\Rector\ClassMethod\NewInInitializerRector;
+use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
-use Rector\PHPUnit\CodeQuality\Rector\MethodCall\AssertCountWithZeroToAssertEmptyRector;
 use Rector\TypeDeclaration\Rector\Closure\AddClosureNeverReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
@@ -93,7 +91,6 @@ return RectorConfig::configure()
         RemoveUnusedPublicMethodParameterRector::class,
         RemoveEmptyClassMethodRector::class,
         RemoveUnusedPromotedPropertyRector::class,
-        NewInInitializerRector::class,
 
         // start with short open tag
         __DIR__ . '/src/Views/tests/fixtures/other/var.php',
@@ -117,7 +114,7 @@ return RectorConfig::configure()
             __DIR__ . '/src/Scaffolder/src/Command',
         ],
 
-        FirstClassCallableRector::class => [
+        ArrayToFirstClassCallableRector::class => [
             __DIR__ . '/src/Core/tests/Scope/UseCaseTest.php',
         ],
 
@@ -127,8 +124,23 @@ return RectorConfig::configure()
             __DIR__ . '/src/Models/tests/PublicEntity.php',
         ],
 
-        // Explicit behavior is more preferable
-        AssertCountWithZeroToAssertEmptyRector::class,
+        // to be enabled later for easier to review
+        \Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector::class,
+        \Rector\PHPUnit\PHPUnit120\Rector\CallLike\CreateStubOverCreateMockArgRector::class,
+
+        \Rector\Php55\Rector\ClassConstFetch\StaticToSelfOnFinalClassRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\MethodCall\StringCastAssertStringContainsStringRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\StmtsAwareInterface\DeclareStrictTypesTestsRector::class,
+        \Rector\DeadCode\Rector\MethodCall\RemoveNullArgOnNullDefaultParamRector::class,
+        \Rector\CodingStyle\Rector\ArrowFunction\ArrowFunctionDelegatingCallToFirstClassCallableRector::class,
+        \Rector\PHPUnit\PHPUnit120\Rector\ClassMethod\ExpressionCreateMockToCreateStubRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\ClassMethod\AddInstanceofAssertForNullableInstanceRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\ClassMethod\BareCreateMockAssignToDirectUseRector::class,
+        \Rector\TypeDeclaration\Rector\Class_\TypedPropertyFromCreateMockAssignRector::class,
+        \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
+        \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)

@@ -85,7 +85,7 @@ class InvokerTest extends TestCase
      */
     public function testCallStaticMethodWithoutInstantiation(): void
     {
-        $result = $this->container->invoke([PrivateConstructor::class, 'publicMethod'], [42]);
+        $result = $this->container->invoke(PrivateConstructor::publicMethod(...), [42]);
 
         self::assertSame(42, $result);
     }

@@ -11,6 +11,11 @@ final class ExtensionsCommand extends ConsoleTestCase
 {
     public int $defaultVerbosityLevel = OutputInterface::VERBOSITY_DEBUG;
 
+    public function __construct()
+    {
+        parent::__construct(self::class);
+    }
+
     public function testExtensions(): void
     {
         $output = $this->runCommand('php:extensions');

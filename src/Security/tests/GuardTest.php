@@ -18,13 +18,13 @@ class GuardTest extends TestCase
     public const CONTEXT = [];
 
     private MockObject&PermissionsInterface $permission;
-    private MockObject&ActorInterface $actor;
+    private \PHPUnit\Framework\MockObject\Stub&ActorInterface $actor;
     private array $roles = ['user', 'admin'];
 
     public function testAllows(): void
     {
         $this->permission->method('hasRole')
-            ->willReturnCallback(static function (...$args) {
+            ->willReturnCallback(static function (...$args): bool {
                 static $series = [
                     [['user'], false],
                     [['admin'], true],
@@ -85,6 +85,6 @@ class GuardTest extends TestCase
     protected function setUp(): void
     {
         $this->permission = $this->createMock(PermissionsInterface::class);
-        $this->actor = $this->createMock(ActorInterface::class);
+        $this->actor = $this->createStub(ActorInterface::class);
     }
 }

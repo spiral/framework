@@ -283,7 +283,7 @@ final class ProxyTest extends BaseTestCase
 
         $root->runScope(
             new Scope('http'),
-            static function () use ($root, $proxy): void {
+            static function () use ($proxy): void {
                 self::assertSame('Foo', $proxy->getName());
                 $proxy->setName(new class implements \Stringable {
                     public function __toString(): string

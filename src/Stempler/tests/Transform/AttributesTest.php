@@ -28,7 +28,6 @@ class AttributesTest extends BaseTestCase
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]->attrs[1]);
 
-        /** @var Aggregate $aggr */
         $aggr = $doc->nodes[0]->attrs[1];
 
         self::assertSame('style', $aggr->accepts('style'));
@@ -48,7 +47,6 @@ class AttributesTest extends BaseTestCase
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]->attrs[1]);
 
-        /** @var Aggregate $aggr */
         $aggr = $doc->nodes[0]->attrs[1];
 
         self::assertNull($aggr->accepts('style'));
@@ -69,7 +67,6 @@ class AttributesTest extends BaseTestCase
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]->attrs[1]);
 
-        /** @var Aggregate $aggr */
         $aggr = $doc->nodes[0]->attrs[1];
 
         self::assertSame('style', $aggr->accepts('style'));
@@ -90,7 +87,6 @@ class AttributesTest extends BaseTestCase
 
         self::assertInstanceOf(Aggregate::class, $doc->nodes[0]->attrs[1]);
 
-        /** @var Aggregate $aggr */
         $aggr = $doc->nodes[0]->attrs[1];
 
         self::assertNull($aggr->accepts('style'));

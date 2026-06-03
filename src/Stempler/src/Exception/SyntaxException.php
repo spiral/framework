@@ -17,7 +17,7 @@ class SyntaxException extends \RuntimeException
         private readonly Token $token,
     ) {
         $message = \sprintf('%s at offset %s', $message, $token->offset);
-        parent::__construct($message, 0, null);
+        parent::__construct($message);
     }
 
     public function getToken(): Token

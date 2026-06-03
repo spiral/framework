@@ -22,7 +22,7 @@ class RuleTest extends TestCase
     public const OPERATION = 'test';
     public const CONTEXT = [];
 
-    private MockObject&ActorInterface $actor;
+    private \PHPUnit\Framework\MockObject\Stub&ActorInterface $actor;
     private MockObject&ResolverInterface $resolver;
     private MockObject&Rule $rule;
 
@@ -68,7 +68,7 @@ class RuleTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->actor = $this->createMock(ActorInterface::class);
+        $this->actor = $this->createStub(ActorInterface::class);
         $this->resolver = $this->createMock(ResolverInterface::class);
         $this->rule = $this->getMockBuilder(Rule::class)
             ->setConstructorArgs([$this->resolver])

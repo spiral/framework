@@ -195,7 +195,6 @@ final class Paginator implements PaginatorInterface, \Countable
      * Non-Immutable version of withCount.
      *
      * @param int<0, max> $count
-     * @return static
      */
     private function setCount(int $count): self
     {

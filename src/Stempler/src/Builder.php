@@ -113,8 +113,6 @@ final class Builder
             return $this->process($tpl);
         } catch (ContextExceptionInterface $e) {
             throw $this->mapException($e);
-        } catch (\Throwable $e) {
-            throw $e;
         }
     }
 

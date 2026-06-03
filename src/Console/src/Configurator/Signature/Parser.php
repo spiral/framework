@@ -173,7 +173,7 @@ final class Parser
     {
         $token = \trim($token);
 
-        $parts = \array_map('trim', \explode(':', $token, 2));
+        $parts = \array_map(trim(...), \explode(':', $token, 2));
 
         return \count($parts) === 2 ? $parts : [$token, ''];
     }
