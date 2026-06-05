@@ -18,7 +18,10 @@ use Spiral\Security\RuleManager;
  */
 class RuleManagerTest extends TestCase
 {
-    public const RULE_NAME = 'test';
+    // Not a valid/loadable class name on purpose: RuleManager::has() calls
+    // class_exists() (case-insensitive, with autoload), so a plain word like
+    // "test" could collide with a global class loaded elsewhere in the suite.
+    public const RULE_NAME = 'test-rule';
 
     /** @var ContainerInterface */
     private $container;

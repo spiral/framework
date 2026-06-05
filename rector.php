@@ -69,6 +69,9 @@ return RectorConfig::configure()
             __DIR__ . '/src/Logger/src/ListenerRegistry.php',
             __DIR__ . '/src/Stempler/src/Transform/Merge/ExtendsParent.php',
             __DIR__ . '/src/Bridge/Stempler/src/StemplerEngine.php',
+            // Keep the is_string() guard: getBindings() reads user config, so a
+            // malformed (non-string) binding must be skipped, not crash class_exists().
+            __DIR__ . '/src/Prototype/src/Bootloader/PrototypeBootloader.php',
         ],
         RemoveExtraParametersRector::class => [
             __DIR__ . '/src/Boot/src/BootloadManager/AbstractBootloadManager.php',

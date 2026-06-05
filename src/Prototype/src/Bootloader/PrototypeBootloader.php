@@ -146,7 +146,7 @@ final class PrototypeBootloader extends Bootloader\Bootloader
                 continue;
             }
 
-            if (\class_exists($shortcut, true) || \interface_exists($shortcut, true)) {
+            if (\is_string($shortcut) && (\class_exists($shortcut, true) || \interface_exists($shortcut, true))) {
                 $registry->bindProperty($property, $shortcut);
             }
         }
