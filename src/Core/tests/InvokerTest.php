@@ -85,6 +85,9 @@ class InvokerTest extends TestCase
      */
     public function testCallStaticMethodWithoutInstantiation(): void
     {
+        // Keep the [class, method] array callable: this test verifies the Invoker resolves
+        // it without instantiating the class. Do not convert it to a first-class callable
+        // (PrivateConstructor::publicMethod(...)) — that bypasses the resolution path under test.
         $result = $this->container->invoke([PrivateConstructor::class, 'publicMethod'], [42]);
 
         self::assertSame(42, $result);

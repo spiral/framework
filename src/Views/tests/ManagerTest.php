@@ -60,7 +60,6 @@ class ManagerTest extends TestCase
 
         $r = new \ReflectionObject($manager);
         $p = $r->getProperty('cache');
-        $p->setAccessible(true);
         /** @var ViewCache $cache */
         $cache = $p->getValue($manager);
 
@@ -78,7 +77,6 @@ class ManagerTest extends TestCase
 
         $r = new \ReflectionObject($manager);
         $p = $r->getProperty('cache');
-        $p->setAccessible(true);
         /** @var ViewCache $cache */
         $cache = $p->getValue($manager);
 
