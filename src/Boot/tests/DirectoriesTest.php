@@ -10,7 +10,7 @@ use Spiral\Boot\Exception\BootException;
 use Spiral\Boot\Exception\DirectoryException;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
-class DirectoriesTest extends TestCase
+final class DirectoriesTest extends TestCase
 {
     public function testDirectories(): void
     {

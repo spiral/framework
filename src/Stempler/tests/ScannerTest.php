@@ -7,7 +7,7 @@ namespace Spiral\Tests\Stempler;
 use PHPUnit\Framework\TestCase;
 use Spiral\Stempler\Lexer\StringStream;
 
-class ScannerTest extends TestCase
+final class ScannerTest extends TestCase
 {
     public function testPeakNull(): void
     {

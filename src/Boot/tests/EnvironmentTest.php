@@ -9,7 +9,7 @@ use Spiral\Boot\Environment;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
-class EnvironmentTest extends TestCase
+final class EnvironmentTest extends TestCase
 {
     public function testValue(): void
     {

@@ -14,7 +14,7 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 
-class AutoRegisterTest extends TestCase
+final class AutoRegisterTest extends TestCase
 {
     public function testRegister(): void
     {

@@ -21,7 +21,7 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\Exception\ConfigException;
 
-class HandlersTest extends BaseTestCase
+final class HandlersTest extends BaseTestCase
 {
     public function testNoHandlers(): void
     {

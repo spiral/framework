@@ -12,7 +12,7 @@ use Spiral\Security\Guard;
 use Spiral\Security\PermissionsInterface;
 use Spiral\Security\RuleInterface;
 
-class GuardTest extends TestCase
+final class GuardTest extends TestCase
 {
     public const OPERATION = 'test';
     public const CONTEXT = [];

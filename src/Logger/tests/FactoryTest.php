@@ -25,7 +25,7 @@ use Spiral\Logger\LogFactory;
 use Spiral\Logger\LoggerInjector;
 use Spiral\Logger\LogsInterface;
 
-class FactoryTest extends TestCase
+final class FactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

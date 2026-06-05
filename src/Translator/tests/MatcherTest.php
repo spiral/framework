@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Translator\Matcher;
 
-class MatcherTest extends TestCase
+final class MatcherTest extends TestCase
 {
     public static function patternProvider(): \Traversable
     {

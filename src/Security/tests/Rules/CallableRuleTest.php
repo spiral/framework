@@ -9,7 +9,7 @@ use Spiral\Security\ActorInterface;
 use Spiral\Security\RuleInterface;
 use Spiral\Security\Rule\CallableRule;
 
-class CallableRuleTest extends TestCase
+final class CallableRuleTest extends TestCase
 {
     public const OPERATION = 'test';
     public const CONTEXT = [];

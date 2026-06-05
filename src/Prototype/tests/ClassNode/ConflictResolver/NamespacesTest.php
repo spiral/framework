@@ -12,7 +12,7 @@ use Spiral\Prototype\ClassNode\ConflictResolver\Namespaces;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures;
 use Spiral\Tests\Prototype\Fixtures\Dependencies;
 
-class NamespacesTest extends TestCase
+final class NamespacesTest extends TestCase
 {
     #[DataProvider('cdProvider')]
     public function testFind(array $stmts, array $dependencies, array $expected): void

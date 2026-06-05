@@ -13,7 +13,7 @@ use Spiral\Auth\TokenInterface;
 use Spiral\Tests\Auth\Stub\TestAuthProvider;
 use Spiral\Tests\Auth\Stub\TestAuthToken;
 
-class AuthContextTest extends TestCase
+final class AuthContextTest extends TestCase
 {
     public function testNull(): void
     {

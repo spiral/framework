@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Cookies\Cookie;
 
-class CookieTest extends TestCase
+final class CookieTest extends TestCase
 {
     public static function sameSiteProvider(): \Traversable
     {

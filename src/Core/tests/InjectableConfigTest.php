@@ -12,7 +12,7 @@ use Spiral\Tests\Core\Fixtures\IntKeysConfig;
 use Spiral\Tests\Core\Fixtures\TestConfig;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Core\InjectableConfig::class)]
-class InjectableConfigTest extends TestCase
+final class InjectableConfigTest extends TestCase
 {
     use AliasTrait;
 

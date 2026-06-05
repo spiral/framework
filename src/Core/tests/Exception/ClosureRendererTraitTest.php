@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Traits\ClosureRendererTrait;
 
-class ClosureRendererTraitTest extends TestCase
+final class ClosureRendererTraitTest extends TestCase
 {
     use ClosureRendererTrait;
 

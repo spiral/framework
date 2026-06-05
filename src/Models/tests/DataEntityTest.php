@@ -7,7 +7,7 @@ namespace Spiral\Tests\Models;
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
 
-class DataEntityTest extends TestCase
+final class DataEntityTest extends TestCase
 {
     public function testSetter(): void
     {

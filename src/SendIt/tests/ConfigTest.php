@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment;
 use Spiral\SendIt\Config\MailerConfig;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testConfig(): void
     {

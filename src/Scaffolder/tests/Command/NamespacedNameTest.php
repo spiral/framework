@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-class NamespacedNameTest extends AbstractCommandTestCase
+final class NamespacedNameTest extends AbstractCommandTestCase
 {
     private const CLASS_NAME = '\\Spiral\\Tests\\Scaffolder\\App\\Controller\\Namespaced\\SampleController';
 

@@ -18,7 +18,7 @@ use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
 use Spiral\Tests\Exceptions\Fixtures\TestException;
 
-class ExceptionHandlerTest extends TestCase
+final class ExceptionHandlerTest extends TestCase
 {
     public static function nonReportableExceptionsDataProvider(): \Traversable
     {

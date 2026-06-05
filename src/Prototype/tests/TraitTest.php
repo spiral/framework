@@ -12,7 +12,7 @@ use Spiral\Prototype\Exception\PrototypeException;
 use Spiral\Prototype\PrototypeRegistry;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
 
-class TraitTest extends TestCase
+final class TraitTest extends TestCase
 {
     public function testNoScope(): void
     {

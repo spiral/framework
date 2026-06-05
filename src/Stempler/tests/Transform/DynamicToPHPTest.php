@@ -10,7 +10,7 @@ use Spiral\Stempler\Node\PHP;
 use Spiral\Stempler\Node\Raw;
 use Spiral\Stempler\Transform\Finalizer\DynamicToPHP;
 
-class DynamicToPHPTest extends BaseTestCase
+final class DynamicToPHPTest extends BaseTestCase
 {
     public static function provideStringWithoutDirective(): iterable
     {

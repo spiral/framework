@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-class JobHandlerTest extends AbstractCommandTestCase
+final class JobHandlerTest extends AbstractCommandTestCase
 {
     /**
      * @throws \ReflectionException

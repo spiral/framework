@@ -16,7 +16,7 @@ use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class ControllerTest extends BaseTestCase
+final class ControllerTest extends BaseTestCase
 {
     public function testRouteException(): void
     {

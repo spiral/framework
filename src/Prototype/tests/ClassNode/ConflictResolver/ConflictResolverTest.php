@@ -12,7 +12,7 @@ use Spiral\Prototype\NodeExtractor;
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures;
 use Spiral\Tests\Prototype\Fixtures\Dependencies;
 
-class ConflictResolverTest extends TestCase
+final class ConflictResolverTest extends TestCase
 {
     /**
      * @throws \Throwable

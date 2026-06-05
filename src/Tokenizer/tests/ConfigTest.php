@@ -5,7 +5,7 @@ namespace Spiral\Tests\Tokenizer;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tokenizer\Config\TokenizerConfig;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testDebugNotSet(): void
     {

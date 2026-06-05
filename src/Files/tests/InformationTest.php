@@ -8,7 +8,7 @@ use Spiral\Files\Exception\FileNotFoundException;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 
-class InformationTest extends TestCase
+final class InformationTest extends TestCase
 {
     public function testTime(): void
     {

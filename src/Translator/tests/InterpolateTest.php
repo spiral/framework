@@ -14,7 +14,7 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 
-class InterpolateTest extends TestCase
+final class InterpolateTest extends TestCase
 {
     public function testInterpolate(): void
     {

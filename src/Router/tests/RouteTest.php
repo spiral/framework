@@ -11,7 +11,7 @@ use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
 
-class RouteTest extends BaseTestCase
+final class RouteTest extends BaseTestCase
 {
     public static function prefixesDataProvider(): \Traversable
     {

@@ -16,7 +16,7 @@ use Spiral\Config\LoaderInterface;
 use Spiral\Logger\LogsInterface;
 use Spiral\Monolog\Bootloader\MonologBootloader;
 
-class LoggerTest extends BaseTestCase
+final class LoggerTest extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 

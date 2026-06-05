@@ -11,7 +11,7 @@ use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
 
 #[TestScope("http")]
-class EngineTest extends BaseTestCase
+final class EngineTest extends BaseTestCase
 {
     public function testList(): void
     {

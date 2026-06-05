@@ -12,7 +12,7 @@ use Spiral\Tests\Boot\Fixtures\TestConfig;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 use Spiral\Core\ContainerScope;
 
-class FunctionsTest extends TestCase
+final class FunctionsTest extends TestCase
 {
     public function testSpiral(): void
     {

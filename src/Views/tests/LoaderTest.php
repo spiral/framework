@@ -10,7 +10,7 @@ use Spiral\Views\Exception\PathException;
 use Spiral\Views\Loader\PathParser;
 use Spiral\Views\ViewLoader;
 
-class LoaderTest extends TestCase
+final class LoaderTest extends TestCase
 {
     public function testExistsException(): void
     {

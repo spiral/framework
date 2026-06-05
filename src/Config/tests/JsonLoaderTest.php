@@ -6,7 +6,7 @@ namespace Spiral\Tests\Config;
 
 use Spiral\Config\Exception\LoaderException;
 
-class JsonLoaderTest extends BaseTestCase
+final class JsonLoaderTest extends BaseTestCase
 {
     public function testGetConfig(): void
     {

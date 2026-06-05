@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Http\Header\AcceptHeader;
 use Spiral\Http\Header\AcceptHeaderItem;
 
-class AcceptHeaderTest extends TestCase
+final class AcceptHeaderTest extends TestCase
 {
     public static function sameQualityCompareProvider(): \Traversable
     {

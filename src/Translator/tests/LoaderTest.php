@@ -13,7 +13,7 @@ use Spiral\Translator\Exception\LocaleException;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 
-class LoaderTest extends TestCase
+final class LoaderTest extends TestCase
 {
     public function testHasLocale(): void
     {

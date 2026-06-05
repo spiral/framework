@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\Actor\Guest;
 
-class GuestTest extends TestCase
+final class GuestTest extends TestCase
 {
     public function testGetRoles(): void
     {

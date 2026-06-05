@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\Actor\NullActor;
 
-class NullActorTest extends TestCase
+final class NullActorTest extends TestCase
 {
     public function testGetRoles(): void
     {

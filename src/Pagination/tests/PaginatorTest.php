@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Pagination\Paginator;
 use Spiral\Pagination\PaginatorInterface;
 
-class PaginatorTest extends TestCase
+final class PaginatorTest extends TestCase
 {
     public function testInterfaces(): void
     {

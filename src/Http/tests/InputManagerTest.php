@@ -18,7 +18,7 @@ use Spiral\Http\Request\InputManager;
 use Spiral\Http\Request\ServerBag;
 use Nyholm\Psr7\ServerRequest;
 
-class InputManagerTest extends TestCase
+final class InputManagerTest extends TestCase
 {
     private Container $container;
     private InputManager $input;

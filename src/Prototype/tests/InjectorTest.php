@@ -15,7 +15,7 @@ use Spiral\Tests\Prototype\Fixtures\Dependencies;
 use Spiral\Tests\Prototype\Fixtures\InheritedInjection\InjectionTwo;
 use Spiral\Tests\Prototype\Fixtures\TestClass;
 
-class InjectorTest extends TestCase
+final class InjectorTest extends TestCase
 {
     protected function setUp(): void
     {

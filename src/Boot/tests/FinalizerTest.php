@@ -7,7 +7,7 @@ namespace Spiral\Tests\Boot;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Finalizer;
 
-class FinalizerTest extends TestCase
+final class FinalizerTest extends TestCase
 {
     public function testFinalize(): void
     {

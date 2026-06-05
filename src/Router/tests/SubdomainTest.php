@@ -11,7 +11,7 @@ use Spiral\Router\Route;
 use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 
-class SubdomainTest extends TestCase
+final class SubdomainTest extends TestCase
 {
     public function testSubDomainWithoutAction(): void
     {

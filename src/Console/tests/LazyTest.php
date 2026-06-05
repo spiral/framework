@@ -8,7 +8,7 @@ use Spiral\Tests\Console\Fixtures\LazyLoadedCommand;
 use Spiral\Tokenizer\ScopedClassesInterface;
 use Symfony\Component\Console\Command\LazyCommand;
 
-class LazyTest extends BaseTestCase
+final class LazyTest extends BaseTestCase
 {
     public function testLazyCommandCreationInCommandLocator(): void
     {

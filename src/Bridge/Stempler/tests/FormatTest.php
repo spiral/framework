@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler;
 
 use Spiral\Views\ViewContext;
 
-class FormatTest extends BaseTestCase
+final class FormatTest extends BaseTestCase
 {
     public function testFormatDiv(): void
     {

@@ -17,7 +17,7 @@ use Spiral\Tests\SendIt\App\MailInterceptorBootloader;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class RenderTest extends TestCase
+final class RenderTest extends TestCase
 {
     public function defineBootloaders(): array
     {

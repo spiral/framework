@@ -13,7 +13,7 @@ use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Spiral\Tests\Console\Fixtures\TestCommand;
 use Spiral\Tests\Console\Fixtures\UpdateClass;
 
-class UpdateTest extends BaseTestCase
+final class UpdateTest extends BaseTestCase
 {
     public const TOKENIZER_CONFIG = [
         'directories' => [__DIR__ . '/../src/Command', __DIR__ . '/Fixtures/'],

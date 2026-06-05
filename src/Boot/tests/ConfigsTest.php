@@ -8,7 +8,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Tests\Boot\Fixtures\TestConfig;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
-class ConfigsTest extends TestCase
+final class ConfigsTest extends TestCase
 {
     public function testDirectories(): void
     {

@@ -8,7 +8,7 @@ use Spiral\Files\Exception\FilesException;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 
-class DirectoriesTest extends TestCase
+final class DirectoriesTest extends TestCase
 {
     public function testEnsureDirectory(): void
     {

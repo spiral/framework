@@ -13,7 +13,7 @@ use Spiral\Core\Exception\RuntimeException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 
-class ScopesTest extends TestCase
+final class ScopesTest extends TestCase
 {
     public function testScope(): void
     {

@@ -14,7 +14,7 @@ use Spiral\Security\Rule\ForbidRule;
  *
  * @package Spiral\Tests\Security\Rules
  */
-class ForbidRuleTest extends TestCase
+final class ForbidRuleTest extends TestCase
 {
     public const OPERATION = 'test';
     public const CONTEXT = [];

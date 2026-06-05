@@ -9,7 +9,7 @@ use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Exception\ContextException;
 use Spiral\Views\ViewContext;
 
-class ContextTest extends TestCase
+final class ContextTest extends TestCase
 {
     public function testResolveValue(): void
     {

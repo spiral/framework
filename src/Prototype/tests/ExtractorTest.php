@@ -7,7 +7,7 @@ namespace Spiral\Tests\Prototype;
 use PHPUnit\Framework\TestCase;
 use Spiral\Prototype\PropertyExtractor;
 
-class ExtractorTest extends TestCase
+final class ExtractorTest extends TestCase
 {
     public function testExtract(): void
     {

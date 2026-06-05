@@ -13,7 +13,7 @@ use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\SingletonAttribute;
 
-class SingletonsTest extends TestCase
+final class SingletonsTest extends TestCase
 {
     public static function singletonWithCustomArgsProvider(): iterable
     {

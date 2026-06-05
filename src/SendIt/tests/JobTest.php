@@ -19,7 +19,7 @@ use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class JobTest extends TestCase
+final class JobTest extends TestCase
 {
     /** @var MailerInterface */
     protected $mailer;

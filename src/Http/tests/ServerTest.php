@@ -11,7 +11,7 @@ use Spiral\Http\Exception\InputException;
 use Spiral\Http\Request\InputManager;
 use Nyholm\Psr7\ServerRequest;
 
-class ServerTest extends TestCase
+final class ServerTest extends TestCase
 {
     private Container $container;
     private InputManager $input;

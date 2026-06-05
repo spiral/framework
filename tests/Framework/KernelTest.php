@@ -18,7 +18,7 @@ use Spiral\App\TestApp;
 use Spiral\Core\Container;
 use Spiral\Framework\Spiral;
 
-class KernelTest extends BaseTestCase
+final class KernelTest extends BaseTestCase
 {
     public const MAKE_APP_ON_STARTUP = false;
 

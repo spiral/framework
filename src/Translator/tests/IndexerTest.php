@@ -16,7 +16,7 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Indexer;
 use Spiral\Translator\Traits\TranslatorTrait;
 
-class IndexerTest extends TestCase
+final class IndexerTest extends TestCase
 {
     use TranslatorTrait;
 

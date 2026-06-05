@@ -8,7 +8,7 @@ use Spiral\Tokenizer\Reflection\ReflectionArgument;
 use Spiral\Tokenizer\Reflection\ReflectionInvocation;
 use Spiral\Tokenizer\Tokenizer;
 
-class InvocationsTest extends TestCase
+final class InvocationsTest extends TestCase
 {
     protected function someFunction()
     {

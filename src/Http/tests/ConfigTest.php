@@ -7,7 +7,7 @@ namespace Spiral\Tests\Http;
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Config\HttpConfig;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testBasePath(): void
     {

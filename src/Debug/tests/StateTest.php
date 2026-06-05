@@ -10,7 +10,7 @@ use Spiral\Debug\Exception\StateException;
 use Spiral\Debug\State;
 use Spiral\Logger\Event\LogEvent;
 
-class StateTest extends TestCase
+final class StateTest extends TestCase
 {
     public function testTags(): void
     {

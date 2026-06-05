@@ -6,7 +6,7 @@ namespace Spiral\Tests\Scaffolder\Command;
 
 use Spiral\Prototype\Traits\PrototypeTrait;
 
-class ControllerTest extends AbstractCommandTestCase
+final class ControllerTest extends AbstractCommandTestCase
 {
     /**
      * @throws \ReflectionException

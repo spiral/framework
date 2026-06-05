@@ -7,7 +7,7 @@ namespace Spiral\Tests\Models;
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\Reflection\ReflectionEntity;
 
-class ReflectionTest extends TestCase
+final class ReflectionTest extends TestCase
 {
     public function testReflection(): void
     {

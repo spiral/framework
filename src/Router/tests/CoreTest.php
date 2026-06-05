@@ -18,7 +18,7 @@ use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 
-class CoreTest extends \Spiral\Testing\TestCase
+final class CoreTest extends \Spiral\Testing\TestCase
 {
     public function defineBootloaders(): array
     {

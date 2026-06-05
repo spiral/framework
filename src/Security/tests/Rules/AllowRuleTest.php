@@ -14,7 +14,7 @@ use Spiral\Security\Rule\AllowRule;
  *
  * @package Spiral\Tests\Security\Rules
  */
-class AllowRuleTest extends TestCase
+final class AllowRuleTest extends TestCase
 {
     public const OPERATION = 'test';
     public const CONTEXT = [];

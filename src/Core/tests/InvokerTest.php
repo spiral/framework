@@ -17,7 +17,7 @@ use Spiral\Tests\Core\Fixtures\PrivateConstructor;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\Storage;
 
-class InvokerTest extends TestCase
+final class InvokerTest extends TestCase
 {
     private Container $container;
 

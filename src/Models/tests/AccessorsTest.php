@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Models\Exception\EntityException;
 use Spiral\Models\Reflection\ReflectionEntity;
 
-class AccessorsTest extends TestCase
+final class AccessorsTest extends TestCase
 {
     public function testAccessed(): void
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-class MiddlewareTest extends AbstractCommandTestCase
+final class MiddlewareTest extends AbstractCommandTestCase
 {
     /**
      * @throws \ReflectionException

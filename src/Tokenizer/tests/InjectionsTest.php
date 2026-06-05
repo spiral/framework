@@ -14,7 +14,7 @@ use Spiral\Tokenizer\InterfacesInterface;
 use Spiral\Tokenizer\InvocationLocator;
 use Spiral\Tokenizer\InvocationsInterface;
 
-class InjectionsTest extends TestCase
+final class InjectionsTest extends TestCase
 {
     public function testClassLocator(): void
     {

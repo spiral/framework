@@ -13,7 +13,7 @@ use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 
-class QueueTest extends TestCase
+final class QueueTest extends TestCase
 {
     /** @var m\LegacyMockInterface|m\MockInterface|QueueInterface */
     private $queue;

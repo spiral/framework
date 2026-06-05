@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Interceptors\Context\Target;
 use Spiral\Tests\Interceptors\Unit\Stub\TestService;
 
-class TargetTest extends TestCase
+final class TargetTest extends TestCase
 {
     public static function providePathChunks(): iterable
     {

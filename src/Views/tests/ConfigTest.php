@@ -11,7 +11,7 @@ use Spiral\Views\Config\ViewsConfig;
 use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\Engine\Native\NativeEngine;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testCache(): void
     {

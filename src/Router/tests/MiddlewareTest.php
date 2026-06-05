@@ -15,7 +15,7 @@ use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Spiral\Tests\Router\Stub\HeaderMiddleware;
 
-class MiddlewareTest extends BaseTestingCase
+final class MiddlewareTest extends BaseTestingCase
 {
     use RouterFactoryTrait;
 

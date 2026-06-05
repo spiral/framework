@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Spiral\Scaffolder\defineArrayType;
 
-class FunctionsTest extends TestCase
+final class FunctionsTest extends TestCase
 {
     public static function defineProvider(): \Traversable
     {

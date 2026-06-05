@@ -11,7 +11,7 @@ use Spiral\Encrypter\Exception\DecryptException;
 use Spiral\Encrypter\Exception\EncrypterException;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Encrypter\Encrypter::class)]
-class EncrypterTest extends TestCase
+final class EncrypterTest extends TestCase
 {
     public function testImmutable(): void
     {

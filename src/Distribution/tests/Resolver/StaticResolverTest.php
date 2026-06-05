@@ -7,7 +7,7 @@ namespace Spiral\Tests\Distribution\Resolver;
 use Spiral\Distribution\Resolver\StaticResolver;
 use Spiral\Tests\Distribution\TestCase;
 
-class StaticResolverTest extends TestCase
+final class StaticResolverTest extends TestCase
 {
     public function testGuzzleResolve(): void
     {

@@ -22,7 +22,7 @@ use Spiral\Stempler\Parser\Syntax\HTMLSyntax;
 use Spiral\Stempler\Parser\Syntax\InlineSyntax;
 use Spiral\Stempler\Parser\Syntax\PHPSyntax;
 
-class BuilderTest extends TestCase
+final class BuilderTest extends TestCase
 {
     public function testRaw(): void
     {

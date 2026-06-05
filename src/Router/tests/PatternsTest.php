@@ -15,7 +15,7 @@ use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Stub\InArrayPattern;
 use Mockery as m;
 
-class PatternsTest extends TestCase
+final class PatternsTest extends TestCase
 {
     public function testDigitWithZeroValue(): void
     {

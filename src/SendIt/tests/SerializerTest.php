@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Mailer\Message;
 use Spiral\SendIt\MessageSerializer;
 
-class SerializerTest extends TestCase
+final class SerializerTest extends TestCase
 {
     public function testSerializeUnserialize(): void
     {
