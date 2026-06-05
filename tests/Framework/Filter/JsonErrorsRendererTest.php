@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Filter;
+namespace Spiral\Tests\Framework\Filter;
 
 use Spiral\Filter\JsonErrorsRenderer;
 use Spiral\Http\ResponseWrapper;

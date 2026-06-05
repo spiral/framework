@@ -95,6 +95,51 @@ jobs:
           vendor/bin/psalm --no-cache --shepherd --stats --output-format=checkstyle --php-version=${{ matrix.php }}
           vendor/bin/rector --dry-run --clear-cache
 
+  architecture:
+    name: StructArmed
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2']
+        os: [ubuntu-latest]
+
+    steps:
+      # General Steps
+      - name: Set Git To Use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Configure environment
+        run: |
+          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
+          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
+
+      # Install PHP and Dependencies
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Validate Composer
+        run: composer validate
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--prefer-dist --no-audit"
+
+      - name: Install StructArmed
+        run: composer require --dev boundwize/structarmed:^0.12.0 --no-interaction --prefer-dist --no-audit
+
+      # Execution
+      - name: Run StructArmed
+        run: vendor/bin/structarmed analyse
+
   #
   # Execute unit tests on all valid PHP versions.
   #

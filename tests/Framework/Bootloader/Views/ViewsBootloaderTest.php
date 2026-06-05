@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Views;
+namespace Spiral\Tests\Framework\Bootloader\Views;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Tests\Framework\BaseTestCase;

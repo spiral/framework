@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Prototype;
+namespace Spiral\Tests\Framework\Bootloader\Prototype;
 
 use Spiral\App\SomeService\Client;
 use Spiral\App\SomeService\HttpClient;

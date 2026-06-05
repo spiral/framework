@@ -8,3 +8,4 @@ phpcs.xml              export-ignore
 phpunit.xml            export-ignore
 psalm.xml              export-ignore
 rector.php             export-ignore
+structarmed.php        export-ignore

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Filter;
+namespace Spiral\Tests\Framework\Filter;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

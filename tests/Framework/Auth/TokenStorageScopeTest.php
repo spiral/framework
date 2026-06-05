@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Auth;
+namespace Spiral\Tests\Framework\Auth;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Auth\TokenInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Security;
+namespace Spiral\Tests\Framework\Bootloader\Security;
 
 use Spiral\Bootloader\Security\FiltersBootloader;
 use Spiral\Config\ConfigManager;

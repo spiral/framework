@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Storage;
+namespace Spiral\Tests\Framework\Bootloader\Storage;
 
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;

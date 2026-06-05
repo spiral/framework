@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Telemetry;
+namespace Spiral\Tests\Framework\Bootloader\Telemetry;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;

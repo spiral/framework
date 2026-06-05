@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Auth\Config;
+namespace Spiral\Tests\Framework\Auth\Config;
 
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\TokenStorageInterface as SessionTokenStorageInterface;

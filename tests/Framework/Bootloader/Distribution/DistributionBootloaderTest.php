@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Distribution;
+namespace Spiral\Tests\Framework\Bootloader\Distribution;
 
 use Mockery as m;
 use Spiral\Distribution\Config\DistributionConfig;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Console;
+namespace Spiral\Tests\Framework\Console;
 
 use Spiral\Tests\Framework\ConsoleTestCase;
 

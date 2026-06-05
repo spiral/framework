@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader;
+namespace Spiral\Tests\Framework\Bootloader;
 
 use Spiral\App\Interceptor\One;
 use Spiral\App\Interceptor\Three;

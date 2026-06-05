@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Framework;
+namespace Spiral\Tests\Framework\Framework;
 
 use Spiral\App\TestApp;
 use Spiral\Tests\Framework\BaseTestCase;
