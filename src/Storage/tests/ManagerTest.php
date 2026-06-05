@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Storage;
 
+use PHPUnit\Framework\Attributes\Group;
 use Spiral\Storage\Exception\InvalidArgumentException;
 use Spiral\Storage\Storage;
 use Spiral\Storage\Visibility;
 
-#[\PHPUnit\Framework\Attributes\Group('unit')]
-class ManagerTestCase extends TestCase
+#[Group('unit')]
+final class ManagerTest extends TestCase
 {
     private Storage $manager;
 

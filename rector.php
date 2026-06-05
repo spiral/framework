@@ -117,6 +117,7 @@ return RectorConfig::configure()
         ArrayToFirstClassCallableRector::class => [
             __DIR__ . '/src/Core/tests/Scope/UseCaseTest.php',
             __DIR__ . '/src/Core/tests/InjectableTest.php',
+            __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
 
         PreferPHPUnitThisCallRector::class,

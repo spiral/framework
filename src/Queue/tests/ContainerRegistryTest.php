@@ -11,15 +11,10 @@ use Spiral\Queue\ContainerRegistry;
 use Spiral\Queue\Exception\JobException;
 use Spiral\Queue\HandlerInterface;
 
-final class ContainerRegistryT extends TestCase
+final class ContainerRegistryTest extends TestCase
 {
     private ContainerInterface|m\MockInterface $container;
     private ContainerRegistry $registry;
-
-    public function __construct()
-    {
-        parent::__construct(self::class);
-    }
 
     public function testGetsHandlerByJobType(): void
     {

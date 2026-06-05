@@ -193,10 +193,6 @@ final class Actor
         return $this->createInstance($ctx, $arguments, $fallbackActor, $tracer);
     }
 
-    /**
-     * @psalm-suppress UnusedParam
-     * todo wat should we do with $arguments?
-     */
     private function resolveInjector(Config\Injectable $binding, Ctx $ctx, Tracer $tracer)
     {
         $context = $ctx->context;

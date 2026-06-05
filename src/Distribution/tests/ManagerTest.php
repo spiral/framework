@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Distribution;
 
+use PHPUnit\Framework\Attributes\Group;
 use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\StaticResolver;
 
-#[\PHPUnit\Framework\Attributes\Group('unit')]
-class ManagerTestCase extends TestCase
+#[Group('unit')]
+class ManagerTest extends TestCase
 {
     private StaticResolver $resolver;
     private Manager $manager;

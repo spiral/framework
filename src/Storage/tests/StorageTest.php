@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Storage;
 
+use PHPUnit\Framework\Attributes\Group;
 use Spiral\Storage\Visibility;
 
-#[\PHPUnit\Framework\Attributes\Group('unit')]
-class StorageTestCase extends TestCase
+#[Group('unit')]
+final class StorageTest extends TestCase
 {
     public function testCreate(): void
     {

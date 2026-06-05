@@ -190,7 +190,6 @@ interface FilesInterface
      * @param non-empty-string|null $pattern Extension pattern.
      *
      * @return list<non-empty-string>
-     * /
      */
     public function getFiles(string $location, ?string $pattern = null): array;
 
