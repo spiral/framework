@@ -87,7 +87,7 @@ final class ScopesTest extends TestCase
             self::assertTrue($c->runScope([
                 'bucket' => new Bucket('b'),
                 'other'  => new SampleClass(),
-            ], static function (): void {
+            ], static function (): never {
                 throw new RuntimeException('exception');
             }));
         } catch (\Throwable) {
