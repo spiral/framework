@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Validation;
+namespace Spiral\Tests\Framework\Bootloader\Validation;
 
 use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Config\ConfiguratorInterface;

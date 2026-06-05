@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Filter\Model;
+namespace Spiral\Tests\Framework\Filter\Model;
 
 use Spiral\App\Request\FilterWithSetters;
 use Spiral\App\Request\PostFilter;

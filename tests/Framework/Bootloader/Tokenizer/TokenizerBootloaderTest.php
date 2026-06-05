@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Tokenizer;
+namespace Spiral\Tests\Framework\Bootloader\Tokenizer;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;

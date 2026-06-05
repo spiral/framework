@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Auth;
+namespace Spiral\Tests\Framework\Bootloader\Auth;
 
 use Spiral\Auth\ActorProviderInterface;
 use Spiral\Auth\AuthScope;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Attributes;
+namespace Spiral\Tests\Framework\Bootloader\Attributes;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Bootloader\Attributes\AttributesConfig;

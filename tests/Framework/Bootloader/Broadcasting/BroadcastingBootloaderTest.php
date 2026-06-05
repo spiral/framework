@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Broadcasting;
+namespace Spiral\Tests\Framework\Bootloader\Broadcasting;
 
 use Spiral\Broadcasting\Bootloader\BroadcastingBootloader;
 use Spiral\Broadcasting\BroadcastInterface;

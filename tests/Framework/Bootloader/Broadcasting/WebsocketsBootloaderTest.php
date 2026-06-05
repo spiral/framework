@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Broadcasting;
+namespace Spiral\Tests\Framework\Bootloader\Broadcasting;
 
 use Spiral\Broadcasting\Middleware\AuthorizationMiddleware;
 use Spiral\Tests\Framework\BaseTestCase;

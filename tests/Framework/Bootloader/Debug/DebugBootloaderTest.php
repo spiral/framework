@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Debug;
+namespace Spiral\Tests\Framework\Bootloader\Debug;
 
 use Spiral\Boot\Environment\AppEnvironment;
 use Spiral\Bootloader\DebugBootloader;

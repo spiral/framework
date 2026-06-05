@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Tokenizer\Config;
+namespace Spiral\Tests\Framework\Tokenizer\Config;
 
 use Spiral\Testing\Attribute\Env;
 use Spiral\Tests\Framework\BaseTestCase;

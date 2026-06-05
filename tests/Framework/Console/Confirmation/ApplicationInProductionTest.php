@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Console\Confirmation;
+namespace Spiral\Tests\Framework\Console\Confirmation;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

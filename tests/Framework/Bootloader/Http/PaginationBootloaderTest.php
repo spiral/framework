@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Http;
+namespace Spiral\Tests\Framework\Bootloader\Http;
 
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use Spiral\Framework\Spiral;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Console;
+namespace Spiral\Tests\Framework\Bootloader\Console;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Exceptions;
+namespace Spiral\Tests\Framework\Bootloader\Exceptions;
 
 use Spiral\Snapshots\FileSnapshooter;
 use Spiral\Snapshots\FileSnapshot;

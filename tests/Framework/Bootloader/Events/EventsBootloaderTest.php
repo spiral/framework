@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Events;
+namespace Spiral\Tests\Framework\Bootloader\Events;
 
 use Mockery as m;
 use Psr\Container\ContainerInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Scaffolder;
+namespace Spiral\Tests\Framework\Bootloader\Scaffolder;
 
 use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;

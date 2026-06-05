@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Serializer;
+namespace Spiral\Tests\Framework\Bootloader\Serializer;
 
 use Spiral\Serializer\Config\SerializerConfig;
 use Spiral\Serializer\Serializer\JsonSerializer;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Security;
+namespace Spiral\Tests\Framework\Bootloader\Security;
 
 use Spiral\Domain\GuardPermissionsProvider;
 use Spiral\Domain\PermissionsProviderInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Attributes;
+namespace Spiral\Tests\Framework\Bootloader\Attributes;
 
 use Spiral\Attributes\Composite\SelectiveReader;
 use Spiral\Attributes\Internal\Instantiator\Facade;

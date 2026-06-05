@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Attribute;
+namespace Spiral\Tests\Framework\Attribute;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\App\Dispatcher\DispatcherWithCustomEnum;

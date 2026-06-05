@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\AuthHttp\Middleware;
+namespace Spiral\Tests\Framework\AuthHttp\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\Middleware\AuthMiddleware;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Http;
+namespace Spiral\Tests\Framework\Bootloader\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Bootloader\Http\CookiesBootloader;

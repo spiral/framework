@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\SendIt;
+namespace Spiral\Tests\Framework\Bootloader\SendIt;
 
 use Spiral\Mailer\MailerInterface;
 use Spiral\SendIt\Bootloader\MailerBootloader;

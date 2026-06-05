@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Console\Confirmation;
+namespace Spiral\Tests\Framework\Console\Confirmation;
 
 use Spiral\Framework\Spiral;
 use Spiral\Testing\Attribute\Env;

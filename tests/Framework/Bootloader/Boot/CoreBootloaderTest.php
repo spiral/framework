@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Boot;
+namespace Spiral\Tests\Framework\Bootloader\Boot;
 
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;

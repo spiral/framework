@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Queue;
+namespace Spiral\Tests\Framework\Bootloader\Queue;
 
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;

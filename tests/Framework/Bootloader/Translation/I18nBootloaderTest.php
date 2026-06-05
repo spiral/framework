@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Bootloader\Translation;
+namespace Spiral\Tests\Framework\Bootloader\Translation;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Environment\DebugMode;
