@@ -67,29 +67,6 @@ final class StorageConfigTest extends TestCase
         ), $config->getAdapters()['uploads-async']);
     }
 
-    /**
-     * S3AsyncClient eagerly builds a Symfony HTTP client whose internal curl state
-     * (handle id) is non-deterministic across platforms, so a deep object comparison
-     * is flaky on Windows. Drop the HTTP client / credential provider first so the
-     * assertion focuses on the configured bucket/prefix/region/credentials.
-     */
-    private function assertAsyncAdapterEquals(AsyncAwsS3Adapter $expected, mixed $actual): void
-    {
-        self::assertInstanceOf(AsyncAwsS3Adapter::class, $actual);
-        self::assertEquals($this->withoutHttpClient($expected), $this->withoutHttpClient($actual));
-    }
-
-    private function withoutHttpClient(AsyncAwsS3Adapter $adapter): AsyncAwsS3Adapter
-    {
-        $client = (new \ReflectionProperty(AsyncAwsS3Adapter::class, 'client'))->getValue($adapter);
-
-        foreach (['httpClient', 'credentialProvider'] as $property) {
-            (new \ReflectionProperty(\AsyncAws\Core\AbstractApi::class, $property))->setValue($client, null);
-        }
-
-        return $adapter;
-    }
-
     public function testS3AdapterWithOverriddenBucket(): void
     {
         $config = new StorageConfig($this->getConfig(['buckets' => [
@@ -268,6 +245,29 @@ final class StorageConfigTest extends TestCase
             'overridden',
             new AsyncAwsS3PortableVisibilityConverter(Visibility::VISIBILITY_PUBLIC),
         ), $config->getAdapters()['uploads-async']);
+    }
+
+    /**
+     * S3AsyncClient eagerly builds a Symfony HTTP client whose internal curl state
+     * (handle id) is non-deterministic across platforms, so a deep object comparison
+     * is flaky on Windows. Drop the HTTP client / credential provider first so the
+     * assertion focuses on the configured bucket/prefix/region/credentials.
+     */
+    private function assertAsyncAdapterEquals(AsyncAwsS3Adapter $expected, mixed $actual): void
+    {
+        self::assertInstanceOf(AsyncAwsS3Adapter::class, $actual);
+        self::assertEquals($this->withoutHttpClient($expected), $this->withoutHttpClient($actual));
+    }
+
+    private function withoutHttpClient(AsyncAwsS3Adapter $adapter): AsyncAwsS3Adapter
+    {
+        $client = (new \ReflectionProperty(AsyncAwsS3Adapter::class, 'client'))->getValue($adapter);
+
+        foreach (['httpClient', 'credentialProvider'] as $property) {
+            (new \ReflectionProperty(\AsyncAws\Core\AbstractApi::class, $property))->setValue($client, null);
+        }
+
+        return $adapter;
     }
 
     private function getConfig(array $config = []): array
