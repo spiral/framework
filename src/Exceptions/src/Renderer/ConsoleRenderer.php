@@ -246,7 +246,10 @@ class ConsoleRenderer extends AbstractRenderer
 
         try {
             if (\DIRECTORY_SEPARATOR === '\\') {
-                return (\function_exists('sapi_windows_vt100_support') && @sapi_windows_vt100_support($stream))
+                // Call via a variable so PHP-CS-Fixer's `native_function_invocation` rule doesn't toggle the
+                // leading backslash depending on the platform (the function only exists on Windows).
+                $sapiWindowsVt100Support = 'sapi_windows_vt100_support';
+                return (\function_exists($sapiWindowsVt100Support) && @$sapiWindowsVt100Support($stream))
                     || \getenv('ANSICON') !== false
                     || \getenv('ConEmuANSI') === 'ON'
                     || \getenv('TERM') === 'xterm';
