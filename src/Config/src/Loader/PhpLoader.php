@@ -9,6 +9,7 @@ use Spiral\Config\Exception\LoaderException;
 use Spiral\Core\ContainerScope;
 
 /**
+ * @internal
  * Loads PHP files inside container scope.
  */
 final class PhpLoader implements FileLoaderInterface
