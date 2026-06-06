@@ -40,7 +40,7 @@ final class CompositeRuleTest extends TestCase
 
         /** @var RuleInterface $rule */
         $rule = new $compositeRuleClass($repository);
-        self::assertEquals($expected, $rule->allows($this->actor, static::OPERATION, static::CONTEXT));
+        self::assertEquals($expected, $rule->allows($this->actor, self::OPERATION, self::CONTEXT));
     }
 
     protected function setUp(): void

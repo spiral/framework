@@ -39,13 +39,13 @@ final class GuardTest extends TestCase
         $rule = $this->createMock(RuleInterface::class);
         $rule->expects($this->once())
             ->method('allows')
-            ->with($this->actor, static::OPERATION, [])->willReturn(true);
+            ->with($this->actor, self::OPERATION, [])->willReturn(true);
 
         $this->permission->method('getRule')
             ->willReturn($rule);
 
         $guard = new Guard($this->permission, $this->actor, $this->roles);
-        self::assertTrue($guard->allows(static::OPERATION, static::CONTEXT));
+        self::assertTrue($guard->allows(self::OPERATION, self::CONTEXT));
     }
 
     public function testAllowsPermissionsHasNoRole(): void
@@ -53,7 +53,7 @@ final class GuardTest extends TestCase
         $this->permission->method('hasRole')->with($this->anything())->willReturn(false);
 
         $guard = new Guard($this->permission, $this->actor, $this->roles);
-        self::assertFalse($guard->allows(static::OPERATION, static::CONTEXT));
+        self::assertFalse($guard->allows(self::OPERATION, self::CONTEXT));
     }
 
     public function testAllowsNoActor(): void
@@ -61,7 +61,7 @@ final class GuardTest extends TestCase
         $guard = new Guard($this->permission, null, $this->roles);
 
         $this->expectException(GuardException::class);
-        $guard->allows(static::OPERATION, static::CONTEXT);
+        $guard->allows(self::OPERATION, self::CONTEXT);
     }
 
     public function testWithActor(): void

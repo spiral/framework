@@ -21,16 +21,16 @@ final class LimitsTraitTest extends TestCase
 
     public function testLimit(): void
     {
-        self::assertEquals(static::DEFAULT_LIMIT, $this->trait->getLimit());
-        self::assertEquals($this->trait, $this->trait->limit(static::LIMIT));
-        self::assertEquals(static::LIMIT, $this->trait->getLimit());
+        self::assertEquals(self::DEFAULT_LIMIT, $this->trait->getLimit());
+        self::assertEquals($this->trait, $this->trait->limit(self::LIMIT));
+        self::assertEquals(self::LIMIT, $this->trait->getLimit());
     }
 
     public function testOffset(): void
     {
-        self::assertEquals(static::DEFAULT_OFFSET, $this->trait->getOffset());
-        self::assertEquals($this->trait, $this->trait->offset(static::OFFSET));
-        self::assertEquals(static::OFFSET, $this->trait->getOffset());
+        self::assertEquals(self::DEFAULT_OFFSET, $this->trait->getOffset());
+        self::assertEquals($this->trait, $this->trait->offset(self::OFFSET));
+        self::assertEquals(self::OFFSET, $this->trait->getOffset());
     }
 
     protected function setUp(): void

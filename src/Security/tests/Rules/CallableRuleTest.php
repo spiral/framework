@@ -26,13 +26,13 @@ final class CallableRuleTest extends TestCase
             ->getMock();
 
         $callable->method('__invoke')
-            ->with($actor, static::OPERATION, $context)
+            ->with($actor, self::OPERATION, $context)
             ->willReturn(true, false);
 
         /** @var RuleInterface $rule */
         $rule = new CallableRule($callable);
 
-        self::assertTrue($rule->allows($actor, static::OPERATION, $context));
-        self::assertFalse($rule->allows($actor, static::OPERATION, $context));
+        self::assertTrue($rule->allows($actor, self::OPERATION, $context));
+        self::assertFalse($rule->allows($actor, self::OPERATION, $context));
     }
 }

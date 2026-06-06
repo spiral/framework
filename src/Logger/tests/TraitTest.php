@@ -45,7 +45,7 @@ final class TraitTest extends TestCase
         $logsInterfaceLogger = new NullLogger();
         $logs = m::mock(LogsInterface::class);
         $logs->shouldReceive('getLogger')
-            ->with(static::class)
+            ->with(self::class)
             ->andReturn($logsInterfaceLogger);
 
         $container = new Container();

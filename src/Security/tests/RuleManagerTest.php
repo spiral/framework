@@ -91,7 +91,7 @@ final class RuleManagerTest extends TestCase
         $manager = new RuleManager($this->container);
 
         $this->expectException(RuleException::class);
-        $manager->get(static::RULE_NAME);
+        $manager->get(self::RULE_NAME);
     }
 
     public function testGetWithSomethingOtherThanRule(): void

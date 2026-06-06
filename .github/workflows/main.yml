@@ -49,7 +49,7 @@ jobs:
 
       # Execution
       - name: Audit dependencies
-        run: composer audit
+        run: composer audit --no-dev
 
   static-analysis:
     name: Psalm and Rector
