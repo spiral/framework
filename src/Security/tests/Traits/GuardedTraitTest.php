@@ -55,7 +55,7 @@ final class GuardedTraitTest extends TestCase
     public function testAllows(): void
     {
         $this->guard->method('allows')
-            ->with(static::OPERATION, static::CONTEXT)
+            ->with(self::OPERATION, self::CONTEXT)
             ->willReturn(true)
         ;
 
@@ -65,19 +65,19 @@ final class GuardedTraitTest extends TestCase
         $container->bind(GuardInterface::class, $this->guard);
 
         ContainerScope::runScope($container, static function () use ($guarded): void {
-            self::assertTrue($guarded->allows(static::OPERATION, static::CONTEXT));
-            self::assertFalse($guarded->denies(static::OPERATION, static::CONTEXT));
+            self::assertTrue($guarded->allows(self::OPERATION, self::CONTEXT));
+            self::assertFalse($guarded->denies(self::OPERATION, self::CONTEXT));
         });
     }
 
     public function testResolvePermission(): void
     {
         $guarded = new Guarded();
-        self::assertSame(static::OPERATION, $guarded->resolvePermission(static::OPERATION));
+        self::assertSame(self::OPERATION, $guarded->resolvePermission(self::OPERATION));
 
         $guarded = new GuardedWithNamespace();
-        $resolvedPermission = GuardedWithNamespace::GUARD_NAMESPACE . '.' . static::OPERATION;
-        self::assertSame($resolvedPermission, $guarded->resolvePermission(static::OPERATION));
+        $resolvedPermission = GuardedWithNamespace::GUARD_NAMESPACE . '.' . self::OPERATION;
+        self::assertSame($resolvedPermission, $guarded->resolvePermission(self::OPERATION));
     }
 
     protected function setUp(): void

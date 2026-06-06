@@ -63,7 +63,7 @@ final class RuleTest extends TestCase
     public function testAllowsException(): void
     {
         $this->expectException(RuleException::class);
-        $this->rule->allows($this->actor, static::OPERATION, static::CONTEXT);
+        $this->rule->allows($this->actor, self::OPERATION, self::CONTEXT);
     }
 
     protected function setUp(): void

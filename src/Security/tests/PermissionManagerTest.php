@@ -29,11 +29,11 @@ final class PermissionManagerTest extends TestCase
     {
         $manager = new PermissionManager($this->rules);
 
-        self::assertFalse($manager->hasRole(static::ROLE));
-        self::assertEquals($manager, $manager->addRole(static::ROLE));
-        self::assertTrue($manager->hasRole(static::ROLE));
-        self::assertEquals($manager, $manager->removeRole(static::ROLE));
-        self::assertFalse($manager->hasRole(static::ROLE));
+        self::assertFalse($manager->hasRole(self::ROLE));
+        self::assertEquals($manager, $manager->addRole(self::ROLE));
+        self::assertTrue($manager->hasRole(self::ROLE));
+        self::assertEquals($manager, $manager->removeRole(self::ROLE));
+        self::assertFalse($manager->hasRole(self::ROLE));
 
         $manager->addRole('one');
         $manager->addRole('two');
@@ -45,8 +45,8 @@ final class PermissionManagerTest extends TestCase
         $manager = new PermissionManager($this->rules);
 
         $this->expectException(RoleException::class);
-        $manager->addRole(static::ROLE);
-        $manager->addRole(static::ROLE);
+        $manager->addRole(self::ROLE);
+        $manager->addRole(self::ROLE);
     }
 
     public function testRemoveRoleException(): void
@@ -54,7 +54,7 @@ final class PermissionManagerTest extends TestCase
         $manager = new PermissionManager($this->rules);
 
         $this->expectException(RoleException::class);
-        $manager->removeRole(static::ROLE);
+        $manager->removeRole(self::ROLE);
     }
 
     public function testAssociation(): void
@@ -78,18 +78,18 @@ final class PermissionManagerTest extends TestCase
             });
 
         $manager = new PermissionManager($this->rules);
-        $manager->addRole(static::ROLE);
+        $manager->addRole(self::ROLE);
 
         // test simple permission
-        self::assertEquals($manager, $manager->associate(static::ROLE, static::PERMISSION, AllowRule::class));
-        self::assertEquals($allowRule, $manager->getRule(static::ROLE, static::PERMISSION));
+        self::assertEquals($manager, $manager->associate(self::ROLE, self::PERMISSION, AllowRule::class));
+        self::assertEquals($allowRule, $manager->getRule(self::ROLE, self::PERMISSION));
 
         // test pattern permission
-        self::assertEquals($manager, $manager->associate(static::ROLE, static::PERMISSION . '.*', AllowRule::class));
-        self::assertEquals($allowRule, $manager->getRule(static::ROLE, static::PERMISSION . '.' . static::PERMISSION));
+        self::assertEquals($manager, $manager->associate(self::ROLE, self::PERMISSION . '.*', AllowRule::class));
+        self::assertEquals($allowRule, $manager->getRule(self::ROLE, self::PERMISSION . '.' . self::PERMISSION));
 
-        self::assertEquals($manager, $manager->deassociate(static::ROLE, static::PERMISSION));
-        self::assertEquals($forbidRule, $manager->getRule(static::ROLE, static::PERMISSION));
+        self::assertEquals($manager, $manager->deassociate(self::ROLE, self::PERMISSION));
+        self::assertEquals($forbidRule, $manager->getRule(self::ROLE, self::PERMISSION));
     }
 
     public function testGetRuleRoleException(): void
@@ -97,7 +97,7 @@ final class PermissionManagerTest extends TestCase
         $manager = new PermissionManager($this->rules);
 
         $this->expectException(RoleException::class);
-        $manager->getRule(static::ROLE, static::PERMISSION);
+        $manager->getRule(self::ROLE, self::PERMISSION);
     }
 
     public function testRulesForRoleException(): void
@@ -126,13 +126,13 @@ final class PermissionManagerTest extends TestCase
     public function testGetFallbackRule(): void
     {
         $manager = new PermissionManager($this->rules);
-        $manager->addRole(static::ROLE);
+        $manager->addRole(self::ROLE);
 
         $this->rules->method('get')
             ->with(ForbidRule::class)
             ->willReturn(new ForbidRule());
 
-        self::assertInstanceOf(ForbidRule::class, $manager->getRule(static::ROLE, static::PERMISSION));
+        self::assertInstanceOf(ForbidRule::class, $manager->getRule(self::ROLE, self::PERMISSION));
     }
 
     public function testAssociateRoleException(): void
@@ -140,7 +140,7 @@ final class PermissionManagerTest extends TestCase
         $manager = new PermissionManager($this->rules);
 
         $this->expectException(RoleException::class);
-        $manager->associate(static::ROLE, static::PERMISSION);
+        $manager->associate(self::ROLE, self::PERMISSION);
     }
 
     public function testAssociatePermissionException(): void
@@ -148,8 +148,8 @@ final class PermissionManagerTest extends TestCase
         $this->expectException(PermissionException::class);
 
         $manager = new PermissionManager($this->rules);
-        $manager->addRole(static::ROLE);
-        $manager->associate(static::ROLE, static::PERMISSION);
+        $manager->addRole(self::ROLE);
+        $manager->associate(self::ROLE, self::PERMISSION);
     }
 
     protected function setUp(): void
