@@ -30,7 +30,7 @@ final class EnumCasterTest extends TestCase
     public function testSetValue(): void
     {
         $setter = new EnumCaster();
-        $filter = $this->createMock(UserFilter::class);
+        $filter = $this->createStub(UserFilter::class);
         $property = new \ReflectionProperty($filter, 'status');
 
         $setter->setValue($filter, $property, 'active');
@@ -40,7 +40,7 @@ final class EnumCasterTest extends TestCase
     public function testSetValueException(): void
     {
         $setter = new EnumCaster();
-        $filter = $this->createMock(UserFilter::class);
+        $filter = $this->createStub(UserFilter::class);
         $property = new \ReflectionProperty($filter, 'status');
 
         $this->expectException(SetterException::class);

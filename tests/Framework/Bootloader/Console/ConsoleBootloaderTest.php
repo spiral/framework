@@ -35,7 +35,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
     public function testAddInterceptor(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ConsoleConfig::CONFIG, ['interceptors' => []]);
 
         $bootloader = new ConsoleBootloader($configs);
@@ -49,7 +49,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
     public function testAddCommand(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ConsoleConfig::CONFIG, ['commands' => []]);
 
         $bootloader = new ConsoleBootloader($configs);
@@ -65,7 +65,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
     public function testAddConfigureSequence(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ConsoleConfig::CONFIG, ['sequences' => []]);
 
         $bootloader = new ConsoleBootloader($configs);
@@ -82,7 +82,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
     public function testAddUpdateSequence(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ConsoleConfig::CONFIG, ['sequences' => []]);
 
         $bootloader = new ConsoleBootloader($configs);
@@ -99,7 +99,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
     public function testAddCustomSequence(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ConsoleConfig::CONFIG, ['sequences' => []]);
 
         $bootloader = new ConsoleBootloader($configs);
@@ -116,7 +116,7 @@ final class ConsoleBootloaderTest extends BaseTestCase
 
     public function testSequencesIsNotDuplicated(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ConsoleConfig::CONFIG, ['sequences' => []]);
 
         $bootloader = new ConsoleBootloader($configs);

@@ -49,7 +49,7 @@ final class FiltersBootloaderTest extends BaseTestCase
 
     public function testAddInterceptor(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(FiltersConfig::CONFIG, ['interceptors' => []]);
 
         $container = $this->getContainer();

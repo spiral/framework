@@ -63,7 +63,7 @@ final class CookiesBootloaderTest extends BaseTestCase
 
     public function testWhitelistCookie(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(CookiesConfig::CONFIG, ['excluded' => []]);
 
         $bootloader = new CookiesBootloader($configs, $this->getContainer());

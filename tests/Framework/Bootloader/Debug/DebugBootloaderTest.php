@@ -30,10 +30,10 @@ final class DebugBootloaderTest extends BaseTestCase
 
     public function testAddCollector(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(DebugConfig::CONFIG, ['collectors' => []]);
 
-        $collector = $this->createMock(StateCollectorInterface::class);
+        $collector = $this->createStub(StateCollectorInterface::class);
         $autowire = new Autowire('foo');
 
         $bootloader = new DebugBootloader($this->getContainer(), $configs);
@@ -46,7 +46,7 @@ final class DebugBootloaderTest extends BaseTestCase
 
     public function testAddTag(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(DebugConfig::CONFIG, ['tags' => []]);
 
         $class = new class {
@@ -94,7 +94,7 @@ final class DebugBootloaderTest extends BaseTestCase
 
     public function testResolveTagCallableDeps(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(DebugConfig::CONFIG, ['tags' => []]);
 
         $bootloader = new DebugBootloader($this->getContainer(), $configs);

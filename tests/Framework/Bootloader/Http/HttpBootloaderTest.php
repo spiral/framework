@@ -44,7 +44,7 @@ final class HttpBootloaderTest extends BaseTestCase
 
     public function testAddInputBag(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(HttpConfig::CONFIG, ['inputBags' => []]);
 
         $bootloader = new HttpBootloader($configs, new Container());
@@ -58,7 +58,7 @@ final class HttpBootloaderTest extends BaseTestCase
     #[DataProvider('middlewaresDataProvider')]
     public function testAddMiddleware(mixed $middleware): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(HttpConfig::CONFIG, ['middleware' => []]);
 
         $bootloader = new HttpBootloader($configs, new Container());

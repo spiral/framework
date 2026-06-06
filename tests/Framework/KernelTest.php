@@ -102,7 +102,7 @@ final class KernelTest extends BaseTestCase
 
     public function testCustomBootloaderRegistry(): void
     {
-        $registry = $this->createMock(BootloaderRegistryInterface::class);
+        $registry = $this->createStub(BootloaderRegistryInterface::class);
         $container = new Container();
         $container->bindSingleton(BootloaderRegistryInterface::class, $registry);
 

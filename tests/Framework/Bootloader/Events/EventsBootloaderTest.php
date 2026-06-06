@@ -131,7 +131,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $kernel = $this->getContainer()->get(AbstractKernel::class);
 
         $finalizer = m::mock(FinalizerInterface::class, EventDispatcherAwareInterface::class);
-        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher = $this->createStub(EventDispatcherInterface::class);
         $finalizer->shouldReceive('setEventDispatcher')->once()->with($dispatcher);
 
         $this->bootBootloader(
@@ -148,7 +148,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $kernel = $this->getContainer()->get(AbstractKernel::class);
 
         $finalizer = m::mock(FinalizerInterface::class);
-        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher = $this->createStub(EventDispatcherInterface::class);
         $finalizer->shouldReceive('setEventDispatcher')->never();
 
         $this->bootBootloader(
@@ -161,10 +161,10 @@ final class EventsBootloaderTest extends BaseTestCase
 
     public function testAddInterceptor(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(EventsConfig::CONFIG, ['interceptors' => []]);
 
-        $interceptor = $this->createMock(CoreInterceptorInterface::class);
+        $interceptor = $this->createStub(CoreInterceptorInterface::class);
         $autowire = new Container\Autowire('foo');
 
         $bootloader = new EventsBootloader($configs);
@@ -182,7 +182,7 @@ final class EventsBootloaderTest extends BaseTestCase
         $bootloader = $this->getContainer()->get(EventsBootloader::class);
         $kernel = $this->getContainer()->get(AbstractKernel::class);
 
-        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher = $this->createStub(EventDispatcherInterface::class);
         $this->getContainer()->bindSingleton(EventDispatcherInterface::class, static fn(): EventDispatcherInterface => $dispatcher);
 
         $finalizer = m::mock(FinalizerInterface::class, EventDispatcherAwareInterface::class);

@@ -18,12 +18,12 @@ final class JobHandlerLocatorListenerTest extends TestCase
 {
     public function testListen(): void
     {
-        $handler = new class($this->createMock(InvokerInterface::class)) extends JobHandler {};
+        $handler = new class($this->createStub(InvokerInterface::class)) extends JobHandler {};
 
         $registry = new QueueRegistry(
             new Container(),
             new Container(),
-            $this->createMock(HandlerRegistryInterface::class),
+            $this->createStub(HandlerRegistryInterface::class),
         );
 
         $reader = $this->createMock(ReaderInterface::class);

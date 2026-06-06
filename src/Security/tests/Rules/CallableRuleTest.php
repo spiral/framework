@@ -17,7 +17,7 @@ final class CallableRuleTest extends TestCase
     public function testAllow(): void
     {
         /** @var ActorInterface $actor */
-        $actor = $this->createMock(ActorInterface::class);
+        $actor = $this->createStub(ActorInterface::class);
         $context = [];
 
         /** @var \PHPUnit\Framework\MockObject\MockObject|callable $callable */

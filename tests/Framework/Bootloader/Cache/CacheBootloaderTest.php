@@ -54,7 +54,7 @@ final class CacheBootloaderTest extends BaseTestCase
 
     public function testRegisterTypeAlias(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(CacheConfig::CONFIG, ['typeAliases' => []]);
 
         $bootloader = new CacheBootloader($configs);

@@ -245,11 +245,11 @@ final class RetryPolicyInterceptorTest extends TestCase
         $this->core = $this->createMock(CoreInterface::class);
 
         $registry = new QueueRegistry(
-            $this->createMock(ContainerInterface::class),
-            $this->createMock(FactoryInterface::class),
-            $this->createMock(HandlerRegistryInterface::class),
+            $this->createStub(ContainerInterface::class),
+            $this->createStub(FactoryInterface::class),
+            $this->createStub(HandlerRegistryInterface::class),
         );
-        $registry->setHandler('foo', $this->createMock(HandlerInterface::class));
+        $registry->setHandler('foo', $this->createStub(HandlerInterface::class));
 
         $this->interceptor = new RetryPolicyInterceptor($this->reader, $registry);
     }

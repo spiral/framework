@@ -24,7 +24,7 @@ final class AllowRuleTest extends TestCase
         /** @var RuleInterface $rule */
         $rule = new AllowRule();
         /** @var ActorInterface $actor */
-        $actor = $this->createMock(ActorInterface::class);
+        $actor = $this->createStub(ActorInterface::class);
 
         self::assertTrue($rule->allows($actor, self::OPERATION, self::CONTEXT));
     }

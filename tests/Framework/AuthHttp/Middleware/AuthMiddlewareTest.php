@@ -18,7 +18,7 @@ final class AuthMiddlewareTest extends HttpTestCase
     #[TestScope(Spiral::Http)]
     public function testTokenStorageInterfaceShouldBeBound(): void
     {
-        $storage = $this->createMock(TokenStorageInterface::class);
+        $storage = $this->createStub(TokenStorageInterface::class);
         $this->getContainer()->bind(
             AuthMiddleware::class,
             new Autowire(AuthMiddleware::class, ['tokenStorage' => $storage]),

@@ -41,7 +41,7 @@ final class ViewsBootloaderTest extends BaseTestCase
 
     public function testAddDirectoryWithNonExistNamespace(): void
     {
-        $configs = new ConfigManager($this->createMock(\Spiral\Config\LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(\Spiral\Config\LoaderInterface::class));
         $configs->setDefaults(ViewsConfig::CONFIG, ['namespaces' => []]);
 
         $bootloader = new ViewsBootloader($configs);
@@ -52,7 +52,7 @@ final class ViewsBootloaderTest extends BaseTestCase
 
     public function testAddDirectory(): void
     {
-        $configs = new ConfigManager($this->createMock(\Spiral\Config\LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(\Spiral\Config\LoaderInterface::class));
         $configs->setDefaults(ViewsConfig::CONFIG, ['namespaces' => ['foo' => ['baz']]]);
 
         $bootloader = new ViewsBootloader($configs);
@@ -63,7 +63,7 @@ final class ViewsBootloaderTest extends BaseTestCase
 
     public function testAddEngine(): void
     {
-        $configs = new ConfigManager($this->createMock(\Spiral\Config\LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(\Spiral\Config\LoaderInterface::class));
         $configs->setDefaults(ViewsConfig::CONFIG, ['engines' => []]);
 
         $bootloader = new ViewsBootloader($configs);
@@ -75,7 +75,7 @@ final class ViewsBootloaderTest extends BaseTestCase
 
     public function testAddCacheDependency(): void
     {
-        $configs = new ConfigManager($this->createMock(\Spiral\Config\LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(\Spiral\Config\LoaderInterface::class));
         $configs->setDefaults(ViewsConfig::CONFIG, ['dependencies' => []]);
 
         $bootloader = new ViewsBootloader($configs);

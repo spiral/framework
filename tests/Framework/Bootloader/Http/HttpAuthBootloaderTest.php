@@ -48,7 +48,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request
             ->method('getAttribute')
-            ->willReturn(new AuthContext($this->createMock(ActorProviderInterface::class)));
+            ->willReturn(new AuthContext($this->createStub(ActorProviderInterface::class)));
 
         $currentRequest = new CurrentRequest();
         $currentRequest->set($request);
@@ -76,7 +76,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
     public function testCorrectDefaultTransports(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
 
         $bootloader = new HttpAuthBootloader($configs);
         $bootloader->init(
@@ -141,7 +141,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
     public function testAddTokenStorage(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(AuthConfig::CONFIG, ['storages' => []]);
 
         $bootloader = new HttpAuthBootloader($configs, $this->getContainer());
@@ -152,7 +152,7 @@ final class HttpAuthBootloaderTest extends BaseTestCase
 
     public function testAddTransport(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(AuthConfig::CONFIG, ['transports' => []]);
 
         $bootloader = new HttpAuthBootloader($configs, $this->getContainer());

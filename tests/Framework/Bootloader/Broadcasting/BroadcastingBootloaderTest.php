@@ -48,7 +48,7 @@ final class BroadcastingBootloaderTest extends BaseTestCase
 
     public function testRegisterDriverAlias(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(BroadcastConfig::CONFIG, ['driverAliases' => []]);
 
         $bootloader = new BroadcastingBootloader($configs);

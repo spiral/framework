@@ -17,7 +17,7 @@ final class ScopesTest extends TestCase
 {
     public function testScope(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         self::assertNull(ContainerScope::getContainer());
 
@@ -28,7 +28,7 @@ final class ScopesTest extends TestCase
 
     public function testScopeException(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
+        $container = $this->createStub(ContainerInterface::class);
 
         self::assertNull(ContainerScope::getContainer());
 

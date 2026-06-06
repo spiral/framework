@@ -62,7 +62,7 @@ final class RotateHandlerTest extends BaseTestCase
         $finalizer->shouldReceive('addFinalizer')->once();
 
         $this->container->bind(EnvironmentInterface::class, new Environment(['MONOLOG_FORMAT' => 'foo']));
-        $this->container->bind(ConfiguratorInterface::class, $this->createMock(ConfiguratorInterface::class));
+        $this->container->bind(ConfiguratorInterface::class, $this->createStub(ConfiguratorInterface::class));
         $this->container->get(StrategyBasedBootloadManager::class)->bootload([MonologBootloader::class]);
 
         $autowire = new Container\Autowire('log.rotate', [

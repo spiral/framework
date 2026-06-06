@@ -57,7 +57,7 @@ final class TelemetryBootloaderTest extends BaseTestCase
 
     public function testRegisterTracer(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(TelemetryConfig::CONFIG, ['drivers' => []]);
 
         $bootloader = new TelemetryBootloader($configs);

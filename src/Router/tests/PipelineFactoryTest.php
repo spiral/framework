@@ -40,7 +40,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreatesFromArrayWithPipeline(): void
     {
         $newPipeline = new Pipeline(
-            scope: $this->createMock(ScopeInterface::class),
+            scope: $this->createStub(ScopeInterface::class),
         );
 
         self::assertSame($newPipeline, $this->pipeline->createWithMiddleware([$newPipeline]));
@@ -56,7 +56,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->once()
             ->with(Pipeline::class)
             ->andReturn($p = new Pipeline(
-                $this->createMock(ScopeInterface::class),
+                $this->createStub(ScopeInterface::class),
                 tracer: new NullTracer($container),
             ));
 
@@ -99,7 +99,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
         $p
             ->withHandler($requestHandler)
-            ->handle($this->createMock(ServerRequestInterface::class));
+            ->handle($this->createStub(ServerRequestInterface::class));
     }
 
     #[DataProvider('invalidTypeDataProvider')]

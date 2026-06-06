@@ -50,7 +50,7 @@ final class TokenStorageScopeTest extends TestCase
 
     public function testDelete(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $storage = $this->createMock(TokenStorageInterface::class);
         $storage
