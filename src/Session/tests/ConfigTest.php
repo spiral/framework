@@ -9,7 +9,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testConfig(): void
     {

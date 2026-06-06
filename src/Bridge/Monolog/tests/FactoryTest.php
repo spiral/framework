@@ -24,7 +24,7 @@ use Spiral\Monolog\Bootloader\MonologBootloader;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
 
-class FactoryTest extends BaseTestCase
+final class FactoryTest extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 

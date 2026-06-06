@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Prototype\ClassNode\ConflictResolver\NameEntity;
 
-class EntitiesTest extends TestCase
+final class EntitiesTest extends TestCase
 {
     #[DataProvider('nameProvider')]
     public function testName(string $name, int $sequence, string $expected): void

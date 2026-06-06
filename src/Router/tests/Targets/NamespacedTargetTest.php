@@ -14,7 +14,7 @@ use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class NamespacedTargetTest extends TestCase
+final class NamespacedTargetTest extends TestCase
 {
     public static function defaultProvider(): \Traversable
     {

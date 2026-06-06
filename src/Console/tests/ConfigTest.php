@@ -9,7 +9,7 @@ use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Exception\ConfigException;
 use Spiral\Console\Sequence\CallableSequence;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testBadSequence(): void
     {

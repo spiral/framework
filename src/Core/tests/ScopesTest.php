@@ -13,7 +13,7 @@ use Spiral\Core\Exception\RuntimeException;
 use Spiral\Tests\Core\Fixtures\Bucket;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 
-class ScopesTest extends TestCase
+final class ScopesTest extends TestCase
 {
     public function testScope(): void
     {
@@ -87,7 +87,7 @@ class ScopesTest extends TestCase
             self::assertTrue($c->runScope([
                 'bucket' => new Bucket('b'),
                 'other'  => new SampleClass(),
-            ], static function (): void {
+            ], static function (): never {
                 throw new RuntimeException('exception');
             }));
         } catch (\Throwable) {

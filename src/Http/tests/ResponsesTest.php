@@ -13,7 +13,7 @@ use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Spiral\Tests\Http\Diactoros\StreamFactory;
 use Nyholm\Psr7\Stream;
 
-class ResponsesTest extends TestCase
+final class ResponsesTest extends TestCase
 {
     public function testRedirect(): void
     {

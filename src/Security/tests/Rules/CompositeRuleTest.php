@@ -14,7 +14,7 @@ use Spiral\Security\RulesInterface;
 use Spiral\Tests\Security\Rules\Fixtures\AllCompositeRule;
 use Spiral\Tests\Security\Rules\Fixtures\OneCompositeRule;
 
-class CompositeRuleTest extends TestCase
+final class CompositeRuleTest extends TestCase
 {
     public const OPERATION = 'test';
     public const CONTEXT = [];

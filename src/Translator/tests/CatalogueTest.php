@@ -9,7 +9,7 @@ use Spiral\Translator\Catalogue;
 use Spiral\Translator\Exception\CatalogueException;
 use Symfony\Component\Translation\MessageCatalogue;
 
-class CatalogueTest extends TestCase
+final class CatalogueTest extends TestCase
 {
     public function testGetLocale(): void
     {

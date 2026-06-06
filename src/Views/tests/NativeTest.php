@@ -12,7 +12,7 @@ use Spiral\Views\Exception\RenderException;
 use Spiral\Views\ViewContext;
 use Spiral\Views\ViewLoader;
 
-class NativeTest extends TestCase
+final class NativeTest extends TestCase
 {
     public function testGet(): void
     {

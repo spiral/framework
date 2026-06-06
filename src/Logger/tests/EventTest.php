@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Spiral\Logger\Event\LogEvent;
 
-class EventTest extends TestCase
+final class EventTest extends TestCase
 {
     public function testListenDebug(): void
     {

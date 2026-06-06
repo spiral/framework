@@ -13,7 +13,7 @@ use Spiral\Core\Options;
 use Spiral\Tests\Core\Fixtures\Factory;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 
-class BindingsTest extends TestCase
+final class BindingsTest extends TestCase
 {
     public function testHasBinding(): void
     {

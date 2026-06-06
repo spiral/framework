@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Cookies\Config\CookiesConfig;
 use Nyholm\Psr7\Uri;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testCookies(): void
     {

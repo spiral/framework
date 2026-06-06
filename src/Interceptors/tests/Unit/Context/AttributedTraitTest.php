@@ -7,7 +7,7 @@ namespace Spiral\Tests\Interceptors\Unit\Context;
 use PHPUnit\Framework\TestCase;
 use Spiral\Tests\Interceptors\Unit\Stub\AttributedStub;
 
-class AttributedTraitTest extends TestCase
+final class AttributedTraitTest extends TestCase
 {
     public function testGetAttribute(): void
     {

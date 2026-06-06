@@ -12,7 +12,7 @@ use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Group;
 use Spiral\Tests\Router\Fixtures\TestController;
 
-class UriTest extends BaseTestCase
+final class UriTest extends BaseTestCase
 {
     public static function providePatternsWithRequiredSegments(): iterable
     {

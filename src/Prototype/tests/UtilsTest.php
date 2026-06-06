@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Prototype\Utils;
 
-class UtilsTest extends TestCase
+final class UtilsTest extends TestCase
 {
     #[DataProvider('trailingProvider')]
     public function testTrimTrailingDigits(string $name, int $sequence, string $expected): void

@@ -8,7 +8,7 @@ use Spiral\Tests\Console\Fixtures\HelperCommand;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class HelpersTest extends BaseTestCase
+final class HelpersTest extends BaseTestCase
 {
     private \Spiral\Console\Console $core;
 

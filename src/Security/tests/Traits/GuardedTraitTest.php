@@ -15,7 +15,7 @@ use Spiral\Tests\Security\Traits\Fixtures\Guarded;
 use Spiral\Tests\Security\Traits\Fixtures\GuardedWithNamespace;
 use Spiral\Security\Traits\GuardedTrait;
 
-class GuardedTraitTest extends TestCase
+final class GuardedTraitTest extends TestCase
 {
     public const OPERATION = 'test';
     public const CONTEXT   = [];

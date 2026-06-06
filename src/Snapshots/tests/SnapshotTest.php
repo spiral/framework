@@ -7,7 +7,7 @@ namespace Spiral\Tests\Snapshots;
 use PHPUnit\Framework\TestCase;
 use Spiral\Snapshots\Snapshot;
 
-class SnapshotTest extends TestCase
+final class SnapshotTest extends TestCase
 {
     public function testSnapshot(): void
     {

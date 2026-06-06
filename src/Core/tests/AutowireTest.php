@@ -20,7 +20,7 @@ use Spiral\Tests\Core\Fixtures\UnionTypes;
 /**
  * The most fun test.
  */
-class AutowireTest extends TestCase
+final class AutowireTest extends TestCase
 {
     public function testSimple(): void
     {

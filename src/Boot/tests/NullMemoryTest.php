@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Boot\NullMemory;
 
-class NullMemoryTest extends TestCase
+final class NullMemoryTest extends TestCase
 {
     public function testLoadData(): void
     {

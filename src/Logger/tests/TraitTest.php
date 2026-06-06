@@ -13,7 +13,7 @@ use Spiral\Core\ContainerScope;
 use Spiral\Logger\LogsInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 
-class TraitTest extends TestCase
+final class TraitTest extends TestCase
 {
     use LoggerTrait;
 

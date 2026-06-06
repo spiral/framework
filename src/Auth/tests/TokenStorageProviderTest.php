@@ -13,7 +13,7 @@ use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
 use PHPUnit\Framework\TestCase;
 
-class TokenStorageProviderTest extends TestCase
+final class TokenStorageProviderTest extends TestCase
 {
     public function testGetStorageByName(): void
     {

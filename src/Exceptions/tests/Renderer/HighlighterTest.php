@@ -9,7 +9,7 @@ use Spiral\Exceptions\Renderer\Highlighter;
 use Spiral\Exceptions\Style\ConsoleStyle;
 use Spiral\Exceptions\Style\PlainStyle;
 
-class HighlighterTest extends TestCase
+final class HighlighterTest extends TestCase
 {
     public function testPlainHighlighter(): void
     {

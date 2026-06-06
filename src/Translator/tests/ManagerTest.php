@@ -14,7 +14,7 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 
-class ManagerTest extends TestCase
+final class ManagerTest extends TestCase
 {
     public function testLocalesFromLoader(): void
     {

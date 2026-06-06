@@ -25,7 +25,7 @@ use Spiral\Tests\Boot\Fixtures\CustomInitializer;
 use Spiral\Tests\Boot\Fixtures\CustomInvokerStrategy;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
-class KernelTest extends TestCase
+final class KernelTest extends TestCase
 {
     /**
      * @throws \Throwable

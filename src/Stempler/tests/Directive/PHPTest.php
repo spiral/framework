@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler\Directive;
 
 use Spiral\Stempler\Directive\PHPDirective;
 
-class PHPTest extends BaseTestCase
+final class PHPTest extends BaseTestCase
 {
     protected const DIRECTIVES = [
         PHPDirective::class,

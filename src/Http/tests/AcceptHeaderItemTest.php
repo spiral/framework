@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Http\Header\AcceptHeader;
 use Spiral\Http\Header\AcceptHeaderItem;
 
-class AcceptHeaderItemTest extends TestCase
+final class AcceptHeaderItemTest extends TestCase
 {
     public static function emptyItemProvider(): iterable
     {

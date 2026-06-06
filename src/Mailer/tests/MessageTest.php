@@ -7,7 +7,7 @@ namespace Spiral\Tests\Mailer;
 use PHPUnit\Framework\TestCase;
 use Spiral\Mailer\Message;
 
-class MessageTest extends TestCase
+final class MessageTest extends TestCase
 {
     public function testDefaults(): void
     {

@@ -6,7 +6,7 @@ namespace Spiral\Tests\Scaffolder\Command;
 
 use Symfony\Component\Console\Input\StringInput;
 
-class ConfigTest extends AbstractCommandTestCase
+final class ConfigTest extends AbstractCommandTestCase
 {
     /**
      * @throws \ReflectionException

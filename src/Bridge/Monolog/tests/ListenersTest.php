@@ -14,7 +14,7 @@ use Spiral\Logger\ListenerRegistry;
 use Spiral\Monolog\Config\MonologConfig;
 use Spiral\Monolog\LogFactory;
 
-class ListenersTest extends TestCase
+final class ListenersTest extends TestCase
 {
     public function testListenDebug(): void
     {

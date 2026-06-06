@@ -11,7 +11,7 @@ use Symfony\Component\Translation\Dumper\PoFileDumper;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testDefaultLocale(): void
     {

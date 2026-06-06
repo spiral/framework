@@ -9,7 +9,7 @@ use Spiral\Config\Patch\Append;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\Container\Autowire;
 
-class InjectionTest extends BaseTestCase
+final class InjectionTest extends BaseTestCase
 {
     public function testInjection(): void
     {

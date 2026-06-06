@@ -13,7 +13,7 @@ use Spiral\Tokenizer\ScopedClassesInterface;
 use Spiral\Tokenizer\ScopedClassLocator;
 use Spiral\Tokenizer\Tokenizer;
 
-class LocatorTest extends TestCase
+final class LocatorTest extends TestCase
 {
     public function testLocate(): void
     {

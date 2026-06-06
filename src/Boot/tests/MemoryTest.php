@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
-class MemoryTest extends TestCase
+final class MemoryTest extends TestCase
 {
     public function testMemory(): void
     {

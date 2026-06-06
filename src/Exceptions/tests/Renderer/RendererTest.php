@@ -9,7 +9,7 @@ use Spiral\Exceptions\Renderer\ConsoleRenderer;
 use Spiral\Exceptions\Renderer\JsonRenderer;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
-class RendererTest extends TestCase
+final class RendererTest extends TestCase
 {
     public function testGetMessage(): void
     {
@@ -147,7 +147,7 @@ class RendererTest extends TestCase
     public function makeException(): void
     {
         try {
-            $f = static function (): void {
+            $f = static function (): never {
                 throw new \RuntimeException('error');
             };
 

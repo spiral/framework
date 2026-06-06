@@ -14,7 +14,7 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
 
-class PluralizeTest extends TestCase
+final class PluralizeTest extends TestCase
 {
     public function testPluralize(): void
     {

@@ -13,7 +13,7 @@ use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 
-class JobsQueueTest extends TestCase
+final class JobsQueueTest extends TestCase
 {
     public function testQueue(): void
     {

@@ -11,7 +11,7 @@ use Spiral\Stempler\Lexer\StreamInterface;
 use Spiral\Stempler\Lexer\StringStream;
 use Spiral\Stempler\Lexer\Token;
 
-class BufferTest extends TestCase
+final class BufferTest extends TestCase
 {
     public function testNext(): void
     {

@@ -16,7 +16,7 @@ use Spiral\Security\RuleManager;
  *
  * @package Spiral\Tests\Security
  */
-class RuleManagerTest extends TestCase
+final class RuleManagerTest extends TestCase
 {
     // Not a valid/loadable class name on purpose: RuleManager::has() calls
     // class_exists() (case-insensitive, with autoload), so a plain word like

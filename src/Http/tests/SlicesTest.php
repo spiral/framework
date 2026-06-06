@@ -10,7 +10,7 @@ use Spiral\Core\Container;
 use Spiral\Http\Request\InputManager;
 use Nyholm\Psr7\ServerRequest;
 
-class SlicesTest extends TestCase
+final class SlicesTest extends TestCase
 {
     private Container $container;
     private InputManager $input;

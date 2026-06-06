@@ -7,7 +7,7 @@ namespace Spiral\Tests\Files;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 
-class TempFilesTest extends TestCase
+final class TempFilesTest extends TestCase
 {
     public function testTempFilename(): void
     {

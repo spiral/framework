@@ -17,7 +17,7 @@ use Spiral\Translator\TranslatorInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 
-class TranslatorTest extends TestCase
+final class TranslatorTest extends TestCase
 {
     public function testIsMessage(): void
     {

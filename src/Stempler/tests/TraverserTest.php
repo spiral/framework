@@ -16,7 +16,7 @@ use Spiral\Stempler\Traverser;
 use Spiral\Stempler\VisitorContext;
 use Spiral\Stempler\VisitorInterface;
 
-class TraverserTest extends BaseTestCase implements VisitorInterface
+final class TraverserTest extends BaseTestCase implements VisitorInterface
 {
     protected const RENDERS = [
         CoreRenderer::class,

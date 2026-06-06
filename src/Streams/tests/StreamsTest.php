@@ -10,7 +10,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\Streams\StreamWrapper;
 use Nyholm\Psr7\Stream;
 
-class StreamsTest extends TestCase
+final class StreamsTest extends TestCase
 {
     private const FIXTURE_DIRECTORY = __DIR__ . '/fixtures';
 

@@ -9,7 +9,7 @@ use Spiral\Distribution\Manager;
 use Spiral\Distribution\Resolver\StaticResolver;
 
 #[Group('unit')]
-class ManagerTest extends TestCase
+final class ManagerTest extends TestCase
 {
     private StaticResolver $resolver;
     private Manager $manager;

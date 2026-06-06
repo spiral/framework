@@ -7,7 +7,7 @@ namespace Spiral\Tests\Csrf;
 use PHPUnit\Framework\TestCase;
 use Spiral\Csrf\Config\CsrfConfig;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testCsrf(): void
     {

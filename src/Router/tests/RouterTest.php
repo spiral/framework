@@ -17,7 +17,7 @@ use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
 use Spiral\Router\RouteCollection;
 
-class RouterTest extends BaseTestCase
+final class RouterTest extends BaseTestCase
 {
     public function testGetRoutes(): void
     {

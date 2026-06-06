@@ -10,7 +10,7 @@ use Spiral\Files\FilesInterface;
 use Spiral\Testing\Attribute\TestScope;
 use Spiral\Views\ViewContext;
 
-class CacheTest extends BaseTestCase
+final class CacheTest extends BaseTestCase
 {
     /** @var FilesInterface */
     protected $files;

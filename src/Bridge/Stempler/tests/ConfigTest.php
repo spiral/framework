@@ -16,7 +16,7 @@ use Spiral\Stempler\Directive\PHPDirective;
 use Spiral\Stempler\Directive\RouteDirective;
 use Spiral\Views\Processor\ContextProcessor;
 
-class ConfigTest extends BaseTestCase
+final class ConfigTest extends BaseTestCase
 {
     public function testWireConfigString(): void
     {

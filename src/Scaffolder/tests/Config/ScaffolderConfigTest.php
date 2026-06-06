@@ -10,7 +10,7 @@ use Spiral\Scaffolder\Declaration\BootloaderDeclaration;
 use Spiral\Scaffolder\Exception\ScaffolderException;
 use Spiral\Tests\Scaffolder\BaseTestCase;
 
-class ScaffolderConfigTest extends BaseTestCase
+final class ScaffolderConfigTest extends BaseTestCase
 {
     public static function declarationDirectoryDataProvider(): \Traversable
     {

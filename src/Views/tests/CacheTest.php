@@ -15,7 +15,7 @@ use Spiral\Views\ViewContext;
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewLoader;
 
-class CacheTest extends TestCase
+final class CacheTest extends TestCase
 {
     public function testSimpleCache(): void
     {

@@ -18,7 +18,7 @@ use Spiral\Security\RulesInterface;
  *
  * @package Spiral\Tests\Security
  */
-class PermissionManagerTest extends TestCase
+final class PermissionManagerTest extends TestCase
 {
     public const ROLE = 'test';
     public const PERMISSION = 'permission';

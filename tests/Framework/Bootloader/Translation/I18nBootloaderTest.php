@@ -22,7 +22,7 @@ use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Dumper;
 use Symfony\Component\Translation\Loader;
 
-class I18nBootloaderTest extends BaseTestCase
+final class I18nBootloaderTest extends BaseTestCase
 {
     public function testTranslatorInterfaceBinding(): void
     {

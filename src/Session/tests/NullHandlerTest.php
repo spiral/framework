@@ -7,7 +7,7 @@ namespace Spiral\Tests\Session;
 use PHPUnit\Framework\TestCase;
 use Spiral\Session\Handler\NullHandler;
 
-class NullHandlerTest extends TestCase
+final class NullHandlerTest extends TestCase
 {
     public function testNullHandler(): void
     {

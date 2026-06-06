@@ -22,7 +22,7 @@ use Spiral\Tests\Core\Fixtures\InvalidInjector;
 use Spiral\Tests\Core\Fixtures\SampleClass;
 use Spiral\Tests\Core\Fixtures\TestConfig;
 
-class InjectableTest extends TestCase
+final class InjectableTest extends TestCase
 {
     public static function inheritanceDataProvider(): iterable
     {

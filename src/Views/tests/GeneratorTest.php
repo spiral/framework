@@ -9,7 +9,7 @@ use Spiral\Views\Context\ValueDependency;
 use Spiral\Views\ContextGenerator;
 use Spiral\Views\ViewContext;
 
-class GeneratorTest extends TestCase
+final class GeneratorTest extends TestCase
 {
     public function testRotateSingleValue(): void
     {

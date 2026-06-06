@@ -20,7 +20,7 @@ use Spiral\Stempler\Transform\Merge\ResolveImports;
 use Spiral\Stempler\Transform\Visitor\DefineAttributes;
 use Spiral\Stempler\Transform\Visitor\DefineBlocks;
 
-class ExceptionTest extends BaseTestCase
+final class ExceptionTest extends BaseTestCase
 {
     public function testSimpleLoad(): void
     {

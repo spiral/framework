@@ -14,7 +14,7 @@ use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-class GroupTargetTest extends TestCase
+final class GroupTargetTest extends TestCase
 {
     public function testDefaultAction(): void
     {

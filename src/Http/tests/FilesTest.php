@@ -12,7 +12,7 @@ use Spiral\Http\Request\InputManager;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile;
 
-class FilesTest extends TestCase
+final class FilesTest extends TestCase
 {
     private Container $container;
     private InputManager $input;

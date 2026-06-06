@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Tokenizer\Reflection\ReflectionArgument;
 use Spiral\Tokenizer\Reflection\ReflectionFile;
 
-class ReflectionFileTest extends TestCase
+final class ReflectionFileTest extends TestCase
 {
     public function testReflection(): void
     {

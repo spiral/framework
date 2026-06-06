@@ -18,7 +18,7 @@ use Spiral\Translator\TranslatorInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 
-class TraitTest extends TestCase
+final class TraitTest extends TestCase
 {
     use TranslatorTrait;
 

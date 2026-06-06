@@ -17,7 +17,7 @@ use Spiral\Tests\Core\Fixtures\InvalidWithContainerInside;
 use Spiral\Tests\Core\Fixtures\WithContainerInside;
 use Spiral\Tests\Core\Fixtures\WithPrivateConstructor;
 
-class ExceptionsTest extends TestCase
+final class ExceptionsTest extends TestCase
 {
     public static function exceptionTraceDataProvider(): \Traversable
     {

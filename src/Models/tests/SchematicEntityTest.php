@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Models\ModelSchema;
 use Spiral\Models\SchematicEntity;
 
-class SchematicEntityTest extends TestCase
+final class SchematicEntityTest extends TestCase
 {
     public function testFillable(): void
     {

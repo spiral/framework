@@ -9,7 +9,7 @@ use Spiral\Files\Exception\FilesException;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 
-class IOTest extends TestCase
+final class IOTest extends TestCase
 {
     public function testWrite(): void
     {

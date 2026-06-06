@@ -7,7 +7,7 @@ namespace Spiral\Tests\Exceptions\Renderer;
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\Renderer\PlainRenderer;
 
-class PlainRendererTest extends TestCase
+final class PlainRendererTest extends TestCase
 {
     public function testRenderException(): void
     {

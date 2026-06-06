@@ -10,7 +10,7 @@ use Spiral\Pagination\Traits\LimitsTrait;
 /**
  * @package Spiral\Tests\Pagination\Traits
  */
-class LimitsTraitTest extends TestCase
+final class LimitsTraitTest extends TestCase
 {
     public const DEFAULT_LIMIT = 0;
     public const DEFAULT_OFFSET = 0;

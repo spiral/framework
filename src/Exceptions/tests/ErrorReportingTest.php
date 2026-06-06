@@ -8,7 +8,7 @@ use JetBrains\PhpStorm\ExpectedValues;
 use PHPUnit\Framework\TestCase;
 use Spiral\Exceptions\ExceptionHandler;
 
-class ErrorReportingTest extends TestCase
+final class ErrorReportingTest extends TestCase
 {
     protected int $reportingBefore;
 

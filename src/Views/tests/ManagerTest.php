@@ -16,7 +16,7 @@ use Spiral\Views\ViewCache;
 use Spiral\Views\ViewLoader;
 use Spiral\Views\ViewManager;
 
-class ManagerTest extends TestCase
+final class ManagerTest extends TestCase
 {
     protected $container;
 

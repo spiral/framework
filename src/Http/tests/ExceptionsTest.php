@@ -13,7 +13,7 @@ use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
 
-class ExceptionsTest extends TestCase
+final class ExceptionsTest extends TestCase
 {
     public static function allExceptionsWithPreviousSet(): \Generator
     {
