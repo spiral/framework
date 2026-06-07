@@ -130,7 +130,6 @@ return RectorConfig::configure()
         ],
 
         // to be enabled later for easier to review
-        \Rector\PHPUnit\PHPUnit120\Rector\CallLike\CreateStubOverCreateMockArgRector::class,
         \Rector\Php55\Rector\ClassConstFetch\StaticToSelfOnFinalClassRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\StringCastAssertStringContainsStringRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector::class,

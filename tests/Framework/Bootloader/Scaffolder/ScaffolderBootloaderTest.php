@@ -24,10 +24,10 @@ final class ScaffolderBootloaderTest extends BaseTestCase
 
     public function testAddDeclaration(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(ScaffolderConfig::CONFIG, ['defaults' => ['declarations' => []]]);
 
-        $bootloader = new ScaffolderBootloader($configs, $this->createMock(KernelInterface::class));
+        $bootloader = new ScaffolderBootloader($configs, $this->createStub(KernelInterface::class));
         $bootloader->addDeclaration('foo', ['bar' => 'baz']);
 
         self::assertSame(['foo' => ['bar' => 'baz']], $configs->getConfig(ScaffolderConfig::CONFIG)['defaults']['declarations']);

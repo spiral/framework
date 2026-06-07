@@ -38,7 +38,7 @@ final class MonologConfigTest extends TestCase
         $config = new MonologConfig([
             'handlers' => [
                 'foo' => [
-                    $this->createMock(HandlerInterface::class),
+                    $this->createStub(HandlerInterface::class),
                 ],
             ],
         ]);
@@ -53,7 +53,7 @@ final class MonologConfigTest extends TestCase
         $config = new MonologConfig([
             'processors' => [
                 'foo' => [
-                    $this->createMock(ProcessorInterface::class),
+                    $this->createStub(ProcessorInterface::class),
                 ],
             ],
         ]);

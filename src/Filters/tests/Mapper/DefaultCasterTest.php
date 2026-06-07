@@ -13,13 +13,13 @@ final class DefaultCasterTest extends TestCase
 {
     public function testSupports(): void
     {
-        self::assertTrue((new DefaultCaster())->supports($this->createMock(\ReflectionNamedType::class)));
+        self::assertTrue((new DefaultCaster())->supports($this->createStub(\ReflectionNamedType::class)));
     }
 
     public function testSetValue(): void
     {
         $setter = new DefaultCaster();
-        $filter = $this->createMock(AddressFilter::class);
+        $filter = $this->createStub(AddressFilter::class);
         $property = new \ReflectionProperty($filter, 'city');
 
         $setter->setValue($filter, $property, 'foo');
@@ -29,7 +29,7 @@ final class DefaultCasterTest extends TestCase
     public function testSetValueException(): void
     {
         $setter = new DefaultCaster();
-        $filter = $this->createMock(AddressFilter::class);
+        $filter = $this->createStub(AddressFilter::class);
         $property = new \ReflectionProperty($filter, 'city');
 
         $this->expectException(SetterException::class);

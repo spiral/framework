@@ -22,7 +22,7 @@ final class SerializerLocatorListenerTest extends TestCase
 {
     public function testListenWithJobTypeFromConfig(): void
     {
-        $handler = new class($this->createMock(InvokerInterface::class)) extends JobHandler {};
+        $handler = new class($this->createStub(InvokerInterface::class)) extends JobHandler {};
 
         $container = new Container();
         $container->bind('test', new PhpSerializer());
@@ -31,7 +31,7 @@ final class SerializerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             $container,
             $container,
-            $this->createMock(HandlerRegistryInterface::class),
+            $this->createStub(HandlerRegistryInterface::class),
         );
 
         $reader = m::mock(ReaderInterface::class);
@@ -58,7 +58,7 @@ final class SerializerLocatorListenerTest extends TestCase
 
     public function testListenWithJobTypeFromAttribute(): void
     {
-        $handler = new class($this->createMock(InvokerInterface::class)) extends JobHandler {};
+        $handler = new class($this->createStub(InvokerInterface::class)) extends JobHandler {};
 
         $container = new Container();
         $container->bind('test', new PhpSerializer());
@@ -67,7 +67,7 @@ final class SerializerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             $container,
             $container,
-            $this->createMock(HandlerRegistryInterface::class),
+            $this->createStub(HandlerRegistryInterface::class),
         );
 
         $reader = m::mock(ReaderInterface::class);
@@ -94,7 +94,7 @@ final class SerializerLocatorListenerTest extends TestCase
 
     public function testListenWithJobTypeFromClass(): void
     {
-        $handler = new class($this->createMock(InvokerInterface::class)) extends JobHandler {};
+        $handler = new class($this->createStub(InvokerInterface::class)) extends JobHandler {};
 
         $container = new Container();
         $container->bind('test', new PhpSerializer());
@@ -103,7 +103,7 @@ final class SerializerLocatorListenerTest extends TestCase
         $registry = new QueueRegistry(
             $container,
             $container,
-            $this->createMock(HandlerRegistryInterface::class),
+            $this->createStub(HandlerRegistryInterface::class),
         );
 
         $reader = m::mock(ReaderInterface::class);

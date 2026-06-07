@@ -83,9 +83,9 @@ final class RouterTest extends BaseTestCase
     public function testImportWithHost(): void
     {
         $groupRegistry = $this->getContainer()->get(GroupRegistry::class);
-        $router = $this->makeRouter('https://host.com', $this->createMock(EventDispatcherInterface::class));
+        $router = $this->makeRouter('https://host.com', $this->createStub(EventDispatcherInterface::class));
 
-        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
+        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createStub(LoaderInterface::class));
         $configurator->add('foo', '//<host>/register')->callable(static fn() => null);
 
         $router->import($configurator);
@@ -105,9 +105,9 @@ final class RouterTest extends BaseTestCase
             ->setNamePrefix('console.')
             ->setPrefix('/console');
 
-        $router = $this->makeRouter(dispatcher: $this->createMock(EventDispatcherInterface::class));
+        $router = $this->makeRouter(dispatcher: $this->createStub(EventDispatcherInterface::class));
 
-        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
+        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createStub(LoaderInterface::class));
         $configurator
             ->add('some-path', 'some/path')
             ->group('console:user')

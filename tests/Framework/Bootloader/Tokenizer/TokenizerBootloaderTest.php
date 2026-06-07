@@ -74,7 +74,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
 
     public function testAddDirectory(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(TokenizerConfig::CONFIG, ['directories' => []]);
 
         $bootloader = new TokenizerBootloader($configs);
@@ -85,7 +85,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
 
     public function testAddScopedDirectoryWithNonExistScope(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(TokenizerConfig::CONFIG, ['scopes' => ['bar' => ['directories' => ['baz']]]]);
 
         $bootloader = new TokenizerBootloader($configs);
@@ -96,7 +96,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
 
     public function testAddScopedDirectory(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(
             TokenizerConfig::CONFIG,
             ['scopes' => ['foo' => ['exclude' => ['baz'], 'directories' => ['baz']]]],
@@ -110,7 +110,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
 
     public function testExcludeScopedDirectoryWithNonExistScope(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(TokenizerConfig::CONFIG, ['scopes' => []]);
 
         $bootloader = new TokenizerBootloader($configs);
@@ -121,7 +121,7 @@ final class TokenizerBootloaderTest extends BaseTestCase
 
     public function testExcludeScopedDirectory(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(
             TokenizerConfig::CONFIG,
             ['scopes' => ['foo' => ['exclude' => ['baz'], 'directories' => ['baz']]]],

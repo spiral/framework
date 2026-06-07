@@ -15,7 +15,7 @@ final class BucketFactoryTest extends TestCase
         $factory = new BucketFactory();
 
         $bucket = $factory->createFromAdapter(
-            $this->createMock(FilesystemAdapter::class),
+            $this->createStub(FilesystemAdapter::class),
             $name = 'foo',
         );
 
@@ -28,7 +28,7 @@ final class BucketFactoryTest extends TestCase
         $factory = new BucketFactory();
 
         $bucket = $factory->createFromAdapter(
-            $this->createMock(FilesystemAdapter::class),
+            $this->createStub(FilesystemAdapter::class),
             $name = 'foo',
             $resolver = $this->createMock(UriResolverInterface::class),
         );

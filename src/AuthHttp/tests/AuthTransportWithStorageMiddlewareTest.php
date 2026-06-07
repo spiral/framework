@@ -41,7 +41,7 @@ final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
             })
             ->willReturnSelf();
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
 
         $registry = new TransportRegistry();
         $registry->setTransport('header', $transport = $this->createMock(HttpTransportInterface::class));
@@ -61,8 +61,8 @@ final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
 
         $middleware = new AuthTransportWithStorageMiddleware(
             'header',
-            $this->createMock(ScopeInterface::class),
-            $this->createMock(ActorProviderInterface::class),
+            $this->createStub(ScopeInterface::class),
+            $this->createStub(ActorProviderInterface::class),
             $storageProvider,
             $registry,
             storage: 'session',

@@ -161,7 +161,7 @@ final class RouteGroupTest extends BaseTestCase
         parent::setUp();
 
         $this->container = new Container();
-        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
+        $this->container->bind(LoaderInterface::class, $this->createStub(LoaderInterface::class));
         $this->container->bind(UriFactoryInterface::class, Psr17Factory::class);
     }
 

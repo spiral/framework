@@ -27,7 +27,7 @@ final class JsonPayloadsBootloaderTest extends BaseTestCase
 
     public function testAddContentType(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(JsonPayloadConfig::CONFIG, ['contentTypes' => []]);
 
         $bootloader = new JsonPayloadsBootloader($configs);

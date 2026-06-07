@@ -44,8 +44,8 @@ final class PhpFileLoaderTest extends TestCase
     protected function setUp(): void
     {
         $this->container = new Container();
-        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
-        $this->container->bind(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $this->container->bind(UriFactoryInterface::class, $this->createMock(UriFactoryInterface::class));
+        $this->container->bind(LoaderInterface::class, $this->createStub(LoaderInterface::class));
+        $this->container->bind(RouterInterface::class, $this->createStub(RouterInterface::class));
+        $this->container->bind(UriFactoryInterface::class, $this->createStub(UriFactoryInterface::class));
     }
 }

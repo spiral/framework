@@ -22,7 +22,7 @@ final class ScopedDebugBootloaderTest extends TestCase
 
     public function testAddCollectorFromOtherScope(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(DebugConfig::CONFIG, ['collectors' => []]);
 
         $bootloader = $this->getContainer()->get(DebugBootloader::class);

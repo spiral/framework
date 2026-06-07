@@ -32,7 +32,7 @@ final class PromptArgumentsTest extends BaseTestCase
         $command->setDefinition(new InputDefinition([new InputArgument('command', InputArgument::REQUIRED)]));
 
 
-        $promptArguments->promptMissedArguments($command, $input, $this->createMock(OutputInterface::class));
+        $promptArguments->promptMissedArguments($command, $input, $this->createStub(OutputInterface::class));
     }
 
     public function testPromptArgumentWithDefaultQuestion(): void

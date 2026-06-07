@@ -26,8 +26,8 @@ final class ApplicationInProductionTest extends TestCase
     {
         $confirmation = new ApplicationInProduction(
             $env,
-            $this->createMock(InputInterface::class),
-            $this->createMock(OutputInterface::class),
+            $this->createStub(InputInterface::class),
+            $this->createStub(OutputInterface::class),
         );
 
         self::assertTrue($confirmation->confirmToProceed());
@@ -38,7 +38,7 @@ final class ApplicationInProductionTest extends TestCase
         $confirmation = new ApplicationInProduction(
             AppEnvironment::Production,
             $input = $this->createMock(InputInterface::class),
-            $this->createMock(OutputInterface::class),
+            $this->createStub(OutputInterface::class),
         );
 
         $input->expects($this->once())->method('hasOption')->willReturn(true);

@@ -30,7 +30,7 @@ final class UuidCasterTest extends TestCase
     public function testSetValue(): void
     {
         $setter = new UuidCaster();
-        $filter = $this->createMock(UserFilter::class);
+        $filter = $this->createStub(UserFilter::class);
         $property = new \ReflectionProperty($filter, 'groupUuid');
 
         $setter->setValue($filter, $property, '11111111-1111-1111-1111-111111111111');
@@ -40,7 +40,7 @@ final class UuidCasterTest extends TestCase
     public function testSetValueException(): void
     {
         $setter = new UuidCaster();
-        $filter = $this->createMock(UserFilter::class);
+        $filter = $this->createStub(UserFilter::class);
         $ref = new \ReflectionProperty($filter, 'friendUuid');
 
         $this->expectException(SetterException::class);

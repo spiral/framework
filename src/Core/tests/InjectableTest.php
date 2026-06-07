@@ -180,7 +180,7 @@ final class InjectableTest extends TestCase
                 // Context
                 null,
             )
-            ->willReturn($this->createMock($class));
+            ->willReturn($this->createStub($class));
 
         $container = new Container();
         $container->bind('injector', $mock);

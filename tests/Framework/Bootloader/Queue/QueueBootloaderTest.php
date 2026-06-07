@@ -92,10 +92,10 @@ final class QueueBootloaderTest extends BaseTestCase
 
     public function testAddConsumeInterceptor(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => ['consume' => []]]);
 
-        $interceptor = new ErrorHandlerInterceptor($this->createMock(FailedJobHandlerInterface::class));
+        $interceptor = new ErrorHandlerInterceptor($this->createStub(FailedJobHandlerInterface::class));
         $autowire = new Autowire(ErrorHandlerInterceptor::class);
 
         $bootloader = new QueueBootloader($configs);
@@ -110,10 +110,10 @@ final class QueueBootloaderTest extends BaseTestCase
 
     public function testAddPushInterceptor(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(QueueConfig::CONFIG, ['interceptors' => ['push' => []]]);
 
-        $interceptor = new ErrorHandlerInterceptor($this->createMock(FailedJobHandlerInterface::class));
+        $interceptor = new ErrorHandlerInterceptor($this->createStub(FailedJobHandlerInterface::class));
         $autowire = new Autowire(ErrorHandlerInterceptor::class);
 
         $bootloader = new QueueBootloader($configs);
@@ -128,7 +128,7 @@ final class QueueBootloaderTest extends BaseTestCase
 
     public function testRegisterDriverAlias(): void
     {
-        $configs = new ConfigManager($this->createMock(LoaderInterface::class));
+        $configs = new ConfigManager($this->createStub(LoaderInterface::class));
         $configs->setDefaults(QueueConfig::CONFIG, ['driverAliases' => []]);
 
         $bootloader = new QueueBootloader($configs);
