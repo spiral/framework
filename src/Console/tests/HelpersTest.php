@@ -31,23 +31,23 @@ final class HelpersTest extends BaseTestCase
 
     public function testSprintf(): void
     {
-        self::assertStringContainsString('hello world', $this->core->run('helper', ['helper' => 'sprintf'])->getOutput()->fetch());
+        self::assertStringContainsString('hello world', (string) $this->core->run('helper', ['helper' => 'sprintf'])->getOutput()->fetch());
     }
 
     public function testWriteln(): void
     {
-        self::assertStringContainsString("\n", $this->core->run('helper', ['helper' => 'writeln'])->getOutput()->fetch());
+        self::assertStringContainsString("\n", (string) $this->core->run('helper', ['helper' => 'writeln'])->getOutput()->fetch());
     }
 
     public function testTable(): void
     {
-        self::assertStringContainsString('id', $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
+        self::assertStringContainsString('id', (string) $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
 
-        self::assertStringContainsString('value', $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
+        self::assertStringContainsString('value', (string) $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
 
-        self::assertStringContainsString('1', $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
+        self::assertStringContainsString('1', (string) $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
 
-        self::assertStringContainsString('true', $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
+        self::assertStringContainsString('true', (string) $this->core->run('helper', ['helper' => 'table'])->getOutput()->fetch());
     }
 
     protected function setUp(): void

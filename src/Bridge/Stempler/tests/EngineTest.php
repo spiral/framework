@@ -50,7 +50,7 @@ final class EngineTest extends BaseTestCase
             $t = $e->getUserTrace()[0];
 
             self::assertSame(2, $t['line']);
-            self::assertStringContainsString('echo.dark.php', $t['file']);
+            self::assertStringContainsString('echo.dark.php', (string) $t['file']);
         }
     }
 
@@ -66,10 +66,10 @@ final class EngineTest extends BaseTestCase
             self::assertCount(2, $t);
 
             self::assertSame(2, $t[0]['line']);
-            self::assertStringContainsString('echo.dark.php', $t[0]['file']);
+            self::assertStringContainsString('echo.dark.php', (string) $t[0]['file']);
 
             self::assertSame(3, $t[1]['line']);
-            self::assertStringContainsString('echo-in.dark.php', $t[1]['file']);
+            self::assertStringContainsString('echo-in.dark.php', (string) $t[1]['file']);
         }
     }
 

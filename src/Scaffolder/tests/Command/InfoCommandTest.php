@@ -24,7 +24,7 @@ final class InfoCommandTest extends AbstractCommandTestCase
         ];
 
         foreach ($strings as $string) {
-            self::assertStringContainsString($string, $result);
+            self::assertStringContainsString($string, (string) $result);
         }
     }
 }

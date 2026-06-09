@@ -27,7 +27,7 @@ final class NamespacedNameTest extends AbstractCommandTestCase
         $reflection = new \ReflectionClass(self::CLASS_NAME);
 
         self::assertStringContainsString('strict_types=1', $this->files()->read($reflection->getFileName()));
-        self::assertStringContainsString('Sample Controller', $reflection->getDocComment());
+        self::assertStringContainsString('Sample Controller', (string) $reflection->getDocComment());
         self::assertTrue($reflection->hasMethod('index'));
         self::assertTrue($reflection->hasMethod('save'));
     }

@@ -28,7 +28,7 @@ final class BootloaderTest extends AbstractCommandTestCase
         $content = $this->files()->read($reflection->getFileName());
 
         self::assertStringContainsString('strict_types=1', $content);
-        self::assertStringContainsString('Sample Bootloader', $reflection->getDocComment());
+        self::assertStringContainsString('Sample Bootloader', (string) $reflection->getDocComment());
         self::assertStringContainsString('{project-name}', $content);
         self::assertStringContainsString('@author {author-name}', $content);
         self::assertTrue($reflection->hasMethod('boot'));

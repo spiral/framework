@@ -78,9 +78,9 @@ text;
         $output = $core->run('update', ['--break' => true]);
         $result = $output->getOutput()->fetch();
 
-        self::assertStringContainsString('Unhandled failed command error at', $result);
-        self::assertStringContainsString('Aborting.', $result);
-        self::assertStringNotContainsString('Unhandled another failed command error at', $result);
+        self::assertStringContainsString('Unhandled failed command error at', (string) $result);
+        self::assertStringContainsString('Aborting.', (string) $result);
+        self::assertStringNotContainsString('Unhandled another failed command error at', (string) $result);
         self::assertSame(1, $output->getCode());
     }
 
@@ -94,9 +94,9 @@ text;
         $output = $core->run('update', ['--ignore' => true, '--break' => true]);
         $result = $output->getOutput()->fetch();
 
-        self::assertStringContainsString('Unhandled failed command error at', $result);
-        self::assertStringNotContainsString('Aborting.', $result);
-        self::assertStringContainsString('Unhandled another failed command error at', $result);
+        self::assertStringContainsString('Unhandled failed command error at', (string) $result);
+        self::assertStringNotContainsString('Aborting.', (string) $result);
+        self::assertStringContainsString('Unhandled another failed command error at', (string) $result);
         self::assertSame(0, $output->getCode());
     }
 
@@ -111,9 +111,9 @@ text;
         $output = $core->run('update');
         $result = $output->getOutput()->fetch();
 
-        self::assertStringContainsString('Unhandled failed command error at', $result);
-        self::assertStringNotContainsString('Aborting.', $result);
-        self::assertStringContainsString('Unhandled another failed command error at', $result);
+        self::assertStringContainsString('Unhandled failed command error at', (string) $result);
+        self::assertStringNotContainsString('Aborting.', (string) $result);
+        self::assertStringContainsString('Unhandled another failed command error at', (string) $result);
         self::assertSame(1, $output->getCode());
     }
 
