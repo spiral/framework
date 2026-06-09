@@ -32,7 +32,7 @@ final class InjectCommandTest extends AbstractCommandsTestCase
         $reflection = new \ReflectionClass($target);
         $filename = $reflection->getFileName();
         $source = file_get_contents($filename);
-        self::assertStringContainsString('use PrototypeTrait;', $source);
+        self::assertStringContainsString('use PrototypeTrait;', (string) $source);
 
         try {
             $this->app->bindApp();
@@ -41,7 +41,7 @@ final class InjectCommandTest extends AbstractCommandsTestCase
             $out = new BufferedOutput();
             $this->app->get(Console::class)->run('prototype:inject', $inp, $out);
 
-            self::assertStringNotContainsString('use PrototypeTrait;', file_get_contents($filename));
+            self::assertStringNotContainsString('use PrototypeTrait;', (string) file_get_contents($filename));
         } finally {
             file_put_contents($filename, $source);
         }

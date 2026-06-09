@@ -29,7 +29,7 @@ final class JobHandlerTest extends AbstractCommandTestCase
         self::assertStringContainsString('{project-name}', $content);
         self::assertStringContainsString('@author {author-name}', $content);
         self::assertStringContainsString('function invoke(string $id, mixed $payload, array $headers)', $content);
-        self::assertStringContainsString('Sample Job Handler', $reflection->getDocComment());
+        self::assertStringContainsString('Sample Job Handler', (string) $reflection->getDocComment());
         self::assertTrue($reflection->hasMethod('invoke'));
     }
 

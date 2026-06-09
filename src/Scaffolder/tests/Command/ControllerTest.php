@@ -30,7 +30,7 @@ final class ControllerTest extends AbstractCommandTestCase
         self::assertStringContainsString('strict_types=1', $content);
         self::assertStringContainsString('{project-name}', $content);
         self::assertStringContainsString('@author {author-name}', $content);
-        self::assertStringContainsString('Sample Controller', $reflection->getDocComment());
+        self::assertStringContainsString('Sample Controller', (string) $reflection->getDocComment());
         self::assertTrue($reflection->hasMethod('index'));
         self::assertTrue($reflection->hasMethod('save'));
 

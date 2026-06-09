@@ -57,10 +57,10 @@ final class KeyCommandTest extends ConsoleTestCase
 
         $out = $out->getOutput()->fetch();
 
-        self::assertStringContainsString('key has been updated', $out);
+        self::assertStringContainsString('key has been updated', (string) $out);
 
         $body = \file_get_contents(__DIR__ . '/.env');
-        self::assertStringContainsString($body, $out);
+        self::assertStringContainsString($body, (string) $out);
 
         \unlink(__DIR__ . '/.env');
     }

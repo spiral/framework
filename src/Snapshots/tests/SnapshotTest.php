@@ -23,10 +23,10 @@ final class SnapshotTest extends TestCase
         self::assertStringContainsString("14", $s->getMessage());
 
         $description = $s->describe();
-        self::assertStringContainsString("Error", $description['error']);
-        self::assertStringContainsString("message", $description['error']);
-        self::assertStringContainsString(__FILE__, $description['error']);
-        self::assertStringContainsString("14", $description['error']);
+        self::assertStringContainsString("Error", (string) $description['error']);
+        self::assertStringContainsString("message", (string) $description['error']);
+        self::assertStringContainsString(__FILE__, (string) $description['error']);
+        self::assertStringContainsString("14", (string) $description['error']);
 
         self::assertSame(__FILE__, $description['location']['file']);
         self::assertSame(14, $description['location']['line']);

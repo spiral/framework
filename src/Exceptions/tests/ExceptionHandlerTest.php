@@ -47,7 +47,7 @@ final class ExceptionHandlerTest extends TestCase
         $handler->setOutput(STDERR);
 
         \fseek($output, 0);
-        self::assertStringContainsString('Test message', \fread($output, 10000));
+        self::assertStringContainsString('Test message', (string) \fread($output, 10000));
     }
 
     public function testDefaultErrorRenderer(): void

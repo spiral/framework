@@ -30,7 +30,7 @@ final class ConfigTest extends AbstractCommandTestCase
         self::assertStringContainsString('strict_types=1', $content);
         self::assertStringContainsString('{project-name}', $content);
         self::assertStringContainsString('@author {author-name}', $content);
-        self::assertStringContainsString('Sample Config', $reflection->getDocComment());
+        self::assertStringContainsString('Sample Config', (string) $reflection->getDocComment());
 
         self::assertTrue($reflection->isFinal());
         self::assertTrue($reflection->hasConstant('CONFIG'));

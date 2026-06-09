@@ -41,9 +41,9 @@ final class RenderTest extends BaseTestCase
             ->get(ViewsInterface::class)
             ->render('stempler:globalVariables', ['replaced' => 'replaced-bar']);
 
-        self::assertStringContainsString('bar', $out);
-        self::assertStringContainsString('global-body', $out);
-        self::assertStringContainsString('replaced-bar', $out);
-        self::assertStringNotContainsString('replaced-foo', $out);
+        self::assertStringContainsString('bar', (string) $out);
+        self::assertStringContainsString('global-body', (string) $out);
+        self::assertStringContainsString('replaced-bar', (string) $out);
+        self::assertStringNotContainsString('replaced-foo', (string) $out);
     }
 }
