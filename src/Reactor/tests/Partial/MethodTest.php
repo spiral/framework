@@ -241,7 +241,7 @@ final class MethodTest extends TestCase
     public function testAddPromotedParameterWithDefaultNullValue(): void
     {
         $method = new Method('test');
-        $param = $method->addPromotedParameter('test', null);
+        $param = $method->addPromotedParameter('test');
         $param->setNullable();
 
         self::assertTrue($param->hasDefaultValue());

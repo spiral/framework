@@ -38,8 +38,6 @@ final class StorageConfigTest extends TestCase
                 'credentials' => new Credentials(
                     'test-key',
                     'test-secret',
-                    null,
-                    null,
                 ),
                 'use_path_style_endpoint' => true,
             ]),
@@ -81,8 +79,6 @@ final class StorageConfigTest extends TestCase
                 'credentials' => new Credentials(
                     'test-key',
                     'test-secret',
-                    null,
-                    null,
                 ),
                 'use_path_style_endpoint' => true,
             ]),
@@ -126,8 +122,6 @@ final class StorageConfigTest extends TestCase
                 'credentials' => new Credentials(
                     'test-key',
                     'test-secret',
-                    null,
-                    null,
                 ),
                 'use_path_style_endpoint' => true,
             ]),
@@ -171,8 +165,6 @@ final class StorageConfigTest extends TestCase
                 'credentials' => new Credentials(
                     'test-key',
                     'test-secret',
-                    null,
-                    null,
                 ),
                 'use_path_style_endpoint' => true,
             ]),
@@ -216,8 +208,6 @@ final class StorageConfigTest extends TestCase
                 'credentials' => new Credentials(
                     'test-key',
                     'test-secret',
-                    null,
-                    null,
                 ),
                 'use_path_style_endpoint' => true,
             ]),

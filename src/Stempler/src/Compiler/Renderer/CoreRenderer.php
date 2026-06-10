@@ -43,7 +43,7 @@ final class CoreRenderer implements RendererInterface
                     static function (Compiler\Result $source) use ($node, $compiler): void {
                         foreach ($node->nodes as $child) {
                             if (\is_string($child)) {
-                                $source->push($child, null);
+                                $source->push($child);
                                 continue;
                             }
 

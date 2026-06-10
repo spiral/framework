@@ -44,21 +44,21 @@ final class HTMLRenderer implements RendererInterface
             $this->attribute($compiler, $result, $attr);
         }
 
-        $result->push(\sprintf('%s>', $node->void ? '/' : ''), null);
+        $result->push(\sprintf('%s>', $node->void ? '/' : ''));
 
         foreach ($node->nodes as $child) {
             $compiler->compile($child, $result);
         }
 
         if (!$node->void) {
-            $result->push(\sprintf('</%s>', $node->name), null);
+            $result->push(\sprintf('</%s>', $node->name));
         }
     }
 
     private function attribute(Compiler $compiler, Compiler\Result $result, Attr $node): void
     {
         if ($node->name instanceof NodeInterface) {
-            $result->push(' ', null);
+            $result->push(' ');
             $compiler->compile($node->name, $result);
         } else {
             $result->push(\sprintf(' %s', $node->name), $node->getContext());
@@ -70,7 +70,7 @@ final class HTMLRenderer implements RendererInterface
         }
 
         if ($value instanceof NodeInterface) {
-            $result->push('=', null);
+            $result->push('=');
             $compiler->compile($value, $result);
             return;
         }
@@ -82,7 +82,7 @@ final class HTMLRenderer implements RendererInterface
     {
         foreach ($node->nodes as $child) {
             if (\is_string($child)) {
-                $result->push($child, null);
+                $result->push($child);
                 continue;
             }
 
