@@ -267,7 +267,7 @@ final class HttpTest extends TestCase
 
         $tracer = $this->createMock(TracerInterface::class);
         $tracer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('trace')
             ->with(
                 'GET http://example.org/path',
@@ -293,13 +293,13 @@ final class HttpTest extends TestCase
                 },
             );
         $tracer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getContext')
             ->willReturn([]);
 
         $tracerFactory = $this->createMock(TracerFactoryInterface::class);
         $tracerFactory
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('make')
             ->willReturn($tracer);
 

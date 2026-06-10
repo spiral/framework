@@ -170,7 +170,7 @@ final class InjectableTest extends TestCase
     public function testInjectableInheritance(string $class): void
     {
         $mock = $this->createMock(Container\InjectorInterface::class);
-        $mock->expects($this->once())
+        $mock->expects(self::once())
             ->method('createInjection')
             ->with(
                 // Class

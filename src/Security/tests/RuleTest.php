@@ -46,13 +46,13 @@ final class RuleTest extends TestCase
 
         $method = new \ReflectionMethod($this->rule, 'check');
         $this->resolver
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('resolveArguments')
             ->with($method, $parameters)
             ->willReturn([$parameters]);
 
         $this->rule
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('check')
             ->with($parameters)
             ->willReturn($allowed);

@@ -23,13 +23,13 @@ final class StorageSnapshotTest extends TestCase
     {
         $this->renderer = $this->createMock(ExceptionRendererInterface::class);
         $this->renderer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('render')
             ->willReturn('foo');
 
         $this->file = $this->createMock(FileInterface::class);
         $this->file
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('write')
             ->with('foo');
 
@@ -37,7 +37,7 @@ final class StorageSnapshotTest extends TestCase
 
         $this->storage = $this->createMock(StorageInterface::class);
         $this->storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('bucket')
             ->willReturn($this->bucket);
     }
@@ -45,7 +45,7 @@ final class StorageSnapshotTest extends TestCase
     public function testCreate(): void
     {
         $this->bucket
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('create')
             ->with($this->callback(static fn (string $filename): bool => \str_contains($filename, 'Error.txt')))
             ->willReturn($this->file);
@@ -64,7 +64,7 @@ final class StorageSnapshotTest extends TestCase
     public function testCreateWithDirectory(): void
     {
         $this->bucket
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('create')
             ->with($this->callback(static fn (string $filename): bool => \str_starts_with($filename, 'foo/bar')))
             ->willReturn($this->file);

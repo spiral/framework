@@ -25,7 +25,7 @@ final class DumpCommandTest extends AbstractCommandsTestCase
     {
         $files = $this->createMock(FilesInterface::class);
         $files
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('write')
             ->with(static::callback(fn (): bool => true), static::callback($this->validateTrait(...)));
 

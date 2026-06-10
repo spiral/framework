@@ -25,7 +25,7 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         $ref = new \ReflectionMethod($class, 'availableReflections');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())->method('warning')->with(
+        $logger->expects(self::once())->method('warning')->with(
             $this->stringContains(' has includes and excluded from analysis')
         );
         $class->setLogger($logger);
@@ -39,7 +39,7 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         $ref = new \ReflectionMethod($class, 'availableReflections');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->never())->method('warning');
+        $logger->expects(self::never())->method('warning');
         $class->setLogger($logger);
 
         \iterator_to_array($ref->invoke($class));
@@ -51,7 +51,7 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         $ref = new \ReflectionMethod($class, 'classReflection');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())->method('error')->with(
+        $logger->expects(self::once())->method('error')->with(
             $this->stringContains("Class 'foo' can not be loaded")
         );
         $class->setLogger($logger);
@@ -68,7 +68,7 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         $ref = new \ReflectionMethod($class, 'classReflection');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->never())->method('error');
+        $logger->expects(self::never())->method('error');
         $class->setLogger($logger);
 
         try {
@@ -83,7 +83,7 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         $ref = new \ReflectionMethod($class, 'enumReflection');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())->method('error')->with(
+        $logger->expects(self::once())->method('error')->with(
             $this->stringContains("Enum 'foo' can not be loaded")
         );
         $class->setLogger($logger);
@@ -100,7 +100,7 @@ final class AbstractLocatorTest extends \PHPUnit\Framework\TestCase
         $ref = new \ReflectionMethod($class, 'enumReflection');
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->never())->method('error');
+        $logger->expects(self::never())->method('error');
         $class->setLogger($logger);
 
         try {

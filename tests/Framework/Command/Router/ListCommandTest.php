@@ -14,43 +14,34 @@ final class ListCommandTest extends ConsoleTestCase
 
         // Anchor each name to the Name column (preceded by a column border, followed by padding + border)
         // so that e.g. `intercepted:without` is not matched inside `intercepted:withoutAttribute`.
-        $this->assertMatchesRegularExpression('/\|\s+auth\s+\|/', $output);
-        $this->assertMatchesRegularExpression('/\|\s+scope\s+\|/', $output);
-        $this->assertMatchesRegularExpression('/\|\s+intercepted:without\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+auth\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+scope\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+intercepted:without\s+\|/', $output);
     }
 
     public function testAllVerbsShownAsWildcard(): void
     {
         // A route accepting all verbs renders `*` as its own Verbs cell (between two borders),
         // distinct from target wildcards such as `AuthController->*`.
-        $this->assertMatchesRegularExpression('/\|\s+\*\s+\|/', $this->runCommand('route:list'));
+        self::assertMatchesRegularExpression('/\|\s+\*\s+\|/', $this->runCommand('route:list'));
     }
 
     public function testControllerTargetFormat(): void
     {
         // `auth` route -> Controller target rendered as `Controller\AuthController->*` in the Target cell.
-        $this->assertMatchesRegularExpression(
-            '/\\\\AuthController->\*\s+\|/',
-            $this->runCommand('route:list'),
-        );
+        self::assertMatchesRegularExpression('/\\\\AuthController->\*\s+\|/', $this->runCommand('route:list'));
     }
 
     public function testActionTargetFormat(): void
     {
         // `intercepted:without` -> Action target. Anchor to the cell border so it is not matched
         // inside `InterceptedController->withoutAttribute`.
-        $this->assertMatchesRegularExpression(
-            '/\\\\InterceptedController->without\s+\|/',
-            $this->runCommand('route:list'),
-        );
+        self::assertMatchesRegularExpression('/\\\\InterceptedController->without\s+\|/', $this->runCommand('route:list'));
     }
 
     public function testClosureTargetFormat(): void
     {
-        $this->assertMatchesRegularExpression(
-            '/Closure\(api\.php:\d+\)/',
-            $this->runCommand('route:list'),
-        );
+        self::assertMatchesRegularExpression('/Closure\(api\.php:\d+\)/', $this->runCommand('route:list'));
     }
 
     public function testRouteGroupAppearsInOutput(): void
@@ -59,8 +50,8 @@ final class ListCommandTest extends ConsoleTestCase
 
         // Tie the group value to a concrete route row (name ... | group |) so an empty/wrong
         // Group column cannot pass just because `api`/`other` appear in patterns or targets.
-        $this->assertMatchesRegularExpression('/\|\s+api\.test-import-index\s+\|.*\|\s*api\s+\|/', $output);
-        $this->assertMatchesRegularExpression('/\|\s+test-import-index\s+\|.*\|\s*other\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+api\.test-import-index\s+\|.*\|\s*api\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+test-import-index\s+\|.*\|\s*other\s+\|/', $output);
     }
 
     public function testPatternWithPrefixAppearsInOutput(): void
@@ -69,8 +60,8 @@ final class ListCommandTest extends ConsoleTestCase
 
         // Anchor to the Pattern cell so the prefixed index pattern is not matched inside the longer
         // `api/test-import/posts` pattern.
-        $this->assertMatchesRegularExpression('/\|\s+api\/test-import\s+\|/', $output);
-        $this->assertMatchesRegularExpression('/\|\s+other\/test-import\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+api\/test-import\s+\|/', $output);
+        self::assertMatchesRegularExpression('/\|\s+other\/test-import\s+\|/', $output);
     }
 
     public function testGetVerbDisplay(): void
@@ -125,9 +116,6 @@ final class ListCommandTest extends ConsoleTestCase
      */
     private function assertVerbForRoute(string $name, string $verb): void
     {
-        $this->assertMatchesRegularExpression(
-            \sprintf('/\|\s+%s\s+\|\s+%s\b/', \preg_quote($name, '/'), \preg_quote($verb, '/')),
-            $this->runCommand('route:list'),
-        );
+        self::assertMatchesRegularExpression(\sprintf('/\|\s+%s\s+\|\s+%s\b/', \preg_quote($name, '/'), \preg_quote($verb, '/')), $this->runCommand('route:list'));
     }
 }

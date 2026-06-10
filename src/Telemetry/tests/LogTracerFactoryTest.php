@@ -18,7 +18,7 @@ final class LogTracerFactoryTest extends TestCase
     {
         $logs = $this->createMock(LogsInterface::class);
 
-        $logs->expects($this->once())
+        $logs->expects(self::once())
             ->method('getLogger')
             ->with('some-channel')
             ->willReturn($logger = $this->createMock(LoggerInterface::class));
@@ -31,7 +31,7 @@ final class LogTracerFactoryTest extends TestCase
         );
 
         $clock->method('now');
-        $logger->expects($this->once())->method('debug');
+        $logger->expects(self::once())->method('debug');
 
         self::assertInstanceOf(LogTracer::class, $tracer = $factory->make());
 

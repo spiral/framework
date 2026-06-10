@@ -41,8 +41,8 @@ final class ApplicationInProductionTest extends TestCase
             $this->createStub(OutputInterface::class),
         );
 
-        $input->expects($this->once())->method('hasOption')->willReturn(true);
-        $input->expects($this->once())->method('getOption')->willReturn(true);
+        $input->expects(self::once())->method('hasOption')->willReturn(true);
+        $input->expects(self::once())->method('getOption')->willReturn(true);
 
         self::assertTrue($confirmation->confirmToProceed());
     }
@@ -55,9 +55,9 @@ final class ApplicationInProductionTest extends TestCase
             $output = $this->createMock(SymfonyStyle::class),
         );
 
-        $input->expects($this->once())->method('hasOption')->willReturn(false);
+        $input->expects(self::once())->method('hasOption')->willReturn(false);
         $output
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('confirm')
             ->with('Do you really wish to run command?', false)
             ->willReturn(true);
@@ -73,9 +73,9 @@ final class ApplicationInProductionTest extends TestCase
             $output = $this->createMock(SymfonyStyle::class),
         );
 
-        $input->expects($this->once())->method('hasOption')->willReturn(false);
+        $input->expects(self::once())->method('hasOption')->willReturn(false);
         $output
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('confirm')
             ->with('Do you really wish to run command?', false)
             ->willReturn(false);

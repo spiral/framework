@@ -16,7 +16,7 @@ final class TokenStorageScopeTest extends TestCase
     {
         $storage = $this->createMock(TokenStorageInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('load')
             ->with('foo')
             ->willReturn($token = $this->createMock(TokenInterface::class));
@@ -35,7 +35,7 @@ final class TokenStorageScopeTest extends TestCase
 
         $storage = $this->createMock(TokenStorageInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('create')
             ->with(['foo' => 'bar'], $expiresAt)
             ->willReturn($token = $this->createMock(TokenInterface::class));
@@ -54,7 +54,7 @@ final class TokenStorageScopeTest extends TestCase
 
         $storage = $this->createMock(TokenStorageInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('delete')
             ->with($token);
 
