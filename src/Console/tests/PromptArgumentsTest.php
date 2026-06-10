@@ -21,10 +21,10 @@ final class PromptArgumentsTest extends BaseTestCase
     {
         $input = $this->createMock(InputInterface::class);
         $input
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('getArgument');
         $input
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('setArgument');
 
         $promptArguments = new PromptArguments();

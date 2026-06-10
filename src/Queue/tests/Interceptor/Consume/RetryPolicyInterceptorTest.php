@@ -34,10 +34,10 @@ final class RetryPolicyInterceptorTest extends TestCase
 
     public function testWithoutException(): void
     {
-        $this->reader->expects($this->never())->method('firstClassMetadata');
+        $this->reader->expects(self::never())->method('firstClassMetadata');
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with('foo', 'bar', [])
             ->willReturn('result');
@@ -48,10 +48,10 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithoutRetryPolicy(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(null);
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(null);
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', [])
             ->willThrowException(new \Exception('Something went wrong'));
@@ -64,10 +64,10 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testNotRetryableException(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(new RetryPolicy());
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(new RetryPolicy());
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', [])
             ->willThrowException(new \Exception('Something went wrong'));
@@ -80,10 +80,10 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithDefaultRetryPolicy(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(new RetryPolicy());
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(new RetryPolicy());
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', [])
             ->willThrowException(new TestRetryException());
@@ -99,10 +99,10 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithoutRetryPolicyAttribute(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(null);
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(null);
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', [])
             ->willThrowException(new TestRetryException(
@@ -120,12 +120,12 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithRetryPolicyInAttribute(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(
             new RetryPolicy(maxAttempts: 3, delay: 4, multiplier: 2),
         );
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', ['headers' => ['attempts' => ['1']]])
             ->willThrowException(new TestRetryException());
@@ -146,12 +146,12 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithRetryPolicyInException(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(
             new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25),
         );
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', ['headers' => ['attempts' => ['1']]])
             ->willThrowException(new TestRetryException(
@@ -174,12 +174,12 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithCustomRetryPolicyInException(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(
             new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25),
         );
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', ['headers' => ['attempts' => ['1']]])
             ->willThrowException(new TestRetryException(
@@ -212,12 +212,12 @@ final class RetryPolicyInterceptorTest extends TestCase
     #[DataProvider('jobNameDataProvider')]
     public function testWithRetryPolicyInExceptionInsideJobException(string $name): void
     {
-        $this->reader->expects($this->once())->method('firstClassMetadata')->willReturn(
+        $this->reader->expects(self::once())->method('firstClassMetadata')->willReturn(
             new RetryPolicy(maxAttempts: 30, delay: 400, multiplier: 25),
         );
 
         $this->core
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('callAction')
             ->with($name, 'bar', ['headers' => ['attempts' => ['1']]])
             ->willThrowException(new JobException(

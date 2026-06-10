@@ -41,27 +41,27 @@ final class ErrorHandlerMiddlewareTest extends TestCase
     public function testHandleExceptionWithDebugFalse(\Throwable $e, int $code): void
     {
         $this->handler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('handle')
             ->with($this->request)
             ->willThrowException($e);
 
         $this->exceptionHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('report')
             ->with($e);
 
         $this->logger
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('error');
 
         $this->renderer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('renderException')
             ->with($this->request, $code, $e);
 
         $this->exceptionHandler
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('getRenderer');
 
         $middleware = new ErrorHandlerMiddleware(
@@ -81,32 +81,32 @@ final class ErrorHandlerMiddlewareTest extends TestCase
     {
         $renderer = $this->createMock(ExceptionRendererInterface::class);
         $renderer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('render')
             ->with($e, Verbosity::DEBUG);
 
         $this->handler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('handle')
             ->with($this->request)
             ->willThrowException($e);
 
         $this->exceptionHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('report')
             ->with($e);
 
         $this->exceptionHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getRenderer')
             ->willReturn($renderer);
 
         $this->logger
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('error');
 
         $this->renderer
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('renderException');
 
         $middleware = new ErrorHandlerMiddleware(
@@ -128,32 +128,32 @@ final class ErrorHandlerMiddlewareTest extends TestCase
     {
         $renderer = $this->createMock(ExceptionRendererInterface::class);
         $renderer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('render')
             ->with($e, Verbosity::VERBOSE);
 
         $this->handler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('handle')
             ->with($this->request)
             ->willThrowException($e);
 
         $this->exceptionHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('report')
             ->with($e);
 
         $this->exceptionHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getRenderer')
             ->willReturn($renderer);
 
         $this->logger
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('error');
 
         $this->renderer
-            ->expects($this->never())
+            ->expects(self::never())
             ->method('renderException');
 
         $middleware = new ErrorHandlerMiddleware(

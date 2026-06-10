@@ -67,7 +67,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->andReturn($middleware5 = $this->createMock(MiddlewareInterface::class));
 
         $this->container
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('get')
             ->with('foo')
             ->willReturn($middleware4 = $this->createMock(MiddlewareInterface::class));
@@ -81,19 +81,19 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
         $handle = static fn(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface => $handler->handle($request);
 
-        $middleware1->expects($this->once())->method('process')->willReturnCallback($handle);
-        $middleware2->expects($this->once())->method('process')->willReturnCallback($handle);
-        $middleware4->expects($this->once())->method('process')->willReturnCallback($handle);
-        $middleware5->expects($this->once())->method('process')->willReturnCallback($handle);
+        $middleware1->expects(self::once())->method('process')->willReturnCallback($handle);
+        $middleware2->expects(self::once())->method('process')->willReturnCallback($handle);
+        $middleware4->expects(self::once())->method('process')->willReturnCallback($handle);
+        $middleware5->expects(self::once())->method('process')->willReturnCallback($handle);
 
         $response = $this->createMock(ResponseInterface::class);
         $response
-            ->expects($this->exactly(4))->method('getHeaderLine')->with('Content-Length')->willReturn('test');
-        $response->expects($this->exactly(8))->method('getStatusCode')->willReturn(200);
+            ->expects(self::exactly(4))->method('getHeaderLine')->with('Content-Length')->willReturn('test');
+        $response->expects(self::exactly(8))->method('getStatusCode')->willReturn(200);
 
         $requestHandler = $this->createMock(RequestHandlerInterface::class);
         $requestHandler
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('handle')
             ->willReturn($response);
 

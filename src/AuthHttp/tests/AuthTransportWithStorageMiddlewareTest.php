@@ -23,15 +23,15 @@ final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
     {
         $storageProvider = $this->createMock(TokenStorageProviderInterface::class);
         $storageProvider
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getStorage')
             ->with('session')
             ->willReturn($tokenStorage = $this->createMock(TokenStorageInterface::class));
 
-        $matcher = $this->exactly(2);
+        $matcher = self::exactly(2);
         $request = $this->createMock(ServerRequestInterface::class);
         $request
-            ->expects($this->exactly(2))
+            ->expects(self::exactly(2))
             ->method('withAttribute')
             ->willReturnCallback(static function (string $key, string $value) use ($matcher, $tokenStorage): void {
                 match ($matcher->numberOfInvocations()) {
@@ -46,18 +46,18 @@ final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
         $registry = new TransportRegistry();
         $registry->setTransport('header', $transport = $this->createMock(HttpTransportInterface::class));
 
-        $transport->expects($this->once())->method('fetchToken')->with($request)->willReturn('fooToken');
-        $transport->expects($this->once())->method('commitToken')->with($request, $response, '123', null)
+        $transport->expects(self::once())->method('fetchToken')->with($request)->willReturn('fooToken');
+        $transport->expects(self::once())->method('commitToken')->with($request, $response, '123', null)
             ->willReturn($response);
 
         $tokenStorage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('load')
             ->with('fooToken')
             ->willReturn($token = $this->createMock(TokenInterface::class));
 
-        $token->expects($this->once())->method('getID')->willReturn('123');
-        $token->expects($this->once())->method('getExpiresAt')->willReturn(null);
+        $token->expects(self::once())->method('getID')->willReturn('123');
+        $token->expects(self::once())->method('getExpiresAt')->willReturn(null);
 
         $middleware = new AuthTransportWithStorageMiddleware(
             'header',
@@ -69,7 +69,7 @@ final class AuthTransportWithStorageMiddlewareTest extends BaseTestCase
         );
 
         $handler = $this->createMock(RequestHandlerInterface::class);
-        $handler->expects($this->once())->method('handle')->with($request)->willReturn($response);
+        $handler->expects(self::once())->method('handle')->with($request)->willReturn($response);
 
         self::assertSame($response, $middleware->process($request, $handler));
     }

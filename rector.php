@@ -130,7 +130,6 @@ return RectorConfig::configure()
         ],
 
         // to be enabled later for easier to review
-        \Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\StmtsAwareInterface\DeclareStrictTypesTestsRector::class,
         \Rector\DeadCode\Rector\MethodCall\RemoveNullArgOnNullDefaultParamRector::class,
         \Rector\CodingStyle\Rector\ArrowFunction\ArrowFunctionDelegatingCallToFirstClassCallableRector::class,

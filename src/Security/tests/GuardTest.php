@@ -37,7 +37,7 @@ final class GuardTest extends TestCase
             });
 
         $rule = $this->createMock(RuleInterface::class);
-        $rule->expects($this->once())
+        $rule->expects(self::once())
             ->method('allows')
             ->with($this->actor, self::OPERATION, [])->willReturn(true);
 

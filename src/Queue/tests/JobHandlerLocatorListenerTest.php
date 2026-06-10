@@ -28,7 +28,7 @@ final class JobHandlerLocatorListenerTest extends TestCase
 
         $reader = $this->createMock(ReaderInterface::class);
         $reader
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('firstClassMetadata')
             ->willReturn(new Attribute('test'));
 

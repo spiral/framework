@@ -269,7 +269,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('get')
             ->with($expectedKey)
             ->willReturn(null);
@@ -284,7 +284,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('set')
             ->with($expectedKey, 'foo')
             ->willReturn(true);
@@ -299,7 +299,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('delete')
             ->with($expectedKey)
             ->willReturn(true);
@@ -314,7 +314,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getMultiple')
             ->with([$expectedKey], null)
             ->willReturn([]);
@@ -329,7 +329,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('setMultiple')
             ->with([$expectedKey => 'foo'])
             ->willReturn(true);
@@ -344,7 +344,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('deleteMultiple')
             ->with([$expectedKey])
             ->willReturn(true);
@@ -359,7 +359,7 @@ final class CacheRepositoryTest extends TestCase
     {
         $storage = $this->createMock(CacheInterface::class);
         $storage
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('has')
             ->with($expectedKey)
             ->willReturn(true);

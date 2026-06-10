@@ -85,7 +85,7 @@ final class DebugBootloaderTest extends BaseTestCase
     public function testGetCollectorsFromConfig(): void
     {
         $collector = $this->createMock(StateCollectorInterface::class);
-        $collector->expects($this->once())->method('populate');
+        $collector->expects(self::once())->method('populate');
 
         $this->getContainer()->bindSingleton('foo', $collector);
 

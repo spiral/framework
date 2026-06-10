@@ -48,15 +48,15 @@ final class AuthTransportMiddlewareTest extends BaseTestCase
         $auth = $this->getPrivateProperty('authMiddleware', $middleware->resolve($this->container));
 
         $authContext = $this->createMock(AuthContextInterface::class);
-        $authContext->expects($this->once())->method('getTransport')->willReturn(null);
-        $authContext->expects($this->once())->method('isClosed')->willReturn(false);
-        $authContext->expects($this->exactly(3))->method('getToken')->willReturn(new Token('1', []));
+        $authContext->expects(self::once())->method('getTransport')->willReturn(null);
+        $authContext->expects(self::once())->method('isClosed')->willReturn(false);
+        $authContext->expects(self::exactly(3))->method('getToken')->willReturn(new Token('1', []));
 
         $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())->method('withAddedHeader')->willReturn($response);
+        $response->expects(self::once())->method('withAddedHeader')->willReturn($response);
 
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->once())->method('hasHeader')->willReturn(false);
+        $request->expects(self::once())->method('hasHeader')->willReturn(false);
 
         (new \ReflectionMethod($auth, 'closeContext'))->invoke($auth, $request, $response, $authContext);
     }

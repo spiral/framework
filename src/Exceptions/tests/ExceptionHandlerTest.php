@@ -114,7 +114,7 @@ final class ExceptionHandlerTest extends TestCase
     public function testNonReportableExceptions(\Throwable $exception): void
     {
         $reporter = $this->createMock(ExceptionReporterInterface::class);
-        $reporter->expects($this->never())->method('report');
+        $reporter->expects(self::never())->method('report');
 
         $handler = $this->makeEmptyErrorHandler();
         $handler->addReporter($reporter);
