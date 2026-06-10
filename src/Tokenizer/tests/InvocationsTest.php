@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spiral\Tests\Tokenizer;
 
 use PHPUnit\Framework\TestCase;
@@ -72,8 +74,8 @@ final class InvocationsTest extends TestCase
         $invocation1 = $invocations[0];
         $invocation2 = $invocations[1];
 
-        self::assertSame(15, $invocation1->getLine());
-        self::assertSame(16, $invocation2->getLine());
+        self::assertSame(17, $invocation1->getLine());
+        self::assertSame(18, $invocation2->getLine());
     }
 
     public function testLevel(): void
