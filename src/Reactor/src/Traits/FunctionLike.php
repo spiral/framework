@@ -45,7 +45,7 @@ trait FunctionLike
     public function getParameters(): Parameters
     {
         return new Parameters(\array_map(
-            static fn(NetteParameter $parameter): Parameter => Parameter::fromElement($parameter),
+            Parameter::fromElement(...),
             $this->element->getParameters(),
         ));
     }

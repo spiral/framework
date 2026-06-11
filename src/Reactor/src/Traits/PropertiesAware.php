@@ -26,7 +26,7 @@ trait PropertiesAware
     public function getProperties(): Properties
     {
         return new Properties(\array_map(
-            static fn(NetteProperty $property): Property => Property::fromElement($property),
+            Property::fromElement(...),
             $this->element->getProperties(),
         ));
     }

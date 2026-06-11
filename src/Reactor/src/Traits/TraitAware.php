@@ -37,7 +37,7 @@ trait TraitAware
         );
 
         return new Traits(\array_map(
-            static fn(TraitType $trait): TraitDeclaration => TraitDeclaration::fromElement($trait),
+            TraitDeclaration::fromElement(...),
             $traits,
         ));
     }

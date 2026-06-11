@@ -41,7 +41,7 @@ trait AttributeAware
     public function getAttributes(): array
     {
         return \array_map(
-            static fn(NetteAttribute $attribute): Attribute => Attribute::fromElement($attribute),
+            Attribute::fromElement(...),
             $this->element->getAttributes(),
         );
     }

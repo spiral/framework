@@ -7,7 +7,6 @@ namespace Spiral\Reactor;
 use Nette\PhpGenerator\ClassLike;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\EnumType;
-use Nette\PhpGenerator\GlobalFunction;
 use Nette\PhpGenerator\InterfaceType;
 use Nette\PhpGenerator\PhpNamespace as NettePhpNamespace;
 use Nette\PhpGenerator\Factory;
@@ -78,7 +77,7 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function getNamespaces(): Namespaces
     {
         return new Namespaces(\array_map(
-            static fn(NettePhpNamespace $namespace): PhpNamespace => PhpNamespace::fromElement($namespace),
+            PhpNamespace::fromElement(...),
             $this->element->getNamespaces(),
         ));
     }
@@ -86,7 +85,7 @@ class FileDeclaration implements \Stringable, DeclarationInterface
     public function getFunctions(): Functions
     {
         return new Functions(\array_map(
-            static fn(GlobalFunction $function): FunctionDeclaration => FunctionDeclaration::fromElement($function),
+            FunctionDeclaration::fromElement(...),
             $this->element->getFunctions(),
         ));
     }

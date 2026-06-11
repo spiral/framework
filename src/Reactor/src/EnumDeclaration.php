@@ -95,7 +95,7 @@ class EnumDeclaration extends AbstractDeclaration implements AggregableInterface
     public function getCases(): EnumCases
     {
         return new EnumCases(\array_map(
-            static fn(NetteEnumCase $enumCase): EnumCase => EnumCase::fromElement($enumCase),
+            EnumCase::fromElement(...),
             $this->element->getCases(),
         ));
     }
