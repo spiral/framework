@@ -26,7 +26,7 @@ trait MethodsAware
     public function getMethods(): Methods
     {
         return new Methods(\array_map(
-            static fn(NetteMethod $method): Method => Method::fromElement($method),
+            Method::fromElement(...),
             $this->element->getMethods(),
         ));
     }

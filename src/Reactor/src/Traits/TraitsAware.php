@@ -26,7 +26,7 @@ trait TraitsAware
     public function getTraits(): TraitUses
     {
         return new TraitUses(\array_map(
-            static fn(NetteTraitUse $trait): TraitUse => TraitUse::fromElement($trait),
+            TraitUse::fromElement(...),
             $this->element->getTraits(),
         ));
     }

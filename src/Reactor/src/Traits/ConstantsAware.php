@@ -26,7 +26,7 @@ trait ConstantsAware
     public function getConstants(): Constants
     {
         return new Constants(\array_map(
-            static fn(NetteConstant $constant): Constant => Constant::fromElement($constant),
+            Constant::fromElement(...),
             $this->element->getConstants(),
         ));
     }

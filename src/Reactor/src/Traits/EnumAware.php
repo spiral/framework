@@ -37,7 +37,7 @@ trait EnumAware
         );
 
         return new Enums(\array_map(
-            static fn(EnumType $enum): EnumDeclaration => EnumDeclaration::fromElement($enum),
+            EnumDeclaration::fromElement(...),
             $enums,
         ));
     }

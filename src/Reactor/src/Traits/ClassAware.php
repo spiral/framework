@@ -37,7 +37,7 @@ trait ClassAware
         );
 
         return new Classes(\array_map(
-            static fn(ClassType $class): ClassDeclaration => ClassDeclaration::fromElement($class),
+            ClassDeclaration::fromElement(...),
             $classes,
         ));
     }

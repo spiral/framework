@@ -102,7 +102,7 @@ final class CookiesMiddleware implements MiddlewareInterface
     {
         try {
             if (\is_array($cookie)) {
-                return \array_map(fn(array|string $cookie): mixed => $this->decodeCookie($cookie), $cookie);
+                return \array_map($this->decodeCookie(...), $cookie);
             }
         } catch (DecryptException) {
             return null;

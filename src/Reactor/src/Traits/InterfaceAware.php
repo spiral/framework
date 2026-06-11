@@ -37,7 +37,7 @@ trait InterfaceAware
         );
 
         return new Interfaces(\array_map(
-            static fn(InterfaceType $interface): InterfaceDeclaration => InterfaceDeclaration::fromElement($interface),
+            InterfaceDeclaration::fromElement(...),
             $interfaces,
         ));
     }
