@@ -34,7 +34,6 @@ final class AuthorizationMiddlewareTest extends TestCase
         $middleware = new AuthorizationMiddleware(
             m::mock(BroadcastInterface::class),
             m::mock(ResponseFactoryInterface::class),
-            null,
         );
 
         $request = m::mock(ServerRequestInterface::class);

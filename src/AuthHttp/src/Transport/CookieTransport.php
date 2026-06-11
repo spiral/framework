@@ -75,7 +75,7 @@ final class CookieTransport implements HttpTransportInterface
     public function removeToken(Request $request, Response $response, string $tokenID): Response
     {
         // reset to null
-        return $this->commitToken($request, $response, null, null);
+        return $this->commitToken($request, $response);
     }
 
     /**

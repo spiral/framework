@@ -118,9 +118,9 @@ final class ServerTest extends TestCase
 
         self::assertSame([
             'PATH' => 'sample',
-        ], $this->input->server->fetch(['path'], true, null));
+        ], $this->input->server->fetch(['path'], true));
 
-        self::assertSame(['PATH' => 'sample', 'OTHER' => null], $this->input->server->fetch(['path', 'other'], true, null));
+        self::assertSame(['PATH' => 'sample', 'OTHER' => null], $this->input->server->fetch(['path', 'other'], true));
     }
 
     public function testServerBagCount(): void

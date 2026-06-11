@@ -129,8 +129,12 @@ return RectorConfig::configure()
             __DIR__ . '/src/Models/tests/PublicEntity.php',
         ],
 
+        \Rector\DeadCode\Rector\MethodCall\RemoveNullArgOnNullDefaultParamRector::class => [
+            // use of func_num_args() to detect if argument is passed or not
+            __DIR__ . '/src/Reactor/tests/Partial/MethodTest.php',
+        ],
+
         // to be enabled later for easier to review
-        \Rector\DeadCode\Rector\MethodCall\RemoveNullArgOnNullDefaultParamRector::class,
         \Rector\CodingStyle\Rector\ArrowFunction\ArrowFunctionDelegatingCallToFirstClassCallableRector::class,
         \Rector\PHPUnit\PHPUnit120\Rector\ClassMethod\ExpressionCreateMockToCreateStubRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\ClassMethod\AddInstanceofAssertForNullableInstanceRector::class,
