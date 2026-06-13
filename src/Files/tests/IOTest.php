@@ -69,14 +69,8 @@ final class IOTest extends TestCase
 
         $files->ensureDirectory($directory, FilesInterface::READONLY);
 
-        if (!@\chmod($directory, 0555)) {
-            self::markTestSkipped('Unable to create a non-writable directory fixture.');
-        }
-
+        @\chmod($directory, 0555);
         \clearstatcache(false, $directory);
-        if (\is_writable($directory)) {
-            self::markTestSkipped('Unable to make the directory fixture non-writable.');
-        }
 
         try {
             $files->write($filename, 'some-data', FilesInterface::RUNTIME, true);
