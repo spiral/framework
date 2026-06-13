@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Queue\Interceptor;
+namespace Spiral\Tests\Queue\Interceptor\Consume;
 
 use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;

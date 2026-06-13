@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Interceptors\Unit\Handler;
+namespace Spiral\Tests\Interceptors\Unit\Handler;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Interceptors\Context\CallContext;

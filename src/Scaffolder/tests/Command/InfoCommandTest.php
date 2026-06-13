@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Command;
+namespace Spiral\Tests\Scaffolder\Command;
 
 use Spiral\Tests\Scaffolder\Command\AbstractCommandTestCase;
 
