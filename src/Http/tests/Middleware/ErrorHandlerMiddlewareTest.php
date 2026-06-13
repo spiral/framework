@@ -7,6 +7,7 @@ namespace Spiral\Tests\Http\Middleware;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -23,11 +24,11 @@ use Spiral\Router\Exception\RouterException;
 
 final class ErrorHandlerMiddlewareTest extends TestCase
 {
-    private \PHPUnit\Framework\MockObject\MockObject $handler;
+    private MockObject $handler;
     private ServerRequestInterface $request;
-    private \PHPUnit\Framework\MockObject\MockObject $exceptionHandler;
-    private \PHPUnit\Framework\MockObject\MockObject $logger;
-    private \PHPUnit\Framework\MockObject\MockObject $renderer;
+    private MockObject $exceptionHandler;
+    private MockObject $logger;
+    private MockObject $renderer;
 
     public static function exceptionsDataProvider(): \Traversable
     {

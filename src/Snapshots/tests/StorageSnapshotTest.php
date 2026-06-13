@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Snapshots;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\Verbosity;
 use Spiral\Snapshots\StorageSnapshot;
@@ -14,10 +15,10 @@ use Spiral\Storage\StorageInterface;
 
 final class StorageSnapshotTest extends TestCase
 {
-    private \PHPUnit\Framework\MockObject\MockObject $renderer;
-    private \PHPUnit\Framework\MockObject\MockObject $file;
-    private \PHPUnit\Framework\MockObject\MockObject $bucket;
-    private \PHPUnit\Framework\MockObject\MockObject $storage;
+    private MockObject $renderer;
+    private MockObject $file;
+    private MockObject $bucket;
+    private MockObject $storage;
 
     protected function setUp(): void
     {
