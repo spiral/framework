@@ -59,7 +59,7 @@ final class StorageSnapshotTest extends TestCase
         self::assertStringContainsString('Error', $s->getMessage());
         self::assertStringContainsString('message', $s->getMessage());
         self::assertStringContainsString(__FILE__, $s->getMessage());
-        self::assertStringContainsString('53', $s->getMessage());
+        self::assertStringContainsString('54', $s->getMessage());
     }
 
     public function testCreateWithDirectory(): void
@@ -79,6 +79,6 @@ final class StorageSnapshotTest extends TestCase
         self::assertStringContainsString('Error', $s->getMessage());
         self::assertStringContainsString('message', $s->getMessage());
         self::assertStringContainsString(__FILE__, $s->getMessage());
-        self::assertStringContainsString('72', $s->getMessage());
+        self::assertStringContainsString('73', $s->getMessage());
     }
 }
