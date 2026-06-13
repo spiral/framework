@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot;
 
+use Spiral\Boot\AbstractKernel;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Tests\Boot\Fixtures\TestConfig;
 use Spiral\Tests\Boot\Fixtures\TestCore;
@@ -16,6 +17,7 @@ final class ConfigsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var TestConfig $config */
         $config = $core->getContainer()->get(TestConfig::class);
@@ -29,6 +31,7 @@ final class ConfigsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ConfiguratorInterface $configurator */
         $configurator = $core->getContainer()->get(ConfiguratorInterface::class);

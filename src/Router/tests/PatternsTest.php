@@ -27,6 +27,7 @@ final class PatternsTest extends TestCase
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/statistics/set/10/285/0')));
+        self::assertInstanceOf(Route::class, $match);
 
         self::assertSame([
             'moduleType' => '10',
@@ -47,6 +48,7 @@ final class PatternsTest extends TestCase
         $match = $route->match(
             new ServerRequest('GET', new Uri('http://site.com/users/1')),
         );
+        self::assertInstanceOf(Route::class, $match);
 
         self::assertSame([
             'int' => '1',
@@ -81,6 +83,7 @@ final class PatternsTest extends TestCase
         $match = $route->match(
             new ServerRequest('GET', new Uri('http://site.com/users/1')),
         );
+        self::assertInstanceOf(Route::class, $match);
 
         self::assertSame([
             'integer' => '1',
@@ -115,6 +118,7 @@ final class PatternsTest extends TestCase
         $match = $route->match(
             new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac120002')),
         );
+        self::assertInstanceOf(Route::class, $match);
 
         self::assertSame([
             'uuid' => '34f7b660-7ad0-11ed-a1eb-0242ac120002',
@@ -161,6 +165,7 @@ final class PatternsTest extends TestCase
         $match = $route->match(
             new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac222222')),
         );
+        self::assertInstanceOf(Route::class, $match);
 
         self::assertSame([
             'uuid' => '34f7b660-7ad0-11ed-a1eb-0242ac222222',
@@ -201,10 +206,12 @@ final class PatternsTest extends TestCase
         $match2 = $route->match(
             new ServerRequest('GET', new Uri('http://site.com/users/baz')),
         );
+        self::assertInstanceOf(Route::class, $match);
 
         self::assertSame([
             'name' => 'foo',
         ], $match->getMatches());
+        self::assertInstanceOf(Route::class, $match1);
         self::assertSame([
             'name' => 'bar',
         ], $match1->getMatches());

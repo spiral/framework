@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
@@ -16,6 +17,7 @@ final class MemoryTest extends TestCase
             'root'  => __DIR__,
             'cache' => __DIR__ . '/cache',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);
@@ -34,6 +36,7 @@ final class MemoryTest extends TestCase
             'root'  => __DIR__,
             'cache' => __DIR__ . '/cache',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);

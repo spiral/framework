@@ -9,6 +9,7 @@ use Nyholm\Psr7\Uri;
 use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
+use Spiral\Router\RouteInterface;
 use Spiral\Router\Target\Group;
 use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Diactoros\UriFactory;
@@ -119,6 +120,7 @@ final class MiddlewareTest extends BaseTestingCase
         $r = $r->withUriHandler(new UriHandler(new UriFactory()));
 
         $r = $r->match(new ServerRequest('GET', new Uri('/test')));
+        self::assertInstanceOf(RouteInterface::class, $r);
         $response = $r->handle(new ServerRequest('GET', new Uri('/test')));
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('hello world', (string) $response->getBody());

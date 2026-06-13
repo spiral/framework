@@ -6,6 +6,7 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
 use Spiral\Boot\BootloadManager\Initializer;
@@ -35,6 +36,7 @@ final class KernelTest extends TestCase
         $this->expectException(BootException::class);
 
         $kernel = TestCore::create(['root' => __DIR__])->run();
+        self::assertInstanceOf(AbstractKernel::class, $kernel);
 
         $kernel->serve();
     }
@@ -57,6 +59,7 @@ final class KernelTest extends TestCase
                 return true;
             }
         };
+        self::assertInstanceOf(AbstractKernel::class, $kernel);
         $kernel->addDispatcher($d);
 
         self::assertTrue($kernel->serve());
@@ -77,6 +80,7 @@ final class KernelTest extends TestCase
                 return true;
             }
         };
+        self::assertInstanceOf(AbstractKernel::class, $kernel);
         $kernel->addDispatcher($d);
 
         self::assertTrue($kernel->serve());
@@ -100,6 +104,7 @@ final class KernelTest extends TestCase
                 return 1;
             }
         };
+        self::assertInstanceOf(AbstractKernel::class, $kernel);
         $kernel->addDispatcher($d);
 
         $result = $kernel->serve();
@@ -112,6 +117,7 @@ final class KernelTest extends TestCase
     public function testEnv(): void
     {
         $kernel = TestCore::create(['root' => __DIR__])->run();
+        self::assertInstanceOf(AbstractKernel::class, $kernel);
 
         self::assertSame('VALUE', $kernel->getContainer()->get(EnvironmentInterface::class)->get('INTERNAL'));
     }

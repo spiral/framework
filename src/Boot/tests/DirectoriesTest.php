@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Boot\Exception\DirectoryException;
@@ -17,6 +18,7 @@ final class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
@@ -48,6 +50,7 @@ final class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
@@ -63,6 +66,7 @@ final class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
@@ -83,6 +87,7 @@ final class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs

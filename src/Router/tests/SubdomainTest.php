@@ -24,9 +24,11 @@ final class SubdomainTest extends TestCase
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo')));
+        self::assertInstanceOf(Route::class, $match);
         self::assertSame(['sub' => 'subdomain'], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo')));
+        self::assertInstanceOf(Route::class, $match);
         self::assertSame(['sub' => 'bar'], $match->getMatches());
     }
 
@@ -41,15 +43,19 @@ final class SubdomainTest extends TestCase
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo/bar')));
+        self::assertInstanceOf(Route::class, $match);
         self::assertSame(['sub' => 'subdomain', 'action' => 'bar'], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo')));
+        self::assertInstanceOf(Route::class, $match);
         self::assertSame(['sub' => 'subdomain', 'action' => null], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo')));
+        self::assertInstanceOf(Route::class, $match);
         self::assertSame(['sub' => 'bar', 'action' => null], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo/bar')));
+        self::assertInstanceOf(Route::class, $match);
         self::assertSame(['sub' => 'bar', 'action' => 'bar'], $match->getMatches());
     }
 }
