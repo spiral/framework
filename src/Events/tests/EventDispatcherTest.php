@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Tests\Events\Interceptor;
+namespace Spiral\Tests\Events;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

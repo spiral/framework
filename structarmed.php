@@ -131,9 +131,18 @@ $ruleset = [
 
 $architecture = Architecture::define()
     ->skipPaths([
-        // per src/ has own autoload-dev which needs to their tests directory need to be skipped
-        // or may require special handling for it
-        'src/*/tests',
+        // fixtures
+        'src/Tokenizer/tests/Enums',
+        'src/Tokenizer/tests/Interfaces',
+        'src/Tokenizer/tests/Classes',
+        'src/Scaffolder/tests/App/config',
+
+        // multiple classes in one file on purpose
+        'src/Tokenizer/tests/ReflectionFileTest.php',
+        'src/Core/tests/Internal/Proxy/ProxyClassRendererTest.php',
+
+        // uses as bootstrapping
+        'src/Core/tests/bootstrap.php',
     ])
     ->ruleset($ruleset);
 
