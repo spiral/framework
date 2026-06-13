@@ -135,8 +135,6 @@ return RectorConfig::configure()
         ],
 
         // to be enabled later for easier to review
-        \Rector\PHPUnit\PHPUnit120\Rector\ClassMethod\ExpressionCreateMockToCreateStubRector::class,
-        \Rector\PHPUnit\CodeQuality\Rector\ClassMethod\AddInstanceofAssertForNullableInstanceRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\ClassMethod\BareCreateMockAssignToDirectUseRector::class,
         \Rector\TypeDeclaration\Rector\Class_\TypedPropertyFromCreateMockAssignRector::class,
         \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class,

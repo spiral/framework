@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Loader\LoaderInterface;
 use Spiral\Stempler\Loader\Source;
+use Spiral\Stempler\Node\Template;
 use Spiral\Stempler\Transform\Import\Directory;
 use Spiral\Tests\Stempler\Transform\BaseTestCase;
 
@@ -57,6 +58,7 @@ final class DirectoryTest extends BaseTestCase
             ->andReturn(new Source('<span></span>'));
 
         $template = $directory->resolve(new Builder($loader), $tag);
+        self::assertInstanceOf(Template::class, $template);
 
         self::assertSame($path, $template->getContext()->getPath());
     }

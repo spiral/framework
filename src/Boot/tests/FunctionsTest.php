@@ -6,6 +6,7 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Environment;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Tests\Boot\Fixtures\TestConfig;
@@ -20,6 +21,7 @@ final class FunctionsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
@@ -37,6 +39,7 @@ final class FunctionsTest extends TestCase
         ])->run(new Environment([
             'key' => '(true)',
         ]));
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
@@ -52,6 +55,7 @@ final class FunctionsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
@@ -76,6 +80,7 @@ final class FunctionsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
