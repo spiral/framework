@@ -24,7 +24,7 @@ use Spiral\Telemetry\NullTracer;
 
 final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    private MockObject $container;
+    private MockObject&ContainerInterface $container;
     private FactoryInterface $factory;
     private PipelineFactory $pipeline;
 

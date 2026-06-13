@@ -23,8 +23,8 @@ use Spiral\Tests\Queue\TestCase;
 
 final class RetryPolicyInterceptorTest extends TestCase
 {
-    private MockObject $reader;
-    private MockObject $core;
+    private MockObject&ReaderInterface $reader;
+    private MockObject&CoreInterface $core;
     private RetryPolicyInterceptor $interceptor;
 
     public static function jobNameDataProvider(): \Traversable
