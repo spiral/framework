@@ -135,8 +135,6 @@ return RectorConfig::configure()
         ],
 
         // to be enabled later for easier to review
-        \Rector\PHPUnit\CodeQuality\Rector\ClassMethod\BareCreateMockAssignToDirectUseRector::class,
-        \Rector\TypeDeclaration\Rector\Class_\TypedPropertyFromCreateMockAssignRector::class,
         \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,

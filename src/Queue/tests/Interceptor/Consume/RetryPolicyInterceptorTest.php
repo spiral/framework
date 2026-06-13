@@ -22,8 +22,8 @@ use Spiral\Tests\Queue\TestCase;
 
 final class RetryPolicyInterceptorTest extends TestCase
 {
-    private ReaderInterface $reader;
-    private CoreInterface $core;
+    private \PHPUnit\Framework\MockObject\MockObject $reader;
+    private \PHPUnit\Framework\MockObject\MockObject $core;
     private RetryPolicyInterceptor $interceptor;
 
     public static function jobNameDataProvider(): \Traversable

@@ -14,10 +14,10 @@ use Spiral\Storage\StorageInterface;
 
 final class StorageSnapshotTest extends TestCase
 {
-    private ExceptionRendererInterface $renderer;
-    private FileInterface $file;
-    private BucketInterface $bucket;
-    private StorageInterface $storage;
+    private \PHPUnit\Framework\MockObject\MockObject $renderer;
+    private \PHPUnit\Framework\MockObject\MockObject $file;
+    private \PHPUnit\Framework\MockObject\MockObject $bucket;
+    private \PHPUnit\Framework\MockObject\MockObject $storage;
 
     protected function setUp(): void
     {

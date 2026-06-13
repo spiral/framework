@@ -23,11 +23,11 @@ use Spiral\Router\Exception\RouterException;
 
 final class ErrorHandlerMiddlewareTest extends TestCase
 {
-    private RequestHandlerInterface $handler;
+    private \PHPUnit\Framework\MockObject\MockObject $handler;
     private ServerRequestInterface $request;
-    private ExceptionHandlerInterface $exceptionHandler;
-    private LoggerInterface $logger;
-    private RendererInterface $renderer;
+    private \PHPUnit\Framework\MockObject\MockObject $exceptionHandler;
+    private \PHPUnit\Framework\MockObject\MockObject $logger;
+    private \PHPUnit\Framework\MockObject\MockObject $renderer;
 
     public static function exceptionsDataProvider(): \Traversable
     {
