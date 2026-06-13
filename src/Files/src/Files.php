@@ -113,23 +113,21 @@ final class Files implements FilesInterface
                 $this->setPermissions($filename, $mode);
             }
 
-            $result = @\file_put_contents(
+            $result = \file_put_contents(
                 $filename,
                 $data,
                 $append ? FILE_APPEND | LOCK_EX : LOCK_EX,
             );
 
-            if ($result === false) {
-                throw new WriteErrorException(\sprintf('Unable to write file `%s`.', $filename));
+            if ($result !== false) {
+                //Forcing mode after file creation
+                $this->setPermissions($filename, $mode);
             }
-
-            //Forcing mode after file creation
-            $this->setPermissions($filename, $mode);
         } catch (\Exception $e) {
             throw new WriteErrorException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
-        return true;
+        return $result !== false;
     }
 
     public function append(
