@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Command;
 
-use Spiral\Tests\Scaffolder\Command\AbstractCommandTestCase;
-
 final class InfoCommandTest extends AbstractCommandTestCase
 {
     public function testInfo(): void
