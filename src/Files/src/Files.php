@@ -96,9 +96,16 @@ final class Files implements FilesInterface
     ): bool {
         $mode ??= self::DEFAULT_FILE_MODE;
 
+        if ($this->isDirectory($filename)) {
+            throw new WriteErrorException(\sprintf('Unable to write file `%s`.', $filename));
+        }
+
         try {
             if ($ensureDirectory) {
-                $this->ensureDirectory(\dirname($filename), $mode);
+                $directory = \dirname($filename);
+                if (!$this->isDirectory($directory) || !\is_writable($directory)) {
+                    $this->ensureDirectory($directory, $mode);
+                }
             }
 
             if ($this->exists($filename)) {
@@ -106,21 +113,23 @@ final class Files implements FilesInterface
                 $this->setPermissions($filename, $mode);
             }
 
-            $result = \file_put_contents(
+            $result = @\file_put_contents(
                 $filename,
                 $data,
                 $append ? FILE_APPEND | LOCK_EX : LOCK_EX,
             );
 
-            if ($result !== false) {
-                //Forcing mode after file creation
-                $this->setPermissions($filename, $mode);
+            if ($result === false) {
+                throw new WriteErrorException(\sprintf('Unable to write file `%s`.', $filename));
             }
+
+            //Forcing mode after file creation
+            $this->setPermissions($filename, $mode);
         } catch (\Exception $e) {
             throw new WriteErrorException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
-        return $result !== false;
+        return true;
     }
 
     public function append(
@@ -273,7 +282,7 @@ final class Files implements FilesInterface
             $mode |= 0111;
         }
 
-        return $this->getPermissions($filename) === $mode || \chmod($filename, $mode);
+        return $this->getPermissions($filename) === $mode || @\chmod($filename, $mode);
     }
 
     public function getFiles(string $location, ?string $pattern = null): array
