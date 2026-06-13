@@ -68,6 +68,7 @@ final class IOTest extends TestCase
         $filename = $directory . 'test.txt';
 
         $files->ensureDirectory($directory, FilesInterface::READONLY);
+        $directoryMode = $files->getPermissions($directory);
 
         @\chmod($directory, 0555);
         \clearstatcache(false, $directory);
@@ -79,7 +80,7 @@ final class IOTest extends TestCase
             self::assertSame(FilesInterface::RUNTIME, $files->getPermissions($filename));
             self::assertSame('some-data', \file_get_contents($filename));
         } finally {
-            @\chmod($directory, 0777);
+            @\chmod($directory, $directoryMode);
         }
     }
 
