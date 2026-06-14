@@ -280,7 +280,7 @@ final class Files implements FilesInterface
             $mode |= 0111;
         }
 
-        return $this->getPermissions($filename) === $mode || @\chmod($filename, $mode);
+        return $this->getPermissions($filename) === $mode || \chmod($filename, $mode);
     }
 
     public function getFiles(string $location, ?string $pattern = null): array
