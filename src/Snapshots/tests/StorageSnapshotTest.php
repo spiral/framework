@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Snapshots;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Spiral\Exceptions\ExceptionRendererInterface;
 use Spiral\Exceptions\Verbosity;
 use Spiral\Snapshots\StorageSnapshot;
@@ -14,10 +15,10 @@ use Spiral\Storage\StorageInterface;
 
 final class StorageSnapshotTest extends TestCase
 {
-    private ExceptionRendererInterface $renderer;
-    private FileInterface $file;
-    private BucketInterface $bucket;
-    private StorageInterface $storage;
+    private MockObject&ExceptionRendererInterface $renderer;
+    private MockObject&FileInterface $file;
+    private MockObject&BucketInterface $bucket;
+    private MockObject&StorageInterface $storage;
 
     protected function setUp(): void
     {
@@ -58,7 +59,7 @@ final class StorageSnapshotTest extends TestCase
         self::assertStringContainsString('Error', $s->getMessage());
         self::assertStringContainsString('message', $s->getMessage());
         self::assertStringContainsString(__FILE__, $s->getMessage());
-        self::assertStringContainsString('53', $s->getMessage());
+        self::assertStringContainsString('54', $s->getMessage());
     }
 
     public function testCreateWithDirectory(): void
@@ -78,6 +79,6 @@ final class StorageSnapshotTest extends TestCase
         self::assertStringContainsString('Error', $s->getMessage());
         self::assertStringContainsString('message', $s->getMessage());
         self::assertStringContainsString(__FILE__, $s->getMessage());
-        self::assertStringContainsString('72', $s->getMessage());
+        self::assertStringContainsString('73', $s->getMessage());
     }
 }

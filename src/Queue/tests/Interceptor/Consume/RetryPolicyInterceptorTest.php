@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Queue\Interceptor\Consume;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\CoreInterface;
@@ -22,8 +23,8 @@ use Spiral\Tests\Queue\TestCase;
 
 final class RetryPolicyInterceptorTest extends TestCase
 {
-    private ReaderInterface $reader;
-    private CoreInterface $core;
+    private MockObject&ReaderInterface $reader;
+    private MockObject&CoreInterface $core;
     private RetryPolicyInterceptor $interceptor;
 
     public static function jobNameDataProvider(): \Traversable
