@@ -43,6 +43,47 @@ final class IOTest extends TestCase
         self::assertSame('some-data', \file_get_contents($filename));
     }
 
+    public function testWriteAndEnsureDirectoryKeepsExistingDirectoryPermissions(): void
+    {
+        $files = new Files();
+
+        $directory = self::FIXTURE_DIRECTORY . '/directory/';
+        $filename = $directory . 'test.txt';
+
+        $files->ensureDirectory($directory, FilesInterface::READONLY);
+        self::assertSame(0755, $files->getPermissions($directory));
+
+        $files->write($filename, 'some-data', FilesInterface::RUNTIME, true);
+
+        self::assertSame(0755, $files->getPermissions($directory));
+        self::assertSame(FilesInterface::RUNTIME, $files->getPermissions($filename));
+        self::assertSame('some-data', \file_get_contents($filename));
+    }
+
+    public function testWriteAndEnsureDirectoryRepairsNotWritableDirectoryPermissions(): void
+    {
+        $files = new Files();
+
+        $directory = self::FIXTURE_DIRECTORY . '/directory/';
+        $filename = $directory . 'test.txt';
+
+        $files->ensureDirectory($directory, FilesInterface::READONLY);
+        $directoryMode = $files->getPermissions($directory);
+
+        @\chmod($directory, 0555);
+        \clearstatcache(false, $directory);
+
+        try {
+            $files->write($filename, 'some-data', FilesInterface::RUNTIME, true);
+
+            self::assertSame(0777, $files->getPermissions($directory));
+            self::assertSame(FilesInterface::RUNTIME, $files->getPermissions($filename));
+            self::assertSame('some-data', \file_get_contents($filename));
+        } finally {
+            @\chmod($directory, $directoryMode);
+        }
+    }
+
     public function testRead(): void
     {
         $files = new Files();

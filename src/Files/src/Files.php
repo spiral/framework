@@ -96,9 +96,16 @@ final class Files implements FilesInterface
     ): bool {
         $mode ??= self::DEFAULT_FILE_MODE;
 
+        if ($this->isDirectory($filename)) {
+            throw new WriteErrorException(\sprintf('Unable to write file `%s`.', $filename));
+        }
+
         try {
             if ($ensureDirectory) {
-                $this->ensureDirectory(\dirname($filename), $mode);
+                $directory = \dirname($filename);
+                if (!$this->isDirectory($directory) || !\is_writable($directory)) {
+                    $this->ensureDirectory($directory, $mode);
+                }
             }
 
             if ($this->exists($filename)) {
@@ -273,7 +280,7 @@ final class Files implements FilesInterface
             $mode |= 0111;
         }
 
-        return $this->getPermissions($filename) === $mode || \chmod($filename, $mode);
+        return $this->getPermissions($filename) === $mode || @\chmod($filename, $mode);
     }
 
     public function getFiles(string $location, ?string $pattern = null): array
