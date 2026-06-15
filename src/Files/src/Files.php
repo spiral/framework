@@ -96,9 +96,16 @@ final class Files implements FilesInterface
     ): bool {
         $mode ??= self::DEFAULT_FILE_MODE;
 
+        if ($this->isDirectory($filename)) {
+            throw new WriteErrorException(\sprintf('Unable to write file `%s`, path is a directory.', $filename));
+        }
+
         try {
             if ($ensureDirectory) {
-                $this->ensureDirectory(\dirname($filename), $mode);
+                $directory = \dirname($filename);
+                if (!$this->isDirectory($directory) || !\is_writable($directory)) {
+                    $this->ensureDirectory($directory, $mode);
+                }
             }
 
             if ($this->exists($filename)) {
