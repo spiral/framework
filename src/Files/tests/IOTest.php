@@ -45,6 +45,10 @@ final class IOTest extends TestCase
 
     public function testWriteAndEnsureDirectoryKeepsExistingDirectoryPermissions(): void
     {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            self::markTestSkipped('Unix file permissions are not enforced on Windows.');
+        }
+
         $files = new Files();
 
         $directory = self::FIXTURE_DIRECTORY . '/directory/';
@@ -62,6 +66,14 @@ final class IOTest extends TestCase
 
     public function testWriteAndEnsureDirectoryRepairsNotWritableDirectoryPermissions(): void
     {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            self::markTestSkipped('Unix file permissions are not enforced on Windows.');
+        }
+
+        if (\function_exists('posix_getuid') && \posix_getuid() === 0) {
+            self::markTestSkipped('Root bypasses directory write permissions.');
+        }
+
         $files = new Files();
 
         $directory = self::FIXTURE_DIRECTORY . '/directory/';
