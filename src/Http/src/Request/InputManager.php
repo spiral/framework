@@ -265,7 +265,7 @@ final class InputManager
 
         if ($softMatch) {
             foreach ($acceptHeader->getAll() as $item) {
-                $itemValue = \strtolower((string) $item->getValue());
+                $itemValue = \strtolower($item->getValue());
                 if (\str_ends_with($itemValue, '/json') || \str_ends_with($itemValue, '+json')) {
                     return true;
                 }
