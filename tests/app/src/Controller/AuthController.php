@@ -14,7 +14,7 @@ class AuthController
 {
     public function __construct(private readonly AuthScope $auth) {}
 
-    public function do(GuardInterface $guard)
+    public function do(GuardInterface $guard): string
     {
         if (!$guard->allows('do')) {
             throw new ControllerException("Unauthorized permission 'do'", ControllerException::FORBIDDEN);
@@ -32,7 +32,7 @@ class AuthController
         return 'none';
     }
 
-    public function login(AuthContextInterface $authContext, TokenStorageInterface $tokenStorage)
+    public function login(AuthContextInterface $authContext, TokenStorageInterface $tokenStorage): string
     {
         $authContext->start(
             $tokenStorage->create(['userID' => 1]),
@@ -41,7 +41,7 @@ class AuthController
         return 'OK';
     }
 
-    public function logout()
+    public function logout(): string
     {
         $this->auth->close();
 
@@ -62,7 +62,7 @@ class AuthController
         return $this->auth->getToken()->getPayload();
     }
 
-    public function login2(TokenStorageInterface $tokenStorage)
+    public function login2(TokenStorageInterface $tokenStorage): string
     {
         $this->auth->start(
             $tokenStorage->create(['userID' => 1]),

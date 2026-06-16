@@ -17,7 +17,7 @@ class TestController
 {
     use TranslatorTrait;
 
-    public function index(string $name = 'Dave')
+    public function index(string $name = 'Dave'): string
     {
         return "Hello, {$name}.";
     }
