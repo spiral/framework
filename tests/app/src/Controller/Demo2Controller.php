@@ -11,25 +11,25 @@ use Spiral\Domain\Annotation\GuardNamespace;
 class Demo2Controller
 {
     #[Guarded('do')]
-    public function do1()
+    public function do1(): string
     {
         return 'ok';
     }
 
     #[Guarded('do', else: 'notFound')]
-    public function do2()
+    public function do2(): string
     {
         return 'ok';
     }
 
     #[Guarded('do', else: 'error')]
-    public function do3()
+    public function do3(): string
     {
         return 'ok';
     }
 
     #[Guarded('do', else: 'badAction')]
-    public function do4()
+    public function do4(): string
     {
         return 'ok';
     }
