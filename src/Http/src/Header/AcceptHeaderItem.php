@@ -65,7 +65,7 @@ final class AcceptHeaderItem implements \Stringable
         return $item;
     }
 
-    public function getValue(): ?string
+    public function getValue(): string
     {
         return $this->value;
     }

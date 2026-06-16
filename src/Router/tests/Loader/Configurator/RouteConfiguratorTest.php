@@ -96,7 +96,7 @@ final class RouteConfiguratorTest extends BaseTestCase
                 return '';
             }
 
-            protected function resolveAction(array $matches): ?string
+            protected function resolveAction(array $matches): string
             {
                 return '';
             }

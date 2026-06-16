@@ -161,7 +161,7 @@ final class AcceptHeader implements \Stringable
             $item = AcceptHeaderItem::fromString($item);
         }
 
-        $value = \strtolower((string) $item->getValue());
+        $value = \strtolower($item->getValue());
         if ($value !== '' && (!$this->has($value) || self::compare($item, $this->get($value)) === 1)) {
             $this->sorted = false;
             $this->items[$value] = $item;

@@ -134,8 +134,13 @@ return RectorConfig::configure()
             __DIR__ . '/src/Reactor/tests/Partial/MethodTest.php',
         ],
 
+        \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class => [
+            // test 2 versions of monolog: v2 and v3 which
+            // Logger::API can be 2 or 3
+            __DIR__ . '/src/Bridge/Monolog/tests/HandlersTest.php',
+        ],
+
         // to be enabled later for easier to review
-        \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
         \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,

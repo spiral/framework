@@ -36,7 +36,7 @@ final class StackCollector implements VisitorInterface
         return null;
     }
 
-    private function registerPush(StackContext $ctx, Tag $node): int|Tag|null
+    private function registerPush(StackContext $ctx, Tag $node): ?int
     {
         $name = $this->stackName($node);
 
@@ -47,7 +47,7 @@ final class StackCollector implements VisitorInterface
         return self::REMOVE_NODE;
     }
 
-    private function registerPrepend(StackContext $ctx, Tag $node): int|Tag|null
+    private function registerPrepend(StackContext $ctx, Tag $node): ?int
     {
         $name = $this->stackName($node);
 

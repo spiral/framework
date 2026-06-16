@@ -14,7 +14,7 @@ final class JsonSerializer implements SerializerInterface
     /**
      * @throws SerializeException
      */
-    public function serialize(mixed $payload): string|\Stringable
+    public function serialize(mixed $payload): string
     {
         try {
             return \json_encode($payload, JSON_THROW_ON_ERROR);

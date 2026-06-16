@@ -10,7 +10,7 @@ use Spiral\Serializer\SerializerInterface;
 
 final class PhpSerializer implements SerializerInterface
 {
-    public function serialize(mixed $payload): string|\Stringable
+    public function serialize(mixed $payload): string
     {
         return \serialize($payload);
     }
