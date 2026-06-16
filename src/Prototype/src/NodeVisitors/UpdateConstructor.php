@@ -19,7 +19,7 @@ final class UpdateConstructor extends NodeVisitorAbstract
         private readonly ClassNode $definition,
     ) {}
 
-    public function leaveNode(Node $node): int|Node|null
+    public function leaveNode(Node $node): ?Node
     {
         if (!$node instanceof Node\Stmt\Class_) {
             return null;
