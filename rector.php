@@ -129,11 +129,6 @@ return RectorConfig::configure()
             __DIR__ . '/src/Models/tests/PublicEntity.php',
         ],
 
-        \Rector\DeadCode\Rector\MethodCall\RemoveNullArgOnNullDefaultParamRector::class => [
-            // use of func_num_args() to detect if argument is passed or not
-            __DIR__ . '/src/Reactor/tests/Partial/MethodTest.php',
-        ],
-
         \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class => [
             // test 2 versions of monolog: v2 and v3 which
             // Logger::API can be 2 or 3
