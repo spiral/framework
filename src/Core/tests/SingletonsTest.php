@@ -208,10 +208,7 @@ final class SingletonsTest extends TestCase
         };
     }
 
-    /**
-     * @return SampleClass
-     */
-    private function sampleClass()
+    private function sampleClass(): SampleClass
     {
         return new SampleClass();
     }

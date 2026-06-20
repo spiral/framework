@@ -193,7 +193,7 @@ final class Actor
         return $this->createInstance($ctx, $arguments, $fallbackActor, $tracer);
     }
 
-    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, Tracer $tracer)
+    private function resolveInjector(Config\Injectable $binding, Ctx $ctx, Tracer $tracer): object
     {
         $context = $ctx->context;
         try {

@@ -129,7 +129,7 @@ final class QueueBootloader extends Bootloader
         ContainerInterface $container,
         FactoryInterface $factory,
         ContainerRegistry $registry,
-    ) {
+    ): QueueRegistry {
         return new QueueRegistry($container, $factory, $registry);
     }
 

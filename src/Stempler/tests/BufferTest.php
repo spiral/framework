@@ -142,7 +142,7 @@ final class BufferTest extends TestCase
         self::assertEquals(new Byte(1, 'b'), $src->next());
     }
 
-    protected function buffer(string $string)
+    protected function buffer(string $string): Buffer
     {
         return new Buffer($this->generate(new StringStream($string)));
     }
