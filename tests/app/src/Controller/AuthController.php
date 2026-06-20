@@ -23,7 +23,7 @@ class AuthController
         return 'ok';
     }
 
-    public function token(AuthContextInterface $authContext)
+    public function token(AuthContextInterface $authContext): string
     {
         if ($authContext->getToken() !== null) {
             return $authContext->getToken()->getID();
@@ -48,7 +48,7 @@ class AuthController
         return 'closed';
     }
 
-    public function token2()
+    public function token2(): string
     {
         if ($this->auth->getToken() !== null) {
             return $this->auth->getToken()->getID();

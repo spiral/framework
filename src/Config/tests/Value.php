@@ -8,7 +8,7 @@ class Value
 {
     public function __construct(private readonly string $value = 'value!') {}
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

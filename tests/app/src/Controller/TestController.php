@@ -37,7 +37,7 @@ class TestController
 
     public function filter2(BadRequest $r): void {}
 
-    public function input(InputScope $i)
+    public function input(InputScope $i): string
     {
         return 'value: ' . $i->withPrefix('section')->getValue('query', 'value');
     }
