@@ -30,7 +30,7 @@ class TestController
         return $p->withCount(1000)->getPage();
     }
 
-    public function filter(TestRequest $r)
+    public function filter(TestRequest $r): array
     {
         return ['name' => $r->name, 'sectionValue' => $r->sectionValue];
     }
