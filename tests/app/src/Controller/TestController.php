@@ -57,7 +57,7 @@ class TestController
         return $request->getBody();
     }
 
-    public function required(int $id)
+    public function required(int $id): int
     {
         //no index
         $this->say(static::class);

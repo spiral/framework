@@ -11,7 +11,7 @@ class GetEntity extends DataEntity
 {
     protected const GETTERS = ['id' => [self::class, 'filter']];
 
-    protected static function filter($v)
+    protected static function filter($v): int
     {
         if (\is_array($v)) {
             throw new RuntimeException("can't be array");
