@@ -107,7 +107,7 @@ final class ReflectionFileTest extends TestCase
         ], $reflection->getInterfaces());
     }
 
-    private function deadend()
+    private function deadend(): void
     {
         $a = $b = null;
         test_function_a($this, $a + $b);

@@ -12,7 +12,7 @@ use Spiral\Tokenizer\Tokenizer;
 
 final class InvocationsTest extends TestCase
 {
-    protected function someFunction()
+    protected function someFunction(): void
     {
         $result = $this->sampleMethod('hello world');
         print_r(self::sampleMethod($result . 'plus'));
@@ -169,7 +169,7 @@ final class InvocationsTest extends TestCase
         self::assertSame('self::sampleMethod($result . \'plus\')', $invocation2->getSource());
     }
 
-    protected static function sampleMethod(string $string)
+    protected static function sampleMethod(string $string): void
     {
     }
 

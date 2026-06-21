@@ -147,7 +147,7 @@ return RectorConfig::configure()
     ->withConfiguredRule(ClassPropertyAssignToConstructorPromotionRector::class, [
         ClassPropertyAssignToConstructorPromotionRector::RENAME_PROPERTY => false,
     ])
-    ->withTypeCoverageLevel(18)
+    ->withTypeCoverageLevel(21)
     ->withRules([
         ClosureReturnTypeRector::class,
         TypedPropertyFromStrictSetUpRector::class,
