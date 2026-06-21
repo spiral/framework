@@ -658,10 +658,10 @@ final class Actor
             foreach ($this->state->inflectors as $class => $inflectors) {
                 if ($instance instanceof $class) {
                     foreach ($inflectors as $inflector) {
+                        /** @var TObject $instance */
                         $instance = $inflector->getParametersCount() > 1
                             ? $this->invoker->invoke($inflector->inflector, [$instance])
                             : ($inflector->inflector)($instance);
-                        /** @var TObject $instance */
                     }
                 }
             }
