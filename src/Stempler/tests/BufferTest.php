@@ -35,9 +35,9 @@ final class BufferTest extends TestCase
     public function testGetBytes(): void
     {
         $src = $this->buffer('abc');
-        self::assertEquals('abc', $src->nextBytes());
+        self::assertSame('abc', $src->nextBytes());
 
-        self::assertEquals('', $src->nextBytes());
+        self::assertSame('', $src->nextBytes());
     }
 
     public function testLookahead(): void
@@ -78,13 +78,13 @@ final class BufferTest extends TestCase
     public function testLookaheadByte(): void
     {
         $src = $this->buffer('abc');
-        self::assertEquals('a', $src->lookaheadByte());
+        self::assertSame('a', $src->lookaheadByte());
 
         self::assertEquals(new Byte(0, 'a'), $src->next());
-        self::assertEquals('b', $src->lookaheadByte());
+        self::assertSame('b', $src->lookaheadByte());
 
         self::assertEquals(new Byte(1, 'b'), $src->next());
-        self::assertEquals('c', $src->lookaheadByte());
+        self::assertSame('c', $src->lookaheadByte());
 
         self::assertEquals(new Byte(2, 'c'), $src->next());
         self::assertEquals(null, $src->lookaheadByte());
@@ -111,16 +111,16 @@ final class BufferTest extends TestCase
     public function testOffset(): void
     {
         $src = $this->buffer('abc');
-        self::assertEquals(0, $src->getOffset());
+        self::assertSame(0, $src->getOffset());
 
         self::assertEquals(new Byte(0, 'a'), $src->next());
-        self::assertEquals(0, $src->getOffset());
+        self::assertSame(0, $src->getOffset());
 
         self::assertEquals(new Byte(1, 'b'), $src->next());
-        self::assertEquals(1, $src->getOffset());
+        self::assertSame(1, $src->getOffset());
 
         self::assertEquals(new Byte(2, 'c'), $src->next());
-        self::assertEquals(2, $src->getOffset());
+        self::assertSame(2, $src->getOffset());
 
         $src = new Buffer($this->generateToken(new StringStream('abc')));
         self::assertEquals(new Token(0, null, 'a'), $src->next());
@@ -130,19 +130,19 @@ final class BufferTest extends TestCase
     public function testLookupBytes(): void
     {
         $src = $this->buffer('abc');
-        self::assertEquals(0, $src->getOffset());
+        self::assertSame(0, $src->getOffset());
 
-        self::assertEquals('ab', $src->lookaheadByte(2));
+        self::assertSame('ab', $src->lookaheadByte(2));
 
         self::assertEquals(new Byte(0, 'a'), $src->next());
 
-        self::assertEquals('bc', $src->lookaheadByte(2));
-        self::assertEquals('bc', $src->lookaheadByte(3));
+        self::assertSame('bc', $src->lookaheadByte(2));
+        self::assertSame('bc', $src->lookaheadByte(3));
 
         self::assertEquals(new Byte(1, 'b'), $src->next());
     }
 
-    protected function buffer(string $string)
+    protected function buffer(string $string): Buffer
     {
         return new Buffer($this->generate(new StringStream($string)));
     }
