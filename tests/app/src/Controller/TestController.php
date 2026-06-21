@@ -47,7 +47,7 @@ class TestController
         throw new \InvalidArgumentException('Invalid argument');
     }
 
-    public function route(RouteInterface $route)
+    public function route(RouteInterface $route): ?array
     {
         return $route->getMatches();
     }
