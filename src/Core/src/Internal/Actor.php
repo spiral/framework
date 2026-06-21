@@ -193,6 +193,13 @@ final class Actor
         return $this->createInstance($ctx, $arguments, $fallbackActor, $tracer);
     }
 
+    /**
+     * @template TObject of object
+     *
+     * @param Ctx<TObject> $ctx
+     *
+     * @return TObject
+     */
     private function resolveInjector(Config\Injectable $binding, Ctx $ctx, Tracer $tracer): object
     {
         $context = $ctx->context;
@@ -243,6 +250,7 @@ final class Actor
                 );
             }
 
+            /** @var TObject $instance */
             return $instance;
         } catch (TracedContainerException $e) {
             throw isset($injectorInstance) ? $e : $e::createWithTrace(\sprintf(
@@ -578,6 +586,13 @@ final class Actor
 
     /**
      * Register instance in container, might perform methods like auto-singletons, log populations, etc.
+     *
+     * @template TObject of object
+     *
+     * @param Ctx<TObject> $ctx
+     * @param TObject $instance
+     *
+     * @return TObject
      */
     private function registerInstance(Ctx $ctx, object $instance): object
     {
@@ -628,6 +643,12 @@ final class Actor
 
     /**
      * Find and run inflector
+     *
+     * @template TObject of object
+     *
+     * @param TObject $instance
+     *
+     * @return TObject
      */
     private function runInflector(object $instance): object
     {
@@ -640,6 +661,7 @@ final class Actor
                         $instance = $inflector->getParametersCount() > 1
                             ? $this->invoker->invoke($inflector->inflector, [$instance])
                             : ($inflector->inflector)($instance);
+                        /** @var TObject $instance */
                     }
                 }
             }
