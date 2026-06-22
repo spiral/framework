@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveDoubleAssignRector;
-use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveEmptyClassMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
@@ -14,9 +13,7 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
 use Rector\DeadCode\Rector\Expression\RemoveDeadStmtRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
-use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
-use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
@@ -39,52 +36,24 @@ return RectorConfig::configure()
     ->withSkip([
         IfIssetToCoalescingRector::class,
         RemoveUnusedPrivatePropertyRector::class => [
-            __DIR__ . '/src/Scaffolder/src/Command/BootloaderCommand.php',
-            __DIR__ . '/src/Scaffolder/src/Command/CommandCommand.php',
-            __DIR__ . '/src/Scaffolder/src/Command/ConfigCommand.php',
-            __DIR__ . '/src/Scaffolder/src/Command/ControllerCommand.php',
-            __DIR__ . '/src/Scaffolder/src/Command/FilterCommand.php',
-            __DIR__ . '/src/Scaffolder/src/Command/JobHandlerCommand.php',
-            __DIR__ . '/src/Scaffolder/src/Command/MiddlewareCommand.php',
             __DIR__ . '/src/Console/tests/PromptArgumentsTest.php',
         ],
         RemoveUnusedPrivateMethodRector::class => [
-            __DIR__ . '/src/Boot/src/Bootloader/ConfigurationBootloader.php',
-            __DIR__ . '/src/Broadcasting/src/Bootloader/BroadcastingBootloader.php',
-            __DIR__ . '/src/Cache/src/Bootloader/CacheBootloader.php',
-            __DIR__ . '/src/Serializer/src/Bootloader/SerializerBootloader.php',
-            __DIR__ . '/src/Validation/src/Bootloader/ValidationBootloader.php',
             __DIR__ . '/src/Translator/tests/IndexerTest.php',
             __DIR__ . '/src/Tokenizer/tests/ReflectionFileTest.php',
             __DIR__ . '/src/Core/tests/SingletonsTest.php',
         ],
-        RemoveUselessVarTagRector::class => [
-            __DIR__ . '/src/Console/src/Traits/HelpersTrait.php',
-        ],
         RemoveAlwaysTrueIfConditionRector::class => [
-            __DIR__ . '/src/Boot/src/BootloadManager/Initializer.php',
-            __DIR__ . '/src/Stempler/src/Traverser.php',
-            __DIR__ . '/src/Prototype/src/NodeVisitors/LocateProperties.php',
-            __DIR__ . '/src/Prototype/src/NodeVisitors/RemoveTrait.php',
-            __DIR__ . '/src/Logger/src/ListenerRegistry.php',
-            __DIR__ . '/src/Stempler/src/Transform/Merge/ExtendsParent.php',
             __DIR__ . '/src/Bridge/Stempler/src/StemplerEngine.php',
             // Keep the is_string() guard: getBindings() reads user config, so a
             // malformed (non-string) binding must be skipped, not crash class_exists().
             __DIR__ . '/src/Prototype/src/Bootloader/PrototypeBootloader.php',
         ],
-        RemoveExtraParametersRector::class => [
-            __DIR__ . '/src/Boot/src/BootloadManager/AbstractBootloadManager.php',
-        ],
         RemoveUnusedPrivateMethodParameterRector::class => [
-            __DIR__ . '/src/Core/src/Internal/Factory.php',
             __DIR__ . '/src/Core/tests/InjectableTest.php',
         ],
         RemoveDoubleAssignRector::class => [
             __DIR__ . '/src/Core/tests/Scope/FinalizeAttributeTest.php',
-        ],
-        RemoveUnusedVariableAssignRector::class => [
-            __DIR__ . '/src/Core/tests/ExceptionsTest.php',
         ],
         RemoveDeadStmtRector::class => [
             __DIR__ . '/src/Core/tests/ExceptionsTest.php',
@@ -118,7 +87,6 @@ return RectorConfig::configure()
         ],
 
         ArrayToFirstClassCallableRector::class => [
-            __DIR__ . '/src/Core/tests/Scope/UseCaseTest.php',
             __DIR__ . '/src/Core/tests/InjectableTest.php',
             __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
@@ -155,4 +123,5 @@ return RectorConfig::configure()
         TypedPropertyFromAssignsRector::class,
         AddClosureNeverReturnTypeRector::class,
         MakeInheritedMethodVisibilitySameAsParentRector::class,
-    ]);
+    ])
+    ->reportUnusedSkips();

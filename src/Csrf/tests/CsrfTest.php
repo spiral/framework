@@ -334,7 +334,7 @@ final class CsrfTest extends TestCase
         foreach ($response->getHeaders() as $header) {
             foreach ($header as $headerLine) {
                 $chunk = \explode(';', $headerLine);
-                if (\mb_strpos($chunk[0], '=') === false) {
+                if (!\str_contains($chunk[0], '=')) {
                     continue;
                 }
 
