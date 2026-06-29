@@ -134,7 +134,7 @@ jobs:
           composer-options: "--prefer-dist --no-audit"
 
       - name: Install StructArmed
-        run: composer require --dev boundwize/structarmed:^0.12.0 --no-interaction --prefer-dist --no-audit
+        run: composer require --dev boundwize/structarmed:^0.14.0 --no-interaction --prefer-dist --no-audit
 
       # Execution
       - name: Run StructArmed
