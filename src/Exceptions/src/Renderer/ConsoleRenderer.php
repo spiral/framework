@@ -218,7 +218,7 @@ class ConsoleRenderer extends AbstractRenderer
         if (!$this->colorsSupport) {
             $format = \preg_replace('/<[^>]+>/', '', $format);
         } else {
-            $format = \preg_replace_callback('/(<([^>]+)>)/', static function ($partial) {
+            $format = \preg_replace_callback('/(<([^>]+)>)/', static function ($partial): string {
                 $style = '';
                 foreach (\explode(',', \trim($partial[2], '/')) as $color) {
                     if (isset(self::COLORS[$color])) {
