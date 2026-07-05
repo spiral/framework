@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\Config\RectorConfig;
-use Rector\DeadCode\Rector\Assign\RemoveDoubleAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveEmptyClassMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPromotedPropertyRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
-use Rector\DeadCode\Rector\Expression\RemoveDeadStmtRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -41,22 +39,14 @@ return RectorConfig::configure()
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Translator/tests/IndexerTest.php',
             __DIR__ . '/src/Tokenizer/tests/ReflectionFileTest.php',
-            __DIR__ . '/src/Core/tests/SingletonsTest.php',
         ],
         RemoveAlwaysTrueIfConditionRector::class => [
-            __DIR__ . '/src/Bridge/Stempler/src/StemplerEngine.php',
             // Keep the is_string() guard: getBindings() reads user config, so a
             // malformed (non-string) binding must be skipped, not crash class_exists().
             __DIR__ . '/src/Prototype/src/Bootloader/PrototypeBootloader.php',
         ],
         RemoveUnusedPrivateMethodParameterRector::class => [
             __DIR__ . '/src/Core/tests/InjectableTest.php',
-        ],
-        RemoveDoubleAssignRector::class => [
-            __DIR__ . '/src/Core/tests/Scope/FinalizeAttributeTest.php',
-        ],
-        RemoveDeadStmtRector::class => [
-            __DIR__ . '/src/Core/tests/ExceptionsTest.php',
         ],
 
         // to be enabled later for bc break 4.x
@@ -87,7 +77,6 @@ return RectorConfig::configure()
         ],
 
         ArrayToFirstClassCallableRector::class => [
-            __DIR__ . '/src/Core/tests/InjectableTest.php',
             __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
 
@@ -97,10 +86,9 @@ return RectorConfig::configure()
             __DIR__ . '/src/Models/tests/PublicEntity.php',
         ],
 
-        \Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector::class => [
-            // test 2 versions of monolog: v2 and v3 which
-            // Logger::API can be 2 or 3
-            __DIR__ . '/src/Bridge/Monolog/tests/HandlersTest.php',
+        TypedPropertyFromAssignsRector::class => [
+            // casted value
+            __DIR__ . '/src/Models/tests/NameValue.php'
         ],
 
         // to be enabled later for easier to review
@@ -108,6 +96,9 @@ return RectorConfig::configure()
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
         \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,
         \Rector\PHPUnit\AnnotationsToAttributes\Rector\Class_\CoversAnnotationWithValueToAttributeRector::class,
+
+        \Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector::class,
+        \Rector\DeadCode\Rector\ClassMethod\RemoveDuplicatedReturnSelfDocblockRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
