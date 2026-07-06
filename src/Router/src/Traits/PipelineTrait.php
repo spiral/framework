@@ -35,7 +35,6 @@ trait PipelineTrait
      * $route->withMiddleware([ProxyMiddleware::class, OtherMiddleware::class]);
      *
      * @param MiddlewareType|array{0:MiddlewareType[]} ...$middleware
-     * @return RouteInterface|$this
      *
      * @throws RouteException
      */
