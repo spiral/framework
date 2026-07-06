@@ -97,7 +97,6 @@ return RectorConfig::configure()
         \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,
         \Rector\PHPUnit\AnnotationsToAttributes\Rector\Class_\CoversAnnotationWithValueToAttributeRector::class,
 
-        \Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector::class,
         \Rector\DeadCode\Rector\ClassMethod\RemoveDuplicatedReturnSelfDocblockRector::class,
     ])
     ->withPhpSets(php81: true)
