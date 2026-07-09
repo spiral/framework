@@ -95,9 +95,6 @@ return RectorConfig::configure()
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
         \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,
-        \Rector\PHPUnit\AnnotationsToAttributes\Rector\Class_\CoversAnnotationWithValueToAttributeRector::class,
-
-        \Rector\DeadCode\Rector\ClassMethod\RemoveDuplicatedReturnSelfDocblockRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
