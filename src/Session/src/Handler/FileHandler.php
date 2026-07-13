@@ -66,8 +66,10 @@ final class FileHandler implements \SessionHandlerInterface
     /**
      * Session data filename.
      */
-    protected function getFilename($id): string
+    protected function getFilename(string $id): string
     {
-        return \sprintf('%s/%s', $this->directory, $id);
+        // basename() strips any '/' and '..', so a crafted id can never leave $directory,
+        // even if some other caller reaches this method with an unvalidated id.
+        return \sprintf('%s/%s', $this->directory, \basename($id));
     }
 }
