@@ -37,7 +37,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "codedungeon/php-cli-colors": "^1.11",
-        "spiral/debug": "^3.17",
+        "spiral/debug": "^3.18",
         "psr/container": "^1.1|^2.0",
         "psr/log": "1 - 3"
     },
@@ -58,7 +58,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.17.x-dev"
+            "dev-master": "3.18.x-dev"
         }
     },
     "config": {

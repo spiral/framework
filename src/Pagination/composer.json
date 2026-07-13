@@ -52,7 +52,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.17.x-dev"
+            "dev-master": "3.18.x-dev"
         }
     },
     "config": {

@@ -34,8 +34,8 @@
     ],
     "require": {
         "php": ">=8.1",
-        "spiral/boot": "^3.17",
-        "spiral/core": "^3.17"
+        "spiral/boot": "^3.18",
+        "spiral/core": "^3.18"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",
@@ -55,7 +55,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.17.x-dev"
+            "dev-master": "3.18.x-dev"
         }
     },
     "config": {
