@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -18,13 +20,14 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Container;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\Exception\ScopeException;
-use Spiral\Core\FactoryInterface;
 use Spiral\Core\InvokerInterface;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\CurrentRequest;
 use Spiral\Http\Http;
+use Spiral\Http\LazyPipeline;
 use Spiral\Telemetry\Bootloader\TelemetryBootloader;
+use Spiral\Telemetry\TracerFactoryInterface;
 
 /**
  * Configures Http dispatcher.
@@ -134,11 +137,17 @@ final class HttpBootloader extends Bootloader
      * @deprecated since v3.12. Will be removed in v4.0 and replaced with callback.
      */
     protected function httpCore(
+        HttpConfig $config,
+        LazyPipeline $pipeline,
         RequestHandlerInterface $handler,
+        ResponseFactoryInterface $responseFactory,
         ContainerInterface $container,
+        TracerFactoryInterface $tracerFactory,
+        ?EventDispatcherInterface $dispatcher = null,
     ): Http {
-        $core = $container->get(FactoryInterface::class)->make(Http::class, ['container' => $container]);
+        $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory, $dispatcher);
         $core->setHandler($handler);
+
         return $core;
     }
 }
