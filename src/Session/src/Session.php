@@ -204,6 +204,6 @@ final class Session implements SessionInterface
      */
     private function validID(string $id): bool
     {
-        return \preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) !== false;
+        return \preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $id) === 1;
     }
 }
