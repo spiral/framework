@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Bootloader\Http;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -142,8 +143,9 @@ final class HttpBootloader extends Bootloader
         ResponseFactoryInterface $responseFactory,
         ContainerInterface $container,
         TracerFactoryInterface $tracerFactory,
+        ?EventDispatcherInterface $dispatcher = null,
     ): Http {
-        $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory);
+        $core = new Http($config, $pipeline, $responseFactory, $container, $tracerFactory, $dispatcher);
         $core->setHandler($handler);
 
         return $core;
