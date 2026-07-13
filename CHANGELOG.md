@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## Unreleased
+## 3.17.1 - 2026-07-13
+
+- **Bug Fixes**
+  - [spiral/session] Fix session id validation and file handler path containment (#1291)
 
 ## 3.17.0 - 2026-06-03
 
