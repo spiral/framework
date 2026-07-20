@@ -10,7 +10,7 @@ use Spiral\Filters\Model\FilterDefinitionInterface;
 use Spiral\Filters\Model\HasFilterDefinition;
 use Spiral\Validator\FilterDefinition;
 
-class AddressFilter extends Filter implements HasFilterDefinition
+final class AddressFilter extends Filter implements HasFilterDefinition
 {
     #[Post]
     public string $city;

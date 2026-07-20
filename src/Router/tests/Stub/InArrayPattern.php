@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Stub;
 
-class InArrayPattern implements \Stringable
+final class InArrayPattern implements \Stringable
 {
     public function __construct(
         private readonly array $values,

@@ -11,7 +11,7 @@ use Spiral\Filters\Attribute\Input\Post;
 use Spiral\Filters\Attribute\Setter;
 use Spiral\Filters\Model\Filter;
 
-class FilterWithSetters extends Filter
+final class FilterWithSetters extends Filter
 {
     #[Post]
     #[Setter(filter: 'intval')]

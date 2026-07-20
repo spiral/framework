@@ -6,7 +6,7 @@ namespace Spiral\Tests\Prototype\Fixtures;
 
 use Spiral\Prototype\Traits\PrototypeTrait;
 
-class TestEmptyClass
+final class TestEmptyClass
 {
     use PrototypeTrait;
 

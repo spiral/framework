@@ -6,7 +6,7 @@ namespace Spiral\Tests\Core\Fixtures;
 
 use Spiral\Core\InjectableConfig;
 
-class IntKeysConfig extends InjectableConfig
+final class IntKeysConfig extends InjectableConfig
 {
     protected array $config = [
         1 => 'some',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures;
 
-class DuplicatePropertyClass
+final class DuplicatePropertyClass
 {
     public function update($test): void
     {

@@ -8,7 +8,7 @@ use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class OptionalCommand extends Command
+final class OptionalCommand extends Command
 {
     public const NAME = 'optional';
 

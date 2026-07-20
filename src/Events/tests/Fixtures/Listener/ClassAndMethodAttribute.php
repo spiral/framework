@@ -9,7 +9,7 @@ use Spiral\Tests\Events\Fixtures\Event\BarEvent;
 use Spiral\Tests\Events\Fixtures\Event\FooEvent;
 
 #[Listener(method: 'onFooEvent')]
-class ClassAndMethodAttribute
+final class ClassAndMethodAttribute
 {
     public function onFooEvent(FooEvent $event): void {}
 

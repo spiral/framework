@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-class TypedClass
+final class TypedClass
 {
     public function __construct(
         public string $string,

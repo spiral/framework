@@ -9,7 +9,7 @@ use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\BootException;
 
-class TestCore extends AbstractKernel
+final class TestCore extends AbstractKernel
 {
     protected const SYSTEM = [
         CoreBootloader::class,

@@ -8,7 +8,7 @@ use Spiral\Core\Exception\ControllerException;
 use Nyholm\Psr7\Response;
 use Spiral\Core\Internal\Introspector;
 
-class TestController
+final class TestController
 {
     public function index(): string
     {

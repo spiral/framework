@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Fixtures;
 
-class HydratedClass
+final class HydratedClass
 {
     private $testClass;
 

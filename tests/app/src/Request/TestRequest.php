@@ -8,7 +8,7 @@ use Spiral\Filters\Attribute\Input\Data;
 use Spiral\Filters\Attribute\Input\Method;
 use Spiral\Filters\Model\Filter;
 
-class TestRequest extends Filter
+final class TestRequest extends Filter
 {
     #[Data(key: 'name')]
     public ?string $name = null;

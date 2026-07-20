@@ -10,7 +10,7 @@ use Spiral\Boot\Bootloader\ConfigurationBootloader;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Core\Container;
 
-class ConfigBootloader extends Bootloader
+final class ConfigBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         CoreBootloader::class,

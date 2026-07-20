@@ -9,7 +9,7 @@ use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Tests\Tokenizer\Fixtures\Bootloader\DirectoryBootloader;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
-class TestCoreWithTokenizer extends AbstractKernel
+final class TestCoreWithTokenizer extends AbstractKernel
 {
     protected const SYSTEM = [
         CoreBootloader::class,

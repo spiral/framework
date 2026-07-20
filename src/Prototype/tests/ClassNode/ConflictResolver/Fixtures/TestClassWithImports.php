@@ -12,6 +12,6 @@ use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures\TestAlias as ATes
 use Spiral\Tests\Prototype\Fixtures\TestApp as Test;
 use Spiral\Prototype\Traits\PrototypeTrait;
 
-class TestClassWithImports
+final class TestClassWithImports
 {
 }

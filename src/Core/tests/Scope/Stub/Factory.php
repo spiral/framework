@@ -6,7 +6,7 @@ namespace Spiral\Tests\Core\Scope\Stub;
 
 use Psr\Container\ContainerInterface;
 
-class Factory
+final class Factory
 {
     public function __construct(
         protected ContainerInterface $container,

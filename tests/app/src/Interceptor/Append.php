@@ -7,7 +7,7 @@ namespace Spiral\App\Interceptor;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 
-class Append implements CoreInterceptorInterface
+final class Append implements CoreInterceptorInterface
 {
     public function __construct(private readonly string $string) {}
 

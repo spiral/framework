@@ -7,7 +7,7 @@ namespace Spiral\App\Interceptor;
 use Spiral\Core\CoreInterceptorInterface;
 use Spiral\Core\CoreInterface;
 
-class Two implements CoreInterceptorInterface
+final class Two implements CoreInterceptorInterface
 {
     public function process(string $controller, string $action, array $parameters, CoreInterface $core): array
     {

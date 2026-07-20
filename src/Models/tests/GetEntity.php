@@ -7,7 +7,7 @@ namespace Spiral\Tests\Models;
 use Mockery\Exception\RuntimeException;
 use Spiral\Models\DataEntity;
 
-class GetEntity extends DataEntity
+final class GetEntity extends DataEntity
 {
     protected const GETTERS = ['id' => [self::class, 'filter']];
 

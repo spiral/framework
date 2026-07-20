@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Serializer\Fixture;
 
-class SomeClass implements SomeInterface
+final class SomeClass implements SomeInterface
 {
     public int $id;
     public string $text;

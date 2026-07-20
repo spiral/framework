@@ -6,7 +6,7 @@ namespace Spiral\App\Controller;
 
 use Spiral\Domain\Annotation\Guarded;
 
-class DemoController
+final class DemoController
 {
     #[Guarded]
     public function guardedButNoName(): string

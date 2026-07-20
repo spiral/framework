@@ -6,7 +6,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 
 use Spiral\Boot\Bootloader\Bootloader;
 
-class BootloaderA extends Bootloader
+final class BootloaderA extends Bootloader
 {
     public const BINDINGS = [
         'a' => 'a',

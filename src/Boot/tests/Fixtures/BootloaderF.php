@@ -7,4 +7,4 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Attribute\BootloadConfig;
 
 #[BootloadConfig(enabled: false)]
-class BootloaderF extends AbstractBootloader {}
+final class BootloaderF extends AbstractBootloader {}

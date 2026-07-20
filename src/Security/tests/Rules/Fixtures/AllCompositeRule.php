@@ -11,7 +11,7 @@ use Spiral\Security\Rule\CompositeRule;
  *
  * @package Spiral\Tests\Security\Rules\Fixtures
  */
-class AllCompositeRule extends CompositeRule
+final class AllCompositeRule extends CompositeRule
 {
     public const RULES = ['test.create', 'test.update', 'test.delete'];
     public const BEHAVIOUR = self::ALL;

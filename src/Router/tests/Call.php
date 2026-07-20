@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-class Call
+final class Call
 {
     public function __invoke(): string
     {

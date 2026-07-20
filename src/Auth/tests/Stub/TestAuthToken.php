@@ -6,7 +6,7 @@ namespace Spiral\Tests\Auth\Stub;
 
 use Spiral\Auth\TokenInterface;
 
-class TestAuthToken implements TokenInterface
+final class TestAuthToken implements TokenInterface
 {
     /** @var string */
     private $id;

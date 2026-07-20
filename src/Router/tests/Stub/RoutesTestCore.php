@@ -6,4 +6,4 @@ namespace Spiral\Tests\Router\Stub;
 
 use Spiral\Core\AbstractCore;
 
-class RoutesTestCore extends AbstractCore {}
+final class RoutesTestCore extends AbstractCore {}

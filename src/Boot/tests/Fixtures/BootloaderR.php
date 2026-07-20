@@ -7,7 +7,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Attribute\BindMethod;
 use Spiral\Boot\Bootloader\Bootloader;
 
-class BootloaderR extends Bootloader
+final class BootloaderR extends Bootloader
 {
     #[BindMethod]
     private function bind(): SampleClass|SampleClassInterface

@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-class InvalidInjector
+final class InvalidInjector
 {
 }

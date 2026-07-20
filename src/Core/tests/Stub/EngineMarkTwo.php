@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Stub;
 
-class EngineMarkTwo extends LightEngine
+final class EngineMarkTwo extends LightEngine
 {
     public const NAME = 'Mark Two';
 

@@ -13,7 +13,7 @@ use Spiral\Interceptors\HandlerInterface;
 use Spiral\Security\PermissionsInterface;
 use Spiral\Views\Bootloader\ViewsBootloader;
 
-class AppBootloader extends DomainBootloader
+final class AppBootloader extends DomainBootloader
 {
     protected const SINGLETONS = [
         HandlerInterface::class => [self::class, 'domainCore'],

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-class CleanController
+final class CleanController
 {
     public function test(string $id)
     {

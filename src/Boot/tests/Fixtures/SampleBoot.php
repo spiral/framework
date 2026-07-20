@@ -7,7 +7,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Core\BinderInterface;
 
-class SampleBoot extends Bootloader
+final class SampleBoot extends Bootloader
 {
     public const BOOT = true;
     public const BINDINGS   = ['abc' => self::class];

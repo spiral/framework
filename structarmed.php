@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Boundwize\StructArmed\Architecture;
 use Boundwize\StructArmed\Preset\Preset;
+use Boundwize\StructArmed\Rule\Rules\Class_\MustBeFinalRule;
 
 $layerPatterns = [
     'Auth' => '/^Spiral\\\\Auth\\\\.*$/',
@@ -130,6 +131,14 @@ $ruleset = [
 ];
 
 $architecture = Architecture::define()
+    ->rule(
+        'tests.must_be_final',
+        new MustBeFinalRule(layer: 'tests'),
+    )
+    ->rule(
+        'component_tests.must_be_final',
+        new MustBeFinalRule(layer: 'component_tests'),
+    )
     ->skipPaths([
         // fixtures
         'src/Tokenizer/tests/Enums',
@@ -144,7 +153,9 @@ $architecture = Architecture::define()
         // uses as bootstrapping
         'src/Core/tests/bootstrap.php',
     ])
-    ->ruleset($ruleset);
+    ->ruleset($ruleset)
+    ->layer('tests', __DIR__ . '/tests')
+    ->layerPattern('component_tests', '/^Spiral\\\\Tests\\\\.*$/');
 
 foreach ($layerPatterns as $name => $pattern) {
     $architecture->layerPattern($name, $pattern);

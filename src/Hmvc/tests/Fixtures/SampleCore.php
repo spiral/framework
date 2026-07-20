@@ -6,4 +6,4 @@ namespace Spiral\Tests\Core\Fixtures;
 
 use Spiral\Core\AbstractCore;
 
-class SampleCore extends AbstractCore {}
+final class SampleCore extends AbstractCore {}

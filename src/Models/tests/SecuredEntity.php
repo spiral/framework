@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\DataEntity;
 
-class SecuredEntity extends DataEntity
+final class SecuredEntity extends DataEntity
 {
     protected const SECURED = '*';
 }

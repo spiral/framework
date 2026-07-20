@@ -10,7 +10,7 @@ use stdClass;
 /**
  * @implements InjectorInterface<stdClass>
  */
-class ExtendedContextInjector implements InjectorInterface
+final class ExtendedContextInjector implements InjectorInterface
 {
     public function createInjection(\ReflectionClass $class, \ReflectionParameter|string|null $context = null): object
     {

@@ -7,7 +7,7 @@ namespace Spiral\Tests\Prototype\Traverse;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
-class ConstructorParamsVisitor extends NodeVisitorAbstract
+final class ConstructorParamsVisitor extends NodeVisitorAbstract
 {
     private array $params = [];
 

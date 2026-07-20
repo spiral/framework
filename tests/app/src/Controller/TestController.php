@@ -13,7 +13,7 @@ use Spiral\Pagination\Paginator;
 use Spiral\Router\RouteInterface;
 use Spiral\Translator\Traits\TranslatorTrait;
 
-class TestController
+final class TestController
 {
     use TranslatorTrait;
 

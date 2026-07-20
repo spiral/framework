@@ -12,7 +12,7 @@ use Google\Protobuf\Internal\GPBUtil;
 /**
  * Generated from protobuf message <code>ping.dto.PingRequest</code>
  */
-class PingRequest extends \Google\Protobuf\Internal\Message
+final class PingRequest extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>string url = 1;</code>

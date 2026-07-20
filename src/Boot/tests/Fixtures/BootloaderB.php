@@ -7,7 +7,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\Bootloader\DependedInterface;
 
-class BootloaderB extends Bootloader implements DependedInterface
+final class BootloaderB extends Bootloader implements DependedInterface
 {
     public const BINDINGS = [
         'b' => 'b',

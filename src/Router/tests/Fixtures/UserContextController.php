@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Fixtures;
 
-class UserContextController
+final class UserContextController
 {
     public function __construct(
         private readonly UserContext $scope,

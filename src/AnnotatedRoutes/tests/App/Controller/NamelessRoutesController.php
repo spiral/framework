@@ -6,7 +6,7 @@ namespace Spiral\Tests\Router\App\Controller;
 
 use Spiral\Router\Annotation\Route;
 
-class NamelessRoutesController
+final class NamelessRoutesController
 {
     #[Route('/nameless', methods: 'GET')]
     public function index(): string

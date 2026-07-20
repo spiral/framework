@@ -8,7 +8,7 @@ use Spiral\Console\Attribute\AsCommand;
 use Spiral\Console\Command;
 
 #[AsCommand(name: 'dead')]
-class DeadCommand extends Command
+final class DeadCommand extends Command
 {
     public const NAME = 'dead';
 
