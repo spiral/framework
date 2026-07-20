@@ -143,6 +143,7 @@ $architecture = Architecture::define()
         'component_tests.must_be_final' => [
             'src/Bridge/Stempler/tests/TestInjection.php',
             '*/Fixtures/*',
+            '*/Fixture/*',
         ],
         'tests.must_be_final' => [
             'tests/app/src/Command/DeadCommand.php',
