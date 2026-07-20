@@ -139,6 +139,15 @@ $architecture = Architecture::define()
         'component_tests.must_be_final',
         new MustBeFinalRule(layer: 'component_tests'),
     )
+    ->skip([
+        'component_tests.must_be_final' => [
+            'src/Bridge/Stempler/tests/TestInjection.php',
+        ],
+        'tests.must_be_final' => [
+            'tests/app/src/Command/DeadCommand.php',
+            'tests/app/src/Controller/TestController.php',
+        ],
+    ])
     ->skipPaths([
         // fixtures
         'src/Tokenizer/tests/Enums',

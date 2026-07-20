@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Stempler;
 
-final class TestInjection
+class TestInjection
 {
     public $name;
 
