@@ -146,6 +146,8 @@ $architecture = Architecture::define()
         'tests.must_be_final' => [
             'tests/app/src/Command/DeadCommand.php',
             'tests/app/src/Controller/TestController.php',
+
+            '*/Fixtures/*'
         ],
     ])
     ->skipPaths([
