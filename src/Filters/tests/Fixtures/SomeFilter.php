@@ -8,7 +8,7 @@ use Spiral\Filters\Attribute\Input\Post;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Model\Filter;
 
-class SomeFilter extends Filter
+final class SomeFilter extends Filter
 {
     #[Post]
     public string $name;
