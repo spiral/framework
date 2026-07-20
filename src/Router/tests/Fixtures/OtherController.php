@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Fixtures;
 
-final class OtherController
+class OtherController
 {
     public function action()
     {

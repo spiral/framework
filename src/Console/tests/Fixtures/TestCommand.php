@@ -8,7 +8,7 @@ use Spiral\Console\Command;
 use Spiral\Core\Attribute\Singleton;
 
 #[Singleton]
-final class TestCommand extends Command
+class TestCommand extends Command
 {
     public const NAME = 'test';
     public const DESCRIPTION = 'Test Command';

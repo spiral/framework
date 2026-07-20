@@ -6,7 +6,7 @@ namespace Spiral\Tests\Prototype\Commands\Fixtures;
 
 use Spiral\Prototype\Traits\PrototypeTrait;
 
-final class EmptyInjectionClass
+class EmptyInjectionClass
 {
     use PrototypeTrait;
 

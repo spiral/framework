@@ -6,7 +6,7 @@ namespace Spiral\Tests\Prototype\Fixtures;
 
 use Spiral\Prototype\Dependency;
 
-final class Dependencies
+class Dependencies
 {
     public static function convert(array $deps): array
     {

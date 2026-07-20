@@ -6,7 +6,7 @@ namespace Spiral\Tests\Prototype\Fixtures;
 
 use Spiral\Prototype\Traits\PrototypeTrait;
 
-final class ChildWithConstructorClass extends WithConstructor
+class ChildWithConstructorClass extends WithConstructor
 {
     use PrototypeTrait;
 

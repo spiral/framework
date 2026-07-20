@@ -12,7 +12,7 @@ use Spiral\Core\BinderInterface;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Tests\Boot\Fixtures\Attribute\SampleMethod;
 
-final class SampleBootWithMethodBoot extends Bootloader
+class SampleBootWithMethodBoot extends Bootloader
 {
     public const BOOT = true;
     public const BINDINGS = ['abc' => self::class];

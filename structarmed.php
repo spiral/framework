@@ -142,12 +142,11 @@ $architecture = Architecture::define()
     ->skip([
         'component_tests.must_be_final' => [
             'src/Bridge/Stempler/tests/TestInjection.php',
+            '*/Fixtures/*',
         ],
         'tests.must_be_final' => [
             'tests/app/src/Command/DeadCommand.php',
             'tests/app/src/Controller/TestController.php',
-
-            '*/Fixtures/*'
         ],
     ])
     ->skipPaths([

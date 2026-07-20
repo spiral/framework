@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-final class UnionTypes
+class UnionTypes
 {
     public static function example(SampleClass|TypedClass $example)
     {

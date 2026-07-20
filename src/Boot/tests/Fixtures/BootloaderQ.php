@@ -7,7 +7,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\Attribute\SingletonMethod;
 use Spiral\Boot\Bootloader\Bootloader;
 
-final class BootloaderQ extends Bootloader
+class BootloaderQ extends Bootloader
 {
     #[SingletonMethod]
     private function bind(): SampleClass|SampleClassInterface

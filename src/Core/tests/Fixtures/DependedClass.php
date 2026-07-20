@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Fixtures;
 
-final class DependedClass
+class DependedClass
 {
     /**
      * @var string

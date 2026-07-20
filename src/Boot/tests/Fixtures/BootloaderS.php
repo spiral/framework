@@ -8,7 +8,7 @@ use Spiral\Boot\Attribute\BindAlias;
 use Spiral\Boot\Attribute\BindMethod;
 use Spiral\Boot\Bootloader\Bootloader;
 
-final class BootloaderS extends Bootloader
+class BootloaderS extends Bootloader
 {
     #[BindMethod(
         alias: 'sample1',

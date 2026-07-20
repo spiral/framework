@@ -6,6 +6,6 @@ namespace Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures;
 
 use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures\ATest3 as ATestAlias;
 
-final class ChildClass extends WithComplexConstructor
+class ChildClass extends WithComplexConstructor
 {
 }

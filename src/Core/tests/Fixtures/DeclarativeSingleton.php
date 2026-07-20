@@ -7,6 +7,6 @@ namespace Spiral\Tests\Core\Fixtures;
 use Spiral\Core\Attribute\Singleton;
 
 #[Singleton]
-final class DeclarativeSingleton
+class DeclarativeSingleton
 {
 }

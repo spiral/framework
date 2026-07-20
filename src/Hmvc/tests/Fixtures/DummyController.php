@@ -7,7 +7,7 @@ namespace Spiral\Tests\Core\Fixtures;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\ContainerScope;
 
-final class DummyController
+class DummyController
 {
     public static function inner(): void {}
 

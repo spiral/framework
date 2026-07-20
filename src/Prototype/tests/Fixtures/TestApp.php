@@ -12,7 +12,7 @@ use Spiral\Tests\Prototype\ClassNode\ConflictResolver\Fixtures;
 use Spiral\Tests\Prototype\Commands\Fixtures\InterfaceResolver;
 use Spiral\Tests\Prototype\Commands\Fixtures\ResolvedInterface;
 
-final class TestApp extends Kernel
+class TestApp extends Kernel
 {
     public const LOAD = [
         PrototypeBootloader::class,

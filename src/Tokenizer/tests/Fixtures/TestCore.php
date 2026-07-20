@@ -7,7 +7,7 @@ namespace Spiral\Tests\Tokenizer\Fixtures;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 
-final class TestCore extends AbstractKernel
+class TestCore extends AbstractKernel
 {
     protected const SYSTEM = [
         CoreBootloader::class,

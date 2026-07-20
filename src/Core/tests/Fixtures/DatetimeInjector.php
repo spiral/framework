@@ -12,7 +12,7 @@ use Spiral\Core\Container\InjectorInterface;
 /**
  * @implements InjectorInterface<DateTimeInterface>
  */
-final class DatetimeInjector implements InjectorInterface
+class DatetimeInjector implements InjectorInterface
 {
     public function createInjection(\ReflectionClass $class, ?string $context = null): object
     {

@@ -6,7 +6,7 @@ namespace Spiral\Tests\Console\Fixtures;
 
 use Spiral\Console\Command;
 
-final class AnotherFailedCommand extends Command
+class AnotherFailedCommand extends Command
 {
     public const NAME = 'failed:another';
 

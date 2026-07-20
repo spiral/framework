@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype\Commands\Fixtures;
 
-final class InterfaceResolver implements ResolvedInterface
+class InterfaceResolver implements ResolvedInterface
 {
 }

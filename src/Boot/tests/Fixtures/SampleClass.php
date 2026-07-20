@@ -4,4 +4,4 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures;
 
-final class SampleClass implements SampleClassInterface {}
+class SampleClass implements SampleClassInterface {}

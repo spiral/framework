@@ -6,7 +6,7 @@ namespace Spiral\Tests\Prototype\Fixtures;
 
 use Spiral\Tests\Prototype\Fixtures\InheritedInjection\InjectionOne;
 
-final class WithPromotedProperty extends AbstractPromotedProperty
+class WithPromotedProperty extends AbstractPromotedProperty
 {
     public function __construct(string $foo, private InjectionOne $one)
     {

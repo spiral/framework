@@ -7,7 +7,7 @@ namespace Spiral\Tests\Console\Fixtures;
 use Spiral\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
-final class HelperCommand extends Command
+class HelperCommand extends Command
 {
     public const NAME = 'helper';
 

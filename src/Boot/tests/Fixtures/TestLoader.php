@@ -6,7 +6,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 
 use Spiral\Config\Loader\FileLoaderInterface;
 
-final class TestLoader implements FileLoaderInterface
+class TestLoader implements FileLoaderInterface
 {
     public function loadFile(string $section, string $filename): array
     {

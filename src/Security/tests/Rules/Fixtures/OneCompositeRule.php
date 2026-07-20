@@ -11,7 +11,7 @@ use Spiral\Security\Rule\CompositeRule;
  *
  * @package Spiral\Tests\Security\Actors
  */
-final class OneCompositeRule extends CompositeRule
+class OneCompositeRule extends CompositeRule
 {
     public const RULES = ['test.create', 'test.update', 'test.delete'];
     public const BEHAVIOUR = self::AT_LEAST_ONE;

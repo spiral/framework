@@ -6,7 +6,7 @@ namespace Spiral\Tests\Console\Fixtures;
 
 use Spiral\Console\Command;
 
-final class LazyLoadedCommand extends Command
+class LazyLoadedCommand extends Command
 {
     public const NAME = 'lazy';
     public const DESCRIPTION = 'Lazy description';

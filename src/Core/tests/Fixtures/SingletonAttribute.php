@@ -7,7 +7,7 @@ namespace Spiral\Tests\Core\Fixtures;
 use Spiral\Core\Attribute\Singleton;
 
 #[Singleton]
-final class SingletonAttribute
+class SingletonAttribute
 {
     public function nullableScalar(?string $nullable): ?string
     {

@@ -7,7 +7,7 @@ namespace Spiral\Tests\Boot\Fixtures;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Exception\BootException;
 
-final class BrokenCore extends AbstractKernel
+class BrokenCore extends AbstractKernel
 {
     protected function bootstrap(): void
     {

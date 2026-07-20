@@ -6,7 +6,7 @@ namespace Spiral\Tests\Console\Fixtures\User;
 
 use Spiral\Console\Command;
 
-final class UserCommand extends Command
+class UserCommand extends Command
 {
     public const NAME        = 'test:user';
     public const DESCRIPTION = 'Test Command';

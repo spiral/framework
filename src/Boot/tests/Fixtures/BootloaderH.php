@@ -11,4 +11,4 @@ use Spiral\Boot\Attribute\BootloadConfig;
     'APP_DEBUG' => false,
     'RR_MODE' => ['http'],
 ])]
-final class BootloaderH extends AbstractBootloader {}
+class BootloaderH extends AbstractBootloader {}

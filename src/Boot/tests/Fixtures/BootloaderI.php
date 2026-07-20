@@ -11,4 +11,4 @@ use Spiral\Boot\Attribute\BootloadConfig;
     'APP_ENV' => ['production', 'prod'],
     'DB_HOST' => 'db.example.com',
 ])]
-final class BootloaderI extends AbstractBootloader {}
+class BootloaderI extends AbstractBootloader {}

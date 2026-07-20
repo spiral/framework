@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Scaffolder\Fixtures;
 
-final class SourceEntity74
+class SourceEntity74
 {
     public $noTypeString;
 
