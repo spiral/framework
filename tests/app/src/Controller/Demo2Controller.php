@@ -8,7 +8,7 @@ use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;
 
 #[GuardNamespace('demo')]
-class Demo2Controller
+final class Demo2Controller
 {
     #[Guarded('do')]
     public function do1(): string

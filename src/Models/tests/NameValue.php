@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\ValueInterface;
 
-class NameValue implements ValueInterface, \Stringable
+final class NameValue implements ValueInterface, \Stringable
 {
     private $value;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Stub;
 
-class LightEngineDecorator
+final class LightEngineDecorator
 {
     public function __construct(
         public LightEngine $engine,

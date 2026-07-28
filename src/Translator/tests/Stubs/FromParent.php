@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Translator\Stubs;
 
-class FromParent extends MessageStub
+final class FromParent extends MessageStub
 {
     private $other = [
         '[[new-mess]]',

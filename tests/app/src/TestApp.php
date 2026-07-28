@@ -14,7 +14,7 @@ use Spiral\Stempler\Bootloader\StemplerBootloader;
 use Spiral\Testing\Traits\TestableKernel;
 use Spiral\Tokenizer\Bootloader\TokenizerListenerBootloader;
 
-class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
+final class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInterface
 {
     use TestableKernel;
 

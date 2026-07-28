@@ -10,7 +10,7 @@ use Spiral\Auth\TokenStorageInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Security\GuardInterface;
 
-class AuthController
+final class AuthController
 {
     public function __construct(private readonly AuthScope $auth) {}
 

@@ -11,7 +11,7 @@ use Spiral\Filters\Model\FilterDefinitionInterface;
 use Spiral\Filters\Model\HasFilterDefinition;
 use Spiral\Validator\FilterDefinition;
 
-class ProfileFilter extends Filter implements HasFilterDefinition
+final class ProfileFilter extends Filter implements HasFilterDefinition
 {
     #[Post]
     public string $name;

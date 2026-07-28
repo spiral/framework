@@ -7,7 +7,7 @@ namespace Spiral\App\Controller;
 use Spiral\App\Interceptor;
 use Spiral\Domain\Annotation\Pipeline;
 
-class InterceptedController
+final class InterceptedController
 {
     public function without(): array
     {

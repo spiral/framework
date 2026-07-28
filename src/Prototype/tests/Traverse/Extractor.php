@@ -9,7 +9,7 @@ use PhpParser\NodeVisitor;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
-class Extractor
+final class Extractor
 {
     private readonly Parser $parser;
 

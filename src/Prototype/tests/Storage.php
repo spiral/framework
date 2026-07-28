@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Prototype;
 
-class Storage
+final class Storage
 {
     /** @var array */
     protected $storage = [];

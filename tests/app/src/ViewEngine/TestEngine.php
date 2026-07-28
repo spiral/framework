@@ -12,7 +12,7 @@ use Spiral\Views\Traits\ProcessorTrait;
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewSource;
 
-class TestEngine extends AbstractEngine
+final class TestEngine extends AbstractEngine
 {
     use ProcessorTrait;
 

@@ -6,7 +6,7 @@ namespace Spiral\Tests\Stempler;
 
 use Spiral\Config\PatchInterface;
 
-class EnableCachePatch implements PatchInterface
+final class EnableCachePatch implements PatchInterface
 {
     public function patch(array $config): array
     {

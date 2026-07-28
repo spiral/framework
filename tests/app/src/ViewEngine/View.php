@@ -7,7 +7,7 @@ namespace Spiral\App\ViewEngine;
 use Spiral\Views\ViewInterface;
 use Spiral\Views\ViewSource;
 
-class View implements ViewInterface
+final class View implements ViewInterface
 {
     public function __construct(private readonly ViewSource $source) {}
 

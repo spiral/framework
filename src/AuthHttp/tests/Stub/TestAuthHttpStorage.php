@@ -7,7 +7,7 @@ namespace Spiral\Tests\Auth\Stub;
 use Spiral\Auth\TokenInterface;
 use Spiral\Auth\TokenStorageInterface;
 
-class TestAuthHttpStorage implements TokenStorageInterface
+final class TestAuthHttpStorage implements TokenStorageInterface
 {
     public function load(string $id): ?TokenInterface
     {

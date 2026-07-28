@@ -8,7 +8,7 @@ use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Bootloader\Auth\HttpAuthBootloader;
 
-class AuthBootloader extends Bootloader
+final class AuthBootloader extends Bootloader
 {
     public function init(StrategyBasedBootloadManager $bootloadManager): void
     {
