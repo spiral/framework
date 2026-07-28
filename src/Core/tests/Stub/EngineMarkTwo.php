@@ -12,7 +12,7 @@ final class EngineMarkTwo extends LightEngine
 
     public function getName(): string
     {
-        return static::NAME;
+        return self::NAME;
     }
 
     public function getPower(): int

@@ -113,7 +113,7 @@ final class TestApp extends Kernel implements \Spiral\Testing\TestableKernelInte
 
     protected function defineBootloaders(): array
     {
-        $bootloaders = static::LOAD;
+        $bootloaders = self::LOAD;
 
         // filter out disabled bootloaders
         return \array_filter($bootloaders, fn(string $bootloader): bool => !\in_array($bootloader, $this->disabledBootloaders, true));

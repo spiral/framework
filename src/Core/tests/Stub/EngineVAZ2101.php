@@ -12,7 +12,7 @@ final class EngineVAZ2101 extends LightEngine implements MadeInUssrInterface
 
     public function getName(): string
     {
-        return static::NAME;
+        return self::NAME;
     }
 
     public function rust(float $index): self
