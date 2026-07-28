@@ -95,10 +95,8 @@ return RectorConfig::configure()
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\WithCallbackIdenticalToStandaloneAssertsRector::class,
         \Rector\PHPUnit\CodeQuality\Rector\MethodCall\SimplerWithIsInstanceOfRector::class,
         \Rector\DeadCode\Rector\ClassMethod\RemoveUnusedConstructorParamRector::class,
-
-        \Rector\DeadCode\Rector\ClassMethod\RemoveReturnTagIncompatibleWithNativeTypeRector::class => [
-            __DIR__ . '/src/Router/src/Traits/VerbsTrait.php',
-        ],
+        \Rector\DeadCode\Rector\Property\RemoveDefaultValueFromAssignedPropertyRector::class,
+        \Rector\DeadCode\Rector\StmtsAwareInterface\RemoveDeadInstanceOfAssertRector::class,
     ])
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
