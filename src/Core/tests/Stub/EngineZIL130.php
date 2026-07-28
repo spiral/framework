@@ -12,7 +12,7 @@ final class EngineZIL130 implements EngineInterface, MadeInUssrInterface
 
     public function getName(): string
     {
-        return static::NAME;
+        return self::NAME;
     }
 
     public function getPower(): int
