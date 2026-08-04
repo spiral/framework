@@ -22,7 +22,7 @@ final class TokenizerConfig extends InjectableConfig
 
     /**
      * @var array{
-     *     cache: array{directory: null, enabled: bool},
+     *     cache: array{directory: string|null, enabled: bool},
      *     load: array{classes:bool, enums: bool, interfaces: bool},
      *     debug: bool,
      *     directories: TDirectories,
