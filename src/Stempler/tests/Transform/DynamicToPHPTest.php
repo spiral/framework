@@ -117,7 +117,8 @@ final class DynamicToPHPTest extends BaseTestCase
     public function testVerbatim3(): void
     {
         self::assertSame('<script>alert(<?php echo json_encode'
-        . '("hello world", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT, 512); ?>)</script>', $res = $this->compile('<script>alert({{ "hello world" }})</script>')->getContent());
+        . '("hello world", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT '
+        . '| JSON_INVALID_UTF8_SUBSTITUTE, 512); ?>)</script>', $res = $this->compile('<script>alert({{ "hello world" }})</script>')->getContent());
 
         self::assertSame('<script>alert("hello world")</script>', $this->eval($res));
     }
@@ -125,9 +126,21 @@ final class DynamicToPHPTest extends BaseTestCase
     public function testVerbatim4(): void
     {
         self::assertSame('<script>alert(<?php echo json_encode' .
-        '("hello\' \'world", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT, 512); ?>)</script>', $res = $this->compile('<script>alert({{ "hello\' \'world" }})</script>')->getContent());
+        '("hello\' \'world", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT '
+        . '| JSON_INVALID_UTF8_SUBSTITUTE, 512); ?>)</script>', $res = $this->compile('<script>alert({{ "hello\' \'world" }})</script>')->getContent());
 
         self::assertSame('<script>alert("hello\u0027 \u0027world")</script>', $this->eval($res));
+    }
+
+    /**
+     * Without JSON_INVALID_UTF8_SUBSTITUTE json_encode() returns false on broken input and the value collapses
+     * to an empty string, silently changing the arity of the surrounding JavaScript call.
+     */
+    public function testVerbatimScriptSubstitutesInvalidUtf8(): void
+    {
+        $res = $this->compile('<script>alert({{ chr(177) . \'1\' }})</script>')->getContent();
+
+        self::assertSame('<script>alert("\ufffd1")</script>', $this->eval($res));
     }
 
     protected function getVisitors(): array
