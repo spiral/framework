@@ -70,7 +70,7 @@ final class PermissionManagerTest extends TestCase
 
         $this->rules->method('has')->willReturn(true);
         $this->rules->method('get')
-            ->willReturnCallback(static function (...$args) use (&$series) {
+            ->willReturnCallback(static function (...$args) use (&$series): ForbidRule|AllowRule {
                 [$expectedArgs, $return] = \array_shift($series);
                 self::assertSame($expectedArgs, $args);
 
