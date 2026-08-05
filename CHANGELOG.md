@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.17.2 - 2026-08-05
+
+- **Bug Fixes**
+  - [spiral/stempler] Encode on* attribute output as a JavaScript literal
+
 ## 3.17.1 - 2026-07-13
 
 - **Bug Fixes**
