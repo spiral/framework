@@ -133,14 +133,24 @@ final class DynamicToPHP implements VisitorInterface
             return \sprintf(
                 'json_encode(%s, %s, %s)',
                 '%s',
-                'JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT',
+                'JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE',
                 '512',
             );
         }
 
-        // in on* and other attributes
+        // php {{ }} in on* event handlers. The browser HTML-decodes the attribute value before the JS engine
+        // parses it, so the value must survive both decodings: encode it as a JavaScript literal first, then
+        // HTML-encode the surrounding quotes. The JSON_HEX_* flags leave no HTML-special character inside the
+        // literal, so the outer htmlspecialchars() only affects the delimiters.
+        // JSON_INVALID_UTF8_SUBSTITUTE mirrors ENT_SUBSTITUTE: broken input yields U+FFFD instead of making
+        // json_encode() return false and collapse the whole value to an empty string.
         if ($context[0] instanceof Verbatim && $context[1] instanceof Attr && $context[1]->name !== 'style') {
-            return \sprintf("'%s', %s, '%s'", '&quot;', $this->defaultFilter, '&quot;');
+            return \sprintf(
+                "htmlspecialchars(json_encode(%s, %s, %s), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')",
+                '%s',
+                'JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE',
+                '512',
+            );
         }
 
         return $this->defaultFilter;
