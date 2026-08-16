@@ -193,7 +193,7 @@ final class AuthorizationMiddlewareTest extends TestCase
         $dispatcher->shouldReceive('dispatch')
             ->once()
             ->withArgs(
-                static fn(Authorized $event): bool => $event->status->success === true
+                static fn(Authorized $event): bool => $event->status->success
                 && $event->status->topics === null
                 && $event->status->response === null,
             );
