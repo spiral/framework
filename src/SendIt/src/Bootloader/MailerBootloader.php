@@ -9,7 +9,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\BinderInterface;
 use Spiral\Logger\LogsInterface;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
@@ -31,24 +30,31 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
  */
 class MailerBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        QueueBootloader::class,
-        BuilderBootloader::class,
-    ];
-    protected const SINGLETONS = [
-        MailJob::class => MailJob::class,
-        MailQueue::class => [self::class, 'initMailQueue'],
-        MailerInterface::class => MailQueue::class,
-        SymfonyMailer::class => [self::class, 'mailer'],
-        TransportResolver::class => [self::class, 'initTransportResolver'],
-        TransportResolverInterface::class => TransportResolver::class,
-        TransportRegistryInterface::class => TransportResolver::class,
-        TransportInterface::class => [self::class, 'initTransport'],
-    ];
-
     public function __construct(
         private readonly ConfiguratorInterface $config,
     ) {}
+
+    public function defineDependencies(): array
+    {
+        return [
+            QueueBootloader::class,
+            BuilderBootloader::class,
+        ];
+    }
+
+    public function defineSingletons(): array
+    {
+        return [
+            MailJob::class => MailJob::class,
+            MailQueue::class => [self::class, 'initMailQueue'],
+            MailerInterface::class => MailQueue::class,
+            SymfonyMailer::class => [self::class, 'mailer'],
+            TransportResolver::class => [self::class, 'initTransportResolver'],
+            TransportResolverInterface::class => TransportResolver::class,
+            TransportRegistryInterface::class => TransportResolver::class,
+            TransportInterface::class => [self::class, 'initTransport'],
+        ];
+    }
 
     public function init(EnvironmentInterface $env): void
     {
