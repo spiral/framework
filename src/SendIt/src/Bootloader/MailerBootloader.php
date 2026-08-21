@@ -9,7 +9,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
-use Spiral\Core\BinderInterface;
 use Spiral\Logger\LogsInterface;
 use Spiral\Mailer\MailerInterface;
 use Spiral\Queue\Bootloader\QueueBootloader;
@@ -37,6 +36,8 @@ class MailerBootloader extends Bootloader
     ];
     protected const SINGLETONS = [
         MailJob::class => MailJob::class,
+        MailQueue::class => [self::class, 'initMailQueue'],
+        MailerInterface::class => MailQueue::class,
         SymfonyMailer::class => [self::class, 'mailer'],
         TransportResolver::class => [self::class, 'initTransportResolver'],
         TransportResolverInterface::class => TransportResolver::class,
@@ -58,16 +59,8 @@ class MailerBootloader extends Bootloader
         ]);
     }
 
-    public function boot(BinderInterface $binder, ContainerInterface $container): void
+    public function boot(ContainerInterface $container): void
     {
-        $binder->bindSingleton(
-            MailerInterface::class,
-            static fn(MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue => new MailQueue(
-                $config,
-                $provider->getConnection($config->getQueueConnection()),
-            ),
-        );
-
         $registry = $container->get(QueueRegistry::class);
         \assert($registry instanceof QueueRegistry);
         $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
@@ -98,6 +91,14 @@ class MailerBootloader extends Bootloader
 
         return new TransportResolver(
             new Transport($defaultTransports),
+        );
+    }
+
+    protected function initMailQueue(MailerConfig $config, QueueConnectionProviderInterface $provider): MailQueue
+    {
+        return new MailQueue(
+            $config,
+            $provider->getConnection($config->getQueueConnection()),
         );
     }
 }
