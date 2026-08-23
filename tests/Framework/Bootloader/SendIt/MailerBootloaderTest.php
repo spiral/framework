@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Bootloader\SendIt;
 
+use Spiral\Config\ConfiguratorInterface;
 use Spiral\Mailer\MailerInterface;
+use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\SendIt\Bootloader\MailerBootloader;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailJob;
@@ -57,6 +59,42 @@ final class MailerBootloaderTest extends BaseTestCase
     public function testMailerInterfaceBinding(): void
     {
         $this->assertContainerBoundAsSingleton(MailerInterface::class, MailQueue::class);
+    }
+
+    public function testMailQueueBinding(): void
+    {
+        $this->assertContainerBoundAsSingleton(MailQueue::class, MailQueue::class);
+    }
+
+    public function testMailerInterfaceAndMailQueueShareTheSameInstance(): void
+    {
+        self::assertSame(
+            $this->getContainer()->get(MailQueue::class),
+            $this->getContainer()->get(MailerInterface::class),
+        );
+    }
+
+    public function testMailQueueUsesConfiguredQueueConnection(): void
+    {
+        $mailQueue = $this->getContainer()->get(MailQueue::class);
+        $queue = (new \ReflectionProperty($mailQueue, 'queue'))->getValue($mailQueue);
+
+        self::assertSame(
+            $this->getContainer()->get(QueueConnectionProviderInterface::class)->getConnection('sync'),
+            $queue,
+        );
+    }
+
+    public function testSubclassCanOverrideBindingConstants(): void
+    {
+        $bootloader = new class($this->getContainer()->get(ConfiguratorInterface::class)) extends MailerBootloader {
+            protected const DEPENDENCIES = [];
+            protected const SINGLETONS = parent::SINGLETONS + ['foo' => 'bar'];
+        };
+
+        self::assertSame([], $bootloader->defineDependencies());
+        self::assertSame('bar', $bootloader->defineSingletons()['foo']);
+        self::assertSame(MailQueue::class, $bootloader->defineSingletons()[MailerInterface::class]);
     }
 
     public function testTransportInterfaceBinding(): void
