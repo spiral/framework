@@ -15,9 +15,7 @@ final class UuidCaster implements CasterInterface
 
     public function supports(\ReflectionNamedType $type): bool
     {
-        if ($this->interfaceExists === null) {
-            $this->interfaceExists = \interface_exists(UuidInterface::class);
-        }
+        $this->interfaceExists ??= \interface_exists(UuidInterface::class);
 
         return $this->interfaceExists &&
             !$type->isBuiltin() &&

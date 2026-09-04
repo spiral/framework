@@ -102,13 +102,9 @@ final class Storage implements MutableStorageInterface
             throw new InvalidArgumentException(\sprintf($message, $uri));
         }
 
-        if (!isset($result['scheme'])) {
-            $result['scheme'] = $withScheme ? $this->default : null;
-        }
+        $result['scheme'] ??= $withScheme ? $this->default : null;
 
-        if (!isset($result['host'])) {
-            $result['host'] = '';
-        }
+        $result['host'] ??= '';
 
         return [
             $result['scheme'] ?? null,

@@ -80,14 +80,10 @@ final class CookieQueue
         bool $httpOnly = true,
         ?string $sameSite = null,
     ): self {
-        if (\is_null($domain)) {
-            //Let's resolve domain via config
-            $domain = $this->domain;
-        }
+        //Let's resolve domain via config
+        $domain ??= $this->domain;
 
-        if (\is_null($secure)) {
-            $secure = $this->secure;
-        }
+        $secure ??= $this->secure;
 
         return $this->schedule(
             new Cookie($name, $value, $lifetime, $path, $domain, $secure, $httpOnly, $sameSite),

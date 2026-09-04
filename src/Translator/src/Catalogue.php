@@ -66,9 +66,7 @@ final class Catalogue implements CatalogueInterface
     public function mergeFrom(MessageCatalogue $catalogue, bool $follow = true): void
     {
         foreach ($catalogue->all() as $domain => $messages) {
-            if (!isset($this->data[$domain])) {
-                $this->data[$domain] = [];
-            }
+            $this->data[$domain] ??= [];
 
             if ($follow) {
                 //MessageCatalogue string has higher priority that string stored in memory

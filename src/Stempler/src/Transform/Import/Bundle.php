@@ -29,9 +29,7 @@ final class Bundle implements ImportInterface
 
     public function resolve(Builder $builder, string $name): ?Template
     {
-        if ($this->template === null) {
-            $this->template = $builder->load($this->path);
-        }
+        $this->template ??= $builder->load($this->path);
 
         $path = $name;
         if ($this->prefix !== null) {

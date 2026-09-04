@@ -33,9 +33,7 @@ final class Core implements CoreInterface, HandlerInterface
         string $action,
         array $parameters = ['options' => null, 'payload' => []],
     ): string {
-        if ($parameters['options'] === null) {
-            $parameters['options'] = new Options();
-        }
+        $parameters['options'] ??= new Options();
 
         $tracer = $this->getTracer();
 

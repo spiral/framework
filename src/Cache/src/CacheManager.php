@@ -35,9 +35,7 @@ class CacheManager implements CacheStorageProviderInterface, CacheStorageRegistr
             $storage = $storage['storage'];
         }
 
-        if (!isset($this->storages[$storage])) {
-            $this->storages[$storage] = $this->resolve($storage);
-        }
+        $this->storages[$storage] ??= $this->resolve($storage);
 
         return new CacheRepository($this->storages[$storage], $this->dispatcher, $prefix);
     }

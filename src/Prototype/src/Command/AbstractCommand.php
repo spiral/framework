@@ -102,9 +102,7 @@ abstract class AbstractCommand extends Command
 
         $result = [];
         foreach ($proto as $name) {
-            if (!isset($result[$name])) {
-                $result[$name] = $this->getRegistry()->resolveProperty($name);
-            }
+            $result[$name] ??= $this->getRegistry()->resolveProperty($name);
         }
 
         return $result;
