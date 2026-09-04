@@ -218,7 +218,7 @@ final class FileTest extends TestCase
         self::assertGreaterThanOrEqual($now, $before);
 
         // Wait 1.1 seconds and then again modify file
-        \usleep(1100000);
+        \usleep(1_100_000);
 
         $file->write('content');
         $after = $file->getLastModified();

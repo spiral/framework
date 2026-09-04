@@ -24,8 +24,8 @@ interface FilesInterface
      */
     public const KB = 1024;
 
-    public const MB = 1048576;
-    public const GB = 1073741824;
+    public const MB = 1_048_576;
+    public const GB = 1_073_741_824;
 
     /**
      * Default location (directory) separator.
