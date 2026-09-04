@@ -267,7 +267,7 @@ final class ManagerTest extends TestCase
         self::assertGreaterThanOrEqual($now, $before);
 
         // Wait 1.1 seconds and then again modify file
-        \usleep(1100000);
+        \usleep(1_100_000);
 
         $this->manager->write('file.txt', 'content');
         $after = $this->manager->getLastModified('file.txt');

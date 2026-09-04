@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Boundwize\StructArmed\Architecture;
 use Boundwize\StructArmed\Preset\Preset;
+use Boundwize\StructArmed\Preset\Presets\CodeQualityPreset;
 use Boundwize\StructArmed\Rule\Rules\Class_\MustBeFinalRule;
 
 $layerPatterns = [
@@ -149,6 +150,9 @@ $architecture = Architecture::define()
             'tests/app/src/Command/DeadCommand.php',
             'tests/app/src/Controller/TestController.php',
         ],
+        CodeQualityPreset::ANONYMOUS_FUNCTIONS_MUST_BE_STATIC => [
+            __DIR__ . '/src/Core/tests/Exception/ClosureRendererTraitTest.php',
+        ],
     ])
     ->skipPaths([
         // fixtures
@@ -172,4 +176,4 @@ foreach ($layerPatterns as $name => $pattern) {
     $architecture->layerPattern($name, $pattern);
 }
 
-return $architecture->withPreset(Preset::PSR4());
+return $architecture->withPresets(Preset::PSR4(), Preset::CODEQUALITY());

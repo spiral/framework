@@ -172,7 +172,7 @@ final class StorageTest extends TestCase
         self::assertGreaterThanOrEqual($now, $before);
 
         // Wait 1.1 seconds and then again modify file
-        \usleep(1100000);
+        \usleep(1_100_000);
 
         $this->local->write('file.txt', 'content');
         $after = $this->local->getLastModified('file.txt');

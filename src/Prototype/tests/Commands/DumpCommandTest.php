@@ -27,7 +27,7 @@ final class DumpCommandTest extends AbstractCommandsTestCase
         $files
             ->expects(self::once())
             ->method('write')
-            ->with(static::callback(fn (): bool => true), static::callback($this->validateTrait(...)));
+            ->with(static::callback(static fn (): bool => true), static::callback($this->validateTrait(...)));
 
         $this->app->getContainer()->bindSingleton(FilesInterface::class, $files, true);
 
