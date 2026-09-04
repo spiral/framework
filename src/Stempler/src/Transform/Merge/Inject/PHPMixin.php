@@ -162,9 +162,7 @@ final class PHPMixin
                         break;
                     }
 
-                    if ($name === null) {
-                        $name = \stripcslashes(\substr((string) $token[1], 1, -1));
-                    }
+                    $name ??= \stripcslashes(\substr((string) $token[1], 1, -1));
                     $value .= $token[1];
                     break;
                 case ',':

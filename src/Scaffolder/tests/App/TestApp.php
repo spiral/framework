@@ -52,9 +52,7 @@ final class TestApp extends Boot\AbstractKernel
             throw new Boot\Exception\BootException('Missing required directory `root`.');
         }
 
-        if (!isset($directories['app'])) {
-            $directories['app'] = $directories['root'] . '/';
-        }
+        $directories['app'] ??= $directories['root'] . '/';
 
         return \array_merge([
             'vendor'  => $directories['root'] . '/vendor/',

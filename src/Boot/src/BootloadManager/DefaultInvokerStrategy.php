@@ -52,9 +52,7 @@ final class DefaultInvokerStrategy implements InvokerStrategyInterface
         $method = $refl->getMethod($method);
 
         $args = $this->resolver->resolveArguments($method);
-        if (!isset($args['boot'])) {
-            $args['boot'] = $options;
-        }
+        $args['boot'] ??= $options;
 
         $method->invokeArgs($bootloader, \array_values($args));
     }

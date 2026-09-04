@@ -47,9 +47,7 @@ trait TranslatorTrait
          */
         $translator = $container->get(TranslatorInterface::class);
 
-        if (\is_null($bundle)) {
-            $bundle = $translator->getDomain(static::class);
-        }
+        $bundle ??= $translator->getDomain(static::class);
 
         //Translate class string using automatically resolved message domain
         return $translator->trans($string, $options, $bundle);

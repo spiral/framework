@@ -128,8 +128,6 @@ final class SessionSection implements SessionSectionInterface, InjectableInterfa
     {
         $this->session->resume();
 
-        if (!isset($_SESSION[$this->name])) {
-            $_SESSION[$this->name] = [];
-        }
+        $_SESSION[$this->name] ??= [];
     }
 }

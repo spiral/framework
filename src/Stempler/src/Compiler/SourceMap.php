@@ -24,9 +24,7 @@ final class SourceMap
 
         foreach ($locations as $offset => $location) {
             $line = Source::resolveLine($content, $offset);
-            if (!isset($map->lines[$line])) {
-                $map->lines[$line] = $map->calculateLine($location, $loader);
-            }
+            $map->lines[$line] ??= $map->calculateLine($location, $loader);
         }
 
         $map->sourceCache = null;
@@ -114,9 +112,7 @@ final class SourceMap
 
     private function calculateLine(Location $location, LoaderInterface $loader): array
     {
-        if (!isset($this->sourceCache[$location->path])) {
-            $this->sourceCache[$location->path] = $loader->load($location->path);
-        }
+        $this->sourceCache[$location->path] ??= $loader->load($location->path);
         $path = $this->sourceCache[$location->path]->getFilename();
 
         if (!\in_array($path, $this->paths, true)) {

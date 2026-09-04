@@ -36,9 +36,7 @@ final class Parser
     {
         $attribute = $this->reader->firstClassMetadata($reflection, AsCommand::class);
 
-        if ($attribute === null) {
-            $attribute = $reflection->getAttributes(SymfonyAsCommand::class)[0]->newInstance();
-        }
+        $attribute ??= $reflection->getAttributes(SymfonyAsCommand::class)[0]->newInstance();
 
         return new CommandDefinition(
             name: $attribute->name,
@@ -144,9 +142,7 @@ final class Parser
             $type = $this->getPropertyType($property);
             $mode = $attribute->mode;
 
-            if ($mode === null) {
-                $mode = $this->guessOptionMode($type, $property);
-            }
+            $mode ??= $this->guessOptionMode($type, $property);
 
             if ($mode === InputOption::VALUE_NONE || $mode === InputOption::VALUE_NEGATABLE) {
                 if ($type->getName() !== 'bool') {
