@@ -6,10 +6,10 @@ namespace Spiral\Core;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Core\Event\InterceptorCalling;
-use Spiral\Core\Exception\InterceptorException;
 use Spiral\Interceptors\Context\CallContext;
 use Spiral\Interceptors\Context\CallContextInterface;
 use Spiral\Interceptors\Context\Target;
+use Spiral\Interceptors\Exception\InterceptorException;
 use Spiral\Interceptors\HandlerInterface;
 use Spiral\Interceptors\InterceptorInterface;
 

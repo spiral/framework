@@ -7,9 +7,9 @@ namespace Spiral\Domain;
 use Spiral\Attributes\ReaderInterface;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\Exception\ControllerException;
-use Spiral\Core\Exception\InterceptorException;
 use Spiral\Domain\Annotation\Guarded;
 use Spiral\Domain\Annotation\GuardNamespace;
+use Spiral\Interceptors\Exception\InterceptorException;
 
 #[Singleton]
 final class GuardPermissionsProvider implements PermissionsProviderInterface
