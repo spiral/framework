@@ -43,30 +43,30 @@ final class BufferTest extends TestCase
     public function testLookahead(): void
     {
         $src = $this->buffer('abc');
-        self::assertEquals('a', $src->lookahead()->char);
-        self::assertEquals(0, $src->lookahead()->offset);
+        self::assertSame('a', $src->lookahead()->char);
+        self::assertSame(0, $src->lookahead()->offset);
 
         // no iteration expected
-        self::assertEquals('a', $src->lookahead()->char);
-        self::assertEquals(0, $src->lookahead()->offset);
+        self::assertSame('a', $src->lookahead()->char);
+        self::assertSame(0, $src->lookahead()->offset);
 
         self::assertEquals(new Byte(0, 'a'), $src->next());
 
-        self::assertEquals('b', $src->lookahead()->char);
-        self::assertEquals(1, $src->lookahead()->offset);
+        self::assertSame('b', $src->lookahead()->char);
+        self::assertSame(1, $src->lookahead()->offset);
 
         // no iteration expected
-        self::assertEquals('b', $src->lookahead()->char);
-        self::assertEquals(1, $src->lookahead()->offset);
+        self::assertSame('b', $src->lookahead()->char);
+        self::assertSame(1, $src->lookahead()->offset);
 
         self::assertEquals(new Byte(1, 'b'), $src->next());
 
-        self::assertEquals('c', $src->lookahead()->char);
-        self::assertEquals(2, $src->lookahead()->offset);
+        self::assertSame('c', $src->lookahead()->char);
+        self::assertSame(2, $src->lookahead()->offset);
 
         // no iteration expected
-        self::assertEquals('c', $src->lookahead()->char);
-        self::assertEquals(2, $src->lookahead()->offset);
+        self::assertSame('c', $src->lookahead()->char);
+        self::assertSame(2, $src->lookahead()->offset);
 
         self::assertEquals(new Byte(2, 'c'), $src->next());
 

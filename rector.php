@@ -13,6 +13,7 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPublicMethodParameterRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
+use Rector\Php80\Rector\Ternary\TernaryToNullsafeCoalesceRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
@@ -44,6 +45,11 @@ return RectorConfig::configure()
             // Keep the is_string() guard: getBindings() reads user config, so a
             // malformed (non-string) binding must be skipped, not crash class_exists().
             __DIR__ . '/src/Prototype/src/Bootloader/PrototypeBootloader.php',
+        ],
+        TernaryToNullsafeCoalesceRector::class => [
+            // A null returned by the core must not fall through to the handler,
+            // which is always null when the core is set.
+            __DIR__ . '/src/Hmvc/src/InterceptorPipeline.php',
         ],
         RemoveUnusedPrivateMethodParameterRector::class => [
             __DIR__ . '/src/Core/tests/InjectableTest.php',

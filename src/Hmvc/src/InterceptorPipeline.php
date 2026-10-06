@@ -111,9 +111,10 @@ final class InterceptorPipeline implements CoreInterface, HandlerInterface
                 : $interceptor->intercept($context, $handler);
         }
 
-        return $this->core === null
+        $core = $this->core;
+        return $core === null
             ? $this->handler->handle($context)
-            : $this->core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments());
+            : $core->callAction($path[0] ?? '', $path[1] ?? '', $context->getArguments());
     }
 
     private function nextWithContext(CallContextInterface $context): self

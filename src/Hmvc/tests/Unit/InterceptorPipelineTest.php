@@ -40,6 +40,21 @@ final class InterceptorPipelineTest extends TestCase
         $pipeline->handle(new CallContext(Target::fromPathArray(['controller', 'action'])));
     }
 
+    public function testHandleReturnsNullFromCore(): void
+    {
+        $core = self::createMock(CoreInterface::class);
+        $core->expects(self::once())
+            ->method('callAction')
+            ->with('controller', 'action')
+            ->willReturn(null);
+
+        $pipeline = $this->createPipeline(lastHandler: $core);
+
+        $result = $pipeline->handle(new CallContext(Target::fromPathArray(['controller', 'action'])));
+
+        self::assertNull($result);
+    }
+
     public function testCrossCompatibility(): void
     {
         $handler = self::createMock(CoreInterface::class);
