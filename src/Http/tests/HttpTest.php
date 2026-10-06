@@ -282,11 +282,14 @@ final class HttpTest extends TestCase
             )
             ->willReturnCallback(
                 function ($name, $callback, $attributes, $scoped, $traceKind) {
-                    self::assertSame($attributes, [
-                        'http.method' => 'GET',
-                        'http.url' => 'http://example.org/path',
-                        'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],
-                    ]);
+                    self::assertSame(
+                        [
+                            'http.method' => 'GET',
+                            'http.url' => 'http://example.org/path',
+                            'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],
+                        ],
+                        $attributes,
+                    );
                     return $this->container
                         ->get(TracerInterface::class)
                         ->trace($name, $callback, $attributes, $scoped, $traceKind);
