@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.18.0@536dd6236b39a5115385b0307b42d6d1ad431a02">
-  <file src="src/Boot/src/Injector/EnumInjector.php">
-    <InvalidArgument>
-      <code><![CDATA[$class]]></code>
-      <code><![CDATA[$class]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Cache/src/Core/CacheInjector.php">
-    <InvalidArgument>
-      <code><![CDATA[$class]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/Console/src/Configurator/AttributeBasedConfigurator.php">
-    <InvalidArgument>
-      <code><![CDATA[$reflection]]></code>
-      <code><![CDATA[$reflection]]></code>
-    </InvalidArgument>
-  </file>
+<files psalm-version="6.19.1@e2ca44251c1f1aa2e35452d426895746b47de64e">
   <file src="src/Core/src/Internal/Actor.php">
     <NoValue>
       <code><![CDATA[$injector]]></code>
