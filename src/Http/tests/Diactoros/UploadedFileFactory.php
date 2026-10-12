@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http\Diactoros;
 
+use Nyholm\Psr7\UploadedFile;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Nyholm\Psr7\UploadedFile;
 
 final class UploadedFileFactory implements UploadedFileFactoryInterface
 {

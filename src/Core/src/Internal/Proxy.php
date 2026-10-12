@@ -75,11 +75,11 @@ final class Proxy
         if ($context !== null || $attachContainer) {
             (static function () use ($instance, $context, $attachContainer): void {
                 // Set the Current Context
-                /** @see \Spiral\Core\Internal\Proxy\ProxyTrait::$__container_proxy_context */
+                /** @see Proxy\ProxyTrait::$__container_proxy_context */
                 $context === null or $instance->__container_proxy_context = $context;
 
                 // Set the Current Scope Container
-                /** @see \Spiral\Core\Internal\Proxy\ProxyTrait::__container_proxy_container */
+                /** @see Proxy\ProxyTrait::__container_proxy_container */
                 $attachContainer and $instance->__container_proxy_container = ContainerScope::getContainer();
             })->bindTo(null, $instance::class)();
         }

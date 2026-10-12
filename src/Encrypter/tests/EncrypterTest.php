@@ -10,7 +10,7 @@ use Spiral\Encrypter\Encrypter;
 use Spiral\Encrypter\Exception\DecryptException;
 use Spiral\Encrypter\Exception\EncrypterException;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Encrypter\Encrypter::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(Encrypter::class)]
 final class EncrypterTest extends TestCase
 {
     public function testImmutable(): void

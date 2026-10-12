@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Csrf;
 
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +17,6 @@ use Spiral\Csrf\Middleware\StrictCsrfFirewall;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Nyholm\Psr7\ServerRequest;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
 

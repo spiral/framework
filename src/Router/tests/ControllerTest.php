@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Interceptors\Handler\AutowireHandler;
@@ -13,8 +15,6 @@ use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Router\Target\Controller;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\Uri;
 
 final class ControllerTest extends BaseTestCase
 {

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Http\ErrorHandler\PlainRenderer;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Http\ErrorHandler\PlainRenderer::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(PlainRenderer::class)]
 final class PlainRendererTest extends TestCase
 {
     public static function dataResponseIsJson(): iterable

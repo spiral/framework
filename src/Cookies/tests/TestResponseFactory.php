@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Cookies;
 
+use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\Http\Config\HttpConfig;
-use Nyholm\Psr7\Response;
 
 final class TestResponseFactory implements ResponseFactoryInterface
 {

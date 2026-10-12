@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Auth\Middleware;
 
+use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Auth\AuthContext;
@@ -14,7 +15,6 @@ use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Tests\Auth\BaseTestCase;
 use Spiral\Tests\Auth\Diactoros\ResponseFactory;
-use Nyholm\Psr7\ServerRequest;
 use Spiral\Tests\Auth\Stub\TestAuthHttpProvider;
 use Spiral\Tests\Auth\Stub\TestAuthHttpStorage;
 

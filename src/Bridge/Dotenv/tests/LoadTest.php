@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\DotEnv;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Directories;
 use Spiral\Boot\EnvironmentInterface;

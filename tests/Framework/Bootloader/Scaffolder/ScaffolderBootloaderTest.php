@@ -11,8 +11,8 @@ use Spiral\Boot\KernelInterface;
 use Spiral\Config\ConfigManager;
 use Spiral\Config\LoaderInterface;
 use Spiral\Scaffolder\Bootloader\ScaffolderBootloader;
-use Spiral\Scaffolder\Declaration;
 use Spiral\Scaffolder\Config\ScaffolderConfig;
+use Spiral\Scaffolder\Declaration;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class ScaffolderBootloaderTest extends BaseTestCase

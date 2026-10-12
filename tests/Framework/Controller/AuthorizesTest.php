@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Controller;
 
+use Spiral\App\Controller\AuthController;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Exception\ScopeException;
@@ -12,7 +13,6 @@ use Spiral\Security\Actor\Guest;
 use Spiral\Security\ActorInterface;
 use Spiral\Security\GuardInterface;
 use Spiral\Security\GuardScope;
-use Spiral\App\Controller\AuthController;
 use Spiral\Tests\Framework\BaseTestCase;
 
 final class AuthorizesTest extends BaseTestCase

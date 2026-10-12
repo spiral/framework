@@ -58,7 +58,7 @@ final class TokenizerListenerBootloaderTest extends BaseTestCase
         self::assertContains(\Spiral\App\Tokenizer\A::class, $this->classes);
         self::assertContains(\Spiral\App\Tokenizer\B::class, $this->classes);
         self::assertContains(\Spiral\App\Tokenizer\TestEnum::class, $this->classes);
-        self::assertContains(\Spiral\App\Tokenizer\TestInterface::class, $this->classes);
+        self::assertContains(TestInterface::class, $this->classes);
         self::assertTrue($this->finalized);
     }
 

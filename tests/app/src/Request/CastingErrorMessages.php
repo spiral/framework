@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\App\Request;
 
 use Ramsey\Uuid\UuidInterface;
-use Spiral\Filters\Attribute\Input\Post;
 use Spiral\Filters\Attribute\CastingErrorMessage;
+use Spiral\Filters\Attribute\Input\Post;
 use Spiral\Filters\Model\Filter;
 
 final class CastingErrorMessages extends Filter

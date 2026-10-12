@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Serializer\Bootloader;
 
+use Google\Protobuf\Internal\Message;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
@@ -15,10 +16,9 @@ use Spiral\Serializer\Serializer\JsonSerializer;
 use Spiral\Serializer\Serializer\PhpSerializer;
 use Spiral\Serializer\Serializer\ProtoSerializer;
 use Spiral\Serializer\SerializerInterface;
-use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerManager;
+use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerRegistryInterface;
-use Google\Protobuf\Internal\Message;
 
 final class SerializerBootloader extends Bootloader
 {

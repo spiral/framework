@@ -101,13 +101,13 @@ final class ScopesTest extends TestCase
     {
         $container = new Container();
 
-        self::assertSame($container, ContainerScope::runScope($container, static fn(ContainerInterface $container): \Psr\Container\ContainerInterface => $container));
+        self::assertSame($container, ContainerScope::runScope($container, static fn(ContainerInterface $container): ContainerInterface => $container));
 
         $result = ContainerScope::runScope(
             $container,
             static fn(Container $container): mixed => $container->runScope(
                 [],
-                static fn(Container $container): \Spiral\Core\Container => $container,
+                static fn(Container $container): Container => $container,
             ),
         );
 

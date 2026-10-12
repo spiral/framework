@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Boot;
 
 /**
- * @internal Use {@see \Spiral\Boot\EnvironmentInterface} instead
+ * @internal Use {@see EnvironmentInterface} instead
  */
 final class Environment implements EnvironmentInterface
 {

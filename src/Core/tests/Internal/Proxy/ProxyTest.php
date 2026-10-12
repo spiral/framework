@@ -37,8 +37,8 @@ final class ProxyTest extends TestCase
     public function testSimpleCases(string $interface, string $var): void
     {
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
@@ -56,7 +56,7 @@ final class ProxyTest extends TestCase
     public function testMagicCallsOnNonMagicProxy(): void
     {
         $root = new Container();
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         self::expectExceptionMessageMatches('/Call to undefined method/i');
 
@@ -69,8 +69,8 @@ final class ProxyTest extends TestCase
     public function testExtraArguments(string $interface, string $var): void
     {
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
@@ -89,8 +89,8 @@ final class ProxyTest extends TestCase
     public function testVariadic(string $interface, string $var): void
     {
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $root->invoke(static function (
             #[Proxy] MockInterface $mock,
@@ -114,8 +114,8 @@ final class ProxyTest extends TestCase
         );
 
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
@@ -134,8 +134,8 @@ final class ProxyTest extends TestCase
         );
 
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
@@ -157,8 +157,8 @@ final class ProxyTest extends TestCase
         );
 
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $root->invoke(static function (#[Proxy] MockInterface $mock, #[Proxy] EmptyInterface $empty) use ($var): void {
             /** @var MockInterfaceImpl $proxy */
@@ -182,8 +182,8 @@ final class ProxyTest extends TestCase
     public function testProxyToUnionType(): void
     {
         $root = new Container();
-        $root->bindSingleton(MockInterface::class, Stub\MockInterfaceImpl::class);
-        $root->bindSingleton(EmptyInterface::class, Stub\MockInterfaceImpl::class);
+        $root->bindSingleton(MockInterface::class, MockInterfaceImpl::class);
+        $root->bindSingleton(EmptyInterface::class, MockInterfaceImpl::class);
 
         $mock = $root->invoke(static fn(#[Proxy] MockInterface|EmptyInterface $mock) => $mock);
 
@@ -194,7 +194,7 @@ final class ProxyTest extends TestCase
     public function testProxyConfig(string $interface): void
     {
         $root = new Container();
-        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->getBinder('foo')->bindSingleton($interface, MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\Proxy($interface, true));
 
         $proxy = $root->get($interface);
@@ -221,7 +221,7 @@ final class ProxyTest extends TestCase
     public function testProxyConfigOutOfProxyException(string $interface): void
     {
         $root = new Container();
-        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->getBinder('foo')->bindSingleton($interface, MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\Proxy($interface, true));
 
         $this->assertInstanceOf($interface, $root->get($interface));
@@ -245,7 +245,7 @@ final class ProxyTest extends TestCase
         });
 
         $root = new Container();
-        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->getBinder('foo')->bindSingleton($interface, MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\DeprecationProxy($interface, true, 'foo', '4.0'));
 
         $proxy = $root->get($interface);
@@ -270,7 +270,7 @@ final class ProxyTest extends TestCase
         });
 
         $root = new Container();
-        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->getBinder('foo')->bindSingleton($interface, MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\DeprecationProxy(
             interface: $interface,
             message: \sprintf('Using `%s` impossible', $interface),
@@ -302,7 +302,7 @@ final class ProxyTest extends TestCase
         });
 
         $root = new Container();
-        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->getBinder('foo')->bindSingleton($interface, MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\DeprecationProxy($interface, true, ScopeEnum::A, '4.0'));
 
         $proxy = $root->get($interface);
@@ -327,7 +327,7 @@ final class ProxyTest extends TestCase
         });
 
         $root = new Container();
-        $root->getBinder('foo')->bindSingleton($interface, Stub\MockInterfaceImpl::class);
+        $root->getBinder('foo')->bindSingleton($interface, MockInterfaceImpl::class);
         $root->bindSingleton($interface, new Config\DeprecationProxy($interface, true, 'foo', '4.0'));
 
         $root->runScope(new Scope('foo'), static function (Container $container) use ($interface): void {

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Spiral\Core;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Core\Internal\Actor;
 use Spiral\Core\Internal\Binder;
 use Spiral\Core\Internal\Container;
 use Spiral\Core\Internal\Factory;
-use Spiral\Core\Internal\Actor;
 use Spiral\Core\Internal\Invoker;
 use Spiral\Core\Internal\Resolver;
 use Spiral\Core\Internal\Scope;

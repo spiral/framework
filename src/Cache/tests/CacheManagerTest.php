@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Cache;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -19,7 +19,7 @@ final class CacheManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FactoryInterface */
+    /** @var m\LegacyMockInterface|m\MockInterface|FactoryInterface */
     private $factory;
 
     private CacheManager $manager;

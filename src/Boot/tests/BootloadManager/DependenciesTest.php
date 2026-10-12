@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\BootloadManager;
 
-use Spiral\Tests\Boot\TestCase;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderB;
+use Spiral\Tests\Boot\TestCase;
 
 final class DependenciesTest extends TestCase
 {

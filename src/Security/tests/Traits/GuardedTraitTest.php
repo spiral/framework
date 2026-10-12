@@ -11,9 +11,9 @@ use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Security\GuardInterface;
+use Spiral\Security\Traits\GuardedTrait;
 use Spiral\Tests\Security\Traits\Fixtures\Guarded;
 use Spiral\Tests\Security\Traits\Fixtures\GuardedWithNamespace;
-use Spiral\Security\Traits\GuardedTrait;
 
 final class GuardedTraitTest extends TestCase
 {

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Targets;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Router\Exception\ConstrainException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Namespaced;
-use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\Uri;
+use Spiral\Tests\Router\Diactoros\UriFactory;
 
 final class NamespacedTargetTest extends TestCase
 {

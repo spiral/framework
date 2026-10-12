@@ -11,8 +11,8 @@ use Spiral\Console\Config\ConsoleConfig;
 use Spiral\Console\Console;
 use Spiral\Console\LocatorInterface;
 use Spiral\Console\StaticLocator;
-use Spiral\Tests\Console\Fixtures\User\UserCommand;
 use Spiral\Core\Container;
+use Spiral\Tests\Console\Fixtures\User\UserCommand;
 use Spiral\Tokenizer\ScopedClassesInterface;
 
 abstract class BaseTestCase extends TestCase

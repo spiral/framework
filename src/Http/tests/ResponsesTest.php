@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Nyholm\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
 use Spiral\Files\Files;
 use Spiral\Http\Config\HttpConfig;
@@ -11,7 +12,6 @@ use Spiral\Http\Exception\ResponseException;
 use Spiral\Http\ResponseWrapper;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
 use Spiral\Tests\Http\Diactoros\StreamFactory;
-use Nyholm\Psr7\Stream;
 
 final class ResponsesTest extends TestCase
 {

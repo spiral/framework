@@ -23,7 +23,7 @@ final class QueueRegistryTest extends TestCase
 {
     private Container $mockContainer;
 
-    /** @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HandlerRegistryInterface */
+    /** @var m\LegacyMockInterface|m\MockInterface|HandlerRegistryInterface */
     private $fallbackHandlers;
 
     private QueueRegistry $registry;

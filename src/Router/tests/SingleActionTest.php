@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\Uri;
 
 final class SingleActionTest extends BaseTestCase
 {

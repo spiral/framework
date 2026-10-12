@@ -6,13 +6,13 @@ namespace Spiral\Bootloader;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Bootloader\Bootloader;
+use Spiral\Command\CleanCommand;
 use Spiral\Command\Encrypter;
+use Spiral\Command\PublishCommand;
 use Spiral\Command\Router;
 use Spiral\Command\Tokenizer;
 use Spiral\Command\Translator;
 use Spiral\Command\Views;
-use Spiral\Command\CleanCommand;
-use Spiral\Command\PublishCommand;
 use Spiral\Console;
 use Spiral\Console\Bootloader\ConsoleBootloader;
 use Spiral\Console\Sequence\RuntimeDirectory;

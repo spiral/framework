@@ -18,8 +18,8 @@ use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\MemoryCache;
 use Spiral\Translator\Translator;
 use Spiral\Translator\TranslatorInterface;
-use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Dumper;
+use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\Loader;
 
 final class I18nBootloaderTest extends BaseTestCase

@@ -10,11 +10,11 @@ use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Session\Config\SessionConfig;
 use Spiral\Session\Handler\FileHandler;
-use Spiral\Session\SessionSectionInterface;
 use Spiral\Session\Session;
 use Spiral\Session\SessionFactory;
 use Spiral\Session\SessionInterface;
 use Spiral\Session\SessionSection;
+use Spiral\Session\SessionSectionInterface;
 
 #[RunTestsInSeparateProcesses]
 final class SessionTest extends TestCase

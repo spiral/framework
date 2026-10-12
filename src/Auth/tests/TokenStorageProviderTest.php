@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Spiral\Tests\Auth;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\Exception\InvalidArgumentException;
 use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\TokenStorageProvider;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\FactoryInterface;
-use PHPUnit\Framework\TestCase;
 
 final class TokenStorageProviderTest extends TestCase
 {

@@ -22,7 +22,7 @@ use Spiral\Stempler\Parser\SyntaxInterface;
  */
 final class HTMLSyntax implements SyntaxInterface
 {
-    use Parser\Syntax\Traits\MixinTrait;
+    use Traits\MixinTrait;
 
     // list of tags which are closed automatically (http://xahlee.info/js/html5_non-closing_tag.html)
     private const VOID_TAGS = [

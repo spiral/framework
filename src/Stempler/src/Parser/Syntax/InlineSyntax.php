@@ -13,7 +13,7 @@ use Spiral\Stempler\Parser\SyntaxInterface;
 
 final class InlineSyntax implements SyntaxInterface
 {
-    use Parser\Syntax\Traits\MixinTrait;
+    use Traits\MixinTrait;
 
     private ?Inline $inline = null;
 

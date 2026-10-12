@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Nyholm\Psr7\ServerRequest;
 
 final class HostsTest extends BaseTestCase
 {

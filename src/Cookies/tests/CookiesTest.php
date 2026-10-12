@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Cookies;
 
 use Defuse\Crypto\Key;
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +22,6 @@ use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
-use Nyholm\Psr7\ServerRequest;
 
 final class CookiesTest extends TestCase
 {

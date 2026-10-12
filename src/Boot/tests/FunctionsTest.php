@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Environment;
+use Spiral\Core\ContainerScope;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Tests\Boot\Fixtures\TestConfig;
 use Spiral\Tests\Boot\Fixtures\TestCore;
-use Spiral\Core\ContainerScope;
 
 final class FunctionsTest extends TestCase
 {
