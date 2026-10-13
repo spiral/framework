@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Storage\File;
 
 use JetBrains\PhpStorm\ExpectedValues;
-use Spiral\Storage\FileInterface;
 use Spiral\Storage\BucketInterface;
+use Spiral\Storage\FileInterface;
 use Spiral\Storage\Visibility;
 
 /**

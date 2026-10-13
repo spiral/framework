@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use Spiral\Router\Exception\RouteException;
-use Spiral\Router\Route;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
+use Spiral\Router\Exception\RouteException;
+use Spiral\Router\Route;
 
 final class CallableTest extends BaseTestCase
 {

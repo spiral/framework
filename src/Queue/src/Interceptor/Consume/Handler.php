@@ -15,7 +15,7 @@ use Spiral\Telemetry\TracerFactoryInterface;
 
 /**
  * Handler is used to invoke pass incoming job through the interceptor chain and invoke the job handler after that.
- * {@see \Spiral\Queue\Interceptor\Consume\Core}.
+ * {@see Core}.
  */
 final class Handler
 {

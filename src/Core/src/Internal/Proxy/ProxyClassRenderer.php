@@ -53,7 +53,7 @@ final class ProxyClassRenderer
             $context = $method->isStatic() ? 'null' : '$this->__container_proxy_context';
             $containerStr = match (false) {
                 $attachContainer => 'null',
-                /** @see \Spiral\Core\Internal\Proxy\ProxyTrait::__container_proxy_container */
+                /** @see ProxyTrait::__container_proxy_container */
                 $method->isStatic() => '$this->__container_proxy_container',
                 default => \sprintf(
                     'throw new \Spiral\Core\Exception\Container\ContainerException(\'%s\')',

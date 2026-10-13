@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Fixtures;
 
-use Spiral\Core\Exception\ControllerException;
 use Nyholm\Psr7\Response;
+use Spiral\Core\Exception\ControllerException;
 use Spiral\Core\Internal\Introspector;
 
 class TestController

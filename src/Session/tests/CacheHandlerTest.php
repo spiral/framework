@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Session;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface;
 use Spiral\Cache\CacheStorageProviderInterface;
 use Spiral\Session\Handler\CacheHandler;
-use Mockery as m;
 
 final class CacheHandlerTest extends TestCase
 {

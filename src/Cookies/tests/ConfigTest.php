@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Cookies;
 
+use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Spiral\Cookies\Config\CookiesConfig;
-use Nyholm\Psr7\Uri;
 
 final class ConfigTest extends TestCase
 {

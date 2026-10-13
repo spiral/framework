@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
 use Spiral\Bootloader\Http\RouterBootloader;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
@@ -16,7 +17,6 @@ use Spiral\Router\Exception\HandlerException;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Nyholm\Psr7\ServerRequest;
 
 final class CoreTest extends \Spiral\Testing\TestCase
 {

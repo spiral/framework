@@ -14,7 +14,7 @@ use Spiral\Encrypter\EncrypterInterface;
 use Spiral\Encrypter\EncryptionInterface;
 use Spiral\Encrypter\Exception\EncrypterException;
 
-#[\PHPUnit\Framework\Attributes\CoversClass(\Spiral\Encrypter\EncrypterFactory::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(EncrypterFactory::class)]
 final class EncrypterFactoryTest extends TestCase
 {
     public function testInjection(): void

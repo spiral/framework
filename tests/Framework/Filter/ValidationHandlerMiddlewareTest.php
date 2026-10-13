@@ -12,8 +12,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Filter\JsonErrorsRenderer;
 use Spiral\Filter\ValidationHandlerMiddleware;
-use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\ErrorsRendererInterface;
+use Spiral\Filters\Exception\ValidationException;
 
 final class ValidationHandlerMiddlewareTest extends TestCase
 {

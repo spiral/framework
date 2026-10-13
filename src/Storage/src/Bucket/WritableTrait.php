@@ -7,9 +7,9 @@ namespace Spiral\Storage\Bucket;
 use JetBrains\PhpStorm\ExpectedValues;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Exception\FileOperationException;
 use Spiral\Storage\FileInterface;
-use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 /**

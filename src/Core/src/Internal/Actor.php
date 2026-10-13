@@ -7,10 +7,11 @@ namespace Spiral\Core\Internal;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract as ContextFunction;
+use Spiral\Core\Attribute;
 use Spiral\Core\BinderInterface;
+use Spiral\Core\Config;
 use Spiral\Core\Config\Alias;
 use Spiral\Core\Config\Binding;
-use Spiral\Core\Attribute;
 use Spiral\Core\Container\InjectorInterface;
 use Spiral\Core\Container\SingletonInterface;
 use Spiral\Core\Exception\Container\AutowireException;
@@ -30,7 +31,6 @@ use Spiral\Core\Internal\Proxy\RetryContext;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\Options;
 use Spiral\Core\ResolverInterface;
-use Spiral\Core\Config;
 
 /**
  * @internal
@@ -149,7 +149,7 @@ final class Actor
         Tracer $tracer,
     ): mixed {
         return match ($binding::class) {
-            Config\Alias::class => $this->resolveAlias($binding, $alias, $context, $arguments, $tracer),
+            Alias::class => $this->resolveAlias($binding, $alias, $context, $arguments, $tracer),
             Config\Proxy::class,
             Config\DeprecationProxy::class => $this->resolveProxy($binding, $alias, $context),
             Config\Autowire::class => $this->resolveAutowire($binding, $alias, $context, $arguments, $tracer),
@@ -263,7 +263,7 @@ final class Actor
     }
 
     private function resolveAlias(
-        Config\Alias $binding,
+        Alias $binding,
         string $alias,
         \Stringable|string|null $context,
         array $arguments,

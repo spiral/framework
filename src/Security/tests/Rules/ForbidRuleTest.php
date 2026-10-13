@@ -6,8 +6,8 @@ namespace Spiral\Tests\Security\Rules;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Security\ActorInterface;
-use Spiral\Security\RuleInterface;
 use Spiral\Security\Rule\ForbidRule;
+use Spiral\Security\RuleInterface;
 
 /**
  * Class ForbidRuleTest

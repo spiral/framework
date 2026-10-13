@@ -82,7 +82,7 @@ final class QueueBootloaderTest extends BaseTestCase
             ],
             'interceptors' => [
                 'consume' => [
-                    \Spiral\Queue\Interceptor\Consume\ErrorHandlerInterceptor::class,
+                    ErrorHandlerInterceptor::class,
                     \Spiral\Queue\Interceptor\Consume\RetryPolicyInterceptor::class,
                 ],
                 'push' => [],

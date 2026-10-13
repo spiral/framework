@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Queue\Attribute\Stub;
 
-use Spiral\Queue\Attribute\JobHandler;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Spiral\Attributes\NamedArgumentConstructor;
+use Spiral\Queue\Attribute\JobHandler;
 
 /**
  * @Annotation

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\UploadedFile;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Spiral\Core\Container;
 use Spiral\Http\Request\InputManager;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\UploadedFile;
 
 final class FilesTest extends TestCase
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Filters\Model\Schema;
 
-use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Exception\SchemaException;
+use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\NestedFilter;
 

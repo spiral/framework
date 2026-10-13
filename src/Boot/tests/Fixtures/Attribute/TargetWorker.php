@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures\Attribute;
 
-use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Attributes\NamedArgumentConstructor;
+use Spiral\Boot\Attribute\BootloadConfig;
 
 #[\Attribute(\Attribute::TARGET_CLASS), NamedArgumentConstructor]
 final class TargetWorker extends BootloadConfig

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Model\Schema;
 
 use Mockery as m;
+use Spiral\Filters\Exception\ValidationException;
+use Spiral\Filters\InputInterface;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Schema\Builder;
 use Spiral\Filters\Model\Schema\InputMapper;
-use Spiral\Filters\Exception\ValidationException;
-use Spiral\Filters\InputInterface;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\NestedFilter;
 

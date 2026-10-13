@@ -17,12 +17,12 @@ final class ExceptionsTest extends TestCase
 {
     public static function allExceptionsWithPreviousSet(): \Generator
     {
-        yield [new Exception\ClientException\BadRequestException('', new \Exception())];
-        yield [new Exception\ClientException\ForbiddenException('', new \Exception())];
-        yield [new Exception\ClientException\NotFoundException('', new \Exception())];
-        yield [new Exception\ClientException\UnauthorizedException('', new \Exception())];
-        yield [new Exception\ClientException\ServerErrorException('', new \Exception())];
-        yield [new Exception\ClientException(0, '', new \Exception())];
+        yield [new BadRequestException('', new \Exception())];
+        yield [new ForbiddenException('', new \Exception())];
+        yield [new NotFoundException('', new \Exception())];
+        yield [new UnauthorizedException('', new \Exception())];
+        yield [new ClientException\ServerErrorException('', new \Exception())];
+        yield [new ClientException(0, '', new \Exception())];
         yield [new Exception\DotNotFoundException('', 0, new \Exception())];
         yield [new Exception\HttpException('', 0, new \Exception())];
         yield [new Exception\InputException('', 0, new \Exception())];

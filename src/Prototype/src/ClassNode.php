@@ -18,7 +18,7 @@ final class ClassNode
 
     public bool $hasConstructor = false;
 
-    /** @var ClassNode\ConstructorParam[] */
+    /** @var ConstructorParam[] */
     public array $constructorParams = [];
 
     /** @var string[] */

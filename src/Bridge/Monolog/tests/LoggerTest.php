@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Monolog;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery as m;
 use Monolog\Logger;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
 use Spiral\Boot\Finalizer;

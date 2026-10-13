@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Reactor\Partial;
 
-use PHPUnit\Framework\TestCase;
 use Nette\PhpGenerator\Method as NetteMethod;
+use PHPUnit\Framework\TestCase;
 use Spiral\Reactor\Aggregator\Parameters;
 use Spiral\Reactor\Partial\Attribute;
 use Spiral\Reactor\Partial\Method;

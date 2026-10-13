@@ -11,10 +11,10 @@ use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
 use Spiral\Filters\Exception\SetterException;
-use Spiral\Filters\Model\FilterInterface;
-use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\FilterInterface;
+use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Mapper\Mapper;
 
 /**

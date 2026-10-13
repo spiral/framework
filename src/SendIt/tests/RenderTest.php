@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
 
+use Spiral\Mailer\Exception\MailerException;
+use Spiral\Mailer\Message;
 use Spiral\Mailer\MessageInterface;
 use Spiral\SendIt\Bootloader\BuilderBootloader;
 use Spiral\SendIt\Bootloader\MailerBootloader;
@@ -11,8 +13,6 @@ use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 use Spiral\Testing\TestCase;
-use Spiral\Mailer\Exception\MailerException;
-use Spiral\Mailer\Message;
 use Spiral\Tests\SendIt\App\MailInterceptorBootloader;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;

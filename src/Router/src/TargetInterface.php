@@ -33,7 +33,7 @@ interface TargetInterface
      *
      * @param Matches $matches
      *
-     * @throws \Spiral\Router\Exception\TargetException
+     * @throws Exception\TargetException
      */
     public function getHandler(ContainerInterface $container, array $matches): Handler;
 }

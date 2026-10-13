@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Auth\Config;
 
-use Spiral\Auth\TokenStorageInterface;
 use Spiral\Auth\Exception\InvalidArgumentException;
+use Spiral\Auth\TokenStorageInterface;
 use Spiral\Core\Container\Autowire;
 use Spiral\Core\InjectableConfig;
 

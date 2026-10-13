@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Nyholm\Psr7\ServerRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,7 +20,6 @@ use Spiral\Http\Exception\PipelineException;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Tests\Http\Diactoros\ResponseFactory;
-use Nyholm\Psr7\ServerRequest;
 
 final class PipelineTest extends TestCase
 {

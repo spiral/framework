@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot;
 
 use Spiral\Boot\BootloadManager\AttributeResolver;
+use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
+use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\BootloadManager\InitializerInterface;
 use Spiral\Boot\BootloadManager\InvokerStrategyInterface;
 use Spiral\Boot\BootloadManager\StrategyBasedBootloadManager;
-use Spiral\Boot\BootloadManager\DefaultInvokerStrategy;
-use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Environment;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Core\Container;

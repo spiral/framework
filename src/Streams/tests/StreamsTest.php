@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Streams;
 
+use Nyholm\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Streams\StreamWrapper;
-use Nyholm\Psr7\Stream;
 
 final class StreamsTest extends TestCase
 {
