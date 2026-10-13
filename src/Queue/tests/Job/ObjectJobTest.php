@@ -6,8 +6,8 @@ namespace Spiral\Tests\Queue\Job;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Core\Container;
-use Spiral\Queue\Job\ObjectJob;
 use Spiral\Queue\Exception\InvalidArgumentException;
+use Spiral\Queue\Job\ObjectJob;
 use Spiral\Tests\Queue\TestCase;
 
 final class ObjectJobTest extends TestCase

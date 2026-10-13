@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Boot\Environment;
 
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Boot\Injector\ProvideFrom;
 use Spiral\Boot\Injector\InjectableEnumInterface;
+use Spiral\Boot\Injector\ProvideFrom;
 
 #[ProvideFrom(method: 'detect')]
 enum AppEnvironment: string implements InjectableEnumInterface

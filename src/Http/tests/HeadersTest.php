@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Core\Container;
 use Spiral\Http\Request\InputManager;
-use Nyholm\Psr7\ServerRequest;
 
 final class HeadersTest extends TestCase
 {

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Targets;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Controller;
+use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Spiral\Router\UriHandler;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\Uri;
 
 final class ControllerTargetTest extends TestCase
 {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Exceptions;
 
+use Mockery as m;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Exceptions\Verbosity;
-use Mockery as m;
 
 final class VerbosityTest extends TestCase
 {

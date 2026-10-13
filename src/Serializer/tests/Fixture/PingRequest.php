@@ -30,7 +30,7 @@ class PingRequest extends \Google\Protobuf\Internal\Message
      */
     public function __construct($data = null)
     {
-        \Spiral\Tests\Serializer\Fixture\GPBMetadata\Service::initOnce();
+        GPBMetadata\Service::initOnce();
         parent::__construct($data);
     }
 

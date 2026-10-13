@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Spiral\SendIt\TransportResolver;
 use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
-use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
-use Nyholm\Psr7\ServerRequest;
+use Spiral\Tests\Router\Diactoros\UriFactory;
 
 final class RouteTest extends BaseTestCase
 {

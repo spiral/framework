@@ -11,7 +11,7 @@ use Spiral\Interceptors\HandlerInterface as InterceptorHandler;
 
 /**
  * This class is used to push jobs into the queue and pass them through the interceptor chain
- * {@see \Spiral\Queue\Interceptor\Push\Core}. After that the job is pushed into the queue using the connection.
+ * {@see Interceptor\Push\Core}. After that the job is pushed into the queue using the connection.
  *
  * @internal Queue is an internal library class, please do not use it in your code.
  * @psalm-internal Spiral\Queue

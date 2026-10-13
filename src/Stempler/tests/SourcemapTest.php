@@ -7,12 +7,12 @@ namespace Spiral\Tests\Stempler;
 use Spiral\Stempler\Builder;
 use Spiral\Stempler\Directive\LoopDirective;
 use Spiral\Stempler\Loader\LoaderInterface;
-use Spiral\Tests\Stempler\Transform\BaseTestCase;
 use Spiral\Stempler\Transform\Finalizer\DynamicToPHP;
 use Spiral\Stempler\Transform\Merge\ExtendsParent;
 use Spiral\Stempler\Transform\Merge\ResolveImports;
 use Spiral\Stempler\Transform\Visitor\DefineAttributes;
 use Spiral\Stempler\Transform\Visitor\DefineBlocks;
+use Spiral\Tests\Stempler\Transform\BaseTestCase;
 
 final class SourcemapTest extends BaseTestCase
 {

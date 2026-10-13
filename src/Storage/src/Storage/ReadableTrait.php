@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Storage\Storage;
 
 use JetBrains\PhpStorm\ExpectedValues;
+use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Storage;
 use Spiral\Storage\StorageInterface;
-use Spiral\Storage\BucketInterface;
 use Spiral\Storage\Visibility;
 
 trait ReadableTrait

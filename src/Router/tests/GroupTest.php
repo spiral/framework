@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Exception\UriHandlerException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
 use Spiral\Tests\Router\Fixtures\TestController;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\Uri;
 
 final class GroupTest extends BaseTestCase
 {

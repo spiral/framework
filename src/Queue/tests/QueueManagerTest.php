@@ -9,9 +9,9 @@ use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Queue\Config\QueueConfig;
+use Spiral\Queue\Driver\SyncDriver;
 use Spiral\Queue\QueueInterface;
 use Spiral\Queue\QueueManager;
-use Spiral\Queue\Driver\SyncDriver;
 
 final class QueueManagerTest extends TestCase
 {
@@ -23,7 +23,7 @@ final class QueueManagerTest extends TestCase
         $this->factory->shouldReceive('make')
             ->once()
             ->with(SyncDriver::class, ['driver' => SyncDriver::class])
-            ->andReturn(\Mockery::mock(QueueInterface::class));
+            ->andReturn(m::mock(QueueInterface::class));
 
         $this->manager->getConnection();
     }
@@ -33,7 +33,7 @@ final class QueueManagerTest extends TestCase
         $this->factory->shouldReceive('make')
             ->once()
             ->with(SyncDriver::class, ['driver' => SyncDriver::class])
-            ->andReturn(\Mockery::mock(QueueInterface::class));
+            ->andReturn(m::mock(QueueInterface::class));
 
         $this->manager->getConnection('sync');
     }
@@ -43,7 +43,7 @@ final class QueueManagerTest extends TestCase
         $this->factory->shouldReceive('make')
             ->once()
             ->with(SyncDriver::class, ['driver' => SyncDriver::class])
-            ->andReturn(\Mockery::mock(QueueInterface::class));
+            ->andReturn(m::mock(QueueInterface::class));
 
         $queue = $this->manager->getConnection('user-data');
 
@@ -70,7 +70,7 @@ final class QueueManagerTest extends TestCase
         $container = new Container();
         $container->bind(CoreInterface::class, m::mock(CoreInterface::class));
 
-        $this->factory = \Mockery::mock(FactoryInterface::class);
+        $this->factory = m::mock(FactoryInterface::class);
 
         parent::setUp();
 

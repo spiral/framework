@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http\Diactoros;
 
+use Nyholm\Psr7\Stream;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
-use Nyholm\Psr7\Stream;
 
 final class StreamFactory implements StreamFactoryInterface
 {

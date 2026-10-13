@@ -13,15 +13,15 @@ use Spiral\Filters\Attribute\Input\Post;
 use Spiral\Filters\Attribute\Input\Query;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
-use Spiral\Filters\Model\FilterInterface;
-use Spiral\Filters\Model\FilterProviderInterface;
-use Spiral\Filters\Model\Mapper\EnumCaster;
-use Spiral\Filters\Model\Mapper\Mapper;
-use Spiral\Filters\Model\Mapper\CasterRegistry;
-use Spiral\Filters\Model\Mapper\UuidCaster;
-use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
+use Spiral\Filters\Model\FilterInterface;
+use Spiral\Filters\Model\FilterProviderInterface;
+use Spiral\Filters\Model\Mapper\CasterRegistry;
+use Spiral\Filters\Model\Mapper\EnumCaster;
+use Spiral\Filters\Model\Mapper\Mapper;
+use Spiral\Filters\Model\Mapper\UuidCaster;
+use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Tests\Filters\BaseTestCase;
 
 final class AttributeMapperTest extends BaseTestCase

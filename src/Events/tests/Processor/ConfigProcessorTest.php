@@ -6,9 +6,9 @@ namespace Spiral\Tests\Events\Processor;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\Config\EventListener;
 use Spiral\Events\Config\EventsConfig;
-use Spiral\Events\AutowireListenerFactory;
 use Spiral\Events\ListenerRegistryInterface;
 use Spiral\Events\Processor\ConfigProcessor;
 use Spiral\Tests\Events\Fixtures\Event\BarEvent;

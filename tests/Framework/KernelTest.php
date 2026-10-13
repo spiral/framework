@@ -10,11 +10,11 @@ use Spiral\App\Dispatcher\DispatcherWithoutScope;
 use Spiral\App\Dispatcher\DispatcherWithScopeName;
 use Spiral\App\Dispatcher\DispatcherWithStringScope;
 use Spiral\App\Dispatcher\Scope;
+use Spiral\App\TestApp;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\BootloaderRegistry;
 use Spiral\Boot\Bootloader\BootloaderRegistryInterface;
 use Spiral\Boot\Exception\BootException;
-use Spiral\App\TestApp;
 use Spiral\Core\Container;
 use Spiral\Framework\Spiral;
 

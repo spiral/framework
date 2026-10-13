@@ -24,11 +24,11 @@ use Spiral\Router\Loader\LoaderRegistry;
 use Spiral\Router\Loader\PhpFileLoader;
 use Spiral\Router\Router;
 use Spiral\Router\RouterInterface;
+use Spiral\Router\UriHandler;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Router\Diactoros\ResponseFactory;
 use Spiral\Tests\Router\Diactoros\UriFactory;
-use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Stub\TestLoader;
 use Spiral\Tests\Router\Stub\TestMiddleware;
 

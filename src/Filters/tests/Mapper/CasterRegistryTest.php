@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Mapper;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Filters\Model\Mapper\DefaultCaster;
 use Spiral\Filters\Model\Mapper\CasterInterface;
 use Spiral\Filters\Model\Mapper\CasterRegistry;
+use Spiral\Filters\Model\Mapper\DefaultCaster;
 
 final class CasterRegistryTest extends TestCase
 {

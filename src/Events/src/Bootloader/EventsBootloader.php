@@ -94,7 +94,7 @@ final class EventsBootloader extends Bootloader
      * @param TInterceptor $interceptor
      */
     public function addInterceptor(
-        string|InterceptorInterface|CoreInterceptorInterface|Container\Autowire $interceptor,
+        string|InterceptorInterface|CoreInterceptorInterface|Autowire $interceptor,
     ): void {
         $this->configs->modify(EventsConfig::CONFIG, new Append('interceptors', null, $interceptor));
     }

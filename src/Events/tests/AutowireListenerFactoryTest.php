@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Events;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;

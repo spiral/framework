@@ -9,8 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Serializer\Exception\SerializerNotFoundException;
 use Spiral\Serializer\Serializer\JsonSerializer;
 use Spiral\Serializer\Serializer\PhpSerializer;
-use Spiral\Serializer\SerializerRegistry;
 use Spiral\Serializer\SerializerManager;
+use Spiral\Serializer\SerializerRegistry;
 
 final class SerializerManagerTest extends TestCase
 {

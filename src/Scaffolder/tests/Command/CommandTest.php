@@ -140,7 +140,7 @@ final class CommandTest extends AbstractCommandTestCase
 
         $reflection = new \ReflectionClass($className);
 
-        /** @var \Spiral\Console\Attribute\AsCommand $definition */
+        /** @var AsCommand $definition */
         $definition = $reflection->getAttributes()[0]->newInstance();
 
         self::assertSame(['al', 'aliased-cmd'], $definition->aliases);

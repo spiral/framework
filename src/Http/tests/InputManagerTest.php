@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http;
 
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -16,7 +17,6 @@ use Spiral\Http\Request\HeadersBag;
 use Spiral\Http\Request\InputBag;
 use Spiral\Http\Request\InputManager;
 use Spiral\Http\Request\ServerBag;
-use Nyholm\Psr7\ServerRequest;
 
 final class InputManagerTest extends TestCase
 {

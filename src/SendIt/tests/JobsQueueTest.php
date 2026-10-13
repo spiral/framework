@@ -6,9 +6,9 @@ namespace Spiral\Tests\SendIt;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Spiral\Mailer\Message;
 use Spiral\Queue\Options;
 use Spiral\Queue\QueueInterface;
-use Spiral\Mailer\Message;
 use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;

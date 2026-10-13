@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http\Diactoros;
 
+use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Nyholm\Psr7\ServerRequest;
 
 final class ServerRequestFactory implements ServerRequestFactoryInterface
 {

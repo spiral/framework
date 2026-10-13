@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Framework\Auth\Config;
 
+use Mockery as m;
 use Spiral\Auth\Config\AuthConfig;
 use Spiral\Auth\TokenStorageInterface as SessionTokenStorageInterface;
 use Spiral\Tests\Framework\BaseTestCase;
-use Mockery as m;
 
 final class AuthConfigTest extends BaseTestCase
 {

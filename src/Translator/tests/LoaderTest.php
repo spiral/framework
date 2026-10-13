@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Translator;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Translator\CatalogueInterface;
 use Spiral\Translator\Catalogue\CatalogueLoader;
 use Spiral\Translator\Catalogue\RuntimeLoader;
+use Spiral\Translator\CatalogueInterface;
 use Spiral\Translator\Config\TranslatorConfig;
 use Spiral\Translator\Exception\LocaleException;
 use Symfony\Component\Translation\Loader\PhpFileLoader;

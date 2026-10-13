@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Namespaced;
-use Nyholm\Psr7\ServerRequest;
-use Nyholm\Psr7\Uri;
 
 final class NamespacedTest extends BaseTestCase
 {

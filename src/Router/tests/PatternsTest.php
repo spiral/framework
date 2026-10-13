@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
+use Mockery as m;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +14,6 @@ use Spiral\Router\Route;
 use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Stub\InArrayPattern;
-use Mockery as m;
 
 final class PatternsTest extends TestCase
 {

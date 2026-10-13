@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Tests\Framework\Debug;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Debug\StateCollector\HttpCollector;
-use Psr\Http\Message\ServerRequestInterface;
 
 final class HttpCollectorTest extends TestCase
 {

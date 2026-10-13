@@ -17,7 +17,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 /**
  * Depends on environment variables:
  * SNAPSHOT_MAX_FILES: defaults to 25
- * SNAPSHOT_VERBOSITY: defaults to {@see \Spiral\Exceptions\Verbosity::VERBOSE} (1)
+ * SNAPSHOT_VERBOSITY: defaults to {@see Verbosity::VERBOSE} (1)
  */
 final class SnapshotsBootloader extends Bootloader
 {
