@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Medium Impact Changes**
+  - [spiral/http] HTTP server and middleware spans follow the stable OpenTelemetry HTTP semantic conventions:
+    the server span is named after the request method, `http.method`/`http.url`/`http.status_code`/
+    `http.response_content_length` are replaced by `http.request.method`, `url.*`, `server.*`,
+    `http.response.status_code` and `http.response.body.size`, request headers (`http.headers`) are no longer
+    recorded, and the span status is left unset below 500 instead of `OK`.
 - **Bug Fixes**
   - [spiral/http] Pass `EventDispatcher` into HTTP core
 
