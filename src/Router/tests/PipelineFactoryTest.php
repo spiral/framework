@@ -89,7 +89,7 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
 
         $response = $this->createMock(ResponseInterface::class);
         $response
-            ->expects(self::exactly(4))->method('getHeaderLine')->with('Content-Length')->willReturn('test');
+            ->expects(self::exactly(4))->method('getHeaderLine')->with('Content-Length')->willReturn('100');
         $response->expects(self::exactly(4))->method('getStatusCode')->willReturn(200);
 
         $requestHandler = $this->createMock(RequestHandlerInterface::class);
