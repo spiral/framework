@@ -53,6 +53,23 @@ final class RenderTest extends TestCase
         self::assertStringContainsString('<p>Hello, Antony!</p>', $body);
     }
 
+    public function testHtmlCommentsAreRemoved(): void
+    {
+        $email = $this->send(new Message('comments', ['email@domain.com'], ['name' => 'Antony']));
+
+        $html = $email->getHtmlBody();
+        self::assertStringContainsString('<h1>Hello, Antony!</h1>', $html);
+        self::assertStringNotContainsString('commented', $html);
+        self::assertStringNotContainsString('multiline', $html);
+
+        // Outlook conditional comments must be kept
+        self::assertStringContainsString('<!--[if mso]><b>outlook</b><![endif]-->', $html);
+        self::assertStringContainsString('<!--[if !mso]><!--><div>not outlook</div><!--<![endif]-->', $html);
+
+        // text part is left untouched
+        self::assertStringContainsString('<!-- not html -->', $email->getTextBody());
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();

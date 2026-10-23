@@ -19,6 +19,9 @@ if (injected('from')) {
 
 \ob_start(); ?>${html}<?php $_html_ = \ob_get_clean();
 
+// strip HTML comments, but keep Outlook conditional comments (<!--[if mso]>, <!--[if !mso]><!-->, <!--<![endif]-->)
+$_html_ = \preg_replace('/<!--(?!\[if\b|<!|>).*?-->/s', '', $_html_);
+
 if (!empty($_html_)) {
     $_msg_->html($_html_);
 }
