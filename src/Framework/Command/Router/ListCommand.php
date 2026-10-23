@@ -81,6 +81,7 @@ final class ListCommand extends Command
 
                 'link' => '<fg=bright-cyan>LINK</>',
                 'unlink' => '<fg=bright-magenta>UNLINK</>',
+                'query' => '<fg=bright-blue>QUERY</>',
 
                 default => '<fg=gray>' . \strtoupper($verb) . '</>',
             };
