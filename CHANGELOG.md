@@ -2,8 +2,15 @@
 
 ## Unreleased
 
+- **New Features**
+  - [spiral/router] Added the `QUERY` HTTP verb ([RFC 10008](https://www.rfc-editor.org/rfc/rfc10008.html)); routes without explicit verbs now accept it too (#1314)
 - **Bug Fixes**
-  - [spiral/http] Pass `EventDispatcher` into HTTP core
+  - [spiral/http] Pass `EventDispatcher` into HTTP core (#1292)
+
+## 3.17.2 - 2026-08-05
+
+- **Bug Fixes**
+  - [spiral/stempler] Encode on* attribute output as a JavaScript literal (#1299)
 
 ## 3.17.1 - 2026-07-13
 
