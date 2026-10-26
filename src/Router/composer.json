@@ -61,11 +61,6 @@
             "Spiral\\Tests\\Router\\": "tests"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "config": {
         "sort-packages": true
     },

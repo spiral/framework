@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - '3.x'
+      - '[0-9]+.[0-9]+'
+  # Retries a run whose tagging was skipped: release-please finds the merged release PR through
+  # the search index, which can lag behind the merge.
+  workflow_dispatch:
+
+# A run cancelled mid-tagging leaves a merged release PR without a tag.
+concurrency:
+  group: release-please-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release PR and tag
+    runs-on: ubuntu-latest
+    steps:
+      # ACCESS_TOKEN, not GITHUB_TOKEN: a tag pushed with GITHUB_TOKEN does not trigger the split workflow.
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          config-file: .github/release-please/config.json
+          manifest-file: .github/release-please/manifest.json
+          target-branch: ${{ github.ref_name }}
+
+      # The manifest version moves only when a release PR is merged, so a version without a tag
+      # means release-please merged the PR but skipped the release.
+      - name: Tag a release that release-please skipped
+        if: ${{ steps.release.outputs.prs_created != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          version=$(gh api "repos/${GITHUB_REPOSITORY}/contents/.github/release-please/manifest.json?ref=${GITHUB_REF_NAME}" \
+            -H "Accept: application/vnd.github.raw" --jq '."."')
+
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${version}" >/dev/null 2>&1; then
+            echo "Tag ${version} exists."
+            exit 0
+          fi
+
+          echo "::warning::Tag ${version} is missing after release-please, creating the release."
+
+          pr=$(gh pr list --repo "${GITHUB_REPOSITORY}" --state merged --base "${GITHUB_REF_NAME}" \
+                --label "autorelease: pending" --json number,body --jq 'sort_by(.number) | last // empty')
+          number=$(echo "${pr}" | jq -r '.number // empty')
+          notes=$(echo "${pr}" | jq -r '.body // empty')
+
+          gh release create "${version}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --target "${GITHUB_SHA}" \
+            --title "${version}" \
+            --notes "${notes:-Release ${version}}"
+
+          # REST instead of `gh pr edit`: the latter queries reviewRequests and fails on fine-grained tokens.
+          # Non-fatal: the release already exists.
+          if [ -n "${number}" ]; then
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/issues/${number}/labels" \
+              -f "labels[]=autorelease: tagged" >/dev/null 2>&1 \
+              && gh api --method DELETE \
+                "repos/${GITHUB_REPOSITORY}/issues/${number}/labels/autorelease%3A%20pending" >/dev/null 2>&1 \
+              || echo "::notice::Released ${version}, but could not relabel PR #${number}; remove 'autorelease: pending' by hand."
+          fi
+
+      # Re-applied on every run: release-please force-pushes the release PR branch.
+      - name: Checkout release PR branch
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup PHP
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Sync intra-package constraints
+        if: ${{ steps.release.outputs.prs_created == 'true' }}
+        run: |
+          php .github/release-please/sync-deps.php
+
+          if git diff --quiet; then
+            exit 0
+          fi
+
+          git config user.name "spiralbot"
+          git config user.email "ci-bot@spiralscout.com"
+          git commit -am "chore(release): sync intra-package constraints"
+          git push

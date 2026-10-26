@@ -6,12 +6,49 @@ on:
     tags:
       - '*'
     branches:
-      - 'master'
+      - '3.x'
 
 jobs:
+  # A tag goes to the split branch it was released from: the X.Y maintenance branch when it holds
+  # the tag, otherwise the X.x mainline.
+  target_branch:
+    name: Resolve target branch
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.resolve.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v6
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          fetch-depth: 0
+
+      - id: resolve
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF}" != refs/tags/* ]]; then
+            echo "branch=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          IFS=. read -r major minor _ <<< "${GITHUB_REF_NAME}"
+          for branch in "${major}.${minor}" "${major}.x"; do
+            if git merge-base --is-ancestor "${GITHUB_SHA}" "origin/${branch}" 2>/dev/null; then
+              echo "branch=${branch}" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+
+          echo "::error::Tag ${GITHUB_REF_NAME} is on neither ${major}.${minor} nor ${major}.x"
+          exit 1
+
   split_monorepo:
     name: Split Monorepo
+    needs: target_branch
     runs-on: ${{ matrix.os }}
+    # Serializes the branch push and the tag push of one release into the same split repository.
+    concurrency:
+      group: split-${{ matrix.package.split_repository }}
+      cancel-in-progress: false
 
     strategy:
       fail-fast: false
@@ -116,7 +153,7 @@ jobs:
             split_repository: 'views'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
       # no tag
       - if: "!startsWith(github.ref, 'refs/tags/')"
@@ -125,7 +162,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
-          branch: "master"
+          branch: ${{ needs.target_branch.outputs.branch }}
           package_directory: 'src/${{ matrix.package.local_path }}'
           repository_organization: 'spiral'
           repository_name: '${{ matrix.package.split_repository }}'
@@ -139,8 +176,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
-          tag: ${GITHUB_REF#refs/tags/}
-          branch: "master"
+          tag: ${{ github.ref_name }}
+          branch: ${{ needs.target_branch.outputs.branch }}
           package_directory: 'src/${{ matrix.package.local_path }}'
           repository_organization: 'spiral'
           repository_name: '${{ matrix.package.split_repository }}'

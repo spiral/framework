@@ -55,11 +55,6 @@
     "provide": {
         "psr/container-implementation": "^1.1|^2.0"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "config": {
         "sort-packages": true
     },

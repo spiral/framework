@@ -4,11 +4,15 @@ name: build
 on:
   push:
     branches:
-      - master
       - '*.*'
   pull_request: null
   schedule:
     - cron: '0 0 * * *'
+
+# The monorepo replaces every package with `self.version`; without a root version Composer cannot
+# match them against siblings required by external packages. On 3.x the dev version is 3.x-dev.
+env:
+  COMPOSER_ROOT_VERSION: 3.x-dev
 
 jobs:
   security:
@@ -29,11 +33,6 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Configure environment
-        run: |
-          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
-          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -69,11 +68,6 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Configure environment
-        run: |
-          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
-          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP and Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -113,11 +107,6 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Configure environment
-        run: |
-          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
-          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP and Dependencies
       - name: Setup PHP ${{ matrix.php }}
@@ -165,11 +154,6 @@ jobs:
           git config --global core.eol lf
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Configure environment
-        run: |
-          export COMPOSER_ROOT_VERSION=$(/usr/bin/jq --null-input --raw-output 'first(inputs["extra"]["branch-alias"])[]' composer.json)
-          echo COMPOSER_ROOT_VERSION=$COMPOSER_ROOT_VERSION >> $GITHUB_ENV
 
       # Install PHP Dependencies
       - name: Setup PHP ${{ matrix.php }}

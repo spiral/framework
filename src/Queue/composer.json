@@ -62,11 +62,6 @@
         "spiral/boot": "^3.18",
         "vimeo/psalm": "^6.0"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "config": {
         "sort-packages": true
     },
