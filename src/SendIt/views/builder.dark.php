@@ -17,7 +17,7 @@ if (injected('from')) {
  */
 ?><stack:collect name="partials"/>${context}<?php
 
-\ob_start(); ?>${html}<?php $_html_ = \ob_get_clean();
+\ob_start(); ?>${html}<?php $_html_ = \Spiral\SendIt\Renderer\ViewRenderer::stripHtmlComments(\ob_get_clean());
 
 if (!empty($_html_)) {
     $_msg_->html($_html_);

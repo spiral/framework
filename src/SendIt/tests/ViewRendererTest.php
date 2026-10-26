@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spiral\Mailer\Message;
 use Spiral\Mailer\MessageInterface;
@@ -21,6 +22,71 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 final class ViewRendererTest extends TestCase
 {
+    public static function strippedCommentsProvider(): iterable
+    {
+        yield 'single-line' => ['<p>a</p><!-- comment --><p>b</p>', '<p>a</p><p>b</p>'];
+        yield 'multi-line' => ["<p>a</p><!--\n  <p>commented</p>\n--><p>b</p>", '<p>a</p><p>b</p>'];
+        yield 'empty' => ['<p>a</p><!----><p>b</p>', '<p>a</p><p>b</p>'];
+        yield 'dashes inside' => ['<p>a</p><!-- a - b -- c ---><p>b</p>', '<p>a</p><p>b</p>'];
+        yield 'several' => ['<!-- 1 --><p>a</p><!-- 2 --><p>b</p><!-- 3 -->', '<p>a</p><p>b</p>'];
+        yield 'inside conditional comment' => [
+            '<!--[if mso]><table><!-- inner --></table><![endif]-->',
+            '<!--[if mso]><table></table><![endif]-->',
+        ];
+        yield 'after raw-text element' => ['<style>.a{}</style><!-- comment --><p>a</p>', '<style>.a{}</style><p>a</p>'];
+    }
+
+    public static function keptHtmlProvider(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'plain' => ['<p>Hello, <b>Antony</b>!</p>'];
+        yield 'dashes and arrows in text' => ['<p>a -- b -> c --> d</p>'];
+        yield 'multibyte' => ['<p>Привет, 世界 👋</p>'];
+        yield 'email document' => [<<<'HTML'
+            <!DOCTYPE html>
+            <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
+            <head>
+                <meta charset="utf-8">
+                <title>Welcome</title>
+                <style>
+                    .button { background: #000; }
+                    @media (max-width: 600px) { .container { width: 100% !important; } }
+                </style>
+                <!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
+            </head>
+            <body>
+                <table role="presentation" class="container" width="600">
+                    <tr><td align="center"><a class="button" href="https://example.com/?a=1&amp;b=2">Confirm</a></td></tr>
+                </table>
+            </body>
+            </html>
+            HTML];
+        yield 'mso' => ['<!--[if mso]><b>outlook</b><![endif]-->'];
+        yield 'mso version' => ['<!--[if gte mso 9]><b>outlook</b><![endif]-->'];
+        yield 'mso uppercase' => ['<!--[IF MSO]><b>outlook</b><![ENDIF]-->'];
+        yield 'not mso' => ['<!--[if !mso]><!--><div>not outlook</div><!--<![endif]-->'];
+        yield 'not mso with empty comment' => ['<!--[if !mso]><!-- --><div>not outlook</div><!--<![endif]-->'];
+        yield 'style' => ["<style type=\"text/css\"><!--\n.a { color: red; }\n--></style>"];
+        yield 'style uppercase' => ['<STYLE><!-- .a { color: red; } --></STYLE>'];
+        yield 'script' => ['<script type="application/ld+json">{"name": "<!-- not a comment -->"}</script>'];
+        yield 'textarea' => ['<textarea><!-- not a comment --></textarea>'];
+        yield 'title' => ['<title><!-- not a comment --></title>'];
+        yield 'unclosed' => ['<p>a</p><!-- unclosed'];
+        yield 'pcre backtrack limit' => ['<p>a</p><style>' . \str_repeat('<b>', 1_000_000) . '</style><!-- comment -->'];
+    }
+
+    #[DataProvider('strippedCommentsProvider')]
+    public function testStripHtmlComments(string $html, string $expected): void
+    {
+        self::assertSame($expected, ViewRenderer::stripHtmlComments($html));
+    }
+
+    #[DataProvider('keptHtmlProvider')]
+    public function testStripHtmlCommentsKeepsHtml(string $html): void
+    {
+        self::assertSame($html, ViewRenderer::stripHtmlComments($html));
+    }
+
     /**
      * Checking for event hits and processing by listeners without changing the original $message
      *
