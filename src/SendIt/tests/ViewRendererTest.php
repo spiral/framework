@@ -38,6 +38,29 @@ final class ViewRendererTest extends TestCase
 
     public static function keptHtmlProvider(): iterable
     {
+        yield 'empty' => [''];
+        yield 'plain' => ['<p>Hello, <b>Antony</b>!</p>'];
+        yield 'dashes and arrows in text' => ['<p>a -- b -> c --> d</p>'];
+        yield 'multibyte' => ['<p>Привет, 世界 👋</p>'];
+        yield 'email document' => [<<<'HTML'
+            <!DOCTYPE html>
+            <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
+            <head>
+                <meta charset="utf-8">
+                <title>Welcome</title>
+                <style>
+                    .button { background: #000; }
+                    @media (max-width: 600px) { .container { width: 100% !important; } }
+                </style>
+                <!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
+            </head>
+            <body>
+                <table role="presentation" class="container" width="600">
+                    <tr><td align="center"><a class="button" href="https://example.com/?a=1&amp;b=2">Confirm</a></td></tr>
+                </table>
+            </body>
+            </html>
+            HTML];
         yield 'mso' => ['<!--[if mso]><b>outlook</b><![endif]-->'];
         yield 'mso version' => ['<!--[if gte mso 9]><b>outlook</b><![endif]-->'];
         yield 'mso uppercase' => ['<!--[IF MSO]><b>outlook</b><![ENDIF]-->'];
