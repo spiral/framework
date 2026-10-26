@@ -58,13 +58,13 @@ final class RenderTest extends TestCase
         $email = $this->send(new Message('comments', ['email@domain.com'], ['name' => 'Antony']));
 
         $html = $email->getHtmlBody();
-        self::assertStringContainsString('<h1>Hello, Antony!</h1>', $html);
-        self::assertStringNotContainsString('commented', $html);
-        self::assertStringNotContainsString('multiline', $html);
-        self::assertStringContainsString('<!--[if mso]><b>outlook</b><![endif]-->', $html);
-        self::assertStringContainsString('<!--[if !mso]><!--><div>not outlook</div><!--<![endif]-->', $html);
+        self::assertStringContainsString('<h1>Hello, Antony!</h1>', (string) $html);
+        self::assertStringNotContainsString('commented', (string) $html);
+        self::assertStringNotContainsString('multiline', (string) $html);
+        self::assertStringContainsString('<!--[if mso]><b>outlook</b><![endif]-->', (string) $html);
+        self::assertStringContainsString('<!--[if !mso]><!--><div>not outlook</div><!--<![endif]-->', (string) $html);
 
-        self::assertStringContainsString('<!-- not html -->', $email->getTextBody());
+        self::assertStringContainsString('<!-- not html -->', (string) $email->getTextBody());
     }
 
     protected function tearDown(): void
