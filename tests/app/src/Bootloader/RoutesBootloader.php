@@ -188,6 +188,7 @@ final class RoutesBootloader extends BaseRoutesBootloader
         $routes->add('verb-delete', '/verb/delete')->callable(static fn() => null)->methods('DELETE');
         $routes->add('verb-link', '/verb/link')->callable(static fn() => null)->methods('LINK');
         $routes->add('verb-unlink', '/verb/unlink')->callable(static fn() => null)->methods('UNLINK');
+        $routes->add('verb-query', '/verb/query')->callable(static fn() => null)->methods('QUERY');
     }
 
     private function getInterceptedCore(array $interceptors): InterceptorPipeline

@@ -109,6 +109,11 @@ final class ListCommandTest extends ConsoleTestCase
         $this->assertVerbForRoute('verb-unlink', 'UNLINK');
     }
 
+    public function testQueryVerbDisplay(): void
+    {
+        $this->assertVerbForRoute('verb-query', 'QUERY');
+    }
+
     /**
      * Assert that the dedicated `$name` route renders `$verb` in its Verbs column (the cell directly
      * after the Name cell), so the verb rendering is actually exercised for that route rather than
