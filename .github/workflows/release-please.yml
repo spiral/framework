@@ -5,8 +5,7 @@ on:
     branches:
       - '3.x'
       - '[0-9]+.[0-9]+'
-  # Retries a run whose tagging was skipped: release-please finds the merged release PR through
-  # the search index, which can lag behind the merge.
+  # Retries a release whose tagging was skipped.
   workflow_dispatch:
 
 # A run cancelled mid-tagging leaves a merged release PR without a tag.
@@ -14,9 +13,14 @@ concurrency:
   group: release-please-${{ github.ref }}
   cancel-in-progress: false
 
+# Everything goes through ACCESS_TOKEN.
+permissions: {}
+
 jobs:
   release:
     name: Release PR and tag
+    # A dispatch from any other branch would open a release PR against that branch.
+    if: ${{ github.event_name == 'push' || startsWith(github.ref_name, '3.') }}
     runs-on: ubuntu-latest
     steps:
       # ACCESS_TOKEN, not GITHUB_TOKEN: a tag pushed with GITHUB_TOKEN does not trigger the split workflow.
@@ -49,13 +53,20 @@ jobs:
           echo "::warning::Tag ${version} is missing after release-please, creating the release."
 
           pr=$(gh pr list --repo "${GITHUB_REPOSITORY}" --state merged --base "${GITHUB_REF_NAME}" \
-                --label "autorelease: pending" --json number,body --jq 'sort_by(.number) | last // empty')
+                --label "autorelease: pending" --json number,body,mergeCommit --jq 'sort_by(.number) | last // empty')
           number=$(echo "${pr}" | jq -r '.number // empty')
           notes=$(echo "${pr}" | jq -r '.body // empty')
+          # Not GITHUB_SHA: on a retry the branch head already holds commits made after the release.
+          target=$(echo "${pr}" | jq -r '.mergeCommit.oid // empty')
+
+          if [ -z "${target}" ]; then
+            echo "::error::No merged release PR with 'autorelease: pending' found for ${version}."
+            exit 1
+          fi
 
           gh release create "${version}" \
             --repo "${GITHUB_REPOSITORY}" \
-            --target "${GITHUB_SHA}" \
+            --target "${target}" \
             --title "${version}" \
             --notes "${notes:-Release ${version}}"
 
