@@ -15,7 +15,7 @@ final class HttpSpanAttributesTest extends TestCase
 {
     public static function knownMethodsProvider(): iterable
     {
-        foreach (['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT', 'TRACE'] as $method) {
+        foreach (['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT', 'QUERY', 'TRACE'] as $method) {
             yield $method => [$method];
         }
     }

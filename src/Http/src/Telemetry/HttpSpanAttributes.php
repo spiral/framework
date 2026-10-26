@@ -18,7 +18,7 @@ use Spiral\Telemetry\SpanInterface;
 final class HttpSpanAttributes
 {
     private const METHOD_OTHER = '_OTHER';
-    private const KNOWN_METHODS = ['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT', 'TRACE'];
+    private const KNOWN_METHODS = ['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT', 'QUERY', 'TRACE'];
 
     /**
      * @return non-empty-string The method as is when it is known, `_OTHER` otherwise.
