@@ -14,6 +14,7 @@ use Spiral\Core\ContainerScope;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Event\MiddlewareProcessing;
 use Spiral\Http\Exception\PipelineException;
+use Spiral\Http\Telemetry\HttpSpanAttributes;
 use Spiral\Http\Traits\MiddlewareTrait;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\SpanInterface;
@@ -82,16 +83,7 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
             $callback = function (SpanInterface $span) use ($request, $middleware): Response {
                 $response = $middleware->process($request, $this);
 
-                $span
-                    ->setAttribute(
-                        'http.status_code',
-                        $response->getStatusCode(),
-                    )
-                    ->setAttribute(
-                        'http.response_content_length',
-                        $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize(),
-                    )
-                    ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
+                HttpSpanAttributes::applyResponse($span, $response);
 
                 return $response;
             };

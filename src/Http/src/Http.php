@@ -16,6 +16,7 @@ use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Event\RequestHandled;
 use Spiral\Http\Event\RequestReceived;
 use Spiral\Http\Exception\HttpException;
+use Spiral\Http\Telemetry\HttpSpanAttributes;
 use Spiral\Telemetry\NullTracerFactory;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TraceKind;
@@ -83,16 +84,7 @@ final class Http implements RequestHandlerInterface
 
             $response = $this->pipeline->withHandler($this->handler)->handle($request);
 
-            $span
-                ->setAttribute(
-                    'http.status_code',
-                    $response->getStatusCode(),
-                )
-                ->setAttribute(
-                    'http.response_content_length',
-                    $response->getHeaderLine('Content-Length') ?: $response->getBody()->getSize(),
-                )
-                ->setStatus($response->getStatusCode() < 500 ? 'OK' : 'ERROR');
+            HttpSpanAttributes::applyResponse($span, $response);
 
             $this->dispatcher?->dispatch(new RequestHandled($request, $response));
 
@@ -103,16 +95,9 @@ final class Http implements RequestHandlerInterface
 
         /** @var ResponseInterface $response */
         $response = $tracer->trace(
-            name: \sprintf('%s %s', $request->getMethod(), (string) $request->getUri()),
+            name: HttpSpanAttributes::serverSpanName($request),
             callback: $callback,
-            attributes: [
-                'http.method' => $request->getMethod(),
-                'http.url' => (string) $request->getUri(),
-                'http.headers' => \array_map(
-                    static fn(array $values): string => \implode(',', $values),
-                    $request->getHeaders(),
-                ),
-            ],
+            attributes: HttpSpanAttributes::serverRequest($request),
             scoped: true,
             traceKind: TraceKind::SERVER,
         );

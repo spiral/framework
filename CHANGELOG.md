@@ -2,8 +2,21 @@
 
 ## Unreleased
 
+- **Medium Impact Changes**
+  - [spiral/http] HTTP server and middleware spans follow the stable OpenTelemetry HTTP semantic conventions:
+    the server span is named after the request method, `http.method`/`http.url`/`http.status_code`/
+    `http.response_content_length` are replaced by `http.request.method`, `url.*`, `server.*`,
+    `http.response.status_code` and `http.response.body.size`, request headers (`http.headers`) are no longer
+    recorded, and the span status is left unset below 500 instead of `OK`.
+- **New Features**
+  - [spiral/router] Added the `QUERY` HTTP verb ([RFC 10008](https://www.rfc-editor.org/rfc/rfc10008.html)); routes without explicit verbs now accept it too (#1314)
 - **Bug Fixes**
-  - [spiral/http] Pass `EventDispatcher` into HTTP core
+  - [spiral/http] Pass `EventDispatcher` into HTTP core (#1292)
+
+## 3.17.2 - 2026-08-05
+
+- **Bug Fixes**
+  - [spiral/stempler] Encode on* attribute output as a JavaScript literal (#1299)
 
 ## 3.17.1 - 2026-07-13
 

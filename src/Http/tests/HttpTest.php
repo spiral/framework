@@ -8,7 +8,9 @@ use Mockery as m;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\ResponseInterface;
 use Spiral\Core\Container;
+use Spiral\Core\InvokerInterface;
 use Spiral\Core\Options;
 use Spiral\Http\CallableHandler;
 use Spiral\Http\Config\HttpConfig;
@@ -18,6 +20,7 @@ use Spiral\Http\Exception\HttpException;
 use Spiral\Http\Http;
 use Spiral\Http\Pipeline;
 use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\TracerFactoryInterface;
 use Spiral\Telemetry\TracerInterface;
@@ -263,37 +266,38 @@ final class HttpTest extends TestCase
     public function testTraceAttributesAreSet(): void
     {
         $config = $this->getHttpConfig();
-        $request = new ServerRequest('GET', 'http://example.org/path', ['foo' => ['bar']]);
+        $request = new ServerRequest(
+            'GET',
+            'http://example.org/path?q=1',
+            ['foo' => ['bar'], 'Authorization' => ['Bearer secret'], 'User-Agent' => ['test-agent']],
+            serverParams: ['REMOTE_ADDR' => '10.0.0.1'],
+        );
 
         $tracer = $this->createMock(TracerInterface::class);
         $tracer
             ->expects(self::once())
             ->method('trace')
             ->with(
-                'GET http://example.org/path',
+                'GET',
                 $this->anything(),
                 [
-                    'http.method' => 'GET',
-                    'http.url' => 'http://example.org/path',
-                    'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],
+                    'http.request.method' => 'GET',
+                    'url.scheme' => 'http',
+                    'url.path' => '/path',
+                    'url.query' => 'q=1',
+                    'server.address' => 'example.org',
+                    'server.port' => 80,
+                    'client.address' => '10.0.0.1',
+                    'user_agent.original' => 'test-agent',
+                    'network.protocol.version' => '1.1',
                 ],
                 true,
                 TraceKind::SERVER,
             )
             ->willReturnCallback(
-                function ($name, $callback, $attributes, $scoped, $traceKind) {
-                    self::assertSame(
-                        [
-                            'http.method' => 'GET',
-                            'http.url' => 'http://example.org/path',
-                            'http.headers' => ['Host' => 'example.org', 'foo' => 'bar'],
-                        ],
-                        $attributes,
-                    );
-                    return $this->container
-                        ->get(TracerInterface::class)
-                        ->trace($name, $callback, $attributes, $scoped, $traceKind);
-                },
+                fn($name, $callback, $attributes, $scoped, $traceKind) => $this->container
+                    ->get(TracerInterface::class)
+                    ->trace($name, $callback, $attributes, $scoped, $traceKind),
             );
         $tracer
             ->expects(self::once())
@@ -318,6 +322,53 @@ final class HttpTest extends TestCase
 
         $response = $http->handle($request);
         self::assertSame('hello world', (string) $response->getBody());
+    }
+
+    public function testServerErrorResponseMarksSpanAsError(): void
+    {
+        $config = $this->getHttpConfig();
+        $span = null;
+
+        $tracer = $this->createMock(TracerInterface::class);
+        $tracer
+            ->method('trace')
+            ->willReturnCallback(
+                function (string $name, callable $callback, array $attributes, bool $scoped, ?TraceKind $traceKind) use (&$span): mixed {
+                    return $this->container
+                        ->get(TracerInterface::class)
+                        ->trace(
+                            $name,
+                            static function (SpanInterface $s, InvokerInterface $invoker) use ($callback, &$span): mixed {
+                                $span = $s;
+                                return $invoker->invoke($callback);
+                            },
+                            $attributes,
+                            $scoped,
+                            $traceKind,
+                        );
+                },
+            );
+        $tracer->method('getContext')->willReturn([]);
+
+        $tracerFactory = $this->createMock(TracerFactoryInterface::class);
+        $tracerFactory->method('make')->willReturn($tracer);
+
+        $http = new Http(
+            $config,
+            new Pipeline($this->container),
+            $responseFactory = new ResponseFactory($config),
+            $this->container,
+            $tracerFactory,
+        );
+        $http->setHandler(static fn(): ResponseInterface => $responseFactory->createResponse(500));
+
+        $http->handle(new ServerRequest('GET', 'http://example.org/path'));
+
+        self::assertInstanceOf(SpanInterface::class, $span);
+        self::assertSame('GET', $span->getName());
+        self::assertSame(500, $span->getAttribute('http.response.status_code'));
+        self::assertSame('500', $span->getAttribute('error.type'));
+        self::assertSame('ERROR', $span->getStatus()?->code);
     }
 
     public function testTraceContextIsAppliedToResponse(): void
