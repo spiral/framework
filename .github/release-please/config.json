@@ -1,0 +1,27 @@
+{
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+    "release-type": "php",
+    "pull-request-title-pattern": "chore: release ${version}",
+    "include-v-in-tag": false,
+    "include-component-in-tag": false,
+    "last-release-sha": "8e649f56b8b365e0286a3540e03327ed567c18c2",
+    "packages": {
+        ".": {
+            "package-name": "spiral/framework"
+        }
+    },
+    "changelog-sections": [
+        {"type": "feat", "section": "Features"},
+        {"type": "fix", "section": "Bug Fixes"},
+        {"type": "perf", "section": "Performance Improvements"},
+        {"type": "deps", "section": "Dependencies"},
+        {"type": "revert", "section": "Reverts"},
+        {"type": "docs", "section": "Documentation", "hidden": true},
+        {"type": "refactor", "section": "Code Refactoring", "hidden": true},
+        {"type": "test", "section": "Tests", "hidden": true},
+        {"type": "build", "section": "Build System", "hidden": true},
+        {"type": "ci", "section": "Continuous Integration", "hidden": true},
+        {"type": "chore", "section": "Miscellaneous", "hidden": true},
+        {"type": "style", "section": "Styles", "hidden": true}
+    ]
+}

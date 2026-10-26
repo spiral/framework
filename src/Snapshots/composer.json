@@ -53,11 +53,6 @@
             "Spiral\\Tests\\Snapshots\\": "tests"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "suggest": {
         "spiral/storage": "For storing snapshots using storage abstraction"
     },

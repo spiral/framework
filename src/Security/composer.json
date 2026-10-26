@@ -53,11 +53,6 @@
             "Spiral\\Tests\\Security\\": "tests"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "config": {
         "sort-packages": true
     },

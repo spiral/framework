@@ -1,7 +1,5 @@
 /.*                    export-ignore
-/builder               export-ignore
 /tests                 export-ignore
-monorepo-builder.php   export-ignore
 codecov.yml            export-ignore
 infection.json         export-ignore
 phpcs.xml              export-ignore

@@ -48,11 +48,6 @@
     "suggest": {
         "aws/aws-sdk-php": "(^3.338) For use S3 and CloudFront URI Resolvers"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "scripts": {
         "analyze": [
             "psalm --no-cache"

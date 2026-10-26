@@ -56,11 +56,6 @@
         "league/flysystem-aws-s3-v3": "(^2.5 || ^3.29) S3 storage driver support",
         "league/flysystem-async-aws-s3": "(^2.5 || ^3.29) S3 storage async driver support"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.18.x-dev"
-        }
-    },
     "config": {
         "sort-packages": true
     },
