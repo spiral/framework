@@ -43,6 +43,22 @@ final class ViewRenderer implements RendererInterface
         return $prefix . \str_replace("=\r\n", $suffix . "\r\n  " . $prefix, $encoded) . $suffix;
     }
 
+    /**
+     * Strip HTML comments. Kept: Outlook conditional comments (`<!--[if mso]>`, `<!--[if !mso]><!-->`,
+     * `<!--[if !mso]><!-- -->`, `<!--<![endif]-->`) and raw-text elements, where `<!--` is content, not a comment.
+     *
+     * On a PCRE error (backtrack limit on a huge input) the HTML is returned as is.
+     */
+    public static function stripHtmlComments(string $html): string
+    {
+        return \preg_replace(
+            '~<(style|script|textarea|title)\b[^>]*+>(?>[^<]++|<(?!/\1\s*>))*+</\1\s*>(*SKIP)(*FAIL)'
+            . '|(?<!\]>)<!--(?!\[if\b|<!|>)(?>[^-]++|-(?!->))*+-->~is',
+            '',
+            $html,
+        ) ?? $html;
+    }
+
     public function render(MessageInterface $message): Email
     {
         try {
