@@ -4,7 +4,6 @@
     "pull-request-title-pattern": "chore: release ${version}",
     "include-v-in-tag": false,
     "include-component-in-tag": false,
-    "last-release-sha": "8e649f56b8b365e0286a3540e03327ed567c18c2",
     "packages": {
         ".": {
             "package-name": "spiral/framework"
