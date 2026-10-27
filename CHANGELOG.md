@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [3.18.0](https://github.com/spiral/framework/compare/3.17.2...3.18.0) (2026-10-27)
+
+
+### Features
+
+* **http:** HTTP server and middleware spans follow the stable OpenTelemetry HTTP semantic conventions ([#1312](https://github.com/spiral/framework/issues/1312)) ([706dd09](https://github.com/spiral/framework/commit/706dd0905c51230149b42ebd061f2508752136c6))
+* **router:** add the `QUERY` HTTP verb; routes without explicit verbs accept it too ([#1314](https://github.com/spiral/framework/issues/1314)) ([706dd09](https://github.com/spiral/framework/commit/706dd0905c51230149b42ebd061f2508752136c6))
+* **sendit:** bind `MailQueue` explicitly in `MailerBootloader`, so applications can override or decorate `MailerInterface` ([#1302](https://github.com/spiral/framework/issues/1302)) ([706dd09](https://github.com/spiral/framework/commit/706dd0905c51230149b42ebd061f2508752136c6))
+
+
+### Bug Fixes
+
+* **http:** pass `EventDispatcher` into the HTTP core ([#1292](https://github.com/spiral/framework/issues/1292)) ([706dd09](https://github.com/spiral/framework/commit/706dd0905c51230149b42ebd061f2508752136c6))
+* **sendit:** strip HTML comments from the rendered HTML part, keeping Outlook conditional comments and raw-text elements ([#1315](https://github.com/spiral/framework/issues/1315)) ([706dd09](https://github.com/spiral/framework/commit/706dd0905c51230149b42ebd061f2508752136c6))
+
 ## 3.17.2 - 2026-08-05
 
 - **Bug Fixes**
