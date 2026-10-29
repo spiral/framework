@@ -31,8 +31,9 @@ final class ArrayStorageTest extends TestCase
 
     public function testGetsWithExpiredCache(): void
     {
+        $before = \time();
         $this->storage->set('foo', 'bar', 0);
-        self::assertSame(\time(), $this->getCacheTtl('foo'));
+        $this->assertExpiresAt($before, 0, 'foo');
         self::assertNull($this->storage->get('foo'));
     }
 
@@ -45,29 +46,33 @@ final class ArrayStorageTest extends TestCase
 
     public function testSetsWithDefaultTTL(): void
     {
+        $before = \time();
         $this->storage->set('foo', 'bar');
-        self::assertSame(\time() + self::DEFAULT_TTL, $this->getCacheTtl('foo'));
+        $this->assertExpiresAt($before, self::DEFAULT_TTL, 'foo');
     }
 
     public function testSetsWithTTLInSeconds(): void
     {
+        $before = \time();
         $this->storage->set('foo', 'bar', 60);
 
-        self::assertSame(\time() + 60, $this->getCacheTtl('foo'));
+        $this->assertExpiresAt($before, 60, 'foo');
     }
 
     public function testSetsWithTTLInDateInterval(): void
     {
+        $before = \time();
         $this->storage->set('foo', 'bar', new \DateInterval('PT30S'));
 
-        self::assertSame(\time() + 30, $this->getCacheTtl('foo'));
+        $this->assertExpiresAt($before, 30, 'foo');
     }
 
     public function testSetsWithTTLInDateTime(): void
     {
+        $before = \time();
         $this->storage->set('foo', 'bar', new \DateTime('+30 seconds'));
 
-        self::assertSame(\time() + 30, $this->getCacheTtl('foo'));
+        $this->assertExpiresAt($before, 30, 'foo');
     }
 
     public function testDeletesExistsValue(): void
@@ -117,6 +122,7 @@ final class ArrayStorageTest extends TestCase
 
     public function testSetsMultipleWithDefaultTtl(): void
     {
+        $before = \time();
         $this->storage->setMultiple([
             'foo' => 'bar',
             'bar' => 'baz',
@@ -125,12 +131,13 @@ final class ArrayStorageTest extends TestCase
         self::assertSame('bar', $this->storage->get('foo'));
         self::assertSame('baz', $this->storage->get('bar'));
 
-        self::assertSame(\time() + self::DEFAULT_TTL, $this->getCacheTtl('foo'));
-        self::assertSame(\time() + self::DEFAULT_TTL, $this->getCacheTtl('bar'));
+        $this->assertExpiresAt($before, self::DEFAULT_TTL, 'foo');
+        $this->assertExpiresAt($before, self::DEFAULT_TTL, 'bar');
     }
 
     public function testSetsMultipleWithTtlInSeconds(): void
     {
+        $before = \time();
         $this->storage->setMultiple([
             'foo' => 'bar',
             'bar' => 'baz',
@@ -139,8 +146,8 @@ final class ArrayStorageTest extends TestCase
         self::assertSame('bar', $this->storage->get('foo'));
         self::assertSame('baz', $this->storage->get('bar'));
 
-        self::assertSame(\time() + 30, $this->getCacheTtl('foo'));
-        self::assertSame(\time() + 30, $this->getCacheTtl('bar'));
+        $this->assertExpiresAt($before, 30, 'foo');
+        $this->assertExpiresAt($before, 30, 'bar');
     }
 
     public function testDeletesMultiple(): void
@@ -174,6 +181,17 @@ final class ArrayStorageTest extends TestCase
         parent::setUp();
 
         $this->storage = new ArrayStorage(self::DEFAULT_TTL);
+    }
+
+    /**
+     * Range check: {@see time()} may tick between the storage call and the assertion.
+     */
+    private function assertExpiresAt(int $before, int $ttl, string $key): void
+    {
+        $timestamp = $this->getCacheTtl($key);
+
+        self::assertGreaterThanOrEqual($before + $ttl, $timestamp);
+        self::assertLessThanOrEqual(\time() + $ttl, $timestamp);
     }
 
     private function getCacheTtl(string $key): ?int
