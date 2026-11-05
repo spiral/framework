@@ -7,6 +7,7 @@ namespace Spiral\Stempler\Parser\Syntax;
 use Spiral\Stempler\Exception\SyntaxException;
 use Spiral\Stempler\Lexer\Grammar\HTMLGrammar;
 use Spiral\Stempler\Lexer\Token;
+use Spiral\Stempler\Node\Dynamic\Output;
 use Spiral\Stempler\Node\HTML\Attr;
 use Spiral\Stempler\Node\HTML\Nil;
 use Spiral\Stempler\Node\HTML\Tag;
@@ -69,7 +70,7 @@ final class HTMLSyntax implements SyntaxInterface
                 }
 
                 if ($this->attr !== null && !$this->attr->value instanceof Nil) {
-                    $this->attr->value = $this->parseToken($parser, $token);
+                    $this->attr->value = $this->quoteDynamicValue($this->parseToken($parser, $token));
                     $this->attr = null;
                     break;
                 }
@@ -100,7 +101,7 @@ final class HTMLSyntax implements SyntaxInterface
                 if (
                     \is_string($this->attr->name)
                     && (
-                        \str_starts_with($this->attr->name, 'on')
+                        \str_starts_with(\strtolower($this->attr->name), 'on')
                         || \in_array($this->attr->name, self::VERBATIM_ATTRIBUTES, true)
                     )
                 ) {
@@ -167,6 +168,27 @@ final class HTMLSyntax implements SyntaxInterface
         $this->node = null;
         $this->token = null;
         $this->attr = null;
+    }
+
+    /**
+     * Quotes an unquoted attribute value that carries escaped `{{ }}` output. Escaping keeps spaces and `=`,
+     * so unquoted output could otherwise end the value and inject attributes. Raw PHP and `{! !}` stay as
+     * written: their author controls the quoting.
+     */
+    private function quoteDynamicValue(Mixin|Raw|string $value): Mixin|Raw|string
+    {
+        if (!$value instanceof Mixin) {
+            return $value;
+        }
+
+        foreach ($value->nodes as $node) {
+            if ($node instanceof Output && !$node->rawOutput) {
+                $value->nodes = [new Raw('"'), ...$value->nodes, new Raw('"')];
+                break;
+            }
+        }
+
+        return $value;
     }
 
     private function parseVerbatim(Parser $parser, Token $token): Verbatim

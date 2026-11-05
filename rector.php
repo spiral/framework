@@ -18,6 +18,7 @@ use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\AddClosureNeverReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
@@ -83,6 +84,11 @@ return RectorConfig::configure()
         ],
 
         ArrayToFirstClassCallableRector::class => [
+            __DIR__ . '/src/Core/tests/InvokerTest.php',
+        ],
+
+        AddArrowFunctionReturnTypeRector::class => [
+            // untyped factory closure is the subject of the test
             __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
 

@@ -114,6 +114,37 @@ final class DynamicToPHPTest extends BaseTestCase
         self::assertSame('<a onclick="alert(&quot;\ufffd1&quot;)"></a>', $this->eval($res));
     }
 
+    public function testUppercaseEventHandlerIsEncodedAsJavaScript(): void
+    {
+        $res = $this->compile('<a ONCLICK="alert({{ chr(39) }})"></a>')->getContent();
+
+        self::assertSame('<a ONCLICK="alert(&quot;\u0027&quot;)"></a>', $this->eval($res));
+    }
+
+    /**
+     * Escaping keeps spaces and `=`, so an unquoted value could end early and inject attributes.
+     */
+    public function testUnquotedAttributeOutputIsQuoted(): void
+    {
+        $res = $this->compile('<a href={{ "x onmouseover=alert(1)" }}></a>')->getContent();
+
+        self::assertSame('<a href="x onmouseover=alert(1)"></a>', $this->eval($res));
+    }
+
+    public function testUnquotedEventHandlerOutputIsQuotedAndEncodedAsJavaScript(): void
+    {
+        $res = $this->compile('<a onclick={{ "a b" }}></a>')->getContent();
+
+        self::assertSame('<a onclick="&quot;a b&quot;"></a>', $this->eval($res));
+    }
+
+    public function testUnquotedPHPStaysAsWritten(): void
+    {
+        $res = $this->compile('<a class=<?="y"?>></a>')->getContent();
+
+        self::assertSame('<a class=y></a>', $this->eval($res));
+    }
+
     public function testVerbatim3(): void
     {
         self::assertSame('<script>alert(<?php echo json_encode'

@@ -1,0 +1,1 @@
+<button attr:aggregate>b</button>

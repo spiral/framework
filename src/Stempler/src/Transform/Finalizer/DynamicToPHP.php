@@ -73,6 +73,11 @@ final class DynamicToPHP implements VisitorInterface
         return null;
     }
 
+    private static function isEventHandler(Attr $attr): bool
+    {
+        return \is_string($attr->name) && \str_starts_with(\strtolower($attr->name), 'on');
+    }
+
     private function directive(Directive $node): PHP
     {
         foreach ($this->directives as $renderer) {
@@ -144,7 +149,12 @@ final class DynamicToPHP implements VisitorInterface
         // literal, so the outer htmlspecialchars() only affects the delimiters.
         // JSON_INVALID_UTF8_SUBSTITUTE mirrors ENT_SUBSTITUTE: broken input yields U+FFFD instead of making
         // json_encode() return false and collapse the whole value to an empty string.
-        if ($context[0] instanceof Verbatim && $context[1] instanceof Attr && $context[1]->name !== 'style') {
+        // A value merged in from a block or an attribute arrives as a Mixin, never as a Verbatim, so the
+        // attribute name is checked as well.
+        if (
+            ($context[0] instanceof Verbatim && $context[1] instanceof Attr && $context[1]->name !== 'style')
+            || ($context[0] instanceof Attr && self::isEventHandler($context[0]))
+        ) {
             return \sprintf(
                 "htmlspecialchars(json_encode(%s, %s, %s), ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8')",
                 '%s',
