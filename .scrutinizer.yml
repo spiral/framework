@@ -3,7 +3,7 @@ build:
 
   environment:
     php:
-      version: 8.1.18
+      version: 8.2
       ini:
         "xdebug.mode": coverage
 

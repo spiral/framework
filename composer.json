@@ -33,7 +33,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-tokenizer": "*",
@@ -148,7 +148,7 @@
         "spiral/testing": "^2.12",
         "spiral/validator": "^1.5.4",
         "symfony/stopwatch": "^6.4.30 || ^7.4 || ^8.0",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload-dev": {
         "psr-4": {

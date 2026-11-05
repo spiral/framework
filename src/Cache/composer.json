@@ -33,7 +33,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "spiral/core": "^3.18.0",
         "spiral/config": "^3.18.0",
         "spiral/files": "^3.18.0",
@@ -49,7 +49,7 @@
         "spiral/boot": "^3.18.0",
         "mockery/mockery": "^1.6.12",
         "phpunit/phpunit": "^10.5.41",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload-dev": {
         "psr-4": {

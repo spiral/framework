@@ -33,14 +33,14 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "monolog/monolog": "^2.9.2 || ^3.5"
     },
     "require-dev": {
         "spiral/boot": "^3.18.0",
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

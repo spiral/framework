@@ -33,7 +33,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "spiral/core": "^3.18.0",
         "spiral/queue": "^3.18.0",
@@ -50,7 +50,7 @@
         "spiral/boot": "^3.18.0",
         "spiral/stempler-bridge": "^3.18.0",
         "spiral/testing": "^2.12",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {
