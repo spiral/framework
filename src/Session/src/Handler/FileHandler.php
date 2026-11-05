@@ -9,7 +9,10 @@ use Spiral\Files\FilesInterface;
 /**
  * Stores session data in file.
  */
-final class FileHandler implements \SessionHandlerInterface
+final class FileHandler implements
+    \SessionHandlerInterface,
+    \SessionIdInterface,
+    \SessionUpdateTimestampHandlerInterface
 {
     public function __construct(
         private readonly FilesInterface $files,
@@ -60,6 +63,22 @@ final class FileHandler implements \SessionHandlerInterface
     public function write(string $id, string $data): bool
     {
         return $this->files->write($this->getFilename($id), $data, FilesInterface::RUNTIME, true);
+    }
+
+    public function create_sid(): string
+    {
+        // Not session_create_id(): during an active session it calls back into this method.
+        return \bin2hex(\random_bytes(16));
+    }
+
+    public function validateId(string $id): bool
+    {
+        return $this->files->exists($this->getFilename($id));
+    }
+
+    public function updateTimestamp(string $id, string $data): bool
+    {
+        return $this->write($id, $data);
     }
 
     /**
