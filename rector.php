@@ -86,6 +86,11 @@ return RectorConfig::configure()
             __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
 
+        AddClosureNeverReturnTypeRector::class => [
+            // untyped factory closure is the subject of the test
+            __DIR__ . '/src/Core/tests/InvokerTest.php',
+        ],
+
         PreferPHPUnitThisCallRector::class,
 
         MakeInheritedMethodVisibilitySameAsParentRector::class => [
