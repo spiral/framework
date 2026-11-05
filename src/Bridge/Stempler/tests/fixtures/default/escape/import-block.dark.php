@@ -1,0 +1,1 @@
+<use:element path="escape/aggregate" as="btn"/><btn><block:onclick>go({{ $value }})</block:onclick></btn>

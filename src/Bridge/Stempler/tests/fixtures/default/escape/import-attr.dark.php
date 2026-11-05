@@ -1,0 +1,1 @@
+<use:element path="escape/button" as="btn"/><btn msg="{{ $value }}">b</btn>

@@ -1,0 +1,1 @@
+<extends path="escape/button" msg="{{ $value }}"/><block:context>b</block:context>
