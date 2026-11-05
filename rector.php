@@ -18,10 +18,12 @@ use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitSelfCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
+use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\AddClosureNeverReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictSetUpRector;
+use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -86,7 +88,7 @@ return RectorConfig::configure()
             __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
 
-        AddClosureNeverReturnTypeRector::class => [
+        AddArrowFunctionReturnTypeRector::class => [
             // untyped factory closure is the subject of the test
             __DIR__ . '/src/Core/tests/InvokerTest.php',
         ],
@@ -109,6 +111,8 @@ return RectorConfig::configure()
         \Rector\DeadCode\Rector\Property\RemoveDefaultValueFromAssignedPropertyRector::class,
         \Rector\DeadCode\Rector\StmtsAwareInterface\RemoveDeadInstanceOfAssertRector::class,
     ])
+    // Stays on 8.1 until the code is migrated to 8.2 features; otherwise the version is taken from composer.json.
+    ->withPhpVersion(PhpVersion::PHP_81)
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
     ->withComposerBased(phpunit: true)
