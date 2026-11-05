@@ -8,6 +8,7 @@
         }
     ],
     "description": "Authorization component with set of authentication middlewares and providers",
+    "keywords": ["spiral", "auth", "authentication", "http", "middleware", "psr-15"],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
@@ -32,7 +33,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "spiral/auth": "^3.18.1",
         "psr/http-message": "^1.0|^2.0",
@@ -45,7 +46,7 @@
         "spiral/http": "^3.18.1",
         "spiral/debug": "^3.18.1",
         "nyholm/psr7": "^1.8",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

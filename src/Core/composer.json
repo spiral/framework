@@ -2,6 +2,7 @@
     "name": "spiral/core",
     "type": "library",
     "description": "IoC container, IoC scopes, factory, memory, configuration interfaces",
+    "keywords": ["spiral", "container", "ioc", "di", "dependency-injection", "psr-11"],
     "license": "MIT",
     "funding": [
         {
@@ -33,14 +34,14 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "psr/container": "^1.1|^2.0",
         "spiral/security": "^3.18.1"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",
         "phpunit/phpunit": "^10.5.41",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

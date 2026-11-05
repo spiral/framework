@@ -2,6 +2,7 @@
     "name": "spiral/filters",
     "type": "library",
     "description": "Deep Structural Validation, Data Mapper, Inheritance",
+    "keywords": ["spiral", "filters", "request", "validation", "data-mapper"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "psr/http-message": "^1.0|^2.0",
         "spiral/attributes": "^2.8|^3.0",
         "spiral/auth": "^3.18.1",
@@ -46,7 +47,7 @@
         "mockery/mockery": "^1.6.12",
         "nyholm/psr7": "^1.8",
         "phpunit/phpunit": "^10.5.41",
-        "vimeo/psalm": "^6.0",
+        "vimeo/psalm": "^7.0.2",
         "ramsey/uuid": "^4.7"
     },
     "autoload": {

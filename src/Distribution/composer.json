@@ -2,6 +2,7 @@
     "name": "spiral/distribution",
     "type": "library",
     "description": "PHP distribution package",
+    "keywords": ["spiral", "distribution", "cdn", "uri", "storage"],
     "license": "MIT",
     "funding": [
         {
@@ -21,7 +22,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "psr/http-factory": "^1.0"
     },
     "conflict": {
@@ -38,7 +39,7 @@
         "guzzlehttp/psr7": "^1.7|^2.7",
         "jetbrains/phpstorm-attributes": "^1.2",
         "phpunit/phpunit": "^10.5.41",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload-dev": {
         "psr-4": {

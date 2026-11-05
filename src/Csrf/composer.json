@@ -2,6 +2,7 @@
     "name": "spiral/csrf",
     "type": "library",
     "description": "Spiral Framework: CSRF Middleware",
+    "keywords": ["spiral", "csrf", "security", "middleware", "psr-15"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "spiral/core": "^3.18.1",
         "spiral/cookies": "^3.18.1",
         "psr/http-server-middleware": "^1.0"
@@ -43,7 +44,7 @@
         "mockery/mockery": "^1.6.12",
         "spiral/http": "^3.18.1",
         "nyholm/psr7": "^1.8",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

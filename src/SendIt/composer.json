@@ -2,6 +2,7 @@
     "name": "spiral/sendit",
     "type": "library",
     "description": "Email builder and queue handler",
+    "keywords": ["spiral", "mailer", "email", "queue", "symfony-mailer"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "spiral/core": "^3.18.1",
         "spiral/queue": "^3.18.1",
@@ -50,7 +51,7 @@
         "spiral/boot": "^3.18.1",
         "spiral/stempler-bridge": "^3.18.1",
         "spiral/testing": "^2.12",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

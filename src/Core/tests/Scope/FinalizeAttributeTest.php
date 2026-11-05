@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
-use PHPUnit\Framework\Attributes\Group;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\FinalizersException;
 use Spiral\Tests\Core\Scope\Stub\AttrFinalize;
@@ -116,7 +115,6 @@ final class FinalizeAttributeTest extends BaseTestCase
         self::assertInstanceOf(LoggerInterface::class, $obj->logger);
     }
 
-    #[Group('scrutinizer-ignore')]
     public function testExceptionOnDestroy(): void
     {
         $root = self::makeContainer();
@@ -145,7 +143,6 @@ final class FinalizeAttributeTest extends BaseTestCase
         }
     }
 
-    #[Group('scrutinizer-ignore')]
     public function testManyExceptionsOnDestroy(): void
     {
         $root = self::makeContainer();

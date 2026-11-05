@@ -2,6 +2,7 @@
     "name": "spiral/dotenv-bridge",
     "type": "library",
     "description": "Spiral Framework: DotEnv Loader",
+    "keywords": ["spiral", "dotenv", "env", "environment", "bridge"],
     "license": "MIT",
     "funding": [
         {
@@ -33,14 +34,14 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",
         "phpunit/phpunit": "^10.5.41",
         "spiral/boot": "^3.18.1",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

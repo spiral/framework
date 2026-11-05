@@ -2,6 +2,7 @@
     "name": "spiral/prototype",
     "type": "library",
     "description": "Automatic dependency injection",
+    "keywords": ["spiral", "prototype", "dependency-injection", "code-generation"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "nikic/php-parser": "^5.4",
         "doctrine/inflector": "^1.4|^2.0",
@@ -51,7 +52,7 @@
         "nyholm/psr7": "^1.8",
         "phpunit/phpunit": "^10.5.41",
         "spiral/dumper": "^3.3",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload-dev": {
         "psr-4": {

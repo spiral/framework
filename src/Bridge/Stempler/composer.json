@@ -2,6 +2,7 @@
     "name": "spiral/stempler-bridge",
     "type": "library",
     "description": "Spiral Framework: Stempler Adapter",
+    "keywords": ["spiral", "stempler", "template", "views", "bridge"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "spiral/stempler": "^3.18.1",
         "spiral/files": "^3.18.1",
         "spiral/config": "^3.18.1",
@@ -46,7 +47,7 @@
         "spiral/boot": "^3.18.1",
         "spiral/testing": "^2.12",
         "mockery/mockery": "^1.6.12",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

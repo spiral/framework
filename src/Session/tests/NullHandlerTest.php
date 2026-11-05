@@ -19,5 +19,8 @@ final class NullHandlerTest extends TestCase
         self::assertSame('', $handler->read(''));
         self::assertTrue($handler->write('abc', 'data'));
         self::assertTrue($handler->close());
+        self::assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $handler->create_sid());
+        self::assertTrue($handler->validateId('abc'));
+        self::assertTrue($handler->updateTimestamp('abc', 'data'));
     }
 }

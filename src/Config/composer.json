@@ -2,6 +2,7 @@
     "name": "spiral/config",
     "type": "library",
     "description": "Config injector and configuration mutator",
+    "keywords": ["spiral", "config", "configuration", "injector"],
     "license": "MIT",
     "funding": [
         {
@@ -33,14 +34,14 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "spiral/core": "^3.18.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "psr-4": {

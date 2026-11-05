@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Core\Scope;
 
-use PHPUnit\Framework\Attributes\Group;
 use Spiral\Core\Attribute\Scope;
 use Spiral\Core\Container;
 use Spiral\Core\Exception\Scope\BadScopeException;
@@ -92,7 +91,6 @@ final class ScopeAttributeTest extends BaseTestCase
      * high priority.
      * Requesting a dependency from a correct scope will be resolved from the `root` scope that leads to an exception.
      */
-    #[Group('scrutinizer-ignore')]
     public function testRequestObjectFromValidScopeUsingFactoryFromWrongScope(): void
     {
         self::expectException(BadScopeException::class);
@@ -108,7 +106,6 @@ final class ScopeAttributeTest extends BaseTestCase
         });
     }
 
-    #[Group('scrutinizer-ignore')]
     public function testRequestObjectFromValidScopeUsingFactoryFromWrongScopeWithDisabledChecking(): void
     {
         $root = self::makeContainer(checkScope: false);
@@ -124,7 +121,6 @@ final class ScopeAttributeTest extends BaseTestCase
     /**
      * Request a dependency from an unnamed scope using alias and there is no any binding in valid scope for this alias.
      */
-    #[Group('scrutinizer-ignore')]
     public function testNamedScopeUseFactoryInWrongParentScope(): void
     {
         self::expectException(BadScopeException::class);
@@ -140,7 +136,6 @@ final class ScopeAttributeTest extends BaseTestCase
         });
     }
 
-    #[Group('scrutinizer-ignore')]
     public function testNamedScopeUseFactoryInWrongParentScopeWithDisabledChecking(): void
     {
         $root = self::makeContainer(checkScope: false);
@@ -157,7 +152,6 @@ final class ScopeAttributeTest extends BaseTestCase
      * In the parent hierarchy, the needed scope specified twice.
      * You can't create nested scopes with the same name.
      */
-    #[Group('scrutinizer-ignore')]
     public function testNamedScopeDuplication(): void
     {
         self::expectException(NamedScopeDuplicationException::class);
@@ -183,7 +177,6 @@ final class ScopeAttributeTest extends BaseTestCase
      * The {@see BasScopeException} must be thrown when trying to resolve a class with the {@see Scope} attribute
      * in a scope that is not specified in the attribute.
      */
-    #[Group('scrutinizer-ignore')]
     public function testBadScopeException(): void
     {
         try {

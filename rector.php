@@ -23,6 +23,7 @@ use Rector\TypeDeclaration\Rector\Closure\AddClosureNeverReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromStrictSetUpRector;
+use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -110,6 +111,8 @@ return RectorConfig::configure()
         \Rector\DeadCode\Rector\Property\RemoveDefaultValueFromAssignedPropertyRector::class,
         \Rector\DeadCode\Rector\StmtsAwareInterface\RemoveDeadInstanceOfAssertRector::class,
     ])
+    // Stays on 8.1 until the code is migrated to 8.2 features; otherwise the version is taken from composer.json.
+    ->withPhpVersion(PhpVersion::PHP_81)
     ->withPhpSets(php81: true)
     ->withPreparedSets(deadCode: true, phpunitCodeQuality: true)
     ->withComposerBased(phpunit: true)

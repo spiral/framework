@@ -58,6 +58,30 @@ final class CacheHandlerTest extends TestCase
         self::assertTrue($this->handler->write('foo', 'bar'));
     }
 
+    public function testCreateSid(): void
+    {
+        $id = $this->handler->create_sid();
+
+        self::assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $id);
+        self::assertNotSame($id, $this->handler->create_sid());
+    }
+
+    public function testValidateId(): void
+    {
+        $this->cache->shouldReceive('has')->with('session:foo')->andReturn(true);
+        $this->cache->shouldReceive('has')->with('session:bar')->andReturn(false);
+
+        self::assertTrue($this->handler->validateId('foo'));
+        self::assertFalse($this->handler->validateId('bar'));
+    }
+
+    public function testUpdateTimestamp(): void
+    {
+        $this->cache->shouldReceive('set')->with('session:foo', 'bar', 86400)->once()->andReturn(true);
+
+        self::assertTrue($this->handler->updateTimestamp('foo', 'bar'));
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

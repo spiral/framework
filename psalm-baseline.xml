@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.19.1@e2ca44251c1f1aa2e35452d426895746b47de64e">
+<files psalm-version="7.0.3@8f2ac04d0ab5ed1d3cbe6e252b0f7232bc031aaf">
+  <file src="src/Boot/src/BootloadManager/Initializer.php">
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[InitMethod|BootMethod]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Core/src/ContainerScope.php">
+    <RedundantCondition>
+      <code><![CDATA[self::$container]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainType>
+      <code><![CDATA[throw new ContainerException('Proxy is out of scope.')]]></code>
+    </TypeDoesNotContainType>
+  </file>
   <file src="src/Core/src/Internal/Actor.php">
     <NoValue>
       <code><![CDATA[$injector]]></code>
@@ -12,15 +25,52 @@
       <code><![CDATA[Attribute\Scope]]></code>
     </UnnecessaryVarAnnotation>
   </file>
+  <file src="src/Distribution/src/Manager.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$self]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Distribution/src/Resolver/ExpirationAwareResolver.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$self]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Exceptions/src/ExceptionHandler.php">
+    <TaintedCallable>
+      <code><![CDATA[$exception]]></code>
+    </TaintedCallable>
+  </file>
   <file src="src/Filters/src/Attribute/Input/AbstractInput.php">
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->key]]></code>
     </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/Framework/Command/Router/ListCommand.php">
+    <TaintedCallable>
+      <code><![CDATA[$target]]></code>
+    </TaintedCallable>
   </file>
   <file src="src/Queue/src/RetryPolicy.php">
     <InvalidOperand>
       <code><![CDATA[$this->delay * $this->multiplier ** $attempts]]></code>
       <code><![CDATA[$this->multiplier ** $attempts]]></code>
     </InvalidOperand>
+  </file>
+  <file src="src/Router/src/UriHandler.php">
+    <ImpureMethodCall>
+      <code><![CDATA[$this->compile()]]></code>
+      <code><![CDATA[$this->fetchTarget($uri)]]></code>
+      <code><![CDATA[$this->isCompiled()]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Snapshots/src/FileSnapshot.php">
+    <TaintedCallable>
+      <code><![CDATA[$snapshot->getException()]]></code>
+    </TaintedCallable>
+  </file>
+  <file src="src/Snapshots/src/StorageSnapshot.php">
+    <TaintedCallable>
+      <code><![CDATA[$snapshot->getException()]]></code>
+    </TaintedCallable>
   </file>
 </files>

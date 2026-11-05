@@ -2,6 +2,7 @@
     "name": "spiral/session",
     "type": "library",
     "description": "Secure sessions over native PHP handlers",
+    "keywords": ["spiral", "session", "middleware", "psr-15"],
     "license": "MIT",
     "funding": [
         {
@@ -33,14 +34,14 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "spiral/core": "^3.18.1",
         "spiral/files": "^3.18.1",
         "spiral/cache": "^3.18.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5.41",
-        "vimeo/psalm": "^6.0",
+        "vimeo/psalm": "^7.0.2",
         "mockery/mockery": "^1.6.12"
     },
     "autoload": {

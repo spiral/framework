@@ -2,6 +2,7 @@
     "name": "spiral/queue",
     "type": "library",
     "description": "Spiral: Jobs and Queue",
+    "keywords": ["spiral", "queue", "jobs", "workers"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-json": "*",
         "spiral/core": "^3.18.1",
         "spiral/hmvc": "^3.18.1",
@@ -60,7 +61,7 @@
         "phpunit/phpunit": "^10.5.41",
         "mockery/mockery": "^1.6.12",
         "spiral/boot": "^3.18.1",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "config": {
         "sort-packages": true

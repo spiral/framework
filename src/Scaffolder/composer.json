@@ -9,7 +9,7 @@
         }
     ],
     "description": "Spiral, Code Scaffolding module",
-    "keywords": ["scaffolding"],
+    "keywords": ["spiral", "scaffolding", "code-generation", "console"],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",
@@ -38,7 +38,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "spiral/reactor": "^3.18.1",
         "cocur/slugify": "^3.2 || ^4.0",
         "doctrine/inflector": "^1.4|^2.0",
@@ -47,7 +47,7 @@
     "require-dev": {
         "phpunit/phpunit": "^10.5.41",
         "spiral/framework": "^3.1",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload": {
         "files": [

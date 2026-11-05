@@ -2,6 +2,7 @@
     "name": "spiral/cache",
     "type": "library",
     "description": "Common Cache Interfaces",
+    "keywords": ["spiral", "cache", "psr-16", "simple-cache"],
     "license": "MIT",
     "funding": [
         {
@@ -33,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "spiral/core": "^3.18.1",
         "spiral/config": "^3.18.1",
         "spiral/files": "^3.18.1",
@@ -49,7 +50,7 @@
         "spiral/boot": "^3.18.1",
         "mockery/mockery": "^1.6.12",
         "phpunit/phpunit": "^10.5.41",
-        "vimeo/psalm": "^6.0"
+        "vimeo/psalm": "^7.0.2"
     },
     "autoload-dev": {
         "psr-4": {
