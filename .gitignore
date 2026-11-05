@@ -1,5 +1,5 @@
-# IDEA
-.idea/
+.*/
+!.github
 *.iml
 
 # Composer
