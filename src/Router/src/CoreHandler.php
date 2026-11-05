@@ -138,6 +138,7 @@ final class CoreHandler implements RequestHandlerInterface
                         'route.action' => $action,
                         'route.parameters' => \array_keys($parameters),
                     ],
+                    scoped: true,
                 ),
             );
         } catch (TargetCallException $e) {

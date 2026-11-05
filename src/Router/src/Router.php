@@ -93,6 +93,7 @@ final class Router implements RouterInterface
 
                 return $route->handle($request);
             },
+            scoped: true,
         );
     }
 

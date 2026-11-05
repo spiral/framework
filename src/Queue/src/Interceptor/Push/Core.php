@@ -53,6 +53,7 @@ final class Core implements CoreInterface, HandlerInterface
             attributes: [
                 'queue.handler' => $controller,
             ],
+            scoped: true,
         );
     }
 
