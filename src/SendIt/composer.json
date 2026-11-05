@@ -2,6 +2,7 @@
     "name": "spiral/sendit",
     "type": "library",
     "description": "Email builder and queue handler",
+    "keywords": ["spiral", "mailer", "email", "queue", "symfony-mailer"],
     "license": "MIT",
     "funding": [
         {

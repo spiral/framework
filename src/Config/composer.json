@@ -2,6 +2,7 @@
     "name": "spiral/config",
     "type": "library",
     "description": "Config injector and configuration mutator",
+    "keywords": ["spiral", "config", "configuration", "injector"],
     "license": "MIT",
     "funding": [
         {

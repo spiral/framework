@@ -2,6 +2,7 @@
     "name": "spiral/annotated-routes",
     "type": "library",
     "description": "Annotated routes for Spiral Framework",
+    "keywords": ["spiral", "router", "routing", "attributes", "annotations"],
     "license": "MIT",
     "funding": [
         {

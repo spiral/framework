@@ -2,6 +2,7 @@
     "name": "spiral/http",
     "type": "library",
     "description": "HTTP Request pipeline",
+    "keywords": ["spiral", "http", "middleware", "psr-7", "psr-15", "psr-17"],
     "license": "MIT",
     "funding": [
         {

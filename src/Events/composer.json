@@ -2,6 +2,7 @@
     "name": "spiral/events",
     "type": "library",
     "description": "Spiral Framework: PSR-14 Event Dispatcher",
+    "keywords": ["spiral", "events", "event-dispatcher", "listener", "psr-14"],
     "license": "MIT",
     "funding": [
         {

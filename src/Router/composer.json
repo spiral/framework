@@ -2,6 +2,7 @@
     "name": "spiral/router",
     "type": "library",
     "description": "Routes, RESTFul, URI generation, Adaptive Patterns",
+    "keywords": ["spiral", "router", "routing", "uri", "psr-15"],
     "license": "MIT",
     "funding": [
         {

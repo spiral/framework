@@ -2,6 +2,7 @@
     "name": "spiral/streams",
     "type": "library",
     "description": "PSR-7 Stream Wrappers",
+    "keywords": ["spiral", "streams", "stream-wrapper", "psr-7"],
     "license": "MIT",
     "funding": [
         {

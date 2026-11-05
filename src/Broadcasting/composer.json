@@ -2,6 +2,7 @@
     "name": "spiral/broadcasting",
     "type": "library",
     "description": "Common Broadcasting Interfaces",
+    "keywords": ["spiral", "broadcasting", "websockets", "pubsub", "events"],
     "license": "MIT",
     "funding": [
         {

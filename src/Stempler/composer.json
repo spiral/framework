@@ -2,6 +2,7 @@
     "name": "spiral/stempler",
     "type": "library",
     "description": "Stempler, HTML markup processor and template engine framework",
+    "keywords": ["spiral", "stempler", "template-engine", "templates", "html"],
     "license": "MIT",
     "funding": [
         {

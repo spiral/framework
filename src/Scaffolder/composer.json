@@ -9,7 +9,7 @@
         }
     ],
     "description": "Spiral, Code Scaffolding module",
-    "keywords": ["scaffolding"],
+    "keywords": ["spiral", "scaffolding", "code-generation", "console"],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",

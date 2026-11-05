@@ -2,6 +2,7 @@
     "name": "spiral/telemetry",
     "type": "library",
     "description": "Telemetry is a collection of tools to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze your software’s performance and behavior.",
+    "keywords": ["spiral", "telemetry", "tracing", "observability", "opentelemetry"],
     "license": "MIT",
     "funding": [
         {

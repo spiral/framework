@@ -2,6 +2,7 @@
     "name": "spiral/console",
     "type": "library",
     "description": "Console Core, Auto-Discovery, Command Sequencing",
+    "keywords": ["spiral", "console", "cli", "command", "symfony-console"],
     "license": "MIT",
     "funding": [
         {

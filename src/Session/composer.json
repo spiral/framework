@@ -2,6 +2,7 @@
     "name": "spiral/session",
     "type": "library",
     "description": "Secure sessions over native PHP handlers",
+    "keywords": ["spiral", "session", "middleware", "psr-15"],
     "license": "MIT",
     "funding": [
         {

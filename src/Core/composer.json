@@ -2,6 +2,7 @@
     "name": "spiral/core",
     "type": "library",
     "description": "IoC container, IoC scopes, factory, memory, configuration interfaces",
+    "keywords": ["spiral", "container", "ioc", "di", "dependency-injection", "psr-11"],
     "license": "MIT",
     "funding": [
         {

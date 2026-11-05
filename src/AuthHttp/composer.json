@@ -8,6 +8,7 @@
         }
     ],
     "description": "Authorization component with set of authentication middlewares and providers",
+    "keywords": ["spiral", "auth", "authentication", "http", "middleware", "psr-15"],
     "homepage": "https://spiral.dev",
     "support": {
         "issues": "https://github.com/spiral/framework/issues",

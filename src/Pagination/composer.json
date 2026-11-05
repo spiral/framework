@@ -2,6 +2,7 @@
     "name": "spiral/pagination",
     "type": "library",
     "description": "Common pagination interfaces",
+    "keywords": ["spiral", "pagination", "paginator"],
     "license": "MIT",
     "funding": [
         {

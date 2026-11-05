@@ -2,6 +2,7 @@
     "name": "spiral/encrypter",
     "type": "library",
     "description": "Encrypter Component",
+    "keywords": ["spiral", "encryption", "encrypter", "crypto"],
     "license": "MIT",
     "funding": [
         {

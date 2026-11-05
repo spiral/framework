@@ -2,6 +2,7 @@
     "name": "spiral/csrf",
     "type": "library",
     "description": "Spiral Framework: CSRF Middleware",
+    "keywords": ["spiral", "csrf", "security", "middleware", "psr-15"],
     "license": "MIT",
     "funding": [
         {

@@ -2,6 +2,7 @@
     "name": "spiral/prototype",
     "type": "library",
     "description": "Automatic dependency injection",
+    "keywords": ["spiral", "prototype", "dependency-injection", "code-generation"],
     "license": "MIT",
     "funding": [
         {

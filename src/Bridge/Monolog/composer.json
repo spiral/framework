@@ -2,6 +2,7 @@
     "name": "spiral/monolog-bridge",
     "type": "library",
     "description": "LogFactory integration based on Monolog package",
+    "keywords": ["spiral", "monolog", "logger", "logging", "psr-3", "bridge"],
     "license": "MIT",
     "funding": [
         {

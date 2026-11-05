@@ -2,6 +2,7 @@
     "name": "spiral/security",
     "type": "library",
     "description": "Spiral, RBAC security layer",
+    "keywords": ["spiral", "security", "rbac", "permissions", "guard"],
     "license": "MIT",
     "funding": [
         {

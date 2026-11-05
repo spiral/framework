@@ -2,6 +2,7 @@
     "name": "spiral/dotenv-bridge",
     "type": "library",
     "description": "Spiral Framework: DotEnv Loader",
+    "keywords": ["spiral", "dotenv", "env", "environment", "bridge"],
     "license": "MIT",
     "funding": [
         {

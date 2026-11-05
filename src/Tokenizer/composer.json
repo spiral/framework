@@ -2,6 +2,7 @@
     "name": "spiral/tokenizer",
     "type": "library",
     "description": "Static Analysis: Class and Invocation locators",
+    "keywords": ["spiral", "tokenizer", "static-analysis", "class-locator", "reflection"],
     "license": "MIT",
     "funding": [
         {

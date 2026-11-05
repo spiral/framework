@@ -2,6 +2,7 @@
     "name": "spiral/filters",
     "type": "library",
     "description": "Deep Structural Validation, Data Mapper, Inheritance",
+    "keywords": ["spiral", "filters", "request", "validation", "data-mapper"],
     "license": "MIT",
     "funding": [
         {

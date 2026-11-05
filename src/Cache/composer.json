@@ -2,6 +2,7 @@
     "name": "spiral/cache",
     "type": "library",
     "description": "Common Cache Interfaces",
+    "keywords": ["spiral", "cache", "psr-16", "simple-cache"],
     "license": "MIT",
     "funding": [
         {

@@ -2,6 +2,7 @@
     "name": "spiral/debug",
     "type": "library",
     "description": "Debug Toolkit: Log factory interface, variable dumper, benchmarker",
+    "keywords": ["spiral", "debug", "dumper", "benchmark"],
     "license": "MIT",
     "funding": [
         {

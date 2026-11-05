@@ -16,7 +16,7 @@
         "docs": "https://spiral.dev/docs",
         "chat": "https://discord.gg/V6EK4he"
     },
-    "keywords": ["interceptors", "aop", "spiral"],
+    "keywords": ["spiral", "interceptors", "aop", "middleware"],
     "authors": [
         {
             "name": "Anton Titov (wolfy-j)",

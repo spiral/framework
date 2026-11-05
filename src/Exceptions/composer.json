@@ -2,6 +2,7 @@
     "name": "spiral/exceptions",
     "type": "library",
     "description": "Exceptions Toolkit: exception and error handler, CLI and HTML renderer",
+    "keywords": ["spiral", "exceptions", "error-handler", "renderer"],
     "license": "MIT",
     "funding": [
         {

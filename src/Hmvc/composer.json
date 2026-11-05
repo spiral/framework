@@ -2,6 +2,7 @@
     "name": "spiral/hmvc",
     "type": "library",
     "description": "HMVC Core and Controllers",
+    "keywords": ["spiral", "hmvc", "controller", "mvc"],
     "license": "MIT",
     "funding": [
         {

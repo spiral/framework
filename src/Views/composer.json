@@ -2,6 +2,7 @@
     "name": "spiral/views",
     "type": "library",
     "description": "View Manager and Rendering Engine selector",
+    "keywords": ["spiral", "views", "templates", "rendering"],
     "license": "MIT",
     "funding": [
         {

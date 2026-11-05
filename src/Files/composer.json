@@ -2,6 +2,7 @@
     "name": "spiral/files",
     "type": "library",
     "description": "File Toolkit: atomic file manager",
+    "keywords": ["spiral", "files", "filesystem"],
     "license": "MIT",
     "funding": [
         {

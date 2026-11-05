@@ -2,6 +2,7 @@
     "name": "spiral/cookies",
     "type": "library",
     "description": "Spiral Framework: Secure Cookie middleware",
+    "keywords": ["spiral", "cookies", "encryption", "middleware", "psr-15"],
     "license": "MIT",
     "funding": [
         {

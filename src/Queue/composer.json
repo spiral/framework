@@ -2,6 +2,7 @@
     "name": "spiral/queue",
     "type": "library",
     "description": "Spiral: Jobs and Queue",
+    "keywords": ["spiral", "queue", "jobs", "workers"],
     "license": "MIT",
     "funding": [
         {

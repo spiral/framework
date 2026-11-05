@@ -2,6 +2,7 @@
     "name": "spiral/distribution",
     "type": "library",
     "description": "PHP distribution package",
+    "keywords": ["spiral", "distribution", "cdn", "uri", "storage"],
     "license": "MIT",
     "funding": [
         {

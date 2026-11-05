@@ -2,6 +2,7 @@
     "name": "spiral/serializer",
     "type": "library",
     "description": "Common Serializer Interfaces",
+    "keywords": ["spiral", "serializer", "serialization"],
     "license": "MIT",
     "funding": [
         {

@@ -2,6 +2,7 @@
     "name": "spiral/snapshots",
     "type": "library",
     "description": "Exception Snapshot Manager",
+    "keywords": ["spiral", "snapshots", "exceptions", "error-reporting"],
     "license": "MIT",
     "funding": [
         {

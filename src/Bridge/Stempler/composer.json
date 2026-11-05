@@ -2,6 +2,7 @@
     "name": "spiral/stempler-bridge",
     "type": "library",
     "description": "Spiral Framework: Stempler Adapter",
+    "keywords": ["spiral", "stempler", "template", "views", "bridge"],
     "license": "MIT",
     "funding": [
         {

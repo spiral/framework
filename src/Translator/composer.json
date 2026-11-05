@@ -2,6 +2,7 @@
     "name": "spiral/translator",
     "type": "library",
     "description": "Translator, Static Analysis and Auto-Indexation",
+    "keywords": ["spiral", "translator", "translation", "i18n", "localization"],
     "license": "MIT",
     "funding": [
         {

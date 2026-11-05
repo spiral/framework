@@ -2,6 +2,7 @@
     "name": "spiral/mailer",
     "type": "library",
     "description": "Implementation-less mailing interfaces",
+    "keywords": ["spiral", "mailer", "mail", "email"],
     "license": "MIT",
     "funding": [
         {

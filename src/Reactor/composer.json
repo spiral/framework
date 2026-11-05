@@ -2,6 +2,7 @@
     "name": "spiral/reactor",
     "type": "library",
     "description": "Reactor: Code Scaffolding",
+    "keywords": ["spiral", "reactor", "code-generation", "scaffolding"],
     "license": "MIT",
     "funding": [
         {

@@ -2,6 +2,7 @@
     "name": "spiral/storage",
     "type": "library",
     "description": "Storage Engine for file storage interaction",
+    "keywords": ["spiral", "storage", "filesystem", "flysystem", "s3"],
     "license": "MIT",
     "funding": [
         {

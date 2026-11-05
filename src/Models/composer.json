@@ -2,6 +2,7 @@
     "name": "spiral/models",
     "type": "library",
     "description": "DataEntity models",
+    "keywords": ["spiral", "models", "entity", "data-entity"],
     "license": "MIT",
     "funding": [
         {
