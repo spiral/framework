@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [3.18.1](https://github.com/spiral/framework/compare/3.18.0...3.18.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* **queue:** make Job push telemetry span scoped ([9239c46](https://github.com/spiral/framework/commit/9239c46a959c56d6f72986275ac4ccbeed51d53f))
+* **router:** make Routing and Controller telemetry spans scoped ([#1325](https://github.com/spiral/framework/issues/1325)) ([9239c46](https://github.com/spiral/framework/commit/9239c46a959c56d6f72986275ac4ccbeed51d53f))
+* **stempler:** detect on* event handler attributes case-insensitively ([d65f73a](https://github.com/spiral/framework/commit/d65f73a24c2f27b9b6fabe14184a9523e99e3ab8))
+* **stempler:** escape output merged into on* attributes as JavaScript ([d65f73a](https://github.com/spiral/framework/commit/d65f73a24c2f27b9b6fabe14184a9523e99e3ab8))
+* **stempler:** quote unquoted attribute values that contain {{ }} output ([d65f73a](https://github.com/spiral/framework/commit/d65f73a24c2f27b9b6fabe14184a9523e99e3ab8))
+
 ## [3.18.0](https://github.com/spiral/framework/compare/3.17.2...3.18.0) (2026-10-27)
 
 
