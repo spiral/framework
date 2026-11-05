@@ -87,7 +87,10 @@ final class CoreTest extends TestCase
 
 
         $tracer->shouldReceive('getContext')->once()->andReturn(['foo' => ['bar']]);
-        $tracer->shouldReceive('trace')->once()->andReturnUsing(static fn($name, $callback) => $callback());
+        $tracer->shouldReceive('trace')->once()
+            ->withArgs(static fn(string $name, callable $callback, array $attributes = [], bool $scoped = false): bool => $name === 'Job push [foo]'
+                && $scoped)
+            ->andReturnUsing(static fn($name, $callback) => $callback());
 
         $queue->shouldReceive('push')->once()
             ->withArgs(static fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
