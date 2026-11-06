@@ -2,7 +2,19 @@
     "name": "spiral/framework",
     "type": "library",
     "description": "Spiral, High-Performance PHP/Go Framework",
-    "keywords": ["spiral", "framework", "php", "roadrunner", "psr-7", "psr-15", "ioc", "di", "http", "console", "queue"],
+    "keywords": [
+        "spiral",
+        "framework",
+        "php",
+        "roadrunner",
+        "psr-7",
+        "psr-15",
+        "ioc",
+        "di",
+        "http",
+        "console",
+        "queue"
+    ],
     "homepage": "https://spiral.dev",
     "license": "MIT",
     "funding": [
