@@ -37,11 +37,11 @@
         "php": ">=8.2",
         "psr/http-message": "^1.0|^2.0",
         "spiral/attributes": "^2.8|^3.0",
-        "spiral/auth": "^3.18.1",
-        "spiral/core": "^3.18.1",
-        "spiral/hmvc": "^3.18.1",
-        "spiral/models": "^3.18.1",
-        "spiral/validation": "^3.18.1"
+        "spiral/auth": "^3.19.0",
+        "spiral/core": "^3.19.0",
+        "spiral/hmvc": "^3.19.0",
+        "spiral/models": "^3.19.0",
+        "spiral/validation": "^3.19.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",
