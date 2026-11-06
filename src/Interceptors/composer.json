@@ -37,7 +37,7 @@
     ],
     "require": {
         "php": ">=8.2",
-        "spiral/core": "^3.18.1",
+        "spiral/core": "^3.19.0",
         "psr/event-dispatcher": "^1.0"
     },
     "require-dev": {

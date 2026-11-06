@@ -37,7 +37,7 @@
         "ext-json": "*",
         "php": ">=8.2",
         "myclabs/deep-copy": "^1.9",
-        "spiral/core": "^3.18.1"
+        "spiral/core": "^3.19.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5.41",
