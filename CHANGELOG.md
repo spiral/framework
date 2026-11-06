@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [3.19.0](https://github.com/spiral/framework/compare/3.18.1...3.19.0) (2026-11-06)
+
+
+### Features
+
+* require PHP 8.2 and support PHP 8.6 ([#1321](https://github.com/spiral/framework/issues/1321)) ([4eafb45](https://github.com/spiral/framework/commit/4eafb45fc7eb234b3bba5826007c5973beaf4195))
+
+
+### Bug Fixes
+
+* **session:** implement session id and timestamp interfaces in handlers ([4eafb45](https://github.com/spiral/framework/commit/4eafb45fc7eb234b3bba5826007c5973beaf4195))
+
 ## [3.18.1](https://github.com/spiral/framework/compare/3.18.0...3.18.1) (2026-11-05)
 
 
