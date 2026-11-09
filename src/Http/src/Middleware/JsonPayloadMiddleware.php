@@ -28,10 +28,11 @@ final class JsonPayloadMiddleware implements MiddlewareInterface
         if ($this->isJsonPayload($request)) {
             $body = (string) $request->getBody();
             if ($body !== '') {
-                $request = $request->withParsedBody(\json_decode($body, true));
-                if (\json_last_error() !== 0) {
+                $data = \json_decode($body, true);
+                if (\json_last_error() !== 0 || !(\is_array($data) || $data === null)) {
                     throw new ClientException(400, 'invalid json payload');
                 }
+                $request = $request->withParsedBody($data);
             }
         }
 
