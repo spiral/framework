@@ -38,14 +38,19 @@ final class JsonPayloadMiddlewareTest extends TestCase
     #[DataProvider('parsedBodyDataProvider')]
     public function testParsedBody(string $contentType, string $body, ?array $expected): void
     {
+        $handled = null;
         $handler = $this->createMock(RequestHandlerInterface::class);
         $handler
             ->expects(self::once())
             ->method('handle')
-            ->with(self::callback(static fn(ServerRequestInterface $r): bool => $r->getParsedBody() === $expected))
-            ->willReturn(new Response());
+            ->willReturnCallback(static function (ServerRequestInterface $request) use (&$handled): Response {
+                $handled = $request;
+                return new Response();
+            });
 
         $this->createMiddleware()->process($this->createRequest($contentType, $body), $handler);
+
+        self::assertSame($expected, $handled->getParsedBody());
     }
 
     #[DataProvider('invalidPayloadDataProvider')]
