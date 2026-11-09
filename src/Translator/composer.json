@@ -35,9 +35,9 @@
     ],
     "require": {
         "php": ">=8.2",
-        "spiral/core": "^3.18.1",
-        "spiral/logger": "^3.18.1",
-        "spiral/tokenizer": "^3.18.1",
+        "spiral/core": "^3.19.0",
+        "spiral/logger": "^3.19.0",
+        "spiral/tokenizer": "^3.19.0",
         "symfony/translation": "^6.4.30 || ^7.4 || ^8.0",
         "psr/event-dispatcher": "^1.0"
     },
