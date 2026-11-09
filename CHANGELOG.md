@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [3.18.2](https://github.com/spiral/framework/compare/3.18.1...3.18.2) (2026-11-09)
+
+
+### Bug Fixes
+
+* **http:** respond 400 on scalar JSON payload in JsonPayloadMiddleware ([#1328](https://github.com/spiral/framework/issues/1328)) ([d938d85](https://github.com/spiral/framework/commit/d938d851959e77d19f5b8d70a329b0a9ca8e2b68))
+
 ## [3.18.1](https://github.com/spiral/framework/compare/3.18.0...3.18.1) (2026-11-05)
 
 
