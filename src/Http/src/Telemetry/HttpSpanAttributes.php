@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Telemetry;
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Spiral\Telemetry\SpanInterface;
 
 /**
  * Builds span names and attributes that follow the stable OpenTelemetry HTTP semantic conventions.
  *
  * @see https://opentelemetry.io/docs/specs/semconv/http/http-spans/
+ *
+ * @psalm-type TClientRequestAttributes = array{
+ *     'http.request.method': non-empty-string,
+ *     'url.full': string,
+ *     'http.request.method_original'?: string,
+ *     'server.address'?: non-empty-string,
+ *     'server.port'?: int,
+ *     'network.protocol.version'?: non-empty-string,
+ * }
  *
  * @internal
  */
@@ -36,9 +47,54 @@ final class HttpSpanAttributes
      */
     public static function serverSpanName(ServerRequestInterface $request): string
     {
+        return self::spanName($request->getMethod());
+    }
+
+    /**
+     * The URL template is not known to a client, so the name is the method alone.
+     *
+     * @return non-empty-string
+     */
+    public static function clientSpanName(RequestInterface $request): string
+    {
+        return self::spanName($request->getMethod());
+    }
+
+    /**
+     * Request headers, user info and the query string are not captured: they carry credentials, API keys and
+     * signatures of pre-signed URLs.
+     *
+     * @return TClientRequestAttributes
+     */
+    public static function clientRequest(RequestInterface $request): array
+    {
+        $uri = $request->getUri();
         $method = self::method($request->getMethod());
 
-        return $method === self::METHOD_OTHER ? 'HTTP' : $method;
+        $attributes = [
+            'http.request.method' => $method,
+            'url.full' => (string) $uri->withUserInfo('')->withQuery('')->withFragment(''),
+        ];
+
+        if ($method !== $request->getMethod()) {
+            $attributes['http.request.method_original'] = $request->getMethod();
+        }
+
+        $host = $uri->getHost();
+        if ($host !== '') {
+            $attributes['server.address'] = $host;
+            $port = self::port($uri);
+            if ($port !== null) {
+                $attributes['server.port'] = $port;
+            }
+        }
+
+        $protocolVersion = $request->getProtocolVersion();
+        if ($protocolVersion !== '') {
+            $attributes['network.protocol.version'] = $protocolVersion;
+        }
+
+        return $attributes;
     }
 
     /**
@@ -67,11 +123,7 @@ final class HttpSpanAttributes
 
         if ($uri->getHost() !== '') {
             $attributes['server.address'] = $uri->getHost();
-            $port = $uri->getPort() ?? match ($uri->getScheme()) {
-                'http' => 80,
-                'https' => 443,
-                default => null,
-            };
+            $port = self::port($uri);
             if ($port !== null) {
                 $attributes['server.port'] = $port;
             }
@@ -114,5 +166,39 @@ final class HttpSpanAttributes
                 ->setAttribute('error.type', (string) $statusCode)
                 ->setStatus('ERROR');
         }
+    }
+
+    /**
+     * Unlike a server span, a client span marks a 4xx response as failed too: the request did not succeed.
+     */
+    public static function applyClientResponse(SpanInterface $span, ResponseInterface $response): void
+    {
+        $statusCode = $response->getStatusCode();
+        $span->setAttribute('http.response.status_code', $statusCode);
+
+        if ($statusCode >= 400) {
+            $span
+                ->setAttribute('error.type', (string) $statusCode)
+                ->setStatus('ERROR');
+        }
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    private static function spanName(string $method): string
+    {
+        $method = self::method($method);
+
+        return $method === self::METHOD_OTHER ? 'HTTP' : $method;
+    }
+
+    private static function port(UriInterface $uri): ?int
+    {
+        return $uri->getPort() ?? match ($uri->getScheme()) {
+            'http' => 80,
+            'https' => 443,
+            default => null,
+        };
     }
 }
