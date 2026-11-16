@@ -12,6 +12,7 @@ use Spiral\Queue\Interceptor\Push\Core;
 use Spiral\Queue\Options;
 use Spiral\Queue\OptionsInterface;
 use Spiral\Queue\QueueInterface;
+use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\TracerInterface;
 use Spiral\Tests\Queue\TestCase;
 
@@ -86,11 +87,19 @@ final class CoreTest extends TestCase
         $container->bind(TracerInterface::class, $tracer = m::mock(TracerInterface::class));
 
 
-        $tracer->shouldReceive('getContext')->once()->andReturn(['foo' => ['bar']]);
+        $inSpan = false;
+        $tracer->shouldReceive('getContext')->once()->andReturnUsing(static function () use (&$inSpan): array {
+            self::assertTrue($inSpan, 'The job headers must be taken inside the push span.');
+            return ['foo' => ['bar']];
+        });
         $tracer->shouldReceive('trace')->once()
-            ->withArgs(static fn(string $name, callable $callback, array $attributes = [], bool $scoped = false): bool => $name === 'Job push [foo]'
-                && $scoped)
-            ->andReturnUsing(static fn($name, $callback) => $callback());
+            ->withArgs(static fn(string $name, callable $callback, array $attributes = [], bool $scoped = false, ?TraceKind $traceKind = null): bool => $name === 'Job push [foo]'
+                && $scoped
+                && $traceKind === TraceKind::PRODUCER)
+            ->andReturnUsing(static function ($name, $callback) use (&$inSpan): mixed {
+                $inSpan = true;
+                return $callback();
+            });
 
         $queue->shouldReceive('push')->once()
             ->withArgs(static fn(string $name, array $payload = [], ?OptionsInterface $options = null): bool => $name === 'foo'
