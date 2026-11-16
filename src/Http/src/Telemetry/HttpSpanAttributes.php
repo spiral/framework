@@ -21,7 +21,6 @@ use Spiral\Telemetry\SpanInterface;
  *     'http.request.method_original'?: string,
  *     'server.address'?: non-empty-string,
  *     'server.port'?: int,
- *     'network.protocol.version'?: non-empty-string,
  * }
  *
  * @internal
@@ -61,8 +60,8 @@ final class HttpSpanAttributes
     }
 
     /**
-     * Request headers, user info and the query string are not captured: they carry credentials, API keys and
-     * signatures of pre-signed URLs.
+     * Request headers, user info and the whole query string are not captured: they carry credentials, API keys
+     * and signatures of pre-signed URLs, and a query cannot be redacted reliably without knowing its keys.
      *
      * @return TClientRequestAttributes
      */
@@ -80,18 +79,13 @@ final class HttpSpanAttributes
             $attributes['http.request.method_original'] = $request->getMethod();
         }
 
-        $host = $uri->getHost();
+        $host = self::host($uri);
         if ($host !== '') {
             $attributes['server.address'] = $host;
             $port = self::port($uri);
             if ($port !== null) {
                 $attributes['server.port'] = $port;
             }
-        }
-
-        $protocolVersion = $request->getProtocolVersion();
-        if ($protocolVersion !== '') {
-            $attributes['network.protocol.version'] = $protocolVersion;
         }
 
         return $attributes;
@@ -121,8 +115,9 @@ final class HttpSpanAttributes
             $attributes['url.query'] = $uri->getQuery();
         }
 
-        if ($uri->getHost() !== '') {
-            $attributes['server.address'] = $uri->getHost();
+        $host = self::host($uri);
+        if ($host !== '') {
+            $attributes['server.address'] = $host;
             $port = self::port($uri);
             if ($port !== null) {
                 $attributes['server.port'] = $port;
@@ -176,11 +171,28 @@ final class HttpSpanAttributes
         $statusCode = $response->getStatusCode();
         $span->setAttribute('http.response.status_code', $statusCode);
 
+        // Taken from the response: a transport may negotiate a version other than the one the request carries.
+        $protocolVersion = $response->getProtocolVersion();
+        if ($protocolVersion !== '') {
+            $span->setAttribute('network.protocol.version', $protocolVersion);
+        }
+
         if ($statusCode >= 400) {
             $span
                 ->setAttribute('error.type', (string) $statusCode)
                 ->setStatus('ERROR');
         }
+    }
+
+    /**
+     * Marks a request that got no response, e.g. on a network error.
+     */
+    public static function applyClientException(SpanInterface $span, \Throwable $exception): void
+    {
+        $message = $exception->getMessage();
+        $span
+            ->setAttribute('error.type', $exception::class)
+            ->setStatus('ERROR', $message === '' ? null : $message);
     }
 
     /**
@@ -191,6 +203,16 @@ final class HttpSpanAttributes
         $method = self::method($method);
 
         return $method === self::METHOD_OTHER ? 'HTTP' : $method;
+    }
+
+    /**
+     * The host with the brackets of an IPv6 literal removed: `server.address` carries the bare address.
+     */
+    private static function host(UriInterface $uri): string
+    {
+        $host = $uri->getHost();
+
+        return \str_starts_with($host, '[') && \str_ends_with($host, ']') ? \substr($host, 1, -1) : $host;
     }
 
     private static function port(UriInterface $uri): ?int

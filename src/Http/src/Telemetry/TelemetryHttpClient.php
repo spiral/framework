@@ -18,6 +18,12 @@ use Spiral\Telemetry\TracerInterface;
  * Requires `psr/http-client`. To change what the span captures, extend it and override
  * {@see getRequestAttributes()}.
  *
+ * Every header of the tracer context goes to the remote service, which may be a third party: with the OpenTelemetry
+ * driver that includes `baggage`. A header of the same name already set on the request is replaced.
+ *
+ * Do not combine it with the OpenTelemetry PSR-18 auto-instrumentation (`open-telemetry/opentelemetry-auto-psr18`):
+ * each request would get two nested CLIENT spans.
+ *
  * Example:
  *
  *     final class TelegramHttpClient extends TelemetryHttpClient
@@ -45,11 +51,18 @@ class TelemetryHttpClient implements ClientInterface
         return $this->tracer->trace(
             name: HttpSpanAttributes::clientSpanName($request),
             callback: function (SpanInterface $span) use ($request): ResponseInterface {
+                // Read inside the span: the remote side has to continue from the client span, not its parent.
                 foreach ($this->tracer->getContext() as $header => $value) {
                     $request = $request->withHeader($header, $value);
                 }
 
-                $response = $this->client->sendRequest($request);
+                try {
+                    $response = $this->client->sendRequest($request);
+                } catch (\Throwable $e) {
+                    HttpSpanAttributes::applyClientException($span, $e);
+                    throw $e;
+                }
+
                 HttpSpanAttributes::applyClientResponse($span, $response);
 
                 return $response;

@@ -17,27 +17,15 @@ use Spiral\Telemetry\TraceKind;
 
 final class TelemetryHttpClientTest extends TestCase
 {
-    private const TRACEPARENT = '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01';
-
-    public function testRequestIsTracedAndContextIsPropagated(): void
+    public function testRequestIsTraced(): void
     {
-        $inner = new class implements ClientInterface {
-            public ?RequestInterface $sent = null;
-
-            public function sendRequest(RequestInterface $request): ResponseInterface
-            {
-                $this->sent = $request;
-
-                return new Response(503);
-            }
-        };
-        $tracer = new RecordingTracer(['traceparent' => self::TRACEPARENT]);
+        $inner = new RecordingClient(new Response(503, version: '2'));
+        $tracer = new RecordingTracer();
 
         $response = (new TelemetryHttpClient($inner, $tracer))
             ->sendRequest(new Request('GET', 'http://example.org:8080/users?token=secret'));
 
         self::assertSame(503, $response->getStatusCode());
-        self::assertSame([self::TRACEPARENT], $inner->sent?->getHeader('traceparent'));
         self::assertSame(
             [
                 [
@@ -49,18 +37,32 @@ final class TelemetryHttpClientTest extends TestCase
                         'url.full' => 'http://example.org:8080/users',
                         'server.address' => 'example.org',
                         'server.port' => 8080,
-                        'network.protocol.version' => '1.1',
                         'http.response.status_code' => 503,
+                        'network.protocol.version' => '2',
                         'error.type' => '503',
                     ],
                     'status' => 'ERROR',
+                    'description' => null,
                 ],
             ],
             $tracer->spans,
         );
     }
 
-    public function testExceptionIsRethrown(): void
+    public function testContextOfClientSpanIsPropagated(): void
+    {
+        $inner = new RecordingClient(new Response(200));
+        $tracer = new RecordingTracer();
+        $client = new TelemetryHttpClient($inner, $tracer);
+
+        $tracer->trace('request', static fn() => $client->sendRequest(
+            new Request('GET', 'http://example.org/', ['traceparent' => 'stale']),
+        ));
+
+        self::assertSame(['request/GET'], $inner->sent?->getHeader('traceparent'));
+    }
+
+    public function testExceptionMarksSpanAndIsRethrown(): void
     {
         $exception = new \RuntimeException('Connection refused');
         $inner = new class($exception) implements ClientInterface {
@@ -73,37 +75,37 @@ final class TelemetryHttpClientTest extends TestCase
                 throw $this->exception;
             }
         };
+        $tracer = new RecordingTracer();
 
-        $this->expectExceptionObject($exception);
+        try {
+            (new TelemetryHttpClient($inner, $tracer))->sendRequest(new Request('GET', 'http://example.org/'));
+            self::fail('The exception was not rethrown.');
+        } catch (\RuntimeException $e) {
+            self::assertSame($exception, $e);
+        }
 
-        (new TelemetryHttpClient($inner, new RecordingTracer([])))
-            ->sendRequest(new Request('GET', 'http://example.org/'));
+        self::assertCount(1, $tracer->spans);
+        self::assertSame('ERROR', $tracer->spans[0]['status']);
+        self::assertSame('Connection refused', $tracer->spans[0]['description']);
+        self::assertSame(\RuntimeException::class, $tracer->spans[0]['attributes']['error.type']);
+        self::assertArrayNotHasKey('http.response.status_code', $tracer->spans[0]['attributes']);
     }
 
     public function testWorksWithContainerScopedTracer(): void
     {
-        $inner = new class implements ClientInterface {
-            public function sendRequest(RequestInterface $request): ResponseInterface
-            {
-                return new Response(204);
-            }
-        };
+        $inner = new RecordingClient(new Response(204));
 
         $response = (new TelemetryHttpClient($inner, new NullTracer(new Container())))
             ->sendRequest(new Request('DELETE', 'http://example.org/users/42'));
 
         self::assertSame(204, $response->getStatusCode());
+        self::assertSame(['Host' => ['example.org']], $inner->sent?->getHeaders());
     }
 
     public function testRequestAttributesCanBeOverridden(): void
     {
-        $inner = new class implements ClientInterface {
-            public function sendRequest(RequestInterface $request): ResponseInterface
-            {
-                return new Response(200);
-            }
-        };
-        $tracer = new RecordingTracer([]);
+        $inner = new RecordingClient(new Response(200));
+        $tracer = new RecordingTracer();
         $client = new class($inner, $tracer) extends TelemetryHttpClient {
             protected function getRequestAttributes(RequestInterface $request): array
             {

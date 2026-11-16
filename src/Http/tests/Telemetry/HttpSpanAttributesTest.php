@@ -153,10 +153,19 @@ final class HttpSpanAttributesTest extends TestCase
                 'url.full' => 'https://example.org:8443/users/42',
                 'server.address' => 'example.org',
                 'server.port' => 8443,
-                'network.protocol.version' => '2',
             ],
             HttpSpanAttributes::clientRequest($request),
         );
+    }
+
+    public function testIpv6AddressLosesBrackets(): void
+    {
+        $client = HttpSpanAttributes::clientRequest(new Request('GET', 'http://[::1]:8080/'));
+        $server = HttpSpanAttributes::serverRequest(new ServerRequest('GET', 'http://[::1]:8080/'));
+
+        self::assertSame('::1', $client['server.address']);
+        self::assertSame('http://[::1]:8080/', $client['url.full']);
+        self::assertSame('::1', $server['server.address']);
     }
 
     public function testClientRequestUnknownMethodAndDefaultPort(): void
@@ -172,10 +181,13 @@ final class HttpSpanAttributesTest extends TestCase
     {
         $span = new Span('GET');
 
-        HttpSpanAttributes::applyClientResponse($span, new Response(302));
+        HttpSpanAttributes::applyClientResponse($span, new Response(302, version: '2'));
 
         self::assertNull($span->getStatus());
-        self::assertSame(['http.response.status_code' => 302], $span->getAttributes());
+        self::assertSame(
+            ['http.response.status_code' => 302, 'network.protocol.version' => '2'],
+            $span->getAttributes(),
+        );
     }
 
     #[DataProvider('clientErrorStatusProvider')]
@@ -187,8 +199,33 @@ final class HttpSpanAttributesTest extends TestCase
 
         self::assertSame('ERROR', $span->getStatus()?->code);
         self::assertSame(
-            ['http.response.status_code' => $statusCode, 'error.type' => (string) $statusCode],
+            [
+                'http.response.status_code' => $statusCode,
+                'network.protocol.version' => '1.1',
+                'error.type' => (string) $statusCode,
+            ],
             $span->getAttributes(),
         );
+    }
+
+    public function testClientExceptionSetsErrorStatus(): void
+    {
+        $span = new Span('GET');
+
+        HttpSpanAttributes::applyClientException($span, new \RuntimeException('Connection refused'));
+
+        self::assertSame('ERROR', $span->getStatus()?->code);
+        self::assertSame('Connection refused', $span->getStatus()?->description);
+        self::assertSame(['error.type' => \RuntimeException::class], $span->getAttributes());
+    }
+
+    public function testClientExceptionWithoutMessage(): void
+    {
+        $span = new Span('GET');
+
+        HttpSpanAttributes::applyClientException($span, new \RuntimeException());
+
+        self::assertSame('ERROR', $span->getStatus()?->code);
+        self::assertNull($span->getStatus()?->description);
     }
 }
