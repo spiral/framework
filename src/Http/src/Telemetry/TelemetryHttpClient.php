@@ -21,6 +21,10 @@ use Spiral\Telemetry\TracerInterface;
  * Every header of the tracer context goes to the remote service, which may be a third party: with the OpenTelemetry
  * driver that includes `baggage`. A header of the same name already set on the request is replaced.
  *
+ * The span describes the request as it reaches the decorator, so send absolute URIs. A client that resolves
+ * a relative one against its base URI (Guzzle's `base_uri`) does that later: the span then gets a relative
+ * `url.full`, and `server.address` and `server.port` only from an explicit `Host` header.
+ *
  * Do not combine it with the OpenTelemetry PSR-18 auto-instrumentation (`open-telemetry/opentelemetry-auto-psr18`):
  * each request would get two nested CLIENT spans.
  *

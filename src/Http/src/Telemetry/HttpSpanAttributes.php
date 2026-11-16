@@ -79,12 +79,29 @@ final class HttpSpanAttributes
             $attributes['http.request.method_original'] = $request->getMethod();
         }
 
-        $host = self::host($uri);
+        $host = self::host($uri->getHost());
         if ($host !== '') {
             $attributes['server.address'] = $host;
             $port = self::port($uri);
             if ($port !== null) {
                 $attributes['server.port'] = $port;
+            }
+
+            return $attributes;
+        }
+
+        // A relative URI, e.g. one a client resolves against its base URI after this point; an explicit `Host`
+        // still names the server. Without a scheme the default port is unknown.
+        $authority = \parse_url('//' . $request->getHeaderLine('Host'));
+        if (!\is_array($authority)) {
+            return $attributes;
+        }
+
+        $host = self::host($authority['host'] ?? '');
+        if ($host !== '') {
+            $attributes['server.address'] = $host;
+            if (isset($authority['port'])) {
+                $attributes['server.port'] = $authority['port'];
             }
         }
 
@@ -115,7 +132,7 @@ final class HttpSpanAttributes
             $attributes['url.query'] = $uri->getQuery();
         }
 
-        $host = self::host($uri);
+        $host = self::host($uri->getHost());
         if ($host !== '') {
             $attributes['server.address'] = $host;
             $port = self::port($uri);
@@ -208,10 +225,8 @@ final class HttpSpanAttributes
     /**
      * The host with the brackets of an IPv6 literal removed: `server.address` carries the bare address.
      */
-    private static function host(UriInterface $uri): string
+    private static function host(string $host): string
     {
-        $host = $uri->getHost();
-
         return \str_starts_with($host, '[') && \str_ends_with($host, ']') ? \substr($host, 1, -1) : $host;
     }
 

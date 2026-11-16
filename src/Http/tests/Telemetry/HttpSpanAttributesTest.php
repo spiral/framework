@@ -158,6 +158,38 @@ final class HttpSpanAttributesTest extends TestCase
         );
     }
 
+    public function testRelativeUriTakesServerFromHostHeader(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(
+            new Request('GET', '/users?token=secret', ['Host' => 'api.example.org:8443']),
+        );
+
+        self::assertSame(
+            [
+                'http.request.method' => 'GET',
+                'url.full' => '/users',
+                'server.address' => 'api.example.org',
+                'server.port' => 8443,
+            ],
+            $attributes,
+        );
+    }
+
+    public function testRelativeUriWithHostHeaderWithoutPort(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(new Request('GET', '/', ['Host' => '[::1]']));
+
+        self::assertSame('::1', $attributes['server.address']);
+        self::assertArrayNotHasKey('server.port', $attributes);
+    }
+
+    public function testRelativeUriWithoutHostHeader(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(new Request('GET', 'users'));
+
+        self::assertSame(['http.request.method' => 'GET', 'url.full' => 'users'], $attributes);
+    }
+
     public function testIpv6AddressLosesBrackets(): void
     {
         $client = HttpSpanAttributes::clientRequest(new Request('GET', 'http://[::1]:8080/'));
