@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Http\Telemetry;
 
+use Nyholm\Psr7\Request;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -26,6 +27,12 @@ final class HttpSpanAttributesTest extends TestCase
         yield 'redirect' => [302];
         yield 'not found' => [404];
         yield 'unprocessable' => [422];
+    }
+
+    public static function clientErrorStatusProvider(): iterable
+    {
+        yield 'not found' => [404];
+        yield 'service unavailable' => [503];
     }
 
     #[DataProvider('knownMethodsProvider')]
@@ -123,5 +130,134 @@ final class HttpSpanAttributesTest extends TestCase
             ['http.response.status_code' => 503, 'http.response.body.size' => 12, 'error.type' => '503'],
             $span->getAttributes(),
         );
+    }
+
+    public function testClientSpanName(): void
+    {
+        self::assertSame('POST', HttpSpanAttributes::clientSpanName(new Request('POST', 'https://example.org/')));
+        self::assertSame('HTTP', HttpSpanAttributes::clientSpanName(new Request('get', 'https://example.org/')));
+    }
+
+    public function testClientRequestAttributes(): void
+    {
+        $request = new Request(
+            'GET',
+            'https://user:secret@example.org:8443/users/42?api_key=secret#top',
+            ['Authorization' => ['Bearer secret']],
+            version: '2',
+        );
+
+        self::assertSame(
+            [
+                'http.request.method' => 'GET',
+                'url.full' => 'https://example.org:8443/users/42',
+                'server.address' => 'example.org',
+                'server.port' => 8443,
+            ],
+            HttpSpanAttributes::clientRequest($request),
+        );
+    }
+
+    public function testRelativeUriTakesServerFromHostHeader(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(
+            new Request('GET', '/users?token=secret', ['Host' => 'api.example.org:8443']),
+        );
+
+        self::assertSame(
+            [
+                'http.request.method' => 'GET',
+                'url.full' => '/users',
+                'server.address' => 'api.example.org',
+                'server.port' => 8443,
+            ],
+            $attributes,
+        );
+    }
+
+    public function testRelativeUriWithHostHeaderWithoutPort(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(new Request('GET', '/', ['Host' => '[::1]']));
+
+        self::assertSame('::1', $attributes['server.address']);
+        self::assertArrayNotHasKey('server.port', $attributes);
+    }
+
+    public function testRelativeUriWithoutHostHeader(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(new Request('GET', 'users'));
+
+        self::assertSame(['http.request.method' => 'GET', 'url.full' => 'users'], $attributes);
+    }
+
+    public function testIpv6AddressLosesBrackets(): void
+    {
+        $client = HttpSpanAttributes::clientRequest(new Request('GET', 'http://[::1]:8080/'));
+        $server = HttpSpanAttributes::serverRequest(new ServerRequest('GET', 'http://[::1]:8080/'));
+
+        self::assertSame('::1', $client['server.address']);
+        self::assertSame('http://[::1]:8080/', $client['url.full']);
+        self::assertSame('::1', $server['server.address']);
+    }
+
+    public function testClientRequestUnknownMethodAndDefaultPort(): void
+    {
+        $attributes = HttpSpanAttributes::clientRequest(new Request('get', 'http://example.org'));
+
+        self::assertSame('_OTHER', $attributes['http.request.method']);
+        self::assertSame('get', $attributes['http.request.method_original']);
+        self::assertSame(80, $attributes['server.port']);
+    }
+
+    public function testClientSuccessLeavesStatusUnset(): void
+    {
+        $span = new Span('GET');
+
+        HttpSpanAttributes::applyClientResponse($span, new Response(302, version: '2'));
+
+        self::assertNull($span->getStatus());
+        self::assertSame(
+            ['http.response.status_code' => 302, 'network.protocol.version' => '2'],
+            $span->getAttributes(),
+        );
+    }
+
+    #[DataProvider('clientErrorStatusProvider')]
+    public function testClientErrorSetsErrorStatus(int $statusCode): void
+    {
+        $span = new Span('GET');
+
+        HttpSpanAttributes::applyClientResponse($span, new Response($statusCode));
+
+        self::assertSame('ERROR', $span->getStatus()?->code);
+        self::assertSame(
+            [
+                'http.response.status_code' => $statusCode,
+                'network.protocol.version' => '1.1',
+                'error.type' => (string) $statusCode,
+            ],
+            $span->getAttributes(),
+        );
+    }
+
+    public function testClientExceptionSetsErrorStatus(): void
+    {
+        $span = new Span('GET');
+
+        HttpSpanAttributes::applyClientException($span, new \RuntimeException('Connection refused'));
+
+        self::assertSame('ERROR', $span->getStatus()?->code);
+        self::assertSame('Connection refused', $span->getStatus()?->description);
+        self::assertSame(['error.type' => \RuntimeException::class], $span->getAttributes());
+    }
+
+    public function testClientExceptionWithoutMessage(): void
+    {
+        $span = new Span('GET');
+
+        HttpSpanAttributes::applyClientException($span, new \RuntimeException());
+
+        self::assertSame('ERROR', $span->getStatus()?->code);
+        self::assertNull($span->getStatus()?->description);
     }
 }
