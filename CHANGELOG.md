@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [3.19.0](https://github.com/spiral/framework/compare/3.18.1...3.19.0) (2026-11-16)
+
+
+### Features
+
+* **http:** add a PSR-18 client decorator that traces outgoing requests ([#1330](https://github.com/spiral/framework/issues/1330)) ([9bf2503](https://github.com/spiral/framework/commit/9bf2503f1ae7ec9cecd4ab350431b4b46635f635))
+* require PHP 8.2 and support PHP 8.6 ([#1321](https://github.com/spiral/framework/issues/1321)) ([4eafb45](https://github.com/spiral/framework/commit/4eafb45fc7eb234b3bba5826007c5973beaf4195))
+
+
+### Bug Fixes
+
+* **http:** respond 400 on scalar JSON payload in JsonPayloadMiddleware ([f1fb63c](https://github.com/spiral/framework/commit/f1fb63cbe7c3318e995a3d865cdd37640f7f63b1))
+* **queue:** make the Job push span a PRODUCER span and propagate it in the job headers ([#1332](https://github.com/spiral/framework/issues/1332)) ([978b1e7](https://github.com/spiral/framework/commit/978b1e75fe3b7f521457e3faee3279fad303f654))
+* **session:** implement session id and timestamp interfaces in handlers ([4eafb45](https://github.com/spiral/framework/commit/4eafb45fc7eb234b3bba5826007c5973beaf4195))
+
 ## [3.18.1](https://github.com/spiral/framework/compare/3.18.0...3.18.1) (2026-11-05)
 
 
