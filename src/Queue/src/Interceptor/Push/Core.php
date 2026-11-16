@@ -12,6 +12,7 @@ use Spiral\Queue\Options;
 use Spiral\Queue\OptionsInterface;
 use Spiral\Queue\QueueInterface;
 use Spiral\Telemetry\NullTracer;
+use Spiral\Telemetry\TraceKind;
 use Spiral\Telemetry\TracerInterface;
 
 /**
@@ -37,23 +38,29 @@ final class Core implements CoreInterface, HandlerInterface
 
         $tracer = $this->getTracer();
 
-        if (\method_exists($parameters['options'], 'withHeader')) {
-            foreach ($tracer->getContext() as $key => $data) {
-                $parameters['options'] = $parameters['options']->withHeader($key, $data);
-            }
-        }
-
         return $tracer->trace(
             name: \sprintf('Job push [%s]', $controller),
-            callback: fn(): string => $this->connection->push(
-                name: $controller,
-                payload: $parameters['payload'],
-                options: $parameters['options'],
-            ),
+            callback: function () use ($tracer, $controller, $parameters): string {
+                $options = $parameters['options'];
+
+                // Read inside the push span: the job headers have to carry it for the consumer to continue it.
+                if (\method_exists($options, 'withHeader')) {
+                    foreach ($tracer->getContext() as $key => $data) {
+                        $options = $options->withHeader($key, $data);
+                    }
+                }
+
+                return $this->connection->push(
+                    name: $controller,
+                    payload: $parameters['payload'],
+                    options: $options,
+                );
+            },
             attributes: [
                 'queue.handler' => $controller,
             ],
             scoped: true,
+            traceKind: TraceKind::PRODUCER,
         );
     }
 
