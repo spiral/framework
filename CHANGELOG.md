@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [3.18.3](https://github.com/spiral/framework/compare/3.18.2...3.18.3) (2026-11-16)
+
+
+### Bug Fixes
+
+* **queue:** make the Job push span a PRODUCER span and propagate it in the job headers ([#1332](https://github.com/spiral/framework/issues/1332)) ([d949cad](https://github.com/spiral/framework/commit/d949cad4dd9b8a59b377f4b45bc3ff7aad01ed58))
+
 ## [3.18.2](https://github.com/spiral/framework/compare/3.18.1...3.18.2) (2026-11-09)
 
 
