@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Spiral\Telemetry;
 
 /**
- * A tracer that knows spans opened inside its traces by other means than {@see TracerInterface::trace()},
- * and gives {@see CurrentSpan} the innermost of them.
+ * Gives {@see CurrentSpan} spans opened by other means than {@see TracerInterface::trace()}.
+ *
+ * A tracer implementing it is asked while its own trace is the innermost one; a provider set with
+ * {@see CurrentSpan::setProvider()} is asked outside any trace.
  */
 interface CurrentSpanProviderInterface
 {
     /**
-     * Called only while a trace of this tracer is the innermost one running.
-     *
-     * @return SpanInterface|null The innermost span, or null for the span of that trace.
+     * @return SpanInterface|null The innermost span the provider knows of, or null to leave it to
+     *         {@see CurrentSpan}: the span of the trace, or a no-op span outside a trace.
      */
     public function getCurrentSpan(): ?SpanInterface;
 }

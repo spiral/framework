@@ -141,6 +141,39 @@ final class CurrentSpanTest extends TestCase
         self::assertSame('inner', $name);
     }
 
+    public function testSetProviderGivesItsSpanOutsideTrace(): void
+    {
+        $own = new Span('own');
+        CurrentSpan::setProvider(new ProvidingTracer(static fn(): SpanInterface => $own));
+
+        self::assertSame($own, CurrentSpan::get());
+    }
+
+    public function testSetProviderGivingNullOrThrowingFallsBackToNoopSpan(): void
+    {
+        CurrentSpan::setProvider(new ProvidingTracer(static fn(): ?SpanInterface => null));
+        self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
+
+        CurrentSpan::setProvider(new ProvidingTracer(static fn() => throw new \RuntimeException()));
+        self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
+    }
+
+    public function testSetProviderIsNotAskedInsideTrace(): void
+    {
+        CurrentSpan::setProvider(new ProvidingTracer(static fn(): SpanInterface => new Span('provided')));
+        $tracer = new NullTracer(new Container());
+
+        self::assertSame('foo', $tracer->trace('foo', static fn(): string => CurrentSpan::get()->getName()));
+    }
+
+    public function testSetProviderUnsetWithNull(): void
+    {
+        CurrentSpan::setProvider(new ProvidingTracer(static fn(): SpanInterface => new Span('provided')));
+        CurrentSpan::setProvider(null);
+
+        self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
+    }
+
     public function testConcurrentTracesInFibersSeeTheirOwnSpans(): void
     {
         $container = new Container();
@@ -194,6 +227,11 @@ final class CurrentSpanTest extends TestCase
         });
 
         self::assertSame(['outer', 'inner', 'outer', 'outer'], $names);
+    }
+
+    protected function tearDown(): void
+    {
+        CurrentSpan::setProvider(null);
     }
 }
 

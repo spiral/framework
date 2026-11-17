@@ -12,29 +12,43 @@ use Spiral\Telemetry\Span\NoopSpan;
  *
  *     CurrentSpan::get()->setAttribute('dict.org_types.count', \count($types));
  *
- * It is the span of the innermost running trace of a tracer based on {@see AbstractTracer}, scoped or not,
- * or the span the tracer of that trace gives as a {@see CurrentSpanProviderInterface}. Outside a trace it
- * is a {@see NoopSpan} that drops everything.
+ * Inside a trace of a tracer based on {@see AbstractTracer}, scoped or not, it is the span of the innermost
+ * trace, or the span its tracer gives as a {@see CurrentSpanProviderInterface}. Outside a trace it is the
+ * span of the provider set with {@see self::setProvider()}, or else a {@see NoopSpan} that drops everything.
  */
 final class CurrentSpan
 {
+    private static ?CurrentSpanProviderInterface $provider = null;
+
     private function __construct() {}
 
     public static function get(): SpanInterface
     {
         $trace = ActiveTrace::current();
         if ($trace === null) {
-            return NoopSpan::instance();
+            return self::ask(self::$provider) ?? NoopSpan::instance();
         }
 
-        if ($trace->tracer instanceof CurrentSpanProviderInterface) {
-            try {
-                return $trace->tracer->getCurrentSpan() ?? $trace->span;
-            } catch (\Throwable) {
-                return $trace->span;
-            }
-        }
+        return $trace->tracer instanceof CurrentSpanProviderInterface
+            ? self::ask($trace->tracer) ?? $trace->span
+            : $trace->span;
+    }
 
-        return $trace->span;
+    /**
+     * Sets the provider asked outside a trace, for spans opened by other means than a tracer, or unsets it
+     * with null.
+     */
+    public static function setProvider(?CurrentSpanProviderInterface $provider): void
+    {
+        self::$provider = $provider;
+    }
+
+    private static function ask(?CurrentSpanProviderInterface $provider): ?SpanInterface
+    {
+        try {
+            return $provider?->getCurrentSpan();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }
