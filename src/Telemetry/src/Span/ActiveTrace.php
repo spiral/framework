@@ -8,13 +8,21 @@ use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TracerInterface;
 
 /**
- * The innermost running trace, for {@see \Spiral\Telemetry\CurrentSpan}.
+ * The innermost running trace of the current fiber, for {@see \Spiral\Telemetry\CurrentSpan}.
+ *
+ * A fiber sees only the traces it runs itself: a fiber started inside a trace has none until it starts
+ * its own. The callback is not moved into a fiber of its own to hand the trace down, as
+ * {@see \Spiral\Core\ContainerScope::runScope()} does with the container: state other code keeps per fiber,
+ * like the OpenTelemetry context, would not reach the callback.
  *
  * @internal
  */
 final class ActiveTrace
 {
-    private static ?self $current = null;
+    private static ?self $main = null;
+
+    /** @var \WeakMap<\Fiber, self>|null */
+    private static ?\WeakMap $fibers = null;
 
     private function __construct(
         public readonly TracerInterface $tracer,
@@ -23,15 +31,13 @@ final class ActiveTrace
 
     public static function current(): ?self
     {
-        return self::$current;
+        $fiber = \Fiber::getCurrent();
+
+        return $fiber === null ? self::$main : self::$fibers[$fiber] ?? null;
     }
 
     /**
-     * Runs the callback as the innermost trace.
-     *
-     * Inside a fiber the callback runs in a fiber of its own, and the trace is the current one only
-     * while that fiber runs, as {@see \Spiral\Core\ContainerScope::runScope()} does with the container:
-     * fibers switching around it see their own traces. A fiber started inside a trace gets it.
+     * Runs the callback as the innermost trace of the current fiber.
      *
      * @template TReturn
      * @param callable(): TReturn $callback
@@ -40,33 +46,30 @@ final class ActiveTrace
      */
     public static function run(TracerInterface $tracer, SpanInterface $span, callable $callback): mixed
     {
-        $previous = self::$current;
-        $own = self::$current = new self($tracer, $span);
+        $previous = self::current();
+        self::set(new self($tracer, $span));
 
         try {
-            if (\Fiber::getCurrent() === null) {
-                return $callback();
-            }
-
-            $fiber = new \Fiber($callback);
-            $value = $fiber->start();
-            while (!$fiber->isTerminated()) {
-                self::$current = $previous;
-                try {
-                    $resume = \Fiber::suspend($value);
-                } catch (\Throwable $e) {
-                    self::$current = $own;
-                    $value = $fiber->throw($e);
-                    continue;
-                }
-
-                self::$current = $own;
-                $value = $fiber->resume($resume);
-            }
-
-            return $fiber->getReturn();
+            return $callback();
         } finally {
-            self::$current = $previous;
+            self::set($previous);
         }
+    }
+
+    private static function set(?self $trace): void
+    {
+        $fiber = \Fiber::getCurrent();
+        if ($fiber === null) {
+            self::$main = $trace;
+            return;
+        }
+
+        self::$fibers ??= new \WeakMap();
+        if ($trace === null) {
+            unset(self::$fibers[$fiber]);
+            return;
+        }
+
+        self::$fibers[$fiber] = $trace;
     }
 }
