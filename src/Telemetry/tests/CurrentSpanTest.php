@@ -11,6 +11,7 @@ use Spiral\Core\ContainerScope;
 use Spiral\Telemetry\AbstractTracer;
 use Spiral\Telemetry\CurrentSpan;
 use Spiral\Telemetry\CurrentSpanProviderInterface;
+use Spiral\Telemetry\FiberAwareTracerInterface;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\Span;
 use Spiral\Telemetry\Span\NoopSpan;
@@ -23,6 +24,12 @@ final class CurrentSpanTest extends TestCase
     {
         yield 'not scoped' => [false];
         yield 'scoped' => [true];
+    }
+
+    public static function provideContainerScope(): iterable
+    {
+        yield 'no container scope' => [false];
+        yield 'in container scope' => [true];
     }
 
     public function testOutsideTraceGivesNoopSpan(): void
@@ -229,6 +236,35 @@ final class CurrentSpanTest extends TestCase
         self::assertSame(['outer', 'inner', 'outer', 'outer'], $names);
     }
 
+    #[DataProvider('provideContainerScope')]
+    public function testFiberAwareTracerHandsItsStateIntoFibersOfTrace(bool $inContainerScope): void
+    {
+        $tracer = new FiberStateTracer();
+        $traces = static fn(): array => $tracer->trace('outer', static function () use ($tracer): array {
+            $state = $tracer->state();
+            \Fiber::suspend();
+            $inner = $tracer->trace('inner', static fn(): array => [$tracer->state(), CurrentSpan::get()->getName()]);
+
+            return [$state, $tracer->state(), CurrentSpan::get()->getName(), ...$inner];
+        });
+
+        $fiber = new \Fiber(
+            $inContainerScope ? static fn(): array => ContainerScope::runScope(new Container(), $traces) : $traces,
+        );
+        $fiber->start();
+        $fiber->resume();
+
+        self::assertSame(['outer', 'outer', 'outer', 'inner', 'inner'], $fiber->getReturn());
+    }
+
+    public function testFiberAwareTracerIsNotAskedOutsideFiber(): void
+    {
+        $tracer = new FiberStateTracer();
+
+        self::assertSame('foo', $tracer->trace('foo', static fn(): string => $tracer->state()));
+        self::assertSame(0, $tracer->bound);
+    }
+
     protected function tearDown(): void
     {
         CurrentSpan::setProvider(null);
@@ -268,5 +304,75 @@ final class ProvidingTracer extends AbstractTracer implements CurrentSpanProvide
     public function getCurrentSpan(): ?SpanInterface
     {
         return ($this->provide)();
+    }
+}
+
+/**
+ * Keeps the name of the running trace per fiber, with no fallback to the parent fiber, as the
+ * OpenTelemetry context does.
+ *
+ * @internal
+ */
+final class FiberStateTracer extends AbstractTracer implements FiberAwareTracerInterface
+{
+    public int $bound = 0;
+
+    /** @var \WeakMap<\Fiber, string> */
+    private \WeakMap $fibers;
+
+    private ?string $main = null;
+
+    public function __construct()
+    {
+        parent::__construct(new Container());
+        $this->fibers = new \WeakMap();
+    }
+
+    public function trace(
+        string $name,
+        callable $callback,
+        array $attributes = [],
+        bool $scoped = false,
+        ?TraceKind $traceKind = null,
+        ?int $startTime = null,
+    ): mixed {
+        $previous = $this->state();
+        $this->setState($name);
+
+        try {
+            return $this->runScope(new Span($name), $callback);
+        } finally {
+            $this->setState($previous);
+        }
+    }
+
+    public function getContext(): array
+    {
+        return [];
+    }
+
+    public function bindToFiber(callable $callback): callable
+    {
+        ++$this->bound;
+        $state = $this->state();
+
+        return function (mixed ...$args) use ($state, $callback): mixed {
+            $this->setState($state);
+
+            return $callback(...$args);
+        };
+    }
+
+    public function state(): ?string
+    {
+        $fiber = \Fiber::getCurrent();
+
+        return $fiber === null ? $this->main : $this->fibers[$fiber] ?? null;
+    }
+
+    private function setState(?string $state): void
+    {
+        $fiber = \Fiber::getCurrent();
+        $fiber === null ? $this->main = $state : $this->fibers[$fiber] = $state;
     }
 }

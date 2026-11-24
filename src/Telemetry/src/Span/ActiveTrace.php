@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Telemetry\Span;
 
+use Spiral\Telemetry\FiberAwareTracerInterface;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TracerInterface;
 
@@ -31,7 +32,8 @@ final class ActiveTrace
      *
      * Inside a fiber the callback runs in a fiber of its own, and the trace is the current one only
      * while that fiber runs, as {@see \Spiral\Core\ContainerScope::runScope()} does with the container:
-     * fibers switching around it see their own traces. A fiber started inside a trace gets it.
+     * fibers switching around it see their own traces. A fiber started inside a trace gets it. A
+     * {@see FiberAwareTracerInterface} hands its own per-fiber state into that fiber.
      *
      * @template TReturn
      * @param callable(): TReturn $callback
@@ -48,7 +50,7 @@ final class ActiveTrace
                 return $callback();
             }
 
-            $fiber = new \Fiber($callback);
+            $fiber = new \Fiber($tracer instanceof FiberAwareTracerInterface ? $tracer->bindToFiber($callback) : $callback);
             $value = $fiber->start();
             while (!$fiber->isTerminated()) {
                 self::$current = $previous;
