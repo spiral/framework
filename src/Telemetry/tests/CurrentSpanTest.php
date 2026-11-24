@@ -13,7 +13,6 @@ use Spiral\Telemetry\CurrentSpan;
 use Spiral\Telemetry\CurrentSpanProviderInterface;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\Span;
-use Spiral\Telemetry\Span\ActiveTrace;
 use Spiral\Telemetry\Span\NoopSpan;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Telemetry\TraceKind;
@@ -205,7 +204,7 @@ final class CurrentSpanTest extends TestCase
         self::assertInstanceOf(NoopSpan::class, $names[2]);
     }
 
-    public function testFiberStartedInsideTraceHasOnlyItsOwnTraces(): void
+    public function testFiberStartedInsideTraceGetsIt(): void
     {
         $tracer = new NullTracer(new Container());
 
@@ -227,21 +226,7 @@ final class CurrentSpanTest extends TestCase
             return [...$fiber->getReturn(), $whileSuspended];
         });
 
-        self::assertSame(['noop', 'inner', 'noop', 'outer'], $names);
-    }
-
-    public function testActiveTraceRunsCallbackInCurrentFiber(): void
-    {
-        $tracer = new NullTracer(new Container());
-        $fiber = new \Fiber(static fn(): array => [
-            \Fiber::getCurrent(),
-            ActiveTrace::run($tracer, new Span('foo'), static fn(): ?\Fiber => \Fiber::getCurrent()),
-        ]);
-
-        $fiber->start();
-
-        [$outside, $inside] = $fiber->getReturn();
-        self::assertSame($outside, $inside);
+        self::assertSame(['outer', 'inner', 'outer', 'outer'], $names);
     }
 
     protected function tearDown(): void

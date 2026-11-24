@@ -28,20 +28,20 @@ abstract class AbstractTracer implements TracerInterface
      */
     final protected function runScope(SpanInterface $span, callable $callback): mixed
     {
-        // Set right at the call: a container scope run inside a fiber moves the callback into a fiber of
-        // its own, and the trace is kept per fiber.
-        $invoke = fn(InvokerInterface $invoker): mixed => ActiveTrace::run(
-            $this,
-            $span,
-            static fn(): mixed => $invoker->invoke($callback),
-        );
+        return ActiveTrace::run($this, $span, fn(): mixed => $this->bindSpan($span, $callback));
+    }
 
+    /**
+     * @throws \Throwable
+     */
+    private function bindSpan(SpanInterface $span, callable $callback): mixed
+    {
         $container = ContainerScope::getContainer();
         if ($container === null) {
             return $this->scope->runScope([
                 SpanInterface::class => $span,
                 TracerInterface::class => $this,
-            ], $invoke);
+            ], static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback));
         }
 
         if ($container instanceof Container) {
@@ -75,9 +75,9 @@ abstract class AbstractTracer implements TracerInterface
                             TracerInterface::class => $this,
                         ],
                     ),
-                    $invoke,
+                    static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback),
                 )
-                : $invoke($invoker);
+                : $invoker->invoke($callback);
         } finally {
             /** @psalm-suppress TooManyArguments */
             $prevSpan === null
