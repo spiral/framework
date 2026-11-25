@@ -6,12 +6,16 @@ namespace Spiral\Tests\Telemetry;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
+use Ramsey\Uuid\UuidFactory;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 use Spiral\Telemetry\AbstractTracer;
 use Spiral\Telemetry\CurrentSpan;
 use Spiral\Telemetry\CurrentSpanProviderInterface;
+use Spiral\Telemetry\Clock\SystemClock;
 use Spiral\Telemetry\FiberAwareTracerInterface;
+use Spiral\Telemetry\LogTracer;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\Span;
 use Spiral\Telemetry\Span\NoopSpan;
@@ -30,6 +34,59 @@ final class CurrentSpanTest extends TestCase
     {
         yield 'no container scope' => [false];
         yield 'in container scope' => [true];
+    }
+
+    public function testTraceInFiberPassesSuspendAndResumeValues(): void
+    {
+        $tracer = new NullTracer(new Container());
+        $fiber = new \Fiber(static fn(): array => $tracer->trace(
+            'foo',
+            static fn(): array => [\Fiber::suspend('out'), CurrentSpan::get()->getName()],
+        ));
+
+        self::assertSame('out', $fiber->start());
+        $fiber->resume('in');
+
+        self::assertSame(['in', 'foo'], $fiber->getReturn());
+    }
+
+    public function testExceptionThrownIntoFiberReachesTraceWithItsSpan(): void
+    {
+        $tracer = new NullTracer(new Container());
+        $fiber = new \Fiber(static fn(): array => $tracer->trace('foo', static function (): array {
+            try {
+                \Fiber::suspend();
+            } catch (\RuntimeException $e) {
+                $caught = [$e->getMessage(), CurrentSpan::get()->getName()];
+            }
+            \Fiber::suspend();
+
+            return [...$caught ?? [], CurrentSpan::get()->getName()];
+        }));
+
+        $fiber->start();
+        $fiber->throw(new \RuntimeException('boom'));
+        $whileSuspended = CurrentSpan::get();
+        $fiber->resume();
+
+        self::assertSame(['boom', 'foo', 'foo'], $fiber->getReturn());
+        self::assertInstanceOf(NoopSpan::class, $whileSuspended);
+    }
+
+    public function testFiberDestroyedWhileSuspendedInTraceKeepsCurrentTraceOfOthers(): void
+    {
+        $tracer = new NullTracer(new Container());
+        $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static fn() => \Fiber::suspend()));
+        $fiber->start();
+
+        $name = $tracer->trace('main', static function () use (&$fiber): string {
+            $fiber = null;
+
+            return CurrentSpan::get()->getName();
+        });
+
+        self::assertSame('main', $name);
+        self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
     }
 
     public function testOutsideTraceGivesNoopSpan(): void
@@ -54,6 +111,20 @@ final class CurrentSpanTest extends TestCase
         self::assertInstanceOf(Span::class, $spans[0]);
         self::assertSame($spans[0], $spans[1]);
         self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
+    }
+
+    public function testInsideTraceOfLogTracer(): void
+    {
+        $tracer = new LogTracer(
+            new Container(),
+            new SystemClock(),
+            new NullLogger(),
+            new UuidFactory(),
+        );
+
+        $spans = $tracer->trace('foo', static fn(SpanInterface $span): array => [$span, CurrentSpan::get()]);
+
+        self::assertSame($spans[0], $spans[1]);
     }
 
     public function testInsideTraceInContainerScope(): void

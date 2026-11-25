@@ -68,7 +68,10 @@ final class ActiveTrace
 
             return $fiber->getReturn();
         } finally {
-            self::$current = $previous;
+            // A suspended fiber destroyed by the garbage collector unwinds while another trace is current.
+            if (self::$current === $own) {
+                self::$current = $previous;
+            }
         }
     }
 }
