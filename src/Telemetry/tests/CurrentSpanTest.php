@@ -10,11 +10,11 @@ use Psr\Log\NullLogger;
 use Ramsey\Uuid\UuidFactory;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
+use Spiral\Core\InvokerInterface;
 use Spiral\Telemetry\AbstractTracer;
 use Spiral\Telemetry\CurrentSpan;
 use Spiral\Telemetry\CurrentSpanProviderInterface;
 use Spiral\Telemetry\Clock\SystemClock;
-use Spiral\Telemetry\FiberAwareTracerInterface;
 use Spiral\Telemetry\LogTracer;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\Span;
@@ -308,7 +308,7 @@ final class CurrentSpanTest extends TestCase
     }
 
     #[DataProvider('provideContainerScope')]
-    public function testFiberAwareTracerHandsItsStateIntoFibersOfTrace(bool $inContainerScope): void
+    public function testTracerHandsItsPerFiberStateIntoFibersOfTraceByWrappingCallback(bool $inContainerScope): void
     {
         $tracer = new FiberStateTracer();
         $traces = static fn(): array => $tracer->trace('outer', static function () use ($tracer): array {
@@ -326,14 +326,6 @@ final class CurrentSpanTest extends TestCase
         $fiber->resume();
 
         self::assertSame(['outer', 'outer', 'outer', 'inner', 'inner'], $fiber->getReturn());
-    }
-
-    public function testFiberAwareTracerIsNotAskedOutsideFiber(): void
-    {
-        $tracer = new FiberStateTracer();
-
-        self::assertSame('foo', $tracer->trace('foo', static fn(): string => $tracer->state()));
-        self::assertSame(0, $tracer->bound);
     }
 
     protected function tearDown(): void
@@ -380,14 +372,13 @@ final class ProvidingTracer extends AbstractTracer implements CurrentSpanProvide
 
 /**
  * Keeps the name of the running trace per fiber, with no fallback to the parent fiber, as the
- * OpenTelemetry context does.
+ * OpenTelemetry context does, and sets it up again in the fiber its callback ends up in, as the OTel
+ * bridge does with its context.
  *
  * @internal
  */
-final class FiberStateTracer extends AbstractTracer implements FiberAwareTracerInterface
+final class FiberStateTracer extends AbstractTracer
 {
-    public int $bound = 0;
-
     /** @var \WeakMap<\Fiber, string> */
     private \WeakMap $fibers;
 
@@ -407,31 +398,24 @@ final class FiberStateTracer extends AbstractTracer implements FiberAwareTracerI
         ?TraceKind $traceKind = null,
         ?int $startTime = null,
     ): mixed {
-        $previous = $this->state();
-        $this->setState($name);
+        return $this->runScope(
+            new Span($name),
+            function (InvokerInterface $invoker) use ($name, $callback): mixed {
+                $previous = $this->state();
+                $this->setState($name);
 
-        try {
-            return $this->runScope(new Span($name), $callback);
-        } finally {
-            $this->setState($previous);
-        }
+                try {
+                    return $invoker->invoke($callback);
+                } finally {
+                    $this->setState($previous);
+                }
+            },
+        );
     }
 
     public function getContext(): array
     {
         return [];
-    }
-
-    public function bindToFiber(callable $callback): callable
-    {
-        ++$this->bound;
-        $state = $this->state();
-
-        return function (mixed ...$args) use ($state, $callback): mixed {
-            $this->setState($state);
-
-            return $callback(...$args);
-        };
     }
 
     public function state(): ?string

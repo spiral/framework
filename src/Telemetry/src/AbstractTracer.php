@@ -36,21 +36,12 @@ abstract class AbstractTracer implements TracerInterface
      */
     private function bindSpan(SpanInterface $span, callable $callback): mixed
     {
-        // A container scope run inside a fiber moves the callback into a fiber of its own.
-        $bound = static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback);
-        if(\Fiber::getCurrent() !== null && $this instanceof FiberAwareTracerInterface) {
-            $bound = $this->bindToFiber($bound);
-        }
-
-        // The scope autowires the parameters of its callback, which a wrapper of the tracer may not declare.
-        $invoke = static fn(InvokerInterface $invoker): mixed => $bound($invoker);
-
         $container = ContainerScope::getContainer();
         if ($container === null) {
             return $this->scope->runScope([
                 SpanInterface::class => $span,
                 TracerInterface::class => $this,
-            ], $invoke);
+            ], static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback));
         }
 
         if ($container instanceof Container) {
@@ -84,7 +75,7 @@ abstract class AbstractTracer implements TracerInterface
                             TracerInterface::class => $this,
                         ],
                     ),
-                    $invoke,
+                    static fn(InvokerInterface $invoker): mixed => $invoker->invoke($callback),
                 )
                 : $invoker->invoke($callback);
         } finally {
