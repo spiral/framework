@@ -20,19 +20,26 @@ use Spiral\Telemetry\Span\NoopSpan;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Tests\Telemetry\Stub\FiberStateTracer;
 use Spiral\Tests\Telemetry\Stub\ProvidingTracer;
+use Spiral\Tests\Telemetry\Stub\PsrContainer;
 
 final class CurrentSpanTest extends TestCase
 {
-    public static function provideScoped(): iterable
-    {
-        yield 'not scoped' => [false];
-        yield 'scoped' => [true];
-    }
-
     public static function provideContainerScope(): iterable
     {
         yield 'no container scope' => [false];
         yield 'in container scope' => [true];
+    }
+
+    public static function provideFiberFailure(): iterable
+    {
+        yield 'callback throws after resume' => [static fn(\Fiber $fiber) => $fiber->resume(true)];
+        yield 'exception thrown into fiber' => [static fn(\Fiber $fiber) => $fiber->throw(new \RuntimeException('thrown'))];
+    }
+
+    public static function provideInFiber(): iterable
+    {
+        yield 'main thread' => [false];
+        yield 'fiber' => [true];
     }
 
     public function testTraceInFiberPassesSuspendAndResumeValues(): void
@@ -70,6 +77,33 @@ final class CurrentSpanTest extends TestCase
 
         self::assertSame(['boom', 'foo', 'foo'], $fiber->getReturn());
         self::assertInstanceOf(NoopSpan::class, $whileSuspended);
+    }
+
+    /**
+     * @param \Closure(\Fiber): mixed $fail
+     */
+    #[DataProvider('provideFiberFailure')]
+    public function testTraceInFiberFailingAfterSuspendKeepsTraceOfResumer(\Closure $fail): void
+    {
+        $tracer = new NullTracer(new Container());
+        $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static function (): void {
+            if (\Fiber::suspend()) {
+                throw new \RuntimeException('failed');
+            }
+        }));
+        $fiber->start();
+
+        $name = $tracer->trace('main', static function () use ($fiber, $fail): string {
+            try {
+                $fail($fiber);
+            } catch (\RuntimeException) {
+            }
+
+            return CurrentSpan::get()->getName();
+        });
+
+        self::assertTrue($fiber->isTerminated());
+        self::assertSame('main', $name);
     }
 
     public function testFiberResumedInsideAnotherTraceKeepsThatTrace(): void
@@ -139,16 +173,11 @@ final class CurrentSpanTest extends TestCase
         self::assertSame([], $span->getAttributes());
     }
 
-    #[DataProvider('provideScoped')]
-    public function testInsideTraceGivesSpanOfTrace(bool $scoped): void
+    public function testInsideTraceGivesSpanOfTrace(): void
     {
         $tracer = new NullTracer(new Container());
 
-        $spans = $tracer->trace(
-            'foo',
-            static fn(SpanInterface $span): array => [$span, CurrentSpan::get()],
-            scoped: $scoped,
-        );
+        $spans = $tracer->trace('foo', static fn(SpanInterface $span): array => [$span, CurrentSpan::get()]);
 
         self::assertInstanceOf(Span::class, $spans[0]);
         self::assertSame($spans[0], $spans[1]);
@@ -182,6 +211,53 @@ final class CurrentSpanTest extends TestCase
             ),
         );
 
+        self::assertSame($spans[0], $spans[1]);
+    }
+
+    #[DataProvider('provideContainerScope')]
+    public function testSpanParameterIsAutowiredInsideFiber(bool $inContainerScope): void
+    {
+        $container = new Container();
+        $tracer = new NullTracer($container);
+        $trace = static fn(): array => $tracer->trace(
+            'outer',
+            static fn(SpanInterface $outer): array => [
+                $outer,
+                $tracer->trace('inner', static fn(SpanInterface $inner): array => [$inner, CurrentSpan::get()]),
+            ],
+        );
+
+        $fiber = new \Fiber(
+            $inContainerScope ? static fn(): array => ContainerScope::runScope($container, $trace) : $trace,
+        );
+        $fiber->start();
+        [$outer, [$inner, $current]] = $fiber->getReturn();
+
+        self::assertSame('outer', $outer->getName());
+        self::assertSame('inner', $inner->getName());
+        self::assertSame($inner, $current);
+    }
+
+    #[DataProvider('provideInFiber')]
+    public function testInsideTraceInScopeOfContainerOtherThanSpiralOne(bool $inFiber): void
+    {
+        $container = new Container();
+        $psr = new PsrContainer($container);
+        $tracer = new NullTracer($container);
+        $trace = static fn(): array => ContainerScope::runScope($psr, static fn(): array => $tracer->trace(
+            'foo',
+            static fn(SpanInterface $span): array => [$span, CurrentSpan::get()],
+        ));
+
+        if ($inFiber) {
+            $fiber = new \Fiber($trace);
+            $fiber->start();
+            $spans = $fiber->getReturn();
+        } else {
+            $spans = $trace();
+        }
+
+        self::assertSame('foo', $spans[0]->getName());
         self::assertSame($spans[0], $spans[1]);
     }
 
