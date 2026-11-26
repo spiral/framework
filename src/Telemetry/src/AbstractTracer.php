@@ -10,6 +10,7 @@ use Spiral\Core\ContainerScope;
 use Spiral\Core\InvokerInterface;
 use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
+use Spiral\Telemetry\Span\ActiveTrace;
 
 /**
  * @internal The component is under development.
@@ -26,6 +27,14 @@ abstract class AbstractTracer implements TracerInterface
      * @throws \Throwable
      */
     final protected function runScope(SpanInterface $span, callable $callback): mixed
+    {
+        return ActiveTrace::run($this, $span, fn(): mixed => $this->bindSpan($span, $callback));
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    private function bindSpan(SpanInterface $span, callable $callback): mixed
     {
         $container = ContainerScope::getContainer();
         if ($container === null) {
