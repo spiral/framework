@@ -40,7 +40,9 @@ final class ActiveTrace
      */
     public static function run(TracerInterface $tracer, SpanInterface $span, callable $callback): mixed
     {
-        $previous = self::$current;
+        // The trace of the code that resumed the fiber last, not of the one that started it: a fiber may be
+        // resumed inside another trace, or after the trace it was started in has ended.
+        $outer = self::$current;
         $own = self::$current = new self($tracer, $span);
 
         try {
@@ -51,15 +53,17 @@ final class ActiveTrace
             $fiber = new \Fiber($callback);
             $value = $fiber->start();
             while (!$fiber->isTerminated()) {
-                self::$current = $previous;
+                self::$current = $outer;
                 try {
                     $resume = \Fiber::suspend($value);
                 } catch (\Throwable $e) {
+                    $outer = self::$current;
                     self::$current = $own;
                     $value = $fiber->throw($e);
                     continue;
                 }
 
+                $outer = self::$current;
                 self::$current = $own;
                 $value = $fiber->resume($resume);
             }
@@ -68,7 +72,7 @@ final class ActiveTrace
         } finally {
             // A suspended fiber destroyed by the garbage collector unwinds while another trace is current.
             if (self::$current === $own) {
-                self::$current = $previous;
+                self::$current = $outer;
             }
         }
     }

@@ -15,6 +15,7 @@ use Spiral\Telemetry\Clock\SystemClock;
 use Spiral\Telemetry\LogTracer;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\Span;
+use Spiral\Telemetry\Span\ActiveTrace;
 use Spiral\Telemetry\Span\NoopSpan;
 use Spiral\Telemetry\SpanInterface;
 use Spiral\Tests\Telemetry\Stub\FiberStateTracer;
@@ -69,6 +70,49 @@ final class CurrentSpanTest extends TestCase
 
         self::assertSame(['boom', 'foo', 'foo'], $fiber->getReturn());
         self::assertInstanceOf(NoopSpan::class, $whileSuspended);
+    }
+
+    public function testFiberResumedInsideAnotherTraceKeepsThatTrace(): void
+    {
+        $tracer = new NullTracer(new Container());
+        $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static function (): void {
+            \Fiber::suspend();
+            \Fiber::suspend();
+        }));
+        $fiber->start();
+
+        $names = $tracer->trace('main', static function () use ($fiber): array {
+            $names = [CurrentSpan::get()->getName()];
+            $fiber->resume();
+            $names[] = CurrentSpan::get()->getName();
+            $fiber->resume();
+            $names[] = CurrentSpan::get()->getName();
+
+            return $names;
+        });
+
+        self::assertSame(['main', 'main', 'main'], $names);
+        self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
+    }
+
+    public function testFiberStartedInsideEndedTraceKeepsNoEndedTraceCurrent(): void
+    {
+        $tracer = new NullTracer(new Container());
+        $fiber = $tracer->trace('ended', static function () use ($tracer): \Fiber {
+            $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static fn() => \Fiber::suspend()));
+            $fiber->start();
+
+            return $fiber;
+        });
+
+        $name = $tracer->trace('root', static fn(): string => $tracer->trace('main', static function () use ($fiber): string {
+            $fiber->resume();
+
+            return CurrentSpan::get()->getName();
+        }));
+
+        self::assertSame('main', $name);
+        self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
     }
 
     public function testFiberDestroyedWhileSuspendedInTraceKeepsCurrentTraceOfOthers(): void
@@ -329,5 +373,6 @@ final class CurrentSpanTest extends TestCase
     protected function tearDown(): void
     {
         CurrentSpan::setProvider(null);
+        self::assertNull(ActiveTrace::current());
     }
 }
