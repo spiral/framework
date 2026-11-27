@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Filters\Model;
 
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\TestWith;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Attributes\Factory;
 use Spiral\Attributes\ReaderInterface;
@@ -19,11 +20,16 @@ use Spiral\Filters\Model\Mapper\CasterRegistry;
 use Spiral\Filters\Model\Mapper\CasterRegistryInterface;
 use Spiral\Filters\Model\NestedInputLimits;
 use Spiral\Http\Request\InputManager;
+use Spiral\Interceptors\Context\CallContextInterface;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Tests\Filters\BaseTestCase;
 use Spiral\Tests\Filters\Fixtures\TreeFilter;
 
 final class NestedInputLimitsTest extends BaseTestCase
 {
+    /** How many filters the provider has finished building, the root one included. */
+    private int $builds = 0;
+
     public function testBuildsFilterWithinLimits(): void
     {
         $provider = $this->makeProvider(maxNestedFilters: 100, maxNestedKeyLength: 8);
@@ -139,6 +145,80 @@ final class NestedInputLimitsTest extends BaseTestCase
         $limits->assertKey('items', \str_repeat('k', 1025));
     }
 
+    public function testBuildsEachNestedElementOnce(): void
+    {
+        $provider = $this->makeProvider(maxNestedFilters: false, maxNestedKeyLength: false);
+
+        $provider->createFilter(TreeFilter::class, $this->input([
+            'branches' => [
+                ['leaves' => [['name' => 'a'], ['name' => 'b'], ['name' => 'c']]],
+                ['leaves' => [['name' => 'd'], ['name' => 'e'], ['name' => 'f']]],
+            ],
+        ]));
+
+        // The root, 2 branches and 6 leaves.
+        self::assertSame(9, $this->builds);
+    }
+
+    #[TestWith([8, true])]
+    #[TestWith([7, false])]
+    public function testLimitCountsEveryNestedFilterOnce(int $limit, bool $passes): void
+    {
+        $provider = $this->makeProvider(maxNestedFilters: $limit, maxNestedKeyLength: false);
+
+        if (!$passes) {
+            $this->expectException(NestedInputLimitException::class);
+        }
+
+        // 2 branches and 6 leaves below the root.
+        $filter = $provider->createFilter(TreeFilter::class, $this->input([
+            'branches' => \array_fill(0, 2, ['leaves' => \array_fill(0, 3, ['name' => 'x'])]),
+        ]));
+
+        self::assertInstanceOf(TreeFilter::class, $filter);
+    }
+
+    public function testRejectsOversizedArrayBeforeBuildingItsElements(): void
+    {
+        $provider = $this->makeProvider(maxNestedFilters: 10, maxNestedKeyLength: false);
+
+        try {
+            $provider->createFilter(TreeFilter::class, $this->input([
+                'branches' => \array_fill(0, 1000, ['leaves' => []]),
+            ]));
+            self::fail('The limit is not applied.');
+        } catch (NestedInputLimitException $e) {
+            self::assertSame(['branches' => ['The number of nested filters exceeds the limit of 10.']], $e->errors);
+        }
+
+        // Building element by element would have completed 10 branches before the limit stopped it.
+        self::assertSame(0, $this->builds);
+    }
+
+    public function testKeepsTheViolationAsPrevious(): void
+    {
+        $provider = $this->makeProvider(maxNestedFilters: false, maxNestedKeyLength: 8);
+
+        try {
+            $provider->createFilter(TreeFilter::class, $this->input([
+                'branches' => ['short' => ['leaves' => [\str_repeat('k', 9) => ['name' => 'x']]]],
+            ]));
+            self::fail('The limit is not applied.');
+        } catch (NestedInputLimitException $e) {
+            self::assertSame(422, $e->getCode());
+
+            $innermost = $e;
+            while ($innermost->getPrevious() instanceof NestedInputLimitException) {
+                $innermost = $innermost->getPrevious();
+            }
+
+            self::assertNotSame($e, $innermost);
+            self::assertSame($e->getMessage(), $innermost->getMessage());
+            self::assertSame([$innermost->reason], $innermost->errors);
+            self::assertSame(['branches' => ['short' => ['leaves' => [$e->reason]]]], $e->errors);
+        }
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -154,7 +234,24 @@ final class NestedInputLimitsTest extends BaseTestCase
             'maxNestedKeyLength' => $maxNestedKeyLength,
         ])));
 
-        $provider = $this->container->make(FilterProvider::class, ['core' => new Core()]);
+        $core = new class($this->builds) implements HandlerInterface {
+            private readonly Core $core;
+
+            public function __construct(
+                private int &$builds,
+            ) {
+                $this->core = new Core();
+            }
+
+            public function handle(CallContextInterface $context): mixed
+            {
+                ++$this->builds;
+
+                return $this->core->handle($context);
+            }
+        };
+
+        $provider = $this->container->make(FilterProvider::class, ['core' => $core]);
         $this->container->bind(FilterProviderInterface::class, $provider);
 
         return $provider;

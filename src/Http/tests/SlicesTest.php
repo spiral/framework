@@ -96,6 +96,54 @@ final class SlicesTest extends TestCase
         self::assertSame('value', $input->post('array.key.name'));
     }
 
+    public function testChainOfSlices(): void
+    {
+        $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
+            'a' => ['0' => ['b' => ['name' => 'value', 'empty' => null]]],
+        ]));
+
+        $input = $this->input->withPrefix('a')->withPrefix('0')->withPrefix('b');
+
+        self::assertSame('value', $input->data('name'));
+        self::assertSame('value', $input->post('name'));
+        self::assertTrue($input->post->has('empty'));
+        self::assertSame(['name' => 'value', 'empty' => null], $input->data->all());
+        self::assertSame([], $input->withPrefix('missing')->withPrefix('deeper')->data->all());
+    }
+
+    public function testAbsolutePrefixAfterChain(): void
+    {
+        $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
+            'a' => ['b' => ['name' => 'nested']],
+            'c' => ['name' => 'root'],
+        ]));
+
+        $input = $this->input->withPrefix('a')->withPrefix('b');
+        self::assertSame('nested', $input->data('name'));
+
+        self::assertSame('root', $input->withPrefix('c', false)->data('name'));
+        self::assertSame('root', $input->withPrefix('c', false)->withPrefix('', true)->data('name'));
+    }
+
+    public function testSliceFollowsChangedRequest(): void
+    {
+        $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
+            'a' => ['b' => ['name' => 'first']],
+        ]));
+
+        $parent = $this->input->withPrefix('a');
+        $child = $parent->withPrefix('b');
+        self::assertSame(['b' => ['name' => 'first']], $parent->data->all());
+        self::assertSame('first', $child->data('name'));
+
+        $this->container->bind(ServerRequestInterface::class, (new ServerRequest('GET', ''))->withParsedBody([
+            'a' => ['b' => ['name' => 'second']],
+        ]));
+
+        self::assertSame('second', $child->data('name'));
+        self::assertSame(['b' => ['name' => 'second']], $parent->data->all());
+    }
+
     protected function setUp(): void
     {
         $this->container = new Container();
