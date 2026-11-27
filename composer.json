@@ -139,6 +139,7 @@
         "jetbrains/phpstorm-attributes": "^1.2",
         "league/flysystem-async-aws-s3": "^2.5 || ^3.29",
         "league/flysystem-aws-s3-v3": "^2.5 || ^3.29",
+        "llm/skills": "^1.23",
         "mikey179/vfsstream": "^1.6.12",
         "mockery/mockery": "^1.6.12",
         "phpunit/phpunit": "^10.5.41",
@@ -278,6 +279,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
+            "llm/skills": true,
             "spiral/composer-publish-plugin": true
         },
         "audit": {
