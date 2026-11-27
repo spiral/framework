@@ -36,12 +36,12 @@
     "require": {
         "php": ">=8.2",
         "ext-json": "*",
-        "spiral/core": "^3.18.1",
-        "spiral/hmvc": "^3.18.1",
-        "spiral/http": "^3.18.1",
-        "spiral/interceptors": "^3.18.1",
+        "spiral/core": "^3.19.0",
+        "spiral/hmvc": "^3.19.0",
+        "spiral/http": "^3.19.0",
+        "spiral/interceptors": "^3.19.0",
         "cocur/slugify": "^3.2 || ^4.0",
-        "spiral/telemetry": "^3.18.1",
+        "spiral/telemetry": "^3.19.0",
         "doctrine/inflector": "^1.4|^2.0",
         "psr/event-dispatcher": "^1.0"
     },
