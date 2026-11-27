@@ -14,6 +14,8 @@ final class FiltersConfig extends InjectableConfig
 
     protected array $config = [
         'interceptors' => [],
+        'maxNestedFilters' => 10_000,
+        'maxNestedKeyLength' => 1024,
     ];
 
     /**
@@ -22,5 +24,33 @@ final class FiltersConfig extends InjectableConfig
     public function getInterceptors(): array
     {
         return (array) ($this->config['interceptors'] ?? []);
+    }
+
+    /**
+     * How many nested filters one root filter may build across all nesting levels.
+     *
+     * @return positive-int|null Null disables the limit.
+     */
+    public function getMaxNestedFilters(): ?int
+    {
+        return $this->positiveIntOrNull('maxNestedFilters');
+    }
+
+    /**
+     * How long, in bytes, a key of a {@see \Spiral\Filters\Attribute\NestedArray} element may be.
+     * The key becomes part of the input prefix of every filter below it.
+     *
+     * @return positive-int|null Null disables the limit.
+     */
+    public function getMaxNestedKeyLength(): ?int
+    {
+        return $this->positiveIntOrNull('maxNestedKeyLength');
+    }
+
+    private function positiveIntOrNull(string $key): ?int
+    {
+        $value = $this->config[$key] ?? null;
+
+        return \is_int($value) && $value > 0 ? $value : null;
     }
 }

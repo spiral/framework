@@ -10,12 +10,14 @@ use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
+use Spiral\Filters\Exception\NestedInputLimitException;
 use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Mapper\Mapper;
+use Spiral\Filters\Model\NestedInputLimits;
 
 /**
  * @internal
@@ -26,6 +28,7 @@ final class AttributeMapper
         private readonly FilterProviderInterface $provider,
         private readonly ReaderInterface $reader,
         private readonly Mapper $mapper,
+        private readonly NestedInputLimits $limits = new NestedInputLimits(),
     ) {}
 
     /**
@@ -63,6 +66,8 @@ final class AttributeMapper
                         } catch (SetterException $e) {
                             $errors[$property->getName()] = $this->createErrorMessage($e, $property, $value);
                         }
+                    } catch (NestedInputLimitException $e) {
+                        throw $e->under($prefix);
                     } catch (ValidationException $e) {
                         if ($this->allowsNull($property)) {
                             $this->setValue($filter, $property, null);
@@ -81,11 +86,15 @@ final class AttributeMapper
 
                     if (\is_array($values)) {
                         foreach (\array_keys($values) as $key) {
+                            $this->limits->assertKey($property->getName(), $key);
+
                             try {
                                 $propertyValues[$key] = $this->provider->createFilter(
                                     $attribute->class,
                                     $input->withPrefix($prefix . '.' . $key),
                                 );
+                            } catch (NestedInputLimitException $e) {
+                                throw $e->under($property->getName(), $key);
                             } catch (ValidationException $e) {
                                 /** @psalm-suppress InvalidArrayOffset */
                                 $errors[$property->getName()][$key] = $e->errors;

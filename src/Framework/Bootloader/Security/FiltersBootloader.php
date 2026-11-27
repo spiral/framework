@@ -29,6 +29,7 @@ use Spiral\Filters\Model\Mapper\CasterRegistry;
 use Spiral\Filters\Model\Mapper\CasterRegistryInterface;
 use Spiral\Filters\Model\Mapper\EnumCaster;
 use Spiral\Filters\Model\Mapper\UuidCaster;
+use Spiral\Filters\Model\NestedInputLimits;
 use Spiral\Framework\Spiral;
 use Spiral\Http\Config\HttpConfig;
 use Spiral\Http\Request\InputManager;
@@ -123,7 +124,7 @@ final class FiltersBootloader extends Bootloader implements Container\InjectorIn
             ->withInterceptors(...$list)
             ->build(new Core());
 
-        return new FilterProvider($container, $container, $pipeline);
+        return new FilterProvider($container, $container, $pipeline, $container->get(NestedInputLimits::class));
     }
 
     private function initCasterRegistry(): CasterRegistryInterface

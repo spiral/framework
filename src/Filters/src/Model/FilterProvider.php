@@ -7,6 +7,7 @@ namespace Spiral\Filters\Model;
 use Psr\Container\ContainerInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\ResolverInterface;
+use Spiral\Filters\Exception\NestedInputLimitException;
 use Spiral\Filters\InputInterface;
 use Spiral\Filters\Model\Schema\AttributeMapper;
 use Spiral\Filters\Model\Schema\Builder;
@@ -24,20 +25,41 @@ final class FilterProvider implements FilterProviderInterface
 {
     private readonly bool $isLegacy;
 
+    // Resolved on first use: the mappers depend on this provider, so the constructor cannot get them.
+    private ?AttributeMapper $attributeMapper = null;
+    private ?InputMapper $inputMapper = null;
+    private ?Builder $schemaBuilder = null;
+
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly ResolverInterface $resolver,
         private readonly HandlerInterface|CoreInterface $core,
+        private readonly NestedInputLimits $limits = new NestedInputLimits(),
     ) {
         $this->isLegacy = !$core instanceof HandlerInterface;
     }
 
+    /**
+     * @throws NestedInputLimitException
+     */
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $attributeMapper = $this->container->get(AttributeMapper::class);
+        $this->limits->enterFilter();
+        try {
+            return $this->buildFilter($name, $input);
+        } finally {
+            $this->limits->leaveFilter();
+        }
+    }
+
+    private function buildFilter(string $name, InputInterface $input): FilterInterface
+    {
+        $this->attributeMapper ??= $this->container->get(AttributeMapper::class);
+        $this->inputMapper ??= $this->container->get(InputMapper::class);
+        $this->schemaBuilder ??= $this->container->get(Builder::class);
 
         $filter = $this->createFilterInstance($name);
-        [$mappingSchema, $errors, $setters, $optionalFilters] = $attributeMapper->map($filter, $input);
+        [$mappingSchema, $errors, $setters, $optionalFilters] = $this->attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
@@ -46,16 +68,12 @@ final class FilterProvider implements FilterProviderInterface
             );
         }
 
-        $inputMapper = $this->container->get(InputMapper::class);
-
-        $schemaBuilder = $this->container->get(Builder::class);
-
-        $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
+        $schema = $this->schemaBuilder->makeSchema($name, $mappingSchema);
         foreach ($optionalFilters as $optionalFilter) {
             $schema[$optionalFilter][Builder::SCHEMA_OPTIONAL] = true;
         }
 
-        [$data, $inputErrors] = $inputMapper->map($schema, $input, $setters);
+        [$data, $inputErrors] = $this->inputMapper->map($schema, $input, $setters);
         $errors = \array_merge($errors, $inputErrors);
 
         $entity = new SchematicEntity($data, $schema);

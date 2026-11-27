@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Spiral\Filters\Model\Schema;
 
 use Spiral\Filters\Attribute\Setter;
+use Spiral\Filters\Exception\NestedInputLimitException;
 use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
+use Spiral\Filters\Model\NestedInputLimits;
 
 final class InputMapper
 {
     public function __construct(
         private readonly FilterProviderInterface $provider,
+        private readonly NestedInputLimits $limits = new NestedInputLimits(),
     ) {}
 
     public function map(array $mappingSchema, InputInterface $input, array $setters = []): array
@@ -45,6 +48,8 @@ final class InputMapper
                 // slicing down
                 try {
                     $result[$field] = $this->provider->createFilter($nested, $input->withPrefix($map[Builder::SCHEMA_ORIGIN]));
+                } catch (NestedInputLimitException $e) {
+                    throw $e->under($field);
                 } catch (ValidationException $e) {
                     if ($map[Builder::SCHEMA_OPTIONAL]) {
                         $result[$field] = null;
@@ -58,9 +63,11 @@ final class InputMapper
             $values = [];
 
             // List of "key" => "location in request"
-            foreach ($this->iterate($map, $input) as $index => $origin) {
+            foreach ($this->iterate($map, $input, $field) as $index => $origin) {
                 try {
                     $values[$index] = $this->provider->createFilter($nested, $input->withPrefix($origin));
+                } catch (NestedInputLimitException $e) {
+                    throw $e->under($field, $index);
                 } catch (ValidationException $e) {
                     $errors[$field][$index] = $e->errors;
                 }
@@ -75,7 +82,7 @@ final class InputMapper
     /**
      * Create set of origins and prefixed for a nested array of models.
      */
-    private function iterate(array $schema, InputInterface $input): \Generator
+    private function iterate(array $schema, InputInterface $input, string $field): \Generator
     {
         $values = $input->getValue(
             $schema[Builder::SCHEMA_ITERATE_SOURCE],
@@ -87,6 +94,8 @@ final class InputMapper
         }
 
         foreach (\array_keys($values) as $key) {
+            $this->limits->assertKey($field, $key);
+
             yield $key => $schema[Builder::SCHEMA_ORIGIN] . '.' . $key;
         }
     }
