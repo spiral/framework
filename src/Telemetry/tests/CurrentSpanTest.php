@@ -32,8 +32,8 @@ final class CurrentSpanTest extends TestCase
 
     public static function provideFiberFailure(): iterable
     {
-        yield 'callback throws after resume' => [static fn(\Fiber $fiber) => $fiber->resume(true)];
-        yield 'exception thrown into fiber' => [static fn(\Fiber $fiber) => $fiber->throw(new \RuntimeException('thrown'))];
+        yield 'callback throws after resume' => [static fn(\Fiber $fiber): mixed => $fiber->resume(true)];
+        yield 'exception thrown into fiber' => [static fn(\Fiber $fiber): mixed => $fiber->throw(new \RuntimeException('thrown'))];
     }
 
     public static function provideInFiber(): iterable
@@ -86,7 +86,7 @@ final class CurrentSpanTest extends TestCase
     public function testTraceInFiberFailingAfterSuspendKeepsTraceOfResumer(\Closure $fail): void
     {
         $tracer = new NullTracer(new Container());
-        $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static function (): void {
+        $fiber = new \Fiber(static fn(): mixed => $tracer->trace('fiber', static function (): void {
             if (\Fiber::suspend()) {
                 throw new \RuntimeException('failed');
             }
@@ -109,7 +109,7 @@ final class CurrentSpanTest extends TestCase
     public function testFiberResumedInsideAnotherTraceKeepsThatTrace(): void
     {
         $tracer = new NullTracer(new Container());
-        $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static function (): void {
+        $fiber = new \Fiber(static fn(): mixed => $tracer->trace('fiber', static function (): void {
             \Fiber::suspend();
             \Fiber::suspend();
         }));
@@ -133,7 +133,7 @@ final class CurrentSpanTest extends TestCase
     {
         $tracer = new NullTracer(new Container());
         $fiber = $tracer->trace('ended', static function () use ($tracer): \Fiber {
-            $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static fn() => \Fiber::suspend()));
+            $fiber = new \Fiber(static fn(): mixed => $tracer->trace('fiber', static fn(): mixed => \Fiber::suspend()));
             $fiber->start();
 
             return $fiber;
@@ -152,7 +152,7 @@ final class CurrentSpanTest extends TestCase
     public function testFiberDestroyedWhileSuspendedInTraceKeepsCurrentTraceOfOthers(): void
     {
         $tracer = new NullTracer(new Container());
-        $fiber = new \Fiber(static fn() => $tracer->trace('fiber', static fn() => \Fiber::suspend()));
+        $fiber = new \Fiber(static fn(): mixed => $tracer->trace('fiber', static fn(): mixed => \Fiber::suspend()));
         $fiber->start();
 
         $name = $tracer->trace('main', static function () use (&$fiber): string {
@@ -280,7 +280,7 @@ final class CurrentSpanTest extends TestCase
 
         $name = $tracer->trace('outer', static function () use ($tracer): string {
             try {
-                $tracer->trace('inner', static fn() => throw new \RuntimeException());
+                $tracer->trace('inner', static fn(): never => throw new \RuntimeException());
             } catch (\RuntimeException) {
             }
 
@@ -295,7 +295,7 @@ final class CurrentSpanTest extends TestCase
         $tracer = new NullTracer(new Container());
 
         try {
-            $tracer->trace('foo', static fn() => throw new \RuntimeException());
+            $tracer->trace('foo', static fn(): never => throw new \RuntimeException());
         } catch (\RuntimeException) {
         }
 
@@ -319,7 +319,7 @@ final class CurrentSpanTest extends TestCase
 
     public function testThrowingProviderFallsBackToSpanOfTrace(): void
     {
-        $tracer = new ProvidingTracer(static fn() => throw new \RuntimeException());
+        $tracer = new ProvidingTracer(static fn(): never => throw new \RuntimeException());
 
         self::assertSame('foo', $tracer->trace('foo', static fn(): string => CurrentSpan::get()->getName()));
     }
@@ -350,7 +350,7 @@ final class CurrentSpanTest extends TestCase
         CurrentSpan::setProvider(new ProvidingTracer(static fn(): ?SpanInterface => null));
         self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
 
-        CurrentSpan::setProvider(new ProvidingTracer(static fn() => throw new \RuntimeException()));
+        CurrentSpan::setProvider(new ProvidingTracer(static fn(): never => throw new \RuntimeException()));
         self::assertInstanceOf(NoopSpan::class, CurrentSpan::get());
     }
 
