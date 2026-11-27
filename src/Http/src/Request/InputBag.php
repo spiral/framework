@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spiral\Http\Request;
 
-use Spiral\Http\Exception\DotNotFoundException;
 use Spiral\Http\Exception\InputException;
 
 /**
@@ -16,6 +15,13 @@ use Spiral\Http\Exception\InputException;
  */
 class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {
+    /**
+     * What the prefix points to, resolved on the first read: whether it exists, and the value.
+     *
+     * @var array{0: bool, 1: mixed}|null
+     */
+    private ?array $scope = null;
+
     public function __construct(
         private readonly array $data,
         private readonly int|string $prefix = '',
@@ -28,11 +34,9 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 
     public function all(): array
     {
-        try {
-            return $this->dotGet('');
-        } catch (DotNotFoundException) {
-            return [];
-        }
+        $value = $this->dotGet('', $found);
+
+        return $found ? $value : [];
     }
 
     public function getIterator(): \Traversable
@@ -61,22 +65,14 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function has(int|string $name): bool
     {
-        try {
-            $this->dotGet($name);
-        } catch (DotNotFoundException) {
-            return false;
-        }
+        $this->dotGet($name, $found);
 
-        return true;
+        return $found;
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        try {
-            return !\is_null($this->dotGet($offset));
-        } catch (DotNotFoundException) {
-            return false;
-        }
+        return $this->dotGet($offset) !== null;
     }
 
     public function offsetGet(mixed $offset): mixed
@@ -89,11 +85,9 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function get(int|string $name, mixed $default = null): mixed
     {
-        try {
-            return $this->dotGet($name);
-        } catch (DotNotFoundException) {
-            return $default;
-        }
+        $value = $this->dotGet($name, $found);
+
+        return $found ? $value : $default;
     }
 
     /**
@@ -118,30 +112,63 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * Get element using dot notation.
-     *
-     * @throws DotNotFoundException
+     * @param list<string> $steps
+     * @param-out bool $found Set to false when a step is missing, left as is otherwise.
      */
-    private function dotGet(int|string $name): mixed
+    private static function walk(mixed $data, array $steps, bool &$found): mixed
     {
-        $data = $this->data;
-
-        //Generating path relative to a given name and prefix
-        $path = (empty($this->prefix) ? '' : $this->prefix . '.') . $name;
-        if (empty($path)) {
-            return $data;
-        }
-
-        $path = \explode('.', \rtrim($path, '.'));
-
-        foreach ($path as $step) {
+        foreach ($steps as $step) {
             if (!\is_array($data) || !\array_key_exists($step, $data)) {
-                throw new DotNotFoundException(\sprintf("Unable to find requested element '%s'.", $name));
+                $found = false;
+
+                return null;
             }
 
-            $data = &$data[$step];
+            // By value: taking a reference would separate, and so copy, every array on the path.
+            $data = $data[$step];
         }
 
         return $data;
+    }
+
+    /**
+     * Get element using dot notation.
+     *
+     * A missing element is reported through $found and not by an exception: filters probe every
+     * field this way, and an exception costs a backtrace of the whole nested filter stack.
+     *
+     * @param-out bool $found False when there is no such element; null is a valid value of a found one.
+     */
+    private function dotGet(int|string $name, ?bool &$found = null): mixed
+    {
+        $found = true;
+        $path = (string) $name;
+
+        if (empty($this->prefix)) {
+            return empty($path)
+                ? $this->data
+                : self::walk($this->data, \explode('.', \rtrim($path, '.')), $found);
+        }
+
+        $path = \rtrim($path, '.');
+        $prefix = (string) $this->prefix;
+
+        // With nothing to read below the prefix, its own trailing dots are trimmed too, so the
+        // cached scope, which keeps them as steps, does not apply.
+        if ($path === '' && \str_ends_with($prefix, '.')) {
+            return self::walk($this->data, \explode('.', \rtrim($prefix, '.')), $found);
+        }
+
+        if ($this->scope === null) {
+            $exists = true;
+            $scope = self::walk($this->data, \explode('.', $prefix), $exists);
+            $this->scope = [$exists, $scope];
+        }
+
+        [$found, $data] = $this->scope;
+
+        return $found && $path !== ''
+            ? self::walk($data, \explode('.', $path), $found)
+            : $data;
     }
 }

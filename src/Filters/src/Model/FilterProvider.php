@@ -34,7 +34,7 @@ final class FilterProvider implements FilterProviderInterface
         private readonly ContainerInterface $container,
         private readonly ResolverInterface $resolver,
         private readonly HandlerInterface|CoreInterface $core,
-        private readonly NestedInputLimits $limits = new NestedInputLimits(),
+        private ?NestedInputLimits $limits = null,
     ) {
         $this->isLegacy = !$core instanceof HandlerInterface;
     }
@@ -44,11 +44,15 @@ final class FilterProvider implements FilterProviderInterface
      */
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
-        $this->limits->enterFilter();
+        // Taken from the container when not given: the mappers get theirs there, and the counter
+        // works only when all three share one instance.
+        $limits = $this->limits ??= $this->container->get(NestedInputLimits::class);
+
+        $limits->enterFilter();
         try {
             return $this->buildFilter($name, $input);
         } finally {
-            $this->limits->leaveFilter();
+            $limits->leaveFilter();
         }
     }
 
@@ -59,7 +63,7 @@ final class FilterProvider implements FilterProviderInterface
         $this->schemaBuilder ??= $this->container->get(Builder::class);
 
         $filter = $this->createFilterInstance($name);
-        [$mappingSchema, $errors, $setters, $optionalFilters] = $this->attributeMapper->map($filter, $input);
+        [$mappingSchema, $errors, $setters, $optionalFilters, $built] = $this->attributeMapper->map($filter, $input);
 
         if ($filter instanceof HasFilterDefinition) {
             $mappingSchema = \array_merge(
@@ -73,7 +77,7 @@ final class FilterProvider implements FilterProviderInterface
             $schema[$optionalFilter][Builder::SCHEMA_OPTIONAL] = true;
         }
 
-        [$data, $inputErrors] = $this->inputMapper->map($schema, $input, $setters);
+        [$data, $inputErrors] = $this->inputMapper->map($schema, $input, $setters, $built);
         $errors = \array_merge($errors, $inputErrors);
 
         $entity = new SchematicEntity($data, $schema);

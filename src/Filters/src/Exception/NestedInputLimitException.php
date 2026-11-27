@@ -16,9 +16,11 @@ final class NestedInputLimitException extends ValidationException
         public readonly string $reason,
         array $errors = [],
         mixed $context = null,
+        ?\Throwable $previous = null,
     ) {
         parent::__construct($errors === [] ? [$reason] : $errors, $context);
-        $this->message = $reason;
+        // The parent constructor accepts neither a message nor a previous exception.
+        \Exception::__construct($reason, $this->code, $previous);
     }
 
     /**
@@ -28,6 +30,6 @@ final class NestedInputLimitException extends ValidationException
     {
         $errors = $key === null ? [$field => $this->errors] : [$field => [$key => $this->errors]];
 
-        return new self($this->reason, $errors, $this->context);
+        return new self($this->reason, $errors, $this->context, $this);
     }
 }

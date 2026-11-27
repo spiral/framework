@@ -61,6 +61,26 @@ final class NestedInputLimits
     }
 
     /**
+     * Rejects a nested array that cannot fit into what is left of the filter limit, before any of its
+     * elements is built. Passing does not reserve anything: every element is still counted by
+     * {@see enterFilter()}.
+     *
+     * @param int<0, max> $count Number of elements in the array.
+     *
+     * @throws NestedInputLimitException
+     */
+    public function assertCount(string $field, int $count): void
+    {
+        // Each element costs at least one filter, so an array within the remainder is never rejected
+        // here while a larger one would hit the limit anyway.
+        if ($this->maxFilters !== null && $count > $this->maxFilters - $this->filters) {
+            throw (new NestedInputLimitException(
+                \sprintf('The number of nested filters exceeds the limit of %d.', $this->maxFilters),
+            ))->under($field);
+        }
+    }
+
+    /**
      * Checks a key of a nested array element before it becomes part of an input prefix.
      *
      * @throws NestedInputLimitException
