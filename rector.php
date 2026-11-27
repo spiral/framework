@@ -42,6 +42,8 @@ return RectorConfig::configure()
         RemoveUnusedPrivateMethodRector::class => [
             __DIR__ . '/src/Translator/tests/IndexerTest.php',
             __DIR__ . '/src/Tokenizer/tests/ReflectionFileTest.php',
+            // Tally calls the #[Before] methods of a benchmark through reflection.
+            __DIR__ . '/tests/Bench',
         ],
         RemoveAlwaysTrueIfConditionRector::class => [
             // Keep the is_string() guard: getBindings() reads user config, so a

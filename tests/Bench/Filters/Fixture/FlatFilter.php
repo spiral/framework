@@ -9,7 +9,7 @@ use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Model\Filter;
 use Spiral\Tests\Filters\Fixtures\LeafFilter;
 
-class FlatFilter extends Filter
+final class FlatFilter extends Filter
 {
     #[NestedArray(class: LeafFilter::class, input: new Post('items'))]
     public array $items = [];
