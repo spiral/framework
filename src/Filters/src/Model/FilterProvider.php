@@ -35,7 +35,6 @@ final class FilterProvider implements FilterProviderInterface
     public function createFilter(string $name, InputInterface $input): FilterInterface
     {
         $attributeMapper = $this->container->get(AttributeMapper::class);
-        \assert($attributeMapper instanceof AttributeMapper);
 
         $filter = $this->createFilterInstance($name);
         [$mappingSchema, $errors, $setters, $optionalFilters] = $attributeMapper->map($filter, $input);
@@ -48,10 +47,8 @@ final class FilterProvider implements FilterProviderInterface
         }
 
         $inputMapper = $this->container->get(InputMapper::class);
-        \assert($inputMapper instanceof InputMapper);
 
         $schemaBuilder = $this->container->get(Builder::class);
-        \assert($schemaBuilder instanceof Builder);
 
         $schema = $schemaBuilder->makeSchema($name, $mappingSchema);
         foreach ($optionalFilters as $optionalFilter) {

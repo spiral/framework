@@ -62,7 +62,6 @@ class MailerBootloader extends Bootloader
     public function boot(ContainerInterface $container): void
     {
         $registry = $container->get(QueueRegistry::class);
-        \assert($registry instanceof QueueRegistry);
         $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
     }
 

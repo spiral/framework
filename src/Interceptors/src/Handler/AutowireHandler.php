@@ -62,7 +62,6 @@ final class AutowireHandler implements HandlerInterface
     protected function resolveArguments(\ReflectionFunctionAbstract $method, CallContextInterface $context): array
     {
         $resolver = $this->container->get(ResolverInterface::class);
-        \assert($resolver instanceof ResolverInterface);
 
         return $resolver->resolveArguments($method, $context->getArguments());
     }

@@ -97,7 +97,6 @@ trait PipelineTrait
     {
         \assert($this->container !== null);
         try {
-            /** @var LazyPipeline $pipeline */
             $pipeline = $this->container->get(LazyPipeline::class);
             return $pipeline->withMiddleware(...$this->middleware);
         } catch (ContainerExceptionInterface $e) {

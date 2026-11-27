@@ -121,7 +121,7 @@ final class EventsBootloader extends Bootloader
      *
      * @param class-string<T>|Autowire<T>|T $id
      *
-     * @return T
+     * @return ($id is class-string<T> ? T : ($id is Autowire<T> ? T : T))
      *
      * @throws ContainerExceptionInterface
      */

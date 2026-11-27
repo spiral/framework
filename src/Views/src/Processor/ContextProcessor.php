@@ -29,9 +29,9 @@ final class ContextProcessor implements ProcessorInterface
         return $source->withCode(
             \preg_replace_callback(
                 $this->pattern,
-                static function (array $matches) use ($context) {
+                static function (array $matches) use ($context): string {
                     try {
-                        return $context->resolveValue($matches['name']) ?? $matches['default'] ?? null;
+                        return (string) ($context->resolveValue($matches['name']) ?? $matches['default'] ?? '');
                     } catch (ContextException $e) {
                         return $matches['default'] ?? throw $e;
                     }

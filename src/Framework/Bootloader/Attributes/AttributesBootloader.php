@@ -67,7 +67,6 @@ class AttributesBootloader extends Bootloader
 
         if ($config->isCacheEnabled()) {
             $provider = $container->get(CacheStorageProviderInterface::class);
-            \assert($provider instanceof CacheStorageProviderInterface);
 
             $reader = new Psr16CachedReader($reader, $provider->storage($config->getCacheStorage()));
         }

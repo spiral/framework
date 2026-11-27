@@ -376,21 +376,20 @@ final class Files implements FilesInterface
     }
 
     /**
-     * CURRENT_AS_PATHNAME makes the iterator yield each match as its non-empty pathname
-     * string; psalm's GlobIterator stub still types the value as SplFileInfo|string.
-     *
      * @param non-empty-string $location Location for search.
      * @param non-empty-string|null $pattern Extension pattern.
      *
      * @return iterable<non-empty-string>
-     *
-     * @psalm-suppress all
      */
     private function filesIterator(string $location, ?string $pattern = null): iterable
     {
         $pattern ??= '*';
         $regexp = \rtrim($location, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . \ltrim($pattern, DIRECTORY_SEPARATOR);
 
-        return new \GlobIterator($regexp, \FilesystemIterator::CURRENT_AS_PATHNAME);
+        // CURRENT_AS_PATHNAME yields pathnames, but the GlobIterator stub types them as SplFileInfo|string
+        foreach (new \GlobIterator($regexp, \FilesystemIterator::CURRENT_AS_PATHNAME) as $filename) {
+            \assert(\is_string($filename) && $filename !== '');
+            yield $filename;
+        }
     }
 }

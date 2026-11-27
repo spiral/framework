@@ -138,7 +138,6 @@ abstract class Command extends SymfonyCommand implements EventDispatcherAwareInt
      */
     protected function buildCore(): CoreInterface|HandlerInterface
     {
-        /** @var InvokerInterface $invoker */
         $invoker = $this->container->get(InvokerInterface::class);
         return $invoker->invoke([CommandCoreFactory::class, 'make'], [$this->interceptors, $this->eventDispatcher]);
     }

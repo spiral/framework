@@ -30,7 +30,6 @@ final class CommandCoreFactory
         ?EventDispatcherInterface $eventDispatcher = null,
         ?PipelineBuilderInterface $pipelineBuilder = null,
     ): CoreInterface|HandlerInterface {
-        /** @var CommandCore $core */
         $core = $this->container->get(CommandCore::class);
         $pipelineBuilder ??= new CompatiblePipelineBuilder($eventDispatcher);
 

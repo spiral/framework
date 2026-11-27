@@ -42,11 +42,9 @@ final class ConsoleDispatcher implements DispatcherInterface
 
         $output ??= new ConsoleOutput();
 
-        /** @var DebugListener $listener */
         $listener = $this->container->get(DebugListener::class);
         $listener = $listener->withOutput($output)->enable();
 
-        /** @var Console $console */
         $console = $this->container->get(Console::class);
 
         try {

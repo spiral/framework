@@ -54,7 +54,7 @@ trait LazyTrait
                 $command->setContainer($this->container);
                 $command->setInterceptors($this->interceptors);
 
-                if ($this->dispatcher !== null && $command instanceof EventDispatcherAwareInterface) {
+                if ($this->dispatcher !== null) {
                     $command->setEventDispatcher($this->dispatcher);
                 }
 

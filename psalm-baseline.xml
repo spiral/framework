@@ -35,6 +35,15 @@
       <code><![CDATA[$self]]></code>
     </InvalidReturnStatement>
   </file>
+  <file src="src/Events/src/Bootloader/EventsBootloader.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[match (true) {
+            \is_string($id) => $container->get($id),
+            $id instanceof Autowire => $id->resolve($factory),
+            default => $id,
+        }]]></code>
+    </InvalidReturnStatement>
+  </file>
   <file src="src/Exceptions/src/ExceptionHandler.php">
     <TaintedCallable>
       <code><![CDATA[$exception]]></code>
@@ -49,6 +58,11 @@
     <TaintedCallable>
       <code><![CDATA[$target]]></code>
     </TaintedCallable>
+  </file>
+  <file src="src/Prototype/src/NodeVisitors/LocateProperties.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->properties]]></code>
+    </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Queue/src/RetryPolicy.php">
     <InvalidOperand>

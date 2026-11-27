@@ -33,9 +33,6 @@ final class PaginationFactory implements PaginationProviderInterface
         if (!$this->container->has(ServerRequestInterface::class)) {
             throw new ScopeException('Unable to create paginator, no request scope found');
         }
-        /**
-         * @var array $query
-         */
         $query = $this->container->get(ServerRequestInterface::class)->getQueryParams();
 
         //Getting page number

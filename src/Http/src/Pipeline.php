@@ -66,7 +66,6 @@ final class Pipeline implements RequestHandlerInterface, MiddlewareInterface
         }
 
         // todo: find a better solution in the Spiral v4.0
-        /** @var CurrentRequest|null $currentRequest */
         $currentRequest = ContainerScope::getContainer()?->get(CurrentRequest::class);
 
         $previousRequest = $currentRequest?->get();
