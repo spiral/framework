@@ -1,5 +1,6 @@
 /.*                    export-ignore
 /tests                 export-ignore
+/vendor-bin            export-ignore
 codecov.yml            export-ignore
 infection.json         export-ignore
 phpcs.xml              export-ignore

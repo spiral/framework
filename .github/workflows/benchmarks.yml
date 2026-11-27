@@ -1,0 +1,51 @@
+name: benchmarks
+
+on:
+  push:
+    branches:
+      - '*.*'
+  pull_request: null
+
+permissions:
+  contents: read
+
+# The monorepo replaces every package with `self.version`; see main.yml.
+env:
+  COMPOSER_ROOT_VERSION: 3.x-dev
+
+jobs:
+  tally:
+    name: Tally (PHP 8.6)
+    # Tally counts instructions under CodSpeed's Valgrind, which it ships for Linux only.
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP 8.6
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.6'
+          extensions: posix
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--prefer-dist --no-audit"
+
+      - name: Install Tally
+        run: composer bin tally install --no-interaction --no-progress
+
+      - name: Run benchmarks
+        run: composer bench -- --output=runtime/tally
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tally-results
+          path: runtime/tally

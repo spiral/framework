@@ -132,6 +132,7 @@
     },
     "require-dev": {
         "aws/aws-sdk-php": "^3.338",
+        "bamarni/composer-bin-plugin": "^1.8",
         "buggregator/trap": "^1.13.3",
         "doctrine/annotations": "^2.0.2",
         "google/protobuf": "^3.25|^4.29",
@@ -163,6 +164,7 @@
                 "src/Auth/tests",
                 "src/AuthHttp/tests"
             ],
+            "Spiral\\Tests\\Bench\\": "tests/Bench",
             "Spiral\\Tests\\Boot\\": "src/Boot/tests",
             "Spiral\\Tests\\Broadcasting\\": "src/Broadcasting/tests",
             "Spiral\\Tests\\Cache\\": "src/Cache/tests",
@@ -269,6 +271,7 @@
         "spiral/sapi-bridge": "<1.1"
     },
     "scripts": {
+        "bench": "tally run --config=vendor-bin/tally/tally.php",
         "cs:diff": "php-cs-fixer fix --dry-run -v --diff",
         "cs:fix": "php-cs-fixer fix -v",
         "psalm": "psalm",
@@ -278,6 +281,7 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
             "composer/package-versions-deprecated": true,
             "llm/skills": true,
             "spiral/composer-publish-plugin": true
@@ -286,6 +290,13 @@
             "ignore": {
                 "GHSA-vvj3-c3rp-c85p": "PHPUnit is a dev dependency and does not affect production code."
             }
+        }
+    },
+    "extra": {
+        "bamarni-bin": {
+            "bin-links": true,
+            "forward-command": false,
+            "target-directory": "vendor-bin"
         }
     },
     "minimum-stability": "dev",
