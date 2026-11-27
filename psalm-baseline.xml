@@ -14,10 +14,6 @@
     </TypeDoesNotContainType>
   </file>
   <file src="src/Core/src/Internal/Actor.php">
-    <NoValue>
-      <code><![CDATA[$injector]]></code>
-      <code><![CDATA[$singleton]]></code>
-    </NoValue>
     <TooManyArguments>
       <code><![CDATA[make]]></code>
     </TooManyArguments>
@@ -67,7 +63,6 @@
   <file src="src/Queue/src/RetryPolicy.php">
     <InvalidOperand>
       <code><![CDATA[$this->delay * $this->multiplier ** $attempts]]></code>
-      <code><![CDATA[$this->multiplier ** $attempts]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Router/src/UriHandler.php">
