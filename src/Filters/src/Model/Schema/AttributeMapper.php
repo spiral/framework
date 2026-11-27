@@ -10,12 +10,14 @@ use Spiral\Filters\Attribute\Input\AbstractInput;
 use Spiral\Filters\Attribute\NestedArray;
 use Spiral\Filters\Attribute\NestedFilter;
 use Spiral\Filters\Attribute\Setter;
+use Spiral\Filters\Exception\NestedInputLimitException;
 use Spiral\Filters\Exception\SetterException;
 use Spiral\Filters\Exception\ValidationException;
 use Spiral\Filters\InputInterface;
 use Spiral\Filters\Model\FilterInterface;
 use Spiral\Filters\Model\FilterProviderInterface;
 use Spiral\Filters\Model\Mapper\Mapper;
+use Spiral\Filters\Model\NestedInputLimits;
 
 /**
  * @internal
@@ -26,10 +28,20 @@ final class AttributeMapper
         private readonly FilterProviderInterface $provider,
         private readonly ReaderInterface $reader,
         private readonly Mapper $mapper,
+        private readonly NestedInputLimits $limits = new NestedInputLimits(),
     ) {}
 
     /**
-     * @return array{0: array, 1: array, 2: array, 3: array}
+     * The last element holds what every nested filter build ended with, by filter class and input
+     * prefix, so that {@see InputMapper} does not build the same filters again.
+     *
+     * @return array{
+     *     0: array,
+     *     1: array,
+     *     2: array,
+     *     3: array,
+     *     4: array<class-string<FilterInterface>, array<array-key, FilterInterface|ValidationException>>
+     * }
      */
     public function map(FilterInterface $filter, InputInterface $input): array
     {
@@ -37,6 +49,7 @@ final class AttributeMapper
         $schema = [];
         $setters = [];
         $optionalFilters = [];
+        $built = [];
         $class = new \ReflectionClass($filter);
 
         foreach ($class->getProperties() as $property) {
@@ -57,13 +70,17 @@ final class AttributeMapper
                             $attribute->class,
                             $input->withPrefix($prefix),
                         );
+                        $built[$attribute->class][$prefix] = $value;
 
                         try {
                             $this->setValue($filter, $property, $value);
                         } catch (SetterException $e) {
                             $errors[$property->getName()] = $this->createErrorMessage($e, $property, $value);
                         }
+                    } catch (NestedInputLimitException $e) {
+                        throw $e->under($prefix);
                     } catch (ValidationException $e) {
+                        $built[$attribute->class][$prefix] = $e;
                         if ($this->allowsNull($property)) {
                             $this->setValue($filter, $property, null);
                             $optionalFilters[] = $property->getName();
@@ -80,13 +97,22 @@ final class AttributeMapper
                     $prefix = $attribute->input->key ?? $attribute->prefix ?? $property->getName();
 
                     if (\is_array($values)) {
+                        $this->limits->assertCount($property->getName(), \count($values));
+
                         foreach (\array_keys($values) as $key) {
+                            $this->limits->assertKey($property->getName(), $key);
+                            $origin = $prefix . '.' . $key;
+
                             try {
                                 $propertyValues[$key] = $this->provider->createFilter(
                                     $attribute->class,
-                                    $input->withPrefix($prefix . '.' . $key),
+                                    $input->withPrefix($origin),
                                 );
+                                $built[$attribute->class][$origin] = $propertyValues[$key];
+                            } catch (NestedInputLimitException $e) {
+                                throw $e->under($property->getName(), $key);
                             } catch (ValidationException $e) {
+                                $built[$attribute->class][$origin] = $e;
                                 /** @psalm-suppress InvalidArrayOffset */
                                 $errors[$property->getName()][$key] = $e->errors;
                             }
@@ -101,7 +127,7 @@ final class AttributeMapper
             }
         }
 
-        return [$schema, $errors, $setters, $optionalFilters];
+        return [$schema, $errors, $setters, $optionalFilters, $built];
     }
 
     private function setValue(FilterInterface $filter, \ReflectionProperty $property, mixed $value): void

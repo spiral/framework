@@ -170,4 +170,124 @@ final class InputBagTest extends TestCase
         $result = $bag->fetch(['1', 4, 3], true, 'baz');
         self::assertSame([3 => 'foo', 1 => 'baz', 4 => 'baz'], $result);
     }
+
+    public function testNullValueIsFoundButNotSet(): void
+    {
+        $bag = new InputBag(['a' => ['b' => null]], prefix: 'a');
+
+        self::assertTrue($bag->has('b'));
+        self::assertNull($bag->get('b', 'default'));
+        self::assertFalse(isset($bag['b']));
+    }
+
+    public function testMissingElementBelowPrefix(): void
+    {
+        $bag = new InputBag(['a' => ['b' => 'x']], prefix: 'a');
+
+        self::assertFalse($bag->has('c'));
+        self::assertFalse($bag->has('b.c'));
+        self::assertSame('default', $bag->get('b.c', 'default'));
+    }
+
+    public function testPrefixPointingToScalarHasNothingBelow(): void
+    {
+        $bag = new InputBag(['a' => 'x'], prefix: 'a');
+
+        self::assertFalse($bag->has('b'));
+        self::assertSame('default', $bag->get('b', 'default'));
+    }
+
+    public function testMissingPrefixHasNothing(): void
+    {
+        $bag = new InputBag(['a' => ['b' => 'x']], prefix: 'c');
+
+        self::assertSame([], $bag->all());
+        self::assertFalse($bag->has('b'));
+        self::assertCount(0, $bag);
+    }
+
+    public function testTrailingDots(): void
+    {
+        self::assertSame(['b' => 'x'], (new InputBag(['a' => ['b' => 'x']], prefix: 'a.'))->all());
+        self::assertSame('x', (new InputBag(['a' => ['b' => 'x']], prefix: 'a'))->get('b.'));
+    }
+
+    public function testZeroKeys(): void
+    {
+        $bag = new InputBag(['a' => ['0' => ['0' => 'x', 'b' => 'y']]], prefix: 'a.0');
+
+        self::assertSame('x', $bag->get('0'));
+        self::assertSame('y', $bag->get('b'));
+    }
+
+    public function testRepeatedReadsOfOneBag(): void
+    {
+        $bag = new InputBag(['a' => ['b' => 'x', 'c' => 'y']], prefix: 'a');
+
+        self::assertSame('x', $bag->get('b'));
+        self::assertSame('y', $bag->get('c'));
+        self::assertSame('x', $bag->get('b'));
+        self::assertSame(['b' => 'x', 'c' => 'y'], $bag->all());
+    }
+
+    public function testWithParentBagContinuesFromWhatTheParentResolved(): void
+    {
+        $parent = new InputBag(['a' => ['b' => ['c' => 'parent']]], prefix: 'a');
+        // A different data set proves the child reads through the parent, not from its own root.
+        $child = (new InputBag(['a' => ['b' => ['c' => 'own']]], prefix: 'a.b'))->withParentBag($parent);
+
+        self::assertSame('parent', $child->get('c'));
+    }
+
+    public function testWithParentBagReturnsNewBag(): void
+    {
+        $data = ['a' => ['b' => ['c' => 'x']]];
+        $parent = new InputBag($data, prefix: 'a');
+        $child = new InputBag($data, prefix: 'a.b');
+
+        $linked = $child->withParentBag($parent);
+
+        self::assertNotSame($child, $linked);
+        self::assertSame(['c' => 'x'], $linked->all());
+        self::assertSame(['c' => 'x'], $child->all());
+    }
+
+    public function testWithParentBagReadsAsStandaloneBag(): void
+    {
+        $data = ['a' => ['b' => ['c' => null, 'd' => ['e' => 'x']], 'f' => 'scalar']];
+        $parent = new InputBag($data, prefix: 'a');
+
+        foreach (['a.b', 'a.b.d', 'a.f', 'a.missing', 'a.b.c'] as $prefix) {
+            $standalone = new InputBag($data, prefix: $prefix);
+            $linked = (new InputBag($data, prefix: $prefix))->withParentBag($parent);
+
+            foreach (['', 'c', 'd', 'd.e', 'e', 'missing'] as $name) {
+                self::assertSame($standalone->has($name), $linked->has($name), "has('$name') under '$prefix'");
+                self::assertSame(
+                    $standalone->get($name, 'default'),
+                    $linked->get($name, 'default'),
+                    "get('$name') under '$prefix'",
+                );
+            }
+        }
+    }
+
+    public function testWithParentBagIgnoresUnrelatedParent(): void
+    {
+        $data = ['a' => ['b' => 'x'], 'ab' => ['c' => 'y']];
+
+        $child = new InputBag($data, prefix: 'ab');
+        self::assertSame($child, $child->withParentBag(new InputBag($data, prefix: 'a')));
+
+        $child = new InputBag($data, prefix: 'a');
+        self::assertSame($child, $child->withParentBag(new InputBag($data, prefix: 'a')));
+    }
+
+    public function testWithParentBagIgnoresRootParent(): void
+    {
+        $data = ['a' => ['b' => 'x']];
+        $child = new InputBag($data, prefix: 'a');
+
+        self::assertSame($child, $child->withParentBag(new InputBag($data)));
+    }
 }

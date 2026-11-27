@@ -112,6 +112,14 @@ final class InputManager
     private string $prefix = '';
 
     /**
+     * The input this one was sliced from. Its bags let the bags of this input skip the shared part
+     * of the prefix, so a chain of slices does not walk its whole prefix at every level.
+     *
+     * @invisible
+     */
+    private ?self $parent = null;
+
+    /**
      * List of content types that must be considered as JSON.
      */
     private array $jsonTypes = [
@@ -137,8 +145,10 @@ final class InputManager
         if ($add) {
             $input->prefix .= '.' . $prefix;
             $input->prefix = \trim($input->prefix, '.');
+            $input->parent = $this;
         } else {
             $input->prefix = $prefix;
+            $input->parent = null;
         }
 
         return $input;
@@ -321,7 +331,10 @@ final class InputManager
             $data = (array) $data;
         }
 
-        return $this->bags[$name] = new $class($data, $this->prefix);
+        $bag = new $class($data, $this->prefix);
+
+        // The parent syncs with the container as well, so its bag reads the same request.
+        return $this->bags[$name] = $this->parent === null ? $bag : $bag->withParentBag($this->parent->bag($name));
     }
 
     public function hasBag(string $name): bool

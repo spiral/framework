@@ -1,0 +1,5 @@
+{
+    "require": {
+        "phpstan/tally": "^1.0"
+    }
+}

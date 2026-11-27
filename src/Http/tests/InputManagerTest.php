@@ -320,6 +320,27 @@ final class InputManagerTest extends TestCase
         self::assertInstanceOf(InputBag::class, $input->test);
     }
 
+    public function testCustomInputBagWithOwnConstructorInSlice(): void
+    {
+        $bag = new class([]) extends InputBag {
+            public function __construct(array $data, int|string $prefix = '', public readonly array $options = [])
+            {
+                parent::__construct($data, $prefix);
+            }
+        };
+        $input = new InputManager($this->container, new HttpConfig(
+            ['inputBags' => ['test' => ['class' => $bag::class, 'source' => 'getQueryParams']]],
+        ));
+        $this->container->bind(
+            ServerRequestInterface::class,
+            (new ServerRequest('GET', '/'))->withQueryParams(['a' => ['b' => ['c' => 'value']]]),
+        );
+
+        self::assertSame(['b' => ['c' => 'value']], $input->test->get('a'));
+        self::assertSame('value', $input->withPrefix('a')->withPrefix('b')->test->get('c'));
+        self::assertSame([], $input->withPrefix('a')->withPrefix('b')->test->options);
+    }
+
     protected function setUp(): void
     {
         $this->container = new Container();
