@@ -16,16 +16,28 @@ use Spiral\Http\Exception\InputException;
 class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * What the prefix points to, resolved on the first read: whether it exists, and the value.
-     *
-     * @var array{0: bool, 1: mixed}|null
+     * Whether the prefix points to an element, null until resolved.
      */
-    private ?array $scope = null;
+    private ?bool $exists = null;
 
+    /**
+     * The element the prefix points to.
+     */
+    private mixed $scope = null;
+
+    /**
+     * @param InputBag|null $parent A bag over the same data whose prefix starts this one. The part
+     *        of the path they share is then not walked again. Internal: passed by {@see InputManager}.
+     */
     public function __construct(
         private readonly array $data,
         private readonly int|string $prefix = '',
-    ) {}
+        ?self $parent = null,
+    ) {
+        if ($parent !== null) {
+            $this->continueFrom($parent);
+        }
+    }
 
     public function count(): int
     {
@@ -159,16 +171,42 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
             return self::walk($this->data, \explode('.', \rtrim($prefix, '.')), $found);
         }
 
-        if ($this->scope === null) {
-            $exists = true;
-            $scope = self::walk($this->data, \explode('.', $prefix), $exists);
-            $this->scope = [$exists, $scope];
-        }
-
-        [$found, $data] = $this->scope;
+        $data = $this->scope($found);
 
         return $found && $path !== ''
             ? self::walk($data, \explode('.', $path), $found)
             : $data;
+    }
+
+    /**
+     * Resolves the element the prefix points to, once.
+     *
+     * @param-out bool $exists
+     */
+    private function scope(?bool &$exists = null): mixed
+    {
+        if ($this->exists === null) {
+            $this->exists = true;
+            $this->scope = self::walk($this->data, \explode('.', (string) $this->prefix), $this->exists);
+        }
+
+        $exists = $this->exists;
+
+        return $this->scope;
+    }
+
+    private function continueFrom(self $parent): void
+    {
+        $base = (string) $parent->prefix;
+        $own = (string) $this->prefix;
+        // An empty prefix means the root, which the scope of the parent would not resolve to.
+        if ($base === '' || !\str_starts_with($own, $base . '.')) {
+            return;
+        }
+
+        $this->scope = $parent->scope($this->exists);
+        if ($this->exists) {
+            $this->scope = self::walk($this->scope, \explode('.', \substr($own, \strlen($base) + 1)), $this->exists);
+        }
     }
 }
