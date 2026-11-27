@@ -55,7 +55,7 @@ final class TelemetryHttpClientTest extends TestCase
         $tracer = new RecordingTracer();
         $client = new TelemetryHttpClient($inner, $tracer);
 
-        $tracer->trace('request', static fn() => $client->sendRequest(
+        $tracer->trace('request', static fn(): ResponseInterface => $client->sendRequest(
             new Request('GET', 'http://example.org/', ['traceparent' => 'stale']),
         ));
 

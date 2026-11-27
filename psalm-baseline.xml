@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="7.0.3@8f2ac04d0ab5ed1d3cbe6e252b0f7232bc031aaf">
+<files psalm-version="7.21.0@1a665f0114bd40cf12ad57a1a82066549d92f1b6">
   <file src="src/Boot/src/BootloadManager/Initializer.php">
     <UnnecessaryVarAnnotation>
       <code><![CDATA[InitMethod|BootMethod]]></code>
     </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Console/src/Command.php">
+    <InvalidArgument>
+      <code><![CDATA[new Scope(
+                        name: 'console.command',
+                        bindings: [
+                            InputInterface::class => $input,
+                            OutputInterface::class => $output,
+                        ],
+                        autowire: false,
+                    )]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Core/src/Container.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[$id]]></code>
+    </MethodSignatureMismatch>
   </file>
   <file src="src/Core/src/ContainerScope.php">
     <RedundantCondition>
@@ -14,16 +31,17 @@
     </TypeDoesNotContainType>
   </file>
   <file src="src/Core/src/Internal/Actor.php">
-    <NoValue>
-      <code><![CDATA[$injector]]></code>
-      <code><![CDATA[$singleton]]></code>
-    </NoValue>
     <TooManyArguments>
       <code><![CDATA[make]]></code>
     </TooManyArguments>
     <UnnecessaryVarAnnotation>
       <code><![CDATA[Attribute\Scope]]></code>
     </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Core/src/Internal/Container.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[$id]]></code>
+    </MethodSignatureMismatch>
   </file>
   <file src="src/Distribution/src/Manager.php">
     <InvalidReturnStatement>
@@ -35,25 +53,28 @@
       <code><![CDATA[$self]]></code>
     </InvalidReturnStatement>
   </file>
-  <file src="src/Exceptions/src/ExceptionHandler.php">
-    <TaintedCallable>
-      <code><![CDATA[$exception]]></code>
-    </TaintedCallable>
+  <file src="src/Events/src/Bootloader/EventsBootloader.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[match (true) {
+            \is_string($id) => $container->get($id),
+            $id instanceof Autowire => $id->resolve($factory),
+            default => $id,
+        }]]></code>
+    </InvalidReturnStatement>
   </file>
   <file src="src/Filters/src/Attribute/Input/AbstractInput.php">
     <UndefinedThisPropertyFetch>
       <code><![CDATA[$this->key]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/Framework/Command/Router/ListCommand.php">
-    <TaintedCallable>
-      <code><![CDATA[$target]]></code>
-    </TaintedCallable>
+  <file src="src/Prototype/src/NodeVisitors/LocateProperties.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->properties]]></code>
+    </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Queue/src/RetryPolicy.php">
     <InvalidOperand>
       <code><![CDATA[$this->delay * $this->multiplier ** $attempts]]></code>
-      <code><![CDATA[$this->multiplier ** $attempts]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Router/src/UriHandler.php">
@@ -63,14 +84,9 @@
       <code><![CDATA[$this->isCompiled()]]></code>
     </ImpureMethodCall>
   </file>
-  <file src="src/Snapshots/src/FileSnapshot.php">
-    <TaintedCallable>
-      <code><![CDATA[$snapshot->getException()]]></code>
-    </TaintedCallable>
-  </file>
-  <file src="src/Snapshots/src/StorageSnapshot.php">
-    <TaintedCallable>
-      <code><![CDATA[$snapshot->getException()]]></code>
-    </TaintedCallable>
+  <file src="src/Stempler/src/Compiler/Renderer/HTMLRenderer.php">
+    <NoValue>
+      <code><![CDATA[$attr]]></code>
+    </NoValue>
   </file>
 </files>

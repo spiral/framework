@@ -246,7 +246,6 @@ class Initializer implements InitializerInterface
             return;
         }
 
-        /** @var AttributeResolver $attributeResolver */
         $attributeResolver = $this->container->get(AttributeResolver::class);
 
         $availableAttributes = $attributeResolver->getResolvers();

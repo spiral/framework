@@ -39,7 +39,6 @@ final class CallableSequence extends AbstractSequence
             $function[0] = $container->get($function[0]);
         }
 
-        /** @var ResolverInterface $resolver */
         $resolver = $container->get(ResolverInterface::class);
 
         if (\is_array($function)) {

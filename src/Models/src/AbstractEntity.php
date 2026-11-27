@@ -99,10 +99,6 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      */
     public function setFields(iterable $fields = [], bool $all = false): self
     {
-        if (!\is_array($fields) && !$fields instanceof \Traversable) {
-            return $this;
-        }
-
         foreach ($fields as $name => $value) {
             if ($all || $this->isFillable($name)) {
                 try {

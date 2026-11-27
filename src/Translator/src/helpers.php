@@ -20,7 +20,7 @@ if (!\function_exists('l')) {
      */
     function l(string $string, array $options = [], ?string $domain = null): string
     {
-        /** @psalm-suppress InternalMethod */
+        /** @psalm-suppress InternalMethod, InternalClass */
         $container = ContainerScope::getContainer();
         if ($container === null || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
@@ -28,7 +28,6 @@ if (!\function_exists('l')) {
             );
         }
 
-        /** @var TranslatorInterface $translator */
         $translator = $container->get(TranslatorInterface::class);
 
         return $translator->trans($string, $options, $domain);
@@ -49,7 +48,7 @@ if (!\function_exists('p')) {
      */
     function p(string $string, int $number, array $options = [], ?string $domain = null): string
     {
-        /** @psalm-suppress InternalMethod */
+        /** @psalm-suppress InternalMethod, InternalClass */
         $container = ContainerScope::getContainer();
         if (empty($container) || !$container->has(TranslatorInterface::class)) {
             throw new ScopeException(
@@ -57,7 +56,6 @@ if (!\function_exists('p')) {
             );
         }
 
-        /** @var TranslatorInterface $translator */
         $translator = $container->get(TranslatorInterface::class);
 
         return $translator->trans($string, ['%count%' => $number] + $options, $domain);

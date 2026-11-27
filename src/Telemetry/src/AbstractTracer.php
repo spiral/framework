@@ -49,11 +49,8 @@ abstract class AbstractTracer implements TracerInterface
             $binder = $container;
             $scope = $container;
         } else {
-            /** @var ScopeInterface $scope */
             $scope = $container->get(ScopeInterface::class);
-            /** @var InvokerInterface $invoker */
             $invoker = $container->get(InvokerInterface::class);
-            /** @var BinderInterface $binder */
             $binder = $container->get(BinderInterface::class);
         }
 

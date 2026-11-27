@@ -88,7 +88,6 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
     {
         $this->handler === null and throw new PipelineException('Unable to run pipeline, no handler given.');
 
-        /** @var CurrentRequest $currentRequest */
         $currentRequest = $this->container->get(CurrentRequest::class);
 
         $previousRequest = $currentRequest->get();
@@ -110,7 +109,6 @@ final class LazyPipeline implements RequestHandlerInterface, MiddlewareInterface
                 : $middleware::class;
             // Init a tracing span when the pipeline starts
             if ($span === null) {
-                /** @var TracerInterface $tracer */
                 $tracer = $this->container->get(TracerInterface::class);
                 return $tracer->trace(
                     name: 'HTTP Pipeline',

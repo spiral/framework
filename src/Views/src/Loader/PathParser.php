@@ -56,8 +56,8 @@ final class PathParser
             return null;
         }
 
-        if (\str_contains((string) $filename, LoaderInterface::NS_SEPARATOR)) {
-            [$namespace, $filename] = \explode(LoaderInterface::NS_SEPARATOR, (string) $filename);
+        if (\str_contains($filename, LoaderInterface::NS_SEPARATOR)) {
+            [$namespace, $filename] = \explode(LoaderInterface::NS_SEPARATOR, $filename);
         }
 
         //Twig like namespaces

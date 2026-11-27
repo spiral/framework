@@ -16,7 +16,7 @@ use Spiral\Serializer\SerializerRegistryInterface;
 
 final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRegistryInterface
 {
-    /** @var array<string, class-string> */
+    /** @var array<string, class-string<HandlerInterface>|HandlerInterface> */
     private array $handlers = [];
 
     /** @var array<string, SerializerInterface> */
@@ -30,6 +30,8 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
 
     /**
      * Associate specific job type with handler class or object
+     *
+     * @param HandlerInterface|class-string<HandlerInterface> $handler
      */
     public function setHandler(string $jobType, HandlerInterface|string $handler): void
     {
@@ -99,7 +101,6 @@ final class QueueRegistry implements HandlerRegistryInterface, QueueSerializerRe
 
         if (\is_string($serializer)) {
             $registry = $this->container->get(SerializerRegistryInterface::class);
-            \assert($registry instanceof SerializerRegistryInterface);
 
             $serializer = $registry->has($serializer) ?
                 $registry->get($serializer) :

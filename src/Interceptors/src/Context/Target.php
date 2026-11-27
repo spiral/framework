@@ -71,9 +71,7 @@ final class Target implements TargetInterface
      */
     public static function fromReflectionFunction(\ReflectionFunction $reflection, array $path = []): self
     {
-        /** @var self<null> $result */
-        $result = new self(path: $path, reflection: $reflection, callable: $reflection->getClosure());
-        return $result;
+        return new self(path: $path, reflection: $reflection, callable: $reflection->getClosure());
     }
 
     /**
@@ -85,9 +83,7 @@ final class Target implements TargetInterface
      */
     public static function fromClosure(\Closure $closure, array $path = []): self
     {
-        /** @var self<null> $result */
-        $result = new self(path: $path, reflection: new \ReflectionFunction($closure), callable: $closure);
-        return $result;
+        return new self(path: $path, reflection: new \ReflectionFunction($closure), callable: $closure);
     }
 
     /**
@@ -110,10 +106,7 @@ final class Target implements TargetInterface
      */
     public static function fromPathArray(array $path, string $delimiter = '.'): self
     {
-        /** @var self<null> $result */
-        $result = new self(path: $path, delimiter: $delimiter);
-
-        return $result;
+        return new self(path: $path, delimiter: $delimiter);
     }
 
     /**

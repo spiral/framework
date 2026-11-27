@@ -90,7 +90,6 @@ final class SessionBootloader extends Bootloader
     private function resolveSession(ContainerInterface $container): SessionInterface
     {
         try {
-            /** @var ServerRequestInterface $request */
             $request = $container->get(ServerRequestInterface::class);
             return $request->getAttribute(SessionMiddleware::ATTRIBUTE) ?? throw new ContextualObjectNotFoundException(
                 SessionInterface::class,

@@ -24,7 +24,6 @@ final class CommandSequence extends AbstractSequence
 
     public function execute(ContainerInterface $container, OutputInterface $output): void
     {
-        /** @var Console $console */
         $console = $container->get(Console::class);
 
         $console->run($this->command, $this->options, $output);
