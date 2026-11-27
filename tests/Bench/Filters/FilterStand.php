@@ -31,16 +31,24 @@ use Spiral\Http\Request\InputManager;
  */
 final class FilterStand
 {
+    /**
+     * A limit of nested filters far above the default, so the data sets can grow past the default and
+     * a benchmark measures how the cost grows, not where the default limit stops it.
+     */
+    private const LOOSE_CONFIG = ['maxNestedFilters' => 1_000_000];
+
     private readonly Container $container;
     private readonly FilterProvider $provider;
 
     /**
-     * @param array<string, mixed> $config Filters config, the limits are the defaults when omitted.
+     * @param array<string, mixed>|null $config Filters config; omitted limits take their defaults. Null
+     *        takes {@see self::LOOSE_CONFIG}.
      * @param bool $validate Puts {@see ValidateFilterInterceptor} in front of the core, as the framework
      *        does, so a filter with errors throws and its errors reach the parent filter.
      */
-    public function __construct(array $config = [], bool $validate = false)
+    public function __construct(?array $config = null, bool $validate = false)
     {
+        $config ??= self::LOOSE_CONFIG;
         $options = new Options();
         $options->checkScope = false;
         $this->container = new Container(options: $options);

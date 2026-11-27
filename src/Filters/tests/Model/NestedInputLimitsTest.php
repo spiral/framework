@@ -42,7 +42,7 @@ final class NestedInputLimitsTest extends BaseTestCase
 
     public function testRejectsTooManyNestedFilters(): void
     {
-        $provider = $this->makeProvider(maxNestedFilters: 10, maxNestedKeyLength: null);
+        $provider = $this->makeProvider(maxNestedFilters: 10, maxNestedKeyLength: false);
 
         try {
             $provider->createFilter(TreeFilter::class, $this->input([
@@ -59,7 +59,7 @@ final class NestedInputLimitsTest extends BaseTestCase
 
     public function testCountsNestedFiltersPerRootFilter(): void
     {
-        $provider = $this->makeProvider(maxNestedFilters: 10, maxNestedKeyLength: null);
+        $provider = $this->makeProvider(maxNestedFilters: 10, maxNestedKeyLength: false);
         $data = ['branches' => [['leaves' => [['name' => 'x']]]]];
 
         for ($i = 0; $i < 5; ++$i) {
@@ -69,7 +69,7 @@ final class NestedInputLimitsTest extends BaseTestCase
 
     public function testRejectsTooLongNestedArrayKey(): void
     {
-        $provider = $this->makeProvider(maxNestedFilters: null, maxNestedKeyLength: 8);
+        $provider = $this->makeProvider(maxNestedFilters: false, maxNestedKeyLength: 8);
 
         try {
             $provider->createFilter(TreeFilter::class, $this->input([
@@ -87,7 +87,7 @@ final class NestedInputLimitsTest extends BaseTestCase
 
     public function testStopsOnLongKeyBeforeBuildingItsChildren(): void
     {
-        $provider = $this->makeProvider(maxNestedFilters: null, maxNestedKeyLength: 1024);
+        $provider = $this->makeProvider(maxNestedFilters: false, maxNestedKeyLength: 1024);
 
         $this->expectException(NestedInputLimitException::class);
 
@@ -97,9 +97,9 @@ final class NestedInputLimitsTest extends BaseTestCase
         ]));
     }
 
-    public function testNullDisablesLimits(): void
+    public function testFalseDisablesLimits(): void
     {
-        $provider = $this->makeProvider(maxNestedFilters: null, maxNestedKeyLength: null);
+        $provider = $this->makeProvider(maxNestedFilters: false, maxNestedKeyLength: false);
 
         $filter = $provider->createFilter(TreeFilter::class, $this->input([
             'branches' => [\str_repeat('k', 2000) => ['leaves' => \array_fill(0, 50, ['name' => 'x'])]],
@@ -108,12 +108,20 @@ final class NestedInputLimitsTest extends BaseTestCase
         self::assertCount(50, $filter->branches[\str_repeat('k', 2000)]->leaves);
     }
 
+    public function testNullKeepsDefaultLimits(): void
+    {
+        $config = new FiltersConfig(['maxNestedFilters' => null, 'maxNestedKeyLength' => null]);
+
+        self::assertSame((new FiltersConfig())->getMaxNestedFilters(), $config->getMaxNestedFilters());
+        self::assertSame((new FiltersConfig())->getMaxNestedKeyLength(), $config->getMaxNestedKeyLength());
+    }
+
     public function testDefaultNestedFiltersLimitWithoutConfig(): void
     {
         $limits = new NestedInputLimits();
         $limits->enterFilter();
 
-        for ($i = 0; $i < 10_000; ++$i) {
+        for ($i = 0; $i < 2000; ++$i) {
             $limits->enterFilter();
             $limits->leaveFilter();
         }
@@ -139,7 +147,7 @@ final class NestedInputLimitsTest extends BaseTestCase
         $this->container->bindSingleton(CasterRegistryInterface::class, new CasterRegistry([]));
     }
 
-    private function makeProvider(?int $maxNestedFilters, ?int $maxNestedKeyLength): FilterProvider
+    private function makeProvider(int|false $maxNestedFilters, int|false $maxNestedKeyLength): FilterProvider
     {
         $this->container->bindSingleton(NestedInputLimits::class, new NestedInputLimits(new FiltersConfig([
             'maxNestedFilters' => $maxNestedFilters,

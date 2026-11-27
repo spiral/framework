@@ -46,7 +46,8 @@ final class LimitRejectionBench
     #[Before]
     private function prepare(int $items): void
     {
-        $this->stand = new FilterStand();
+        // The default limits, as an application gets them.
+        $this->stand = new FilterStand([]);
         $this->stand->warmUp(FlatFilter::class, ['items' => [0]]);
         $this->input = $this->stand->input(['items' => \array_fill(0, $items, 0)]);
     }

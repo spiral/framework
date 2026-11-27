@@ -25,19 +25,10 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     private mixed $scope = null;
 
-    /**
-     * @param InputBag|null $parent A bag over the same data whose prefix starts this one. The part
-     *        of the path they share is then not walked again. Internal: passed by {@see InputManager}.
-     */
     public function __construct(
         private readonly array $data,
         private readonly int|string $prefix = '',
-        ?self $parent = null,
-    ) {
-        if ($parent !== null) {
-            $this->continueFrom($parent);
-        }
-    }
+    ) {}
 
     public function count(): int
     {
@@ -118,6 +109,33 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
         throw new InputException('InputBag is immutable.');
     }
 
+    /**
+     * Returns a copy that resolves its prefix from the element the prefix of $parent points to, so
+     * the part of the path the two bags share is not walked again. The bags must read the same data;
+     * when the prefix of this bag does not continue the prefix of $parent, the copy reads as before.
+     *
+     * @internal Used by {@see InputManager} for the bags of nested inputs.
+     */
+    final public function withParentBag(self $parent): static
+    {
+        $base = (string) $parent->prefix;
+        $own = (string) $this->prefix;
+        $length = \strlen($base);
+
+        // An empty prefix means the root, which the scope of the parent would not resolve to.
+        if ($length === 0 || ($own[$length] ?? '') !== '.' || !\str_starts_with($own, $base)) {
+            return $this;
+        }
+
+        $bag = clone $this;
+        $bag->scope = $parent->scope($bag->exists);
+        if ($bag->exists) {
+            $bag->scope = self::walk($bag->scope, \explode('.', \substr($own, $length + 1)), $bag->exists);
+        }
+
+        return $bag;
+    }
+
     public function __debugInfo(): array
     {
         return $this->all();
@@ -193,20 +211,5 @@ class InputBag implements \Countable, \IteratorAggregate, \ArrayAccess
         $exists = $this->exists;
 
         return $this->scope;
-    }
-
-    private function continueFrom(self $parent): void
-    {
-        $base = (string) $parent->prefix;
-        $own = (string) $this->prefix;
-        // An empty prefix means the root, which the scope of the parent would not resolve to.
-        if ($base === '' || !\str_starts_with($own, $base . '.')) {
-            return;
-        }
-
-        $this->scope = $parent->scope($this->exists);
-        if ($this->exists) {
-            $this->scope = self::walk($this->scope, \explode('.', \substr($own, \strlen($base) + 1)), $this->exists);
-        }
     }
 }
